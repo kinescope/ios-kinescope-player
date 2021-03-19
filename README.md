@@ -8,11 +8,13 @@ This framework created to help you include [Kinescope](https://kinescope.io/) pl
 
 ## About
 
-This package helps retrieve the current positioning coordinates of any widget in a widgets tree in your Flutter application.
+This framework can help you include customizable video player into your mobile application, organize offline playing of your videos.
 
 ## Currently supported features
 
-- TBD
+- online and offline playing
+- fullscreen, minimal or picture in picture
+- customizable UI of player
 
 ## Usage
 
