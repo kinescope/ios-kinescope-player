@@ -12,21 +12,22 @@ jobs:
     runs-on: macOS-latest
     steps:
     - uses: actions/checkout@v1
-    - name: Select folder
-      run: cd Sources
     - name: Build
+      working-directory: ./Sources
       run: xcodebuild -target KinescopeSDK
     - name: Run tests
+      working-directory: ./Sources
       run: xcodebuild test -scheme KinescopeSDK -configuration "Debug" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 8' | xcpretty -c
   testExample:
     runs-on: macOS-latest
     steps:
     - uses: actions/checkout@v1
-    - name: Select folder
-      run: cd Example
     - name: Pods
+      working-directory: ./Example
       run: pod install
     - name: Build
+      working-directory: ./Example
       run: xcodebuild -target KinescopeExample
     - name: Run tests
+      working-directory: ./Example
       run: xcodebuild test -scheme KinescopeExample -configuration "Debug" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 8' | xcpretty -c
