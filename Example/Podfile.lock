@@ -1,0 +1,27 @@
+PODS:
+  - KinescopeSDK (0.1)
+  - ReactiveDataDisplayManager (6.0.0)
+
+DEPENDENCIES:
+  - KinescopeSDK (from `../`)
+  - ReactiveDataDisplayManager (from `https://github.com/surfstudio/ReactiveDataDisplayManager`, branch `develop`)
+
+EXTERNAL SOURCES:
+  KinescopeSDK:
+    :path: "../"
+  ReactiveDataDisplayManager:
+    :branch: develop
+    :git: https://github.com/surfstudio/ReactiveDataDisplayManager
+
+CHECKOUT OPTIONS:
+  ReactiveDataDisplayManager:
+    :commit: b5b0f360ecfad8ed892a53c431ce1f1baad82dfe
+    :git: https://github.com/surfstudio/ReactiveDataDisplayManager
+
+SPEC CHECKSUMS:
+  KinescopeSDK: c900dd2d04307055c73fd316fbdfd931a65610b2
+  ReactiveDataDisplayManager: 53c14bb0e0ccef2047a4816651ef904500cf83da
+
+PODFILE CHECKSUM: a77306369bacc6826d4fef2eab5f34d5ed6f5bd1
+
+COCOAPODS: 1.8.0
