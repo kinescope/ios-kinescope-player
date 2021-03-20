@@ -1,0 +1,32 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+
+jobs:
+  testSDK:
+    runs-on: macOS-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Select folder
+      run: cd Sources
+    - name: Build
+      run: xcodebuild -target KinescopeSDK
+    - name: Run tests
+      run: xcodebuild test -scheme KinescopeSDK -configuration "Debug" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 8' | xcpretty -c
+  testExample:
+    runs-on: macOS-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Select folder
+      run: cd Example
+    - name: Pods
+      run: pod install
+    - name: Build
+      run: xcodebuild -target KinescopeExample
+    - name: Run tests
+      run: xcodebuild test -scheme KinescopeExample -configuration "Debug" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 8' | xcpretty -c
