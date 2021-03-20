@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		019253D9260640CA008734A6 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019253D8260640CA008734A6 /* Tests.swift */; };
 		1375ACCE003DBC060AAC4AF3 /* Pods_KinescopeExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6071891D69BD1817C88B053D /* Pods_KinescopeExampleTests.framework */; };
 		27803C78BC9292176387B837 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1297BC1CB454C3BA783E4F43 /* Main.storyboard */; };
 		6E4269CADAE4110CF3E96574 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA6D1B1FB02192C67211B98A /* AppDelegate.swift */; };
@@ -25,11 +26,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		019253D8260640CA008734A6 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		07666117EB3CAD502E122441 /* Pods-KinescopeExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KinescopeExample.release.xcconfig"; path = "Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample.release.xcconfig"; sourceTree = "<group>"; };
 		0E70230F7F4E7A4799FB8C09 /* Pods-KinescopeExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KinescopeExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-KinescopeExampleTests/Pods-KinescopeExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		1297BC1CB454C3BA783E4F43 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		1B5BA8AD065732355D68FC30 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		2F96319F17C3CB8FC8E0D63E /* KinescopeExampleTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = KinescopeExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2F96319F17C3CB8FC8E0D63E /* KinescopeExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KinescopeExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6071891D69BD1817C88B053D /* Pods_KinescopeExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KinescopeExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		96FB4A4491B8B00FA3019B09 /* KinescopeExample.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = KinescopeExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6CF9373B6E4C98892A3BB38 /* Pods-KinescopeExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KinescopeExampleTests.release.xcconfig"; path = "Target Support Files/Pods-KinescopeExampleTests/Pods-KinescopeExampleTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 			isa = PBXGroup;
 			children = (
 				EB09A8DA69C4862776C07E23 /* Info.plist */,
+				019253D8260640CA008734A6 /* Tests.swift */,
 			);
 			path = KinescopeExampleTests;
 			sourceTree = "<group>";
@@ -85,7 +88,6 @@
 				0E70230F7F4E7A4799FB8C09 /* Pods-KinescopeExampleTests.debug.xcconfig */,
 				A6CF9373B6E4C98892A3BB38 /* Pods-KinescopeExampleTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -167,6 +169,9 @@
 			attributes = {
 				LastUpgradeCheck = 1200;
 				TargetAttributes = {
+					C5CCA5C4A5BB6E5F03FF9519 = {
+						LastSwiftMigration = 1240;
+					};
 					DAD9A1A1F3A9232E027C1860 = {
 						ProvisioningStyle = Automatic;
 					};
@@ -279,6 +284,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				019253D9260640CA008734A6 /* Tests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -463,6 +469,7 @@
 			baseConfigurationReference = 0E70230F7F4E7A4799FB8C09 /* Pods-KinescopeExampleTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = KinescopeExampleTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -472,6 +479,8 @@
 					"@loader_path/Frameworks",
 				);
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KinescopeExample.app/KinescopeExample";
 			};
@@ -482,6 +491,7 @@
 			baseConfigurationReference = A6CF9373B6E4C98892A3BB38 /* Pods-KinescopeExampleTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = KinescopeExampleTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -490,6 +500,7 @@
 					"@loader_path/Frameworks",
 				);
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KinescopeExample.app/KinescopeExample";
 			};
