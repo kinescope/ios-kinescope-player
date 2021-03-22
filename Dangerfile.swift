@@ -12,6 +12,11 @@ violations.append(contentsOf: SwiftLint.lint(.modifiedAndCreatedFiles(directory:
                                              inline: false,
                                              configFile: ".swiftlint.yml"))
 
-if violations.isEmpty {
+switch violations.count {
+case 0:
     danger.message("✅ Great! We didn't found any violations in your changes. Congratulations 🎉")
+case 1..<20:
+    danger.warn("⚠️ Oops! We have found some issues. It's better to fix them to keep code clean ")
+default:
+    danger.fail("❎ Omg. Your code smells bad. Please fix issues above")
 }
