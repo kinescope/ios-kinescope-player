@@ -6,7 +6,7 @@ target 'KinescopeExample' do
   use_frameworks!
 
   # Pods for KinescopeExample
-  pod 'ReactiveDataDisplayManager', :git => 'https://github.com/surfstudio/ReactiveDataDisplayManager', :branch => 'develop'
+  pod 'ReactiveDataDisplayManager', :git => 'https://github.com/surfstudio/ReactiveDataDisplayManager', :commit => 'b5b0f360ecfad8ed892a53c431ce1f1baad82dfe'
   pod 'KinescopeSDK', :path => '../'
 
 end
