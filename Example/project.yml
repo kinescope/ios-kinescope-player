@@ -34,4 +34,5 @@ targets:
           VERSIONING_SYSTEM: "apple-generic"
           DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
           LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks @loader_path/Frameworks"
+          CODE_SIGN_IDENTITY: "iPhone Developer"
           CODE_SIGN_STYLE: Manual

@@ -27,7 +27,4 @@ jobs:
       run: pod install
     - name: Build
       working-directory: ./Example
-      run: xcodebuild -target KinescopeExample
-    - name: Run tests
-      working-directory: ./Example
-      run: xcodebuild test -scheme KinescopeExample -configuration "Debug" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 8' | xcpretty -c
+      run: xcodebuild -target KinescopeExample -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 8'
