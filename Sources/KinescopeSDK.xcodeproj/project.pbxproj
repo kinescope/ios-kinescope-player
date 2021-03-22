@@ -13,6 +13,9 @@
 		01C748612608C7C7006A8355 /* Kinescope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C748602608C7C7006A8355 /* Kinescope.swift */; };
 		01C748652608C848006A8355 /* Manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C748642608C848006A8355 /* Manager.swift */; };
 		01C748692608C9A9006A8355 /* KinescopeConfigurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C748682608C9A9006A8355 /* KinescopeConfigurable.swift */; };
+		01C7486F2608CB64006A8355 /* View+Kinescope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C7486E2608CB64006A8355 /* View+Kinescope.swift */; };
+		01C748722608CB77006A8355 /* Layer+Kinescope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C748712608CB77006A8355 /* Layer+Kinescope.swift */; };
+		01C748852608D5AB006A8355 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C748842608D5AB006A8355 /* PlayerView.swift */; };
 		213DB8E1DBE71D5CCDE2A405 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7634D368F5A8B12E336D09 /* Tests.swift */; };
 		2804396B8DF806E90B094F41 /* KinescopeSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 20D4D486064D5C046AA39415 /* KinescopeSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		97D07FE1FC678DA5D1B39F9F /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F92972E54958B64C323AB20 /* AVKit.framework */; };
@@ -53,6 +56,9 @@
 		01C748602608C7C7006A8355 /* Kinescope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kinescope.swift; sourceTree = "<group>"; };
 		01C748642608C848006A8355 /* Manager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Manager.swift; sourceTree = "<group>"; };
 		01C748682608C9A9006A8355 /* KinescopeConfigurable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeConfigurable.swift; sourceTree = "<group>"; };
+		01C7486E2608CB64006A8355 /* View+Kinescope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Kinescope.swift"; sourceTree = "<group>"; };
+		01C748712608CB77006A8355 /* Layer+Kinescope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Layer+Kinescope.swift"; sourceTree = "<group>"; };
+		01C748842608D5AB006A8355 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		07899D9E5DD7637FA8A3022A /* KinescopePlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopePlayer.swift; sourceTree = "<group>"; };
 		1F92972E54958B64C323AB20 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		20D4D486064D5C046AA39415 /* KinescopeSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = KinescopeSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -110,6 +116,24 @@
 			path = Manager;
 			sourceTree = "<group>";
 		};
+		01C7486D2608CB1D006A8355 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				01C748832608D59A006A8355 /* Player */,
+				01C7486E2608CB64006A8355 /* View+Kinescope.swift */,
+				01C748712608CB77006A8355 /* Layer+Kinescope.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		01C748832608D59A006A8355 /* Player */ = {
+			isa = PBXGroup;
+			children = (
+				01C748842608D5AB006A8355 /* PlayerView.swift */,
+			);
+			path = Player;
+			sourceTree = "<group>";
+		};
 		1D8369ABF97DDFAA83667B83 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -152,6 +176,7 @@
 		9CFF77E0AC7A0832C1F30198 /* KinescopeSDK */ = {
 			isa = PBXGroup;
 			children = (
+				01C7486D2608CB1D006A8355 /* View */,
 				01C748632608C824006A8355 /* Manager */,
 				01C7485B2608C699006A8355 /* Shared */,
 				01C748522608C43B006A8355 /* Models */,
@@ -255,9 +280,12 @@
 				01C748692608C9A9006A8355 /* KinescopeConfigurable.swift in Sources */,
 				01C7484D2608C305006A8355 /* KinescopePlayerCompatible.swift in Sources */,
 				01C748612608C7C7006A8355 /* Kinescope.swift in Sources */,
+				01C748852608D5AB006A8355 /* PlayerView.swift in Sources */,
+				01C748722608CB77006A8355 /* Layer+Kinescope.swift in Sources */,
 				FFFEB83093302DDEB9FDB89C /* KinescopePlayer.swift in Sources */,
 				01C748502608C342006A8355 /* KinescopeWrapper.swift in Sources */,
 				01C748652608C848006A8355 /* Manager.swift in Sources */,
+				01C7486F2608CB64006A8355 /* View+Kinescope.swift in Sources */,
 				01C748542608C461006A8355 /* KinescopeConfig.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
