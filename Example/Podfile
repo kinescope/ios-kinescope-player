@@ -9,9 +9,4 @@ target 'KinescopeExample' do
   pod 'ReactiveDataDisplayManager', :git => 'https://github.com/surfstudio/ReactiveDataDisplayManager', :branch => 'develop'
   pod 'KinescopeSDK', :path => '../'
 
-  target 'KinescopeExampleTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-
 end

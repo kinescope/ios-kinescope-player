@@ -29,16 +29,6 @@
       onlyGenerateCoverageForSpecifiedTargets = "NO"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C5CCA5C4A5BB6E5F03FF9519"
-               BuildableName = "KinescopeExampleTests.xctest"
-               BlueprintName = "KinescopeExampleTests"
-               ReferencedContainer = "container:KinescopeExample.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
