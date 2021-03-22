@@ -1,28 +1,16 @@
-name: SwiftLint
+name: Lint
 
-on:
-  pull_request:
-    paths:
-      - '.github/workflows/Lint.yml'
-      - '.swiftlint.yml'
-      - 'Sources/**/*.swift'
+on: [pull_request]
 
 jobs:
-  SwiftLint:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: GitHub Action for SwiftLint
-        uses: norio-nomura/action-swiftlint@3.2.1
-      - name: GitHub Action for SwiftLint with --strict
-        uses: norio-nomura/action-swiftlint@3.2.1
+      - name: Danger
+        uses: docker://ghcr.io/danger/danger-swift-with-swiftlint:3.7.2
         with:
-          args: --strict
-      - name: GitHub Action for SwiftLint (Only files changed in the PR)
-        uses: norio-nomura/action-swiftlint@3.2.1
+            args: --failOnErrors --no-publish-check
         env:
-          DIFF_BASE: ${{ github.base_ref }}
-      - name: GitHub Action for SwiftLint (Different working directory)
-        uses: norio-nomura/action-swiftlint@3.2.1
-        env:
-          WORKING_DIRECTORY: Sources
+          # add token to secrets
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
