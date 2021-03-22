@@ -18,13 +18,3 @@ jobs:
     - name: Run tests
       working-directory: ./Sources
       run: xcodebuild test -scheme KinescopeSDK -configuration "Debug" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 8' | xcpretty -c
-  testExample:
-    runs-on: macOS-latest
-    steps:
-    - uses: actions/checkout@v1
-    - name: Pods
-      working-directory: ./Example
-      run: pod install
-    - name: Build
-      working-directory: ./Example
-      run: xcodebuild -workspace "KinescopeExample.xcworkspace" -scheme KinescopeExample
