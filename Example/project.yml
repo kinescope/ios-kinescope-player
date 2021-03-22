@@ -7,6 +7,8 @@ options:
   generateEmptyDirectories: true
   # Создание групп
   createIntermediateGroups: true
+settings:
+  DEVELOPMENT_TEAM: EFAAG9GXN4
 targets:
     KinescopeExample:
       dependencies:
@@ -35,4 +37,4 @@ targets:
           DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
           LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks @loader_path/Frameworks"
           CODE_SIGN_IDENTITY: "iPhone Developer"
-          CODE_SIGN_STYLE: Manual
+          CODE_SIGN_STYLE: Automatic
