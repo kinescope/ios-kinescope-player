@@ -27,4 +27,4 @@ jobs:
       run: pod install
     - name: Build
       working-directory: ./Example
-      run: xcodebuild -workspace "KinescopeExample.xcworkspace" -scheme KinescopeExample -configuration Debug -sdk iphonesimulator
+      run: xcodebuild -workspace "KinescopeExample.xcworkspace" -scheme KinescopeExample
