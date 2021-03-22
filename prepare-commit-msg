@@ -1,0 +1,18 @@
+#!/bin/bash
+# This way you can customize which branches should be skipped when
+# prepending commit message.
+if [ -z "$BRANCHES_TO_SKIP" ]; then
+  BRANCHES_TO_SKIP=(master dev test)
+fi
+BRANCH_NAME=$(git symbolic-ref --short HEAD)
+BRANCH_NAME="${BRANCH_NAME##*/}"
+BRANCH_EXCLUDED=$(printf "%s\n" "${BRANCHES_TO_SKIP[@]}" | grep -c "^$BRANCH_NAME$")
+BRANCH_IN_COMMIT=$(grep -c "\[$BRANCH_NAME\]" $1)
+if [ -n "$BRANCH_NAME" ] && ! [[ $BRANCH_EXCLUDED -eq 1 ]] && ! [[ $BRANCH_IN_COMMIT -ge 1 ]]; then
+
+
+  IFS='-' # space is set as delimiter
+  read -ra ARR <<< "$BRANCH_NAME"
+  RES_KEY="${ARR[0]}-${ARR[1]}"
+  sed -i.bak -e "1s/^/$RES_KEY /" $1
+fi
