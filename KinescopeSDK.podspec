@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.author = { "Surf Studio" => "surfstudio36@gmail.com"  }
   s.source = { :git => "https://github.com/surfstudio/ios-kinescope-sdk.git", :tag => s.version }
 
-  s.source_files = 'Sources/**/*.swift'
+  s.source_files = 'Sources/KinescopeSDK/*.swift'
   s.framework = 'UIKit'
   s.ios.deployment_target = '10.0'
   s.swift_version = '5.0'
