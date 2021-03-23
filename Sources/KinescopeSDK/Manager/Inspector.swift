@@ -5,7 +5,7 @@
 //  Created by Никита Коробейников on 23.03.2021.
 //
 
-// MARK: - KinescopeDownloadab
+// MARK: - KinescopeInspectable
 
 class Inspector: KinescopeInspectable {
 

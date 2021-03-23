@@ -12,19 +12,19 @@ public protocol KinescopeDownloadableDelegate: class {
 
     /// Notify about progress state of downloading task
     ///
-    /// - parameter asset_id: Asset id of concrete video quality
+    /// - parameter assetId: Asset id of concrete video quality
     /// - parameter progress: Progress of process
-    func kinescopeDownloadProgress(asset_id: String, progress: Progress)
+    func kinescopeDownloadProgress(assetId: String, progress: Progress)
 
     /// Notify about error state of downloading task
     ///
-    /// - parameter asset_id: Asset id of concrete video quality
+    /// - parameter assetId: Asset id of concrete video quality
     /// - parameter error: Reason of failure
-    func kinescopeDownloadError(asset_id: String, error: KinescopeDownloadError)
+    func kinescopeDownloadError(assetId: String, error: KinescopeDownloadError)
 
     /// Notify about successfully completed downloading task
     ///
-    /// - parameter asset_id: Asset id of concrete video quality
-    func kinescopeDownloadComplete(asset_id: String)
+    /// - parameter assetId: Asset id of concrete video quality
+    func kinescopeDownloadComplete(assetId: String)
 
 }

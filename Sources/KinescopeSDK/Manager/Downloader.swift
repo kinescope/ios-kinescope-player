@@ -23,23 +23,23 @@ class Downoloader: KinescopeDownloadable {
 
     // MARK: - Methods
 
-    func isDownloaded(asset_id: String) -> Bool {
+    func isDownloaded(assetId: String) -> Bool {
         preconditionFailure("Implement")
     }
 
-    func enqeueDownload(asset_id: String) {
+    func enqeueDownload(assetId: String) {
         preconditionFailure("Implement")
     }
 
-    func deqeueDownload(asset_id: String) {
+    func deqeueDownload(assetId: String) {
         preconditionFailure("Implement")
     }
 
-    func addDelegate(_ delegate: KinescopeDownloadableDelegate) {
+    func add(delegate: KinescopeDownloadableDelegate) {
         delegates.append(delegate)
     }
 
-    func removeDelegate(_ delegate: KinescopeDownloadableDelegate) {
+    func remove(delegate: KinescopeDownloadableDelegate) {
         if let index = delegates.firstIndex(where: { delegate === $0 }) {
             delegates.remove(at: index)
         }
