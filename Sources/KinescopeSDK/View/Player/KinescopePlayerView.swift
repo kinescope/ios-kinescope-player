@@ -4,6 +4,7 @@
 //
 //  Created by Никита Коробейников on 23.03.2021.
 //
+// swiftlint:disable implicitly_unwrapped_optional
 
 import UIKit
 import AVFoundation

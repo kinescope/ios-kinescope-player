@@ -24,16 +24,15 @@ class Downoloader: KinescopeDownloadable {
     // MARK: - Methods
 
     func isDownloaded(asset_id: String) -> Bool {
-        // TODO: - implement
-        false
+        preconditionFailure("Implement")
     }
 
     func enqeueDownload(asset_id: String) {
-        // TODO: - implement
+        preconditionFailure("Implement")
     }
 
     func deqeueDownload(asset_id: String) {
-        // TODO: - implement
+        preconditionFailure("Implement")
     }
 
     func addDelegate(_ delegate: KinescopeDownloadableDelegate) {
