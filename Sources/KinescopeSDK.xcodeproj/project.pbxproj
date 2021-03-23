@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		010FBC00260877BE0075465C /* KinescopePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010FBBFF260877BE0075465C /* KinescopePlayer.swift */; };
 		213DB8E1DBE71D5CCDE2A405 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7634D368F5A8B12E336D09 /* Tests.swift */; };
 		2804396B8DF806E90B094F41 /* KinescopeSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 20D4D486064D5C046AA39415 /* KinescopeSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		97D07FE1FC678DA5D1B39F9F /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F92972E54958B64C323AB20 /* AVKit.framework */; };
 		AAB98EC0F67C269DA2E6EC31 /* KinescopeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20D4D486064D5C046AA39415 /* KinescopeSDK.framework */; };
 		AF513796EC98C52C83936C1F /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1648B3BF451573C4D95229F /* AVFoundation.framework */; };
 		BF6D27769D36CEA1029526CE /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDB7A67A3320A273EC1D4B70 /* UIKit.framework */; };
+		FFFEB83093302DDEB9FDB89C /* KinescopePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07899D9E5DD7637FA8A3022A /* KinescopePlayer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,11 +41,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		010FBBFF260877BE0075465C /* KinescopePlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopePlayer.swift; sourceTree = "<group>"; };
+		07899D9E5DD7637FA8A3022A /* KinescopePlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopePlayer.swift; sourceTree = "<group>"; };
 		1F92972E54958B64C323AB20 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		20D4D486064D5C046AA39415 /* KinescopeSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = KinescopeSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D7634D368F5A8B12E336D09 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
-		747ABC9D39DD63B95056C27F /* KinescopeSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KinescopeSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		747ABC9D39DD63B95056C27F /* KinescopeSDKTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = KinescopeSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1648B3BF451573C4D95229F /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		D1F37AA2D3FA8B6A08D5C9E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D4AB73C6ED4BAA1D36BECAE1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -74,14 +74,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		010FBBFE260877AA0075465C /* Protocols */ = {
-			isa = PBXGroup;
-			children = (
-				010FBBFF260877BE0075465C /* KinescopePlayer.swift */,
-			);
-			path = Protocols;
-			sourceTree = "<group>";
-		};
 		1D8369ABF97DDFAA83667B83 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -89,6 +81,14 @@
 				747ABC9D39DD63B95056C27F /* KinescopeSDKTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		36B52B17E79CB05AD270BAB5 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				07899D9E5DD7637FA8A3022A /* KinescopePlayer.swift */,
+			);
+			path = Protocols;
 			sourceTree = "<group>";
 		};
 		370D05E666542032C8C710E3 /* KinescopeSDKTests */ = {
@@ -113,8 +113,8 @@
 		9CFF77E0AC7A0832C1F30198 /* KinescopeSDK */ = {
 			isa = PBXGroup;
 			children = (
-				010FBBFE260877AA0075465C /* Protocols */,
 				D4AB73C6ED4BAA1D36BECAE1 /* Info.plist */,
+				36B52B17E79CB05AD270BAB5 /* Protocols */,
 			);
 			path = KinescopeSDK;
 			sourceTree = "<group>";
@@ -175,7 +175,6 @@
 				LastUpgradeCheck = 1200;
 				TargetAttributes = {
 					D07F5796A83CD517A71F3098 = {
-						LastSwiftMigration = 1240;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -211,7 +210,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				010FBC00260877BE0075465C /* KinescopePlayer.swift in Sources */,
+				FFFEB83093302DDEB9FDB89C /* KinescopePlayer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -229,7 +228,6 @@
 		10409924AD47CC51C01212E4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = KinescopeSDKTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -308,7 +306,6 @@
 		2A8C1B308B9B4D4FCF3B1DF2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 0;
@@ -320,16 +317,11 @@
 				INFOPLIST_FILE = KinescopeSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = io.kinescope.sdk;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -338,7 +330,6 @@
 		6272E7FA77072DB945DE5D50 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 0;
@@ -350,17 +341,11 @@
 				INFOPLIST_FILE = KinescopeSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = io.kinescope.sdk;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -369,7 +354,6 @@
 		B1F9B0B80BEBE25B90F08F5A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = KinescopeSDKTests/Info.plist;
