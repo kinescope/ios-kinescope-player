@@ -13,12 +13,4 @@ class Manager {
     var config: KinescopeConfig?
 }
 
-// MARK: - KinescopeConfigurable
 
-extension Manager: KinescopeConfigurable {
-
-    func setConfig(_ config: KinescopeConfig) {
-        self.config = config
-    }
-
-}
