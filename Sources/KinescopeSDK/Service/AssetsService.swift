@@ -18,7 +18,12 @@ final class AssetsService {
 
     func getAssetLink(by id: String, completion: @escaping (Result<KinescopeVideoAssetLink, Error>) -> Void) {
         DispatchQueue.global(qos: .utility).async { [weak self] in
-            guard let self = self else { return }
+            guard
+                let self = self
+            else {
+                return
+            }
+
             do {
 
                 let request = try RequestBuilder(path: self.config.endpoint + "/assets/\(id)/link", method: .get)

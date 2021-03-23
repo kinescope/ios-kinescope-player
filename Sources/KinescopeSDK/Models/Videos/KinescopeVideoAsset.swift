@@ -30,7 +30,16 @@ public struct KinescopeVideoAsset: Codable {
 
     // MARK: - Lifecycle
 
-    public init(id: String, videoId: String, originalName: String, fileSize: Int, filetype: String, quality: String, resolution: String, createdAt: String, updatedAt: String?, url: String) {
+    public init(id: String,
+                videoId: String,
+                originalName: String,
+                fileSize: Int,
+                filetype: String,
+                quality: String,
+                resolution: String,
+                createdAt: String,
+                updatedAt: String?,
+                url: String) {
         self.id = id
         self.videoId = videoId
         self.originalName = originalName
@@ -75,7 +84,6 @@ public struct KinescopeVideoAsset: Codable {
         try container.encode(url, forKey: .url)
     }
 }
-
 
 // MARK: - Equatable
 

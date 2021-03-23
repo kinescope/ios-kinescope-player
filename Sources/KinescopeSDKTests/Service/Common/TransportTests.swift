@@ -1,6 +1,7 @@
 import XCTest
 @testable import KinescopeSDK
 
+//swiftlint:disable all
 final class TransportTests: XCTestCase {
 
     // MARK: - Nested
@@ -153,3 +154,4 @@ final class TransportTests: XCTestCase {
         XCTAssertNil(res)
     }
 }
+//swiftlint:enable all

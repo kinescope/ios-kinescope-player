@@ -18,7 +18,12 @@ final class VideosService {
 
     func getAll(request: KinescopeVideosRequest, completion: @escaping (Result<[KinescopeVideo], Error>) -> Void) {
         DispatchQueue.global(qos: .utility).async { [weak self] in
-            guard let self = self else { return }
+            guard
+                let self = self
+            else {
+                return
+            }
+
             do {
                 let requestData = try JSONEncoder().encode(request)
                 let requestDictionary = try JSONSerialization.jsonObject(with: requestData) as? [String: Any] ?? [:]
@@ -40,7 +45,12 @@ final class VideosService {
 
     func getVideo(by id: String, completion: @escaping (Result<KinescopeVideo, Error>) -> Void) {
         DispatchQueue.global(qos: .utility).async { [weak self] in
-            guard let self = self else { return }
+            guard
+                let self = self
+            else {
+                return
+            }
+
             do {
 
                 let request = try RequestBuilder(path: self.config.endpoint + "/videos/\(id)", method: .get)

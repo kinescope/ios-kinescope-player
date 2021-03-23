@@ -1,6 +1,7 @@
 import XCTest
 @testable import KinescopeSDK
 
+//swiftlint:disable all
 final class RequestBuilderTests: XCTestCase {
 
     // MARK: - Nested
@@ -350,3 +351,5 @@ final class RequestBuilderTests: XCTestCase {
         XCTAssertNotNil(request.httpBody)
     }
 }
+//swiftlint:enable all
+

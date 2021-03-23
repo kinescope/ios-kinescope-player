@@ -37,7 +37,16 @@ public struct KinescopeVideo: Codable {
 
     // MARK: - Lifecycle
 
-    public init(id: String, projectId: String, version: Int, status: String, progress: Int, duration: Double, assets: [KinescopeVideoAsset], poster: KinescopeVideoPoster, subtitlesEnabled: Bool, hlsLink: String) {
+    public init(id: String,
+                projectId: String,
+                version: Int,
+                status: String,
+                progress: Int,
+                duration: Double,
+                assets: [KinescopeVideoAsset],
+                poster: KinescopeVideoPoster,
+                subtitlesEnabled: Bool,
+                hlsLink: String) {
         self.id = id
         self.projectId = projectId
         self.version = version
@@ -82,7 +91,6 @@ public struct KinescopeVideo: Codable {
         try container.encode(hlsLink, forKey: .hlsLink)
     }
 }
-
 
 // MARK: - Equatable
 

@@ -8,6 +8,7 @@
 import XCTest
 @testable import KinescopeSDK
 
+//swiftlint:disable all
 /// Just stub for tests
 final class Tests: XCTestCase {
 
@@ -150,3 +151,4 @@ final class Tests: XCTestCase {
         XCTAssertNil(err)
     }
 }
+//swiftlint:enable all
