@@ -21,7 +21,7 @@ class Inspector: KinescopeInspectable {
 
     // MARK: - Methods
 
-    func list(onSuccess: ([KinescopeVideo]) -> Void, onError: (KinescopeInspectError) -> Void) {
+    func list(onSuccess: (KinescopeVideoListResponse) -> Void, onError: (KinescopeInspectError) -> Void) {
         preconditionFailure("Implement")
     }
 
