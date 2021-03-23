@@ -13,6 +13,9 @@
 		01B950A52609C1B600B368EA /* KinescopeDownloadError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B950A42609C1B600B368EA /* KinescopeDownloadError.swift */; };
 		01B950AC2609C5B600B368EA /* KinescopePlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B950AB2609C5B600B368EA /* KinescopePlayerView.swift */; };
 		01B950B02609C69900B368EA /* KinescopePlayerConfigurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B950AF2609C69900B368EA /* KinescopePlayerConfigurable.swift */; };
+		01B950B32609CAF300B368EA /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B950B22609CAF300B368EA /* PlayerView.swift */; };
+		01B950BF2609D03C00B368EA /* Manager+KinescopeDownloadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B950BE2609D03C00B368EA /* Manager+KinescopeDownloadable.swift */; };
+		01B950C22609D1FC00B368EA /* PlayerControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B950C12609D1FC00B368EA /* PlayerControlView.swift */; };
 		01C748542608C461006A8355 /* KinescopeConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C748532608C461006A8355 /* KinescopeConfig.swift */; };
 		01C748612608C7C7006A8355 /* Kinescope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C748602608C7C7006A8355 /* Kinescope.swift */; };
 		01C748652608C848006A8355 /* Manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C748642608C848006A8355 /* Manager.swift */; };
@@ -57,6 +60,9 @@
 		01B950A42609C1B600B368EA /* KinescopeDownloadError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeDownloadError.swift; sourceTree = "<group>"; };
 		01B950AB2609C5B600B368EA /* KinescopePlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopePlayerView.swift; sourceTree = "<group>"; };
 		01B950AF2609C69900B368EA /* KinescopePlayerConfigurable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopePlayerConfigurable.swift; sourceTree = "<group>"; };
+		01B950B22609CAF300B368EA /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
+		01B950BE2609D03C00B368EA /* Manager+KinescopeDownloadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Manager+KinescopeDownloadable.swift"; sourceTree = "<group>"; };
+		01B950C12609D1FC00B368EA /* PlayerControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerControlView.swift; sourceTree = "<group>"; };
 		01C748532608C461006A8355 /* KinescopeConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeConfig.swift; sourceTree = "<group>"; };
 		01C748602608C7C7006A8355 /* Kinescope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kinescope.swift; sourceTree = "<group>"; };
 		01C748642608C848006A8355 /* Manager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Manager.swift; sourceTree = "<group>"; };
@@ -116,6 +122,7 @@
 			children = (
 				01C748642608C848006A8355 /* Manager.swift */,
 				01B9509B2609B1E100B368EA /* Manager+KinescopeConfigurable.swift */,
+				01B950BE2609D03C00B368EA /* Manager+KinescopeDownloadable.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -132,6 +139,8 @@
 			isa = PBXGroup;
 			children = (
 				01B950AB2609C5B600B368EA /* KinescopePlayerView.swift */,
+				01B950B22609CAF300B368EA /* PlayerView.swift */,
+				01B950C12609D1FC00B368EA /* PlayerControlView.swift */,
 			);
 			path = Player;
 			sourceTree = "<group>";
@@ -283,11 +292,14 @@
 				01B950B02609C69900B368EA /* KinescopePlayerConfigurable.swift in Sources */,
 				01C748692608C9A9006A8355 /* KinescopeConfigurable.swift in Sources */,
 				01C748612608C7C7006A8355 /* Kinescope.swift in Sources */,
+				01B950B32609CAF300B368EA /* PlayerView.swift in Sources */,
 				01B9509F2609BCFE00B368EA /* KinescopeDownloadable.swift in Sources */,
 				FFFEB83093302DDEB9FDB89C /* KinescopePlayer.swift in Sources */,
 				01C748652608C848006A8355 /* Manager.swift in Sources */,
 				01B950A52609C1B600B368EA /* KinescopeDownloadError.swift in Sources */,
 				01B950AC2609C5B600B368EA /* KinescopePlayerView.swift in Sources */,
+				01B950BF2609D03C00B368EA /* Manager+KinescopeDownloadable.swift in Sources */,
+				01B950C22609D1FC00B368EA /* PlayerControlView.swift in Sources */,
 				01B950A22609BFAD00B368EA /* KinescopeDownloadableDelegate.swift in Sources */,
 				01C748542608C461006A8355 /* KinescopeConfig.swift in Sources */,
 				01B9509C2609B1E100B368EA /* Manager+KinescopeConfigurable.swift in Sources */,

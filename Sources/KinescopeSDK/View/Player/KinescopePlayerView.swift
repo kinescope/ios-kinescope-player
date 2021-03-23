@@ -12,21 +12,16 @@ public class KinescopePlayerView: UIView {
 
     // MARK: - Private Properties
 
-    var player: AVPlayer? {
-        get {
-            playerLayer.player
-        }
-        set {
-            playerLayer.player = newValue
-        }
-    }
+    var playerView: PlayerView!
+    var playerControlView: PlayerControlView!
 
-    var playerLayer: AVPlayerLayer {
-        // swiftlint:disable:next force_cast
-        return layer as! AVPlayerLayer
-    }
+    // MARK: - Internal Properties
 
-    public override static var layerClass: AnyClass {
-        return AVPlayerLayer.self
-    }
+    ///
+    public private(set) var previewView: UIImageView!
+
+    // MARK: - Public Properties
+
+    public var progressview: UIActivityIndicatorView!
+
 }
