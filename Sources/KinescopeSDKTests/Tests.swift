@@ -6,12 +6,13 @@
 //
 
 import XCTest
+import KinescopeSDK
 
 /// Just stub for tests
 final class Tests: XCTestCase {
 
     func stubTest() {
-
+        Kinescope.shared.setConfig(.init(apiKey: "stub"))
     }
 
 }

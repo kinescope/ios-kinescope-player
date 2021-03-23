@@ -9,11 +9,11 @@ public enum Kinescope {
 
     // MARK: - Alias
 
-    typealias SharedManager = KinescopeConfigurable & KinescopeServicesProvider
+    public typealias SharedManager = KinescopeConfigurable & KinescopeServicesProvider
 
     // MARK: - Properties
 
     /// Singleton entry to kinescope services
-    static let shared: SharedManager = Manager()
+    public static let shared: SharedManager = Manager()
 
 }
