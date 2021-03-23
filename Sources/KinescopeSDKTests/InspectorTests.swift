@@ -24,7 +24,7 @@ final class InspectorTests: XCTestCase {
         inspector = nil
     }
 
-    func testSuccessPassingToCallback() {
+    func testListSuccessPassingToCallback() {
 
         // TODO: - add mocked API layer
 
@@ -41,7 +41,7 @@ final class InspectorTests: XCTestCase {
         XCTAssertNil(errorCatched)
     }
 
-    func testError404MappedToNotFound() {
+    func testListError404MappedToNotFound() {
 
         // TODO: - add mocked API layer
 
@@ -58,7 +58,7 @@ final class InspectorTests: XCTestCase {
         XCTAssertEqual(errorCatched, KinescopeInspectError.notFound)
     }
 
-    func testError403MappedToDenied() {
+    func testListError403MappedToDenied() {
 
         // TODO: - add mocked API layer
 
@@ -75,7 +75,7 @@ final class InspectorTests: XCTestCase {
         XCTAssertEqual(errorCatched, KinescopeInspectError.denied)
     }
 
-    func testError500MappedToUnknown() {
+    func testListError500MappedToUnknown() {
 
         // TODO: - add mocked API layer
 
@@ -92,7 +92,7 @@ final class InspectorTests: XCTestCase {
         XCTAssertEqual(errorCatched, KinescopeInspectError.unknown(KinescopeInspectError.notFound))
     }
 
-    func testErrorNegativeMappedToNetwork() {
+    func testListErrorNegativeMappedToNetwork() {
 
         var successCalled: Bool = false
         var errorCatched: KinescopeInspectError?
