@@ -9,7 +9,7 @@ public enum Kinescope {
 
     // MARK: - Alias
 
-    typealias SharedManager = KinescopeConfigurable
+    typealias SharedManager = KinescopeConfigurable & KinescopeServicesProvider
 
     // MARK: - Properties
 

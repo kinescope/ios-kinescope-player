@@ -24,4 +24,6 @@ public class KinescopePlayerView: UIView {
 
     public var progressview: UIActivityIndicatorView!
 
+    public var player: KinescopePlayer?
+
 }

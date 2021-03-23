@@ -7,7 +7,21 @@
 
 // MARK: - KinescopeDownloadable
 
-extension Manager: KinescopeDownloadable {
+class Downoloader: KinescopeDownloadable {
+
+    // MARK: - Properties
+
+    private var delegates: [KinescopeDownloadableDelegate] = []
+
+    private let apiKey: String
+
+    // MARK: - Initialisation
+
+    init(apiKey: String) {
+        self.apiKey = apiKey
+    }
+
+    // MARK: - Methods
 
     func isDownloaded(asset_id: String) -> Bool {
         // TODO: - implement
@@ -23,11 +37,13 @@ extension Manager: KinescopeDownloadable {
     }
 
     func addDelegate(_ delegate: KinescopeDownloadableDelegate) {
-        // TODO: - implement
+        delegates.append(delegate)
     }
 
     func removeDelegate(_ delegate: KinescopeDownloadableDelegate) {
-        // TODO: - implement
+        if let index = delegates.firstIndex(where: { delegate === $0 }) {
+            delegates.remove(at: index)
+        }
     }
 
 }

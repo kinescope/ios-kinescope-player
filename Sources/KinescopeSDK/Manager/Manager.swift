@@ -6,11 +6,15 @@
 //
 
 /// Implementation of services
-class Manager {
+class Manager: KinescopeServicesProvider {
 
     // MARK: - Properties
 
     var config: KinescopeConfig?
+
+    var downloader: KinescopeDownloadable!
+
+    var inspector: KinescopeInspectable!
 }
 
 

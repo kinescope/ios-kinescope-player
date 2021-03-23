@@ -6,7 +6,7 @@
 //
 
 /// Control protocol managing downloading of assets
-public protocol KinescopeDownloadable {
+public protocol KinescopeDownloadable: class {
 
     /// Checks that asset were downloaded
     ///

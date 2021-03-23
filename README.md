@@ -28,8 +28,8 @@ From now you can use most of API through SDK
 
 For example, to get list of videos just call
 ```
-Kinescope.shared.list(onSuccess: { videos in
-
+Kinescope.shared.inspector.list(onSuccess: { videos in
+  // save video models somewhere
 })
 ```
 
@@ -49,7 +49,7 @@ view.addSubview(playerView)
 Connect player and playerView together
 
 ```
-playerView.setPlayer(player)
+playerView.player = player
 ```
 
 Enjoy.
