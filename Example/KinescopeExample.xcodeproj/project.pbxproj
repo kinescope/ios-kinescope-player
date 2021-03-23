@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0182AF23260A1E18007E62EF /* VideoListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0182AF22260A1E18007E62EF /* VideoListCell.swift */; };
+		0182AF2B260A271E007E62EF /* VideoListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0182AF2A260A271E007E62EF /* VideoListCell.xib */; };
 		27803C78BC9292176387B837 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1297BC1CB454C3BA783E4F43 /* Main.storyboard */; };
 		53DD07DA809842A9C48DA7E9 /* Pods_KinescopeExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AB90A3495B56F29B53A61D0 /* Pods_KinescopeExample.framework */; };
 		6E4269CADAE4110CF3E96574 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA6D1B1FB02192C67211B98A /* AppDelegate.swift */; };
@@ -16,6 +18,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0182AF22260A1E18007E62EF /* VideoListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListCell.swift; sourceTree = "<group>"; };
+		0182AF2A260A271E007E62EF /* VideoListCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VideoListCell.xib; sourceTree = "<group>"; };
 		1297BC1CB454C3BA783E4F43 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		1697D697E9F0904B87B756B7 /* PaginatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginatorView.swift; sourceTree = "<group>"; };
 		1B5BA8AD065732355D68FC30 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -41,6 +45,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0182AF21260A1DEF007E62EF /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				0182AF22260A1E18007E62EF /* VideoListCell.swift */,
+				0182AF2A260A271E007E62EF /* VideoListCell.xib */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
 		04605A919CA4A5FDF6394B74 /* Flows */ = {
 			isa = PBXGroup;
 			children = (
@@ -83,13 +96,13 @@
 				7B97715F62D8EA1FE9C939E5 /* Pods-KinescopeExample.debug.xcconfig */,
 				4D460A2BCADC29F1B6612645 /* Pods-KinescopeExample.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
 		AF687273EFB801F59B28F156 /* VideoList */ = {
 			isa = PBXGroup;
 			children = (
+				0182AF21260A1DEF007E62EF /* Cell */,
 				1697D697E9F0904B87B756B7 /* PaginatorView.swift */,
 				246B7F2D473017AA57153302 /* VideoListController.swift */,
 			);
@@ -174,6 +187,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				27803C78BC9292176387B837 /* Main.storyboard in Resources */,
+				0182AF2B260A271E007E62EF /* VideoListCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,6 +241,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6E4269CADAE4110CF3E96574 /* AppDelegate.swift in Sources */,
+				0182AF23260A1E18007E62EF /* VideoListCell.swift in Sources */,
 				FDE7CBB089D7D45FA27883F5 /* PaginatorView.swift in Sources */,
 				B1E9AE507740662091763DC9 /* VideoListController.swift in Sources */,
 			);

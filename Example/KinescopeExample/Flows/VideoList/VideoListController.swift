@@ -7,9 +7,17 @@
 
 import UIKit
 import ReactiveDataDisplayManager
+import KinescopeSDK
 
 /// Example of video gallery
 final class VideoListController: UIViewController {
+
+    // MARK: - Constants
+
+    private enum Constants {
+        static let pageSize = 16
+        static let pagesCount = 3
+    }
 
     // MARK: - IBOutlet
 
@@ -33,7 +41,7 @@ final class VideoListController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Table with pagination"
+        title = "Video List"
         loadFirstPage()
     }
 
@@ -70,6 +78,9 @@ private extension VideoListController {
     /// This method is used to fill adapter
     func fillAdapter() {
 
+        for _ in 0...Constants.pageSize {
+            adapter.addCellGenerator(makeGenerator())
+        }
 
         adapter.forceRefill()
     }
@@ -82,21 +93,20 @@ private extension VideoListController {
         }
     }
 
-//    func makeGenerator() -> TableCellGenerator {
-//        TitleTableViewCell.rddm.baseGenerator(with: "Random cell \(Int.random(in: 0...1000)) from page \(currentPage)" )
-//    }
+    func makeGenerator() -> BaseCellGenerator<VideoListCell> {
+        VideoListCell.rddm.baseGenerator(with: .init(title: ""))
+    }
 
     func fillNext() -> Bool {
-//        currentPage += 1
-//
-//        for _ in 0...Constants.pageSize {
-//            adapter.addCellGenerator(makeGenerator())
-//        }
-//
-//        adapter.forceRefill()
-//
-//        return currentPage < Constants.pagesCount
-        return false
+        currentPage += 1
+
+        for _ in 0...Constants.pageSize {
+            adapter.addCellGenerator(makeGenerator())
+        }
+
+        adapter.forceRefill()
+
+        return currentPage < Constants.pagesCount
     }
 
 }
