@@ -1,17 +1,20 @@
 //
-//  PlayerView.swift
+//  KinescopePlayerView.swift
 //  KinescopeSDK
 //
-//  Created by Никита Коробейников on 22.03.2021.
+//  Created by Никита Коробейников on 23.03.2021.
 //
 
 import UIKit
 import AVFoundation
 
-public class PlayerView: UIView {
+public class KinescopePlayerView: UIView {
+
+    // MARK: - Private Properties
+
     var player: AVPlayer? {
         get {
-            return playerLayer.player
+            playerLayer.player
         }
         set {
             playerLayer.player = newValue
