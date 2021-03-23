@@ -2,22 +2,44 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="QTb-d7-Rhh">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Video List Controller-->
         <scene sceneID="WBO-Gk-QJI">
             <objects>
-                <viewController id="QTb-d7-Rhh" sceneMemberID="viewController">
+                <viewController id="QTb-d7-Rhh" customClass="VideoListController" customModule="KinescopeExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="olC-PR-ahI">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Qzz-t2-KHe">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </tableView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="OP4-E5-go6">
+                                <rect key="frame" x="197" y="443" width="20" height="20"/>
+                            </activityIndicatorView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="oh4-E8-NGc"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="oh4-E8-NGc" firstAttribute="trailing" secondItem="Qzz-t2-KHe" secondAttribute="trailing" id="3HY-yO-9Ng"/>
+                            <constraint firstItem="Qzz-t2-KHe" firstAttribute="top" secondItem="oh4-E8-NGc" secondAttribute="top" id="Au5-0x-96Q"/>
+                            <constraint firstItem="OP4-E5-go6" firstAttribute="centerX" secondItem="oh4-E8-NGc" secondAttribute="centerX" id="OQ6-C6-uac"/>
+                            <constraint firstItem="Qzz-t2-KHe" firstAttribute="leading" secondItem="oh4-E8-NGc" secondAttribute="leading" id="Qnj-bR-PVk"/>
+                            <constraint firstItem="oh4-E8-NGc" firstAttribute="bottom" secondItem="Qzz-t2-KHe" secondAttribute="bottom" id="d0h-HQ-yKU"/>
+                            <constraint firstItem="OP4-E5-go6" firstAttribute="centerY" secondItem="oh4-E8-NGc" secondAttribute="centerY" id="uMV-5x-CMP"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="activityIndicator" destination="OP4-E5-go6" id="0kR-Ks-3JR"/>
+                        <outlet property="tableView" destination="Qzz-t2-KHe" id="GML-wt-xob"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CtD-2X-T69" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
