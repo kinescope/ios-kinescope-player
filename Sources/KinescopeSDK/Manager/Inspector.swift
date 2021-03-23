@@ -11,12 +11,12 @@ class Inspector: KinescopeInspectable {
 
     // MARK: - Properties
 
-    private let apiKey: String
+    private let videosService: VideosService
 
     // MARK: - Initialisation
 
-    init(apiKey: String) {
-        self.apiKey = apiKey
+    init(videosService: VideosService) {
+        self.videosService = videosService
     }
 
     // MARK: - Methods
