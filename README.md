@@ -18,7 +18,49 @@ This framework can help you include customizable video player into your mobile a
 
 ## Usage
 
-<!-- TODO add usage example -->
+First of all, init SDK with apiKey somewhere at startup of your app
+
+```
+Kinescope.shared.setConfig(.init(apiKey: "your api key"))
+```
+
+From now you can use most of API through SDK
+
+For example, to get list of videos just call
+```
+Kinescope.shared.inspector.list(onSuccess: { videos in
+  // save video models somewhere
+})
+```
+
+Than init player instance
+
+```
+let player = KinescopePlayer(video_id: "some video id")
+```
+
+Add player view somewhere in your layout
+
+```
+let playerView = KinescopePlayerView()
+view.addSubview(playerView)
+```
+
+Connect player and playerView together
+
+```
+playerView.player = player
+```
+
+Enjoy.
+
+## Installation
+
+Just add KinescopeSDK to your `Podfile` like this
+
+```
+pod 'KinescopeSDK' ~> 0.1
+```
 
 ## Changelog
 

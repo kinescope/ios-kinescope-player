@@ -19,9 +19,9 @@ CHECKOUT OPTIONS:
     :git: https://github.com/surfstudio/ReactiveDataDisplayManager
 
 SPEC CHECKSUMS:
-  KinescopeSDK: aa9306473678c6a47166f6133d8545b5565b24d5
+  KinescopeSDK: 95b2da2e14411157a669a9f70bd536c82fcacde9
   ReactiveDataDisplayManager: 53c14bb0e0ccef2047a4816651ef904500cf83da
 
-PODFILE CHECKSUM: 09afd0d6079be2debbe353cd289d60cab1a986b6
+PODFILE CHECKSUM: 6e0e85b0c3be408e8d71035077f6cf8694ee04ca
 
 COCOAPODS: 1.10.1
