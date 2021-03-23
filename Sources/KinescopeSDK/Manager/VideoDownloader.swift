@@ -1,5 +1,5 @@
 //
-//  Manager+KinescopeDownloadable.swift
+//  VideoDownloader.swift
 //  KinescopeSDK
 //
 //  Created by Никита Коробейников on 23.03.2021.
@@ -7,7 +7,7 @@
 
 // MARK: - KinescopeDownloadable
 
-class Downoloader: KinescopeDownloadable {
+class VideoDownloader: KinescopeDownloadable {
 
     // MARK: - Properties
 
