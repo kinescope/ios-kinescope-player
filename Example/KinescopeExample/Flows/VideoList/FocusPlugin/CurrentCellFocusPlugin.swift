@@ -8,14 +8,11 @@
 import ReactiveDataDisplayManager
 
 /// Plugin to Detect Most Visible Cell in `UITableView`
-final class CurrentCellFocusPlugin: PluginAction {
+final class CurrentCellFocusPlugin: BaseTablePlugin<ScrollEvent> {
 
     // MARK: - Alias
 
     typealias GeneratorType = FocusableItem
-
-    typealias Event = ScrollEvent
-    typealias Manager = BaseTableManager
 
     // MARK: - Properties
 
@@ -23,11 +20,7 @@ final class CurrentCellFocusPlugin: PluginAction {
 
     // MARK: - Public Methods
 
-    func setup(with manager: BaseTableManager?) {
-        focusedGenerator = nil
-    }
-
-    func process(event: ScrollEvent, with manager: BaseTableManager?) {
+    override func process(event: ScrollEvent, with manager: BaseTableManager?) {
 
         switch event {
         case .didScroll:
@@ -40,15 +33,22 @@ final class CurrentCellFocusPlugin: PluginAction {
             let firstVisiblePath = visiblePaths[0]
             let newFocusedGenerator = getGenerator(from: manager, at: firstVisiblePath)
 
-            if let oldFocusedGenerator = focusedGenerator,
-               !(oldFocusedGenerator === newFocusedGenerator) {
-                print("KIN stop")
-                oldFocusedGenerator.focusUpdated(isFocused: false)
-            }
+            if let oldFocusedGenerator = focusedGenerator {
+                if oldFocusedGenerator === newFocusedGenerator {
 
-            focusedGenerator = newFocusedGenerator
-            focusedGenerator?.focusUpdated(isFocused: true)
-            print("KIN start")
+                } else {
+                    oldFocusedGenerator.focusUpdated(isFocused: false)
+                    print("KIN stop")
+                    focusedGenerator = newFocusedGenerator
+                    focusedGenerator?.focusUpdated(isFocused: true)
+                    print("KIN start")
+                }
+
+            } else {
+                focusedGenerator = newFocusedGenerator
+                focusedGenerator?.focusUpdated(isFocused: true)
+                print("KIN start")
+            }
 
         default:
             break

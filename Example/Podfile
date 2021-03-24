@@ -6,7 +6,7 @@ target 'KinescopeExample' do
   # Comment the next line if you don't want to use dynamic frameworks
 
   # Pods for KinescopeExample
-  pod 'ReactiveDataDisplayManager', :git => 'https://github.com/surfstudio/ReactiveDataDisplayManager', :commit => 'b5b0f360ecfad8ed892a53c431ce1f1baad82dfe'
+  pod 'ReactiveDataDisplayManager', :git => 'https://github.com/surfstudio/ReactiveDataDisplayManager', :commit => '2360428f1b4ebeaa3aa3e59797325df11993d1d4'
   pod 'KinescopeSDK', :path => '../'
 
 end
