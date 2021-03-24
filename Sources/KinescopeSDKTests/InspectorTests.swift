@@ -10,12 +10,13 @@ import XCTest
 
 final class InspectorTests: XCTestCase {
 
+    var videoService: VideosService?
     var inspector: KinescopeInspectable?
 
     override func setUp() {
         super.setUp()
 
-        inspector = Inspector(apiKey: "")
+//        inspector = Inspector(videosService: videoService)
     }
 
     override func tearDown() {
