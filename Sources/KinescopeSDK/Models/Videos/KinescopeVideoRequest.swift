@@ -1,4 +1,3 @@
-
 /// Request info with sort order and requested page chunk
 public struct KinescopeVideosRequest: Encodable {
 

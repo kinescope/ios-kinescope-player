@@ -27,7 +27,7 @@ final class Transport {
                 do {
                     let decoder = JSONDecoder()
                     decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    let response = try decoder.decode(MetaResponse<D,M>.self, from: responseData)
+                    let response = try decoder.decode(MetaResponse<D, M>.self, from: responseData)
 
                     DispatchQueue.main.async {
                         completion(.success(response))
@@ -91,5 +91,5 @@ final class Transport {
             }
         }.resume()
     }
-    
+
 }
