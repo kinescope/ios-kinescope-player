@@ -4,24 +4,24 @@ PODS:
 
 DEPENDENCIES:
   - KinescopeSDK (from `../`)
-  - ReactiveDataDisplayManager (from `https://github.com/surfstudio/ReactiveDataDisplayManager`, commit `2360428f1b4ebeaa3aa3e59797325df11993d1d4`)
+  - ReactiveDataDisplayManager (from `https://github.com/surfstudio/ReactiveDataDisplayManager`, tag `7.0.0-beta`)
 
 EXTERNAL SOURCES:
   KinescopeSDK:
     :path: "../"
   ReactiveDataDisplayManager:
-    :commit: 2360428f1b4ebeaa3aa3e59797325df11993d1d4
     :git: https://github.com/surfstudio/ReactiveDataDisplayManager
+    :tag: 7.0.0-beta
 
 CHECKOUT OPTIONS:
   ReactiveDataDisplayManager:
-    :commit: 2360428f1b4ebeaa3aa3e59797325df11993d1d4
     :git: https://github.com/surfstudio/ReactiveDataDisplayManager
+    :tag: 7.0.0-beta
 
 SPEC CHECKSUMS:
   KinescopeSDK: 95b2da2e14411157a669a9f70bd536c82fcacde9
   ReactiveDataDisplayManager: 0ff30e94f5c9785e4f366ca5e09bef00eb6a8ba8
 
-PODFILE CHECKSUM: d3b15b75498e9294ec23bff4233fc48637da324b
+PODFILE CHECKSUM: 940a79062f7827865d83c586a042d3a5d6295c67
 
 COCOAPODS: 1.10.1
