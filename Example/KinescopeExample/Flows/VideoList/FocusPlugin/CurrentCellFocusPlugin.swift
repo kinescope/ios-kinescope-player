@@ -8,34 +8,52 @@
 import ReactiveDataDisplayManager
 
 /// Plugin to Detect Most Visible Cell in `UITableView`
-final class CurrentCellFocusPlugin: BaseTablePlugin<TableEvent> {
+final class CurrentCellFocusPlugin: PluginAction {
 
     // MARK: - Alias
 
     typealias GeneratorType = FocusableItem
 
+    typealias Event = ScrollEvent
+    typealias Manager = BaseTableManager
+
+    // MARK: - Properties
+
+    weak var focusedGenerator: GeneratorType?
+
     // MARK: - Public Methods
 
-    override func process(event: TableEvent, with manager: BaseTableManager?) {
+    func setup(with manager: BaseTableManager?) {
+        focusedGenerator = nil
+    }
+
+    func process(event: ScrollEvent, with manager: BaseTableManager?) {
 
         switch event {
-        case .willDisplayCell(let indexPath):
-            guard let focusable = getGenerator(from: manager, at: indexPath) else {
+        case .didScroll:
+
+            guard let visiblePaths = manager?.view.indexPathsForVisibleRows,
+                  !visiblePaths.isEmpty else {
                 return
             }
 
-            // TODO: - calculate  percent of visibility
-            focusable.focusUpdated(isFocused: true)
-        case .didEndDisplayCell(let indexPath):
-            guard let focusable = getGenerator(from: manager, at: indexPath) else {
-                return
+            let firstVisiblePath = visiblePaths[0]
+            let newFocusedGenerator = getGenerator(from: manager, at: firstVisiblePath)
+
+            if let oldFocusedGenerator = focusedGenerator,
+               !(oldFocusedGenerator === newFocusedGenerator) {
+                print("KIN stop")
+                oldFocusedGenerator.focusUpdated(isFocused: false)
             }
 
-            // TODO: - calculate  percent of visibility
-            focusable.focusUpdated(isFocused: false)
+            focusedGenerator = newFocusedGenerator
+            focusedGenerator?.focusUpdated(isFocused: true)
+            print("KIN start")
+
         default:
             break
         }
+
     }
 
 }
@@ -49,6 +67,16 @@ private extension CurrentCellFocusPlugin {
             return nil
         }
         return generator as? GeneratorType
+    }
+
+}
+
+// MARK: - Public init
+
+extension BaseTablePlugin {
+
+    static func currentFocus() -> CurrentCellFocusPlugin {
+        .init()
     }
 
 }
