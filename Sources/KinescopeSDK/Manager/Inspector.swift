@@ -22,7 +22,7 @@ class Inspector: KinescopeInspectable {
     // MARK: - Methods
 
     func list(onSuccess: (KinescopeVideoListResponse) -> Void, onError: (KinescopeInspectError) -> Void) {
-        preconditionFailure("Implement")
+        // TODO: - implement
     }
 
 }

@@ -10,13 +10,15 @@ import XCTest
 
 final class InspectorTests: XCTestCase {
 
-    var videoService: VideosService?
+    var videoService: VideoServiceMock?
     var inspector: KinescopeInspectable?
 
     override func setUp() {
         super.setUp()
 
-//        inspector = Inspector(videosService: videoService)
+        let videoService = VideoServiceMock()
+        self.inspector = Inspector(videosService: videoService)
+        self.videoService = videoService
     }
 
     override func tearDown() {
@@ -27,16 +29,22 @@ final class InspectorTests: XCTestCase {
 
     func testListSuccessPassingToCallback() {
 
-        // TODO: - add mocked API layer
+        // given
+
+        videoService?.allVideosMock[0] = .success([])
 
         var successCalled: Bool = false
         var errorCatched: KinescopeInspectError?
+
+        // when
 
         inspector?.list(onSuccess: { _ in
             successCalled = true
         }, onError: { error in
             errorCatched = error
         })
+
+        // then
 
         XCTAssertTrue(successCalled)
         XCTAssertNil(errorCatched)
@@ -44,16 +52,22 @@ final class InspectorTests: XCTestCase {
 
     func testListError404MappedToNotFound() {
 
-        // TODO: - add mocked API layer
+        // given
+
+        videoService?.allVideosMock[0] = .failure(ServerError(code: 404, message: "", detail: nil))
 
         var successCalled: Bool = false
         var errorCatched: KinescopeInspectError?
+
+        // when
 
         inspector?.list(onSuccess: { _ in
             successCalled = true
         }, onError: { error in
             errorCatched = error
         })
+
+        // then
 
         XCTAssertFalse(successCalled)
         XCTAssertEqual(errorCatched, KinescopeInspectError.notFound)
@@ -61,16 +75,22 @@ final class InspectorTests: XCTestCase {
 
     func testListError403MappedToDenied() {
 
-        // TODO: - add mocked API layer
+        // given
+
+        videoService?.allVideosMock[0] = .failure(ServerError(code: 403, message: "", detail: nil))
 
         var successCalled: Bool = false
         var errorCatched: KinescopeInspectError?
+
+        // when
 
         inspector?.list(onSuccess: { _ in
             successCalled = true
         }, onError: { error in
             errorCatched = error
         })
+
+        // then
 
         XCTAssertFalse(successCalled)
         XCTAssertEqual(errorCatched, KinescopeInspectError.denied)
@@ -78,16 +98,22 @@ final class InspectorTests: XCTestCase {
 
     func testListError500MappedToUnknown() {
 
-        // TODO: - add mocked API layer
+        // given
+
+        videoService?.allVideosMock[0] = .failure(ServerError(code: 500, message: "", detail: nil))
 
         var successCalled: Bool = false
         var errorCatched: KinescopeInspectError?
+
+        // when
 
         inspector?.list(onSuccess: { _ in
             successCalled = true
         }, onError: { error in
             errorCatched = error
         })
+
+        // then
 
         XCTAssertFalse(successCalled)
         XCTAssertEqual(errorCatched, KinescopeInspectError.unknown(KinescopeInspectError.notFound))
@@ -95,14 +121,22 @@ final class InspectorTests: XCTestCase {
 
     func testListErrorNegativeMappedToNetwork() {
 
+        // given
+
+        videoService?.allVideosMock[0] = .failure(ServerError(code: -1, message: "", detail: nil))
+
         var successCalled: Bool = false
         var errorCatched: KinescopeInspectError?
+
+        // when
 
         inspector?.list(onSuccess: { _ in
             successCalled = true
         }, onError: { error in
             errorCatched = error
         })
+
+        // then
 
         XCTAssertFalse(successCalled)
         XCTAssertEqual(errorCatched, KinescopeInspectError.network)

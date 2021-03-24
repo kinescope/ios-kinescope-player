@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		012D3AD8260B74760031EF7C /* VideoServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 012D3AD7260B74760031EF7C /* VideoServiceMock.swift */; };
 		019BE3A15D8833FB4B17BF85 /* RequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57787D9E7DA2F62069166D0 /* RequestBuilder.swift */; };
 		01C772F62FB45A601F8B5872 /* KinescopeVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611C5D1CBB38D103C3D7715A /* KinescopeVideo.swift */; };
 		0C1657DC1247E55DCE576629 /* KinescopePlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C52549B0D681DE85A0A800 /* KinescopePlayerView.swift */; };
@@ -77,6 +78,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		012D3AD7260B74760031EF7C /* VideoServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoServiceMock.swift; sourceTree = "<group>"; };
 		07899D9E5DD7637FA8A3022A /* KinescopePlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopePlayer.swift; sourceTree = "<group>"; };
 		087F0FDA92B482F898FD5BB0 /* VideosService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideosService.swift; sourceTree = "<group>"; };
 		14289950B9DEA174065501DD /* EmptyRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyRequest.swift; sourceTree = "<group>"; };
@@ -146,6 +148,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		012D3AD5260B741C0031EF7C /* Public */ = {
+			isa = PBXGroup;
+			children = (
+				9F8EC52719D4B522B6F986ED /* InspectorTests.swift */,
+			);
+			path = Public;
+			sourceTree = "<group>";
+		};
+		012D3AD6260B74630031EF7C /* Mock */ = {
+			isa = PBXGroup;
+			children = (
+				012D3AD7260B74760031EF7C /* VideoServiceMock.swift */,
+			);
+			path = Mock;
+			sourceTree = "<group>";
+		};
 		1A5206CC959BE73E5A547155 /* Common */ = {
 			isa = PBXGroup;
 			children = (
@@ -213,8 +231,8 @@
 		370D05E666542032C8C710E3 /* KinescopeSDKTests */ = {
 			isa = PBXGroup;
 			children = (
+				012D3AD6260B74630031EF7C /* Mock */,
 				D1F37AA2D3FA8B6A08D5C9E0 /* Info.plist */,
-				9F8EC52719D4B522B6F986ED /* InspectorTests.swift */,
 				3D7634D368F5A8B12E336D09 /* Tests.swift */,
 				BB777A275FFA8D99E4212F66 /* Service */,
 			);
@@ -293,6 +311,7 @@
 		BB777A275FFA8D99E4212F66 /* Service */ = {
 			isa = PBXGroup;
 			children = (
+				012D3AD5260B741C0031EF7C /* Public */,
 				1A5206CC959BE73E5A547155 /* Common */,
 			);
 			path = Service;
@@ -409,6 +428,7 @@
 				C732EEB15D6BFFCFA1586E1D /* InspectorTests.swift in Sources */,
 				67407834D21BA4E2566C04B2 /* RequestBuilderTests.swift in Sources */,
 				213DB8E1DBE71D5CCDE2A405 /* Tests.swift in Sources */,
+				012D3AD8260B74760031EF7C /* VideoServiceMock.swift in Sources */,
 				FC3D1CD4CA1A73C56239163F /* TransportTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -557,7 +577,11 @@
 				INFOPLIST_FILE = KinescopeSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = io.kinescope.sdk;
 				SDKROOT = iphoneos;
@@ -581,7 +605,11 @@
 				INFOPLIST_FILE = KinescopeSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = io.kinescope.sdk;
 				SDKROOT = iphoneos;
