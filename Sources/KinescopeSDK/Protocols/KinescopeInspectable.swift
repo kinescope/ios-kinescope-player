@@ -12,7 +12,7 @@ public protocol KinescopeInspectable: class {
     ///
     /// - parameter onSuccess: callback on success. Returns list of videos available
     /// - parameter onError: callback on error.
-    func list(onSuccess: @escaping (KinescopeVideoListResponse) -> Void,
+    func list(onSuccess: @escaping (([KinescopeVideo], KinescopeMetaData?)) -> Void,
               onError: @escaping (KinescopeInspectError) -> Void)
 
 }

@@ -1,8 +1,8 @@
 import Foundation
 
 protocol VideosApiClient {
-    func getAll(request: KinescopeVideosRequest, completion: @escaping (Result<[KinescopeVideo], Error>) -> Void)
-    func getVideo(by id: String, completion: @escaping (Result<KinescopeVideo, Error>) -> Void)
+    func getAll(request: KinescopeVideosRequest, completion: @escaping (Result<Response<[KinescopeVideo], KinescopeMetaData>, Error>) -> Void)
+    func getVideo(by id: String, completion: @escaping (Result<Response<KinescopeVideo, String>, Error>) -> Void)
 }
 
 final class VideosService: VideosApiClient {
@@ -21,7 +21,7 @@ final class VideosService: VideosApiClient {
 
     // MARK: - Public Methods
 
-    func getAll(request: KinescopeVideosRequest, completion: @escaping (Result<[KinescopeVideo], Error>) -> Void) {
+    func getAll(request: KinescopeVideosRequest, completion: @escaping (Result<Response<[KinescopeVideo], KinescopeMetaData>, Error>) -> Void) {
         DispatchQueue.global(qos: .utility).async { [weak self] in
             guard
                 let self = self
@@ -51,7 +51,7 @@ final class VideosService: VideosApiClient {
         }
     }
 
-    func getVideo(by id: String, completion: @escaping (Result<KinescopeVideo, Error>) -> Void) {
+    func getVideo(by id: String, completion: @escaping (Result<Response<KinescopeVideo, String>, Error>) -> Void) {
         DispatchQueue.global(qos: .utility).async { [weak self] in
             guard
                 let self = self

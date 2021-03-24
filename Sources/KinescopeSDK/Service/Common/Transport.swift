@@ -14,7 +14,7 @@ final class Transport {
 
     // MARK: - Public Methods
 
-    func perform<R: Codable>(request: URLRequest, completion: @escaping (Result<R, Error>) -> Void) {
+    func perform<D: Codable, M: Codable>(request: URLRequest, completion: @escaping (Result<Response<D, M>, Error>) -> Void) {
         session.dataTask(with: request) { data, response, error in
             if let error = error {
                 DispatchQueue.main.async {
@@ -27,10 +27,10 @@ final class Transport {
                 do {
                     let decoder = JSONDecoder()
                     decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    let response = try decoder.decode(Response<R>.self, from: responseData)
+                    let response = try decoder.decode(Response<D,M>.self, from: responseData)
 
                     DispatchQueue.main.async {
-                        completion(.success(response.data))
+                        completion(.success(response))
                     }
                 } catch let error {
                     DispatchQueue.main.async {
@@ -52,4 +52,5 @@ final class Transport {
             }
         }.resume()
     }
+    
 }
