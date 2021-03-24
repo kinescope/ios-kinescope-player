@@ -26,7 +26,10 @@ final class VideoListController: UIViewController {
 
     // MARK: - Private Properties
 
-    private lazy var progressView = PaginatorView(frame: .init(x: 0, y: 0, width: tableView.frame.width, height: 80))
+    private lazy var progressView = PaginatorView(frame: .init(x: 0,
+                                                               y: 0,
+                                                               width: tableView.frame.width,
+                                                               height: 80))
 
     private lazy var adapter = tableView.rddm.baseBuilder
         .add(plugin: .paginatable(progressView: progressView,
@@ -79,8 +82,8 @@ private extension VideoListController {
     /// This method is used to fill adapter
     func fillAdapter() {
 
-        for _ in 0...Constants.pageSize {
-            adapter.addCellGenerator(makeGenerator())
+        for i in 0...Constants.pageSize {
+            adapter.addCellGenerator(makeGenerator(with: "\(currentPage)_\(i)"))
         }
 
         adapter.forceRefill()
@@ -94,15 +97,15 @@ private extension VideoListController {
         }
     }
 
-    func makeGenerator() -> BaseCellGenerator<VideoListCell> {
-        VideoListFocusableCellGenerator(with: .init(title: ""))
+    func makeGenerator(with title: String) -> BaseCellGenerator<VideoListCell> {
+        VideoListFocusableCellGenerator(with: .init(title: title))
     }
 
     func fillNext() -> Bool {
         currentPage += 1
 
-        for _ in 0...Constants.pageSize {
-            adapter.addCellGenerator(makeGenerator())
+        for i in 0...Constants.pageSize {
+            adapter.addCellGenerator(makeGenerator(with: "\(currentPage)_\(i)"))
         }
 
         adapter.forceRefill()

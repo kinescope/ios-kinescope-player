@@ -15,6 +15,10 @@ final class VideoListCell: UITableViewCell {
 
     @IBOutlet private weak var playerView: KinescopePlayerView!
 
+    // MARK: - Properties
+
+    var title: String?
+
     // MARK: - Lifecycle
 
     override func awakeFromNib() {
@@ -32,10 +36,12 @@ final class VideoListCell: UITableViewCell {
     // MARK: - Public Methods
 
     func start() {
+        print("KIN start \(title)")
         playerView?.player?.play()
     }
 
     func stop() {
+        print("KIN stop \(title)")
         playerView?.player?.stop()
     }
 
@@ -51,6 +57,7 @@ extension VideoListCell: ConfigurableItem {
     }
 
     func configure(with model: Model) {
+        title = model.title
 //        playerView.player = model.player
     }
 
