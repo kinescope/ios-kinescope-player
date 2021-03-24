@@ -1,6 +1,11 @@
 import Foundation
 
-final class VideosService {
+protocol VideosApiClient {
+    func getAll(request: KinescopeVideosRequest, completion: @escaping (Result<[KinescopeVideo], Error>) -> Void)
+    func getVideo(by id: String, completion: @escaping (Result<KinescopeVideo, Error>) -> Void)
+}
+
+final class VideosService: VideosApiClient {
 
     // MARK: - Private Properties
 

@@ -11,11 +11,11 @@ class Inspector: KinescopeInspectable {
 
     // MARK: - Properties
 
-    private let videosService: VideosService
+    private let videosService: VideosApiClient
 
     // MARK: - Initialisation
 
-    init(videosService: VideosService) {
+    init(videosService: VideosApiClient) {
         self.videosService = videosService
     }
 
