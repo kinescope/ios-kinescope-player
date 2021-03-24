@@ -52,4 +52,4 @@ node_modules/
 package-lock.json
 .build/
 
-Example/KinescopeExample/KinescopeConfig.plist
+/Example/KinescopeExample/KinescopeConfig.plist
