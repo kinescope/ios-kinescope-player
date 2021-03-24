@@ -21,9 +21,10 @@ class Inspector: KinescopeInspectable {
 
     // MARK: - Methods
 
-    func list(onSuccess: @escaping (([KinescopeVideo], KinescopeMetaData?)) -> Void,
+    func list(request: KinescopeVideosRequest,
+              onSuccess: @escaping (([KinescopeVideo], KinescopeMetaData?)) -> Void,
               onError: @escaping (KinescopeInspectError) -> Void) {
-        videosService.getAll(request: .init(page: 1, perPage: 5, order: nil)) { result in
+        videosService.getAll(request: request) { result in
             switch result {
             case .success(let response):
                 onSuccess((response.data, response.meta))

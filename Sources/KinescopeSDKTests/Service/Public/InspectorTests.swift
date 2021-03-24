@@ -41,11 +41,12 @@ final class InspectorTests: XCTestCase {
 
         // when
 
-        inspector?.list(onSuccess: { _ in
-            successCalled = true
-        }, onError: { error in
-            errorCatched = error
-        })
+        inspector?.list(request: .init(page: 1),
+                        onSuccess: { _ in
+                            successCalled = true
+                        }, onError: { error in
+                            errorCatched = error
+                        })
 
         // then
 
@@ -64,11 +65,12 @@ final class InspectorTests: XCTestCase {
 
         // when
 
-        inspector?.list(onSuccess: { _ in
-            successCalled = true
-        }, onError: { error in
-            errorCatched = error
-        })
+        inspector?.list(request: .init(page: 1),
+                        onSuccess: { _ in
+                            successCalled = true
+                        }, onError: { error in
+                            errorCatched = error
+                        })
 
         // then
 
@@ -87,11 +89,12 @@ final class InspectorTests: XCTestCase {
 
         // when
 
-        inspector?.list(onSuccess: { _ in
-            successCalled = true
-        }, onError: { error in
-            errorCatched = error
-        })
+        inspector?.list(request: .init(page: 1),
+                        onSuccess: { _ in
+                            successCalled = true
+                        }, onError: { error in
+                            errorCatched = error
+                        })
 
         // then
 
@@ -110,11 +113,12 @@ final class InspectorTests: XCTestCase {
 
         // when
 
-        inspector?.list(onSuccess: { _ in
-            successCalled = true
-        }, onError: { error in
-            errorCatched = error
-        })
+        inspector?.list(request: .init(page: 1),
+                        onSuccess: { _ in
+                            successCalled = true
+                        }, onError: { error in
+                            errorCatched = error
+                        })
 
         // then
 
@@ -133,11 +137,12 @@ final class InspectorTests: XCTestCase {
 
         // when
 
-        inspector?.list(onSuccess: { _ in
-            successCalled = true
-        }, onError: { error in
-            errorCatched = error
-        })
+        inspector?.list(request: .init(page: 1),
+                        onSuccess: { _ in
+                            successCalled = true
+                        }, onError: { error in
+                            errorCatched = error
+                        })
 
         // then
 
