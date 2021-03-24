@@ -21,8 +21,38 @@ class Inspector: KinescopeInspectable {
 
     // MARK: - Methods
 
-    func list(onSuccess: (KinescopeVideoListResponse) -> Void, onError: (KinescopeInspectError) -> Void) {
-        // TODO: - implement
+    func list(onSuccess: @escaping (KinescopeVideoListResponse) -> Void, onError: @escaping (KinescopeInspectError) -> Void) {
+        videosService.getAll(request: .init(page: 0, perPage: 5, order: nil)) { result in
+            switch result {
+            case .success(let videos):
+                onSuccess(.init(meta: nil, data: videos))
+            case .failure(let error):
+                onError(.from(error: error))
+            }
+        }
+    }
+
+}
+
+// MARK: - Private
+
+private extension KinescopeInspectError {
+
+    static func from(error: Error) -> KinescopeInspectError {
+        guard let serverError = error as? ServerError else {
+            return .unknown(error)
+        }
+
+        switch serverError.code {
+        case 404:
+            return .notFound
+        case 403:
+            return .denied
+        case ..<0:
+            return .network
+        default:
+            return .unknown(error)
+        }
     }
 
 }
