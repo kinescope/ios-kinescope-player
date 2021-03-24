@@ -10,6 +10,9 @@
 		185D8765CC79F0EF65E8C93C /* Pods_KinescopeExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70DE1FAFFB81B2E9A39D9526 /* Pods_KinescopeExample.framework */; };
 		27803C78BC9292176387B837 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1297BC1CB454C3BA783E4F43 /* Main.storyboard */; };
 		6E4269CADAE4110CF3E96574 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA6D1B1FB02192C67211B98A /* AppDelegate.swift */; };
+		89067F7E260B915B00DCDF96 /* KinescopeConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 89067F7D260B915B00DCDF96 /* KinescopeConfig.plist */; };
+		89067F86260B92DB00DCDF96 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89067F85260B92DA00DCDF96 /* User.swift */; };
+		89067F8A260BB03C00DCDF96 /* ConfigStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89067F89260BB03C00DCDF96 /* ConfigStorage.swift */; };
 		E2E3E7080D78E3690E531239 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B5BA8AD065732355D68FC30 /* UIKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -18,6 +21,9 @@
 		1B5BA8AD065732355D68FC30 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		3EE2B6B915925CB58BB5980A /* Pods-KinescopeExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KinescopeExample.debug.xcconfig"; path = "Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample.debug.xcconfig"; sourceTree = "<group>"; };
 		70DE1FAFFB81B2E9A39D9526 /* Pods_KinescopeExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KinescopeExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		89067F7D260B915B00DCDF96 /* KinescopeConfig.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = KinescopeConfig.plist; sourceTree = "<group>"; };
+		89067F85260B92DA00DCDF96 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		89067F89260BB03C00DCDF96 /* ConfigStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigStorage.swift; sourceTree = "<group>"; };
 		96FB4A4491B8B00FA3019B09 /* KinescopeExample.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = KinescopeExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D470B97BE293F2CBD3E9EA22 /* Pods-KinescopeExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KinescopeExample.release.xcconfig"; path = "Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample.release.xcconfig"; sourceTree = "<group>"; };
 		DA6D1B1FB02192C67211B98A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -50,7 +56,6 @@
 				3EE2B6B915925CB58BB5980A /* Pods-KinescopeExample.debug.xcconfig */,
 				D470B97BE293F2CBD3E9EA22 /* Pods-KinescopeExample.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -58,6 +63,8 @@
 			isa = PBXGroup;
 			children = (
 				DA6D1B1FB02192C67211B98A /* AppDelegate.swift */,
+				89067F83260B923700DCDF96 /* Helper */,
+				89067F7D260B915B00DCDF96 /* KinescopeConfig.plist */,
 				1297BC1CB454C3BA783E4F43 /* Main.storyboard */,
 			);
 			path = KinescopeExample;
@@ -70,6 +77,15 @@
 				70DE1FAFFB81B2E9A39D9526 /* Pods_KinescopeExample.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		89067F83260B923700DCDF96 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				89067F85260B92DA00DCDF96 /* User.swift */,
+				89067F89260BB03C00DCDF96 /* ConfigStorage.swift */,
+			);
+			path = Helper;
 			sourceTree = "<group>";
 		};
 		D09F6815030B468C4B8FCCBD = {
@@ -141,6 +157,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				89067F7E260B915B00DCDF96 /* KinescopeConfig.plist in Resources */,
 				27803C78BC9292176387B837 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -195,6 +212,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				6E4269CADAE4110CF3E96574 /* AppDelegate.swift in Sources */,
+				89067F8A260BB03C00DCDF96 /* ConfigStorage.swift in Sources */,
+				89067F86260B92DB00DCDF96 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

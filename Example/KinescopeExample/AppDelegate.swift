@@ -16,6 +16,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         Kinescope.shared.setConfig(.init(apiKey: "stub"))
+
+        // FIXME: Remove when start KIN-28
+        let users = ConfigStorage.read()
+        let surfUser = users.first(where: { $0.name == "surf" })
+        Kinescope.shared.setConfig(.init(apiKey: surfUser!.apiKey))
+
         return true
     }
 
