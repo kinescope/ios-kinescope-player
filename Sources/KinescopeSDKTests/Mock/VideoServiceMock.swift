@@ -11,12 +11,12 @@ final class VideoServiceMock: VideosApiClient {
 
     // MARK: - Properties
 
-    var allVideosMock: [Int: Result<[KinescopeVideo], Error>] = [:]
+    var allVideosMock: [Int: Result<MetaResponse<[KinescopeVideo], KinescopeMetaData>, Error>] = [:]
     var singleVideoMock: [String: Result<KinescopeVideo, Error>] = [:]
 
     // MARK: - Methods
 
-    func getAll(request: KinescopeVideosRequest, completion: @escaping (Result<[KinescopeVideo], Error>) -> Void) {
+    func getAll(request: KinescopeVideosRequest, completion: @escaping (Result<MetaResponse<[KinescopeVideo], KinescopeMetaData>, Error>) -> Void) {
         if let result = allVideosMock[request.page] {
             completion(result)
         } else {

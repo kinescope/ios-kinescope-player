@@ -16,7 +16,7 @@ final class AssetsService {
 
     // MARK: - Public Methods
 
-    func getAssetLink(by id: String, completion: @escaping (Result<Response<KinescopeVideoAssetLink, String>, Error>) -> Void) {
+    func getAssetLink(by id: String, completion: @escaping (Result<KinescopeVideoAssetLink, Error>) -> Void) {
         DispatchQueue.global(qos: .utility).async { [weak self] in
             guard
                 let self = self

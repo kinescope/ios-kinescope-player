@@ -31,7 +31,10 @@ final class InspectorTests: XCTestCase {
 
         // given
 
-        videoService?.allVideosMock[0] = .success([])
+        videoService?.allVideosMock[1] = .success(.init(data: [KinescopeVideo](),
+                                                        meta: .init(pagination: .init(page: 1,
+                                                                                      perPage: 5,
+                                                                                      total: 0))))
 
         var successCalled: Bool = false
         var errorCatched: KinescopeInspectError?
@@ -54,7 +57,7 @@ final class InspectorTests: XCTestCase {
 
         // given
 
-        videoService?.allVideosMock[0] = .failure(ServerError(code: 404, message: "", detail: nil))
+        videoService?.allVideosMock[1] = .failure(ServerError(code: 404, message: "", detail: nil))
 
         var successCalled: Bool = false
         var errorCatched: KinescopeInspectError?
@@ -77,7 +80,7 @@ final class InspectorTests: XCTestCase {
 
         // given
 
-        videoService?.allVideosMock[0] = .failure(ServerError(code: 403, message: "", detail: nil))
+        videoService?.allVideosMock[1] = .failure(ServerError(code: 403, message: "", detail: nil))
 
         var successCalled: Bool = false
         var errorCatched: KinescopeInspectError?
@@ -100,7 +103,7 @@ final class InspectorTests: XCTestCase {
 
         // given
 
-        videoService?.allVideosMock[0] = .failure(ServerError(code: 500, message: "", detail: nil))
+        videoService?.allVideosMock[1] = .failure(ServerError(code: 500, message: "", detail: nil))
 
         var successCalled: Bool = false
         var errorCatched: KinescopeInspectError?
@@ -123,7 +126,7 @@ final class InspectorTests: XCTestCase {
 
         // given
 
-        videoService?.allVideosMock[0] = .failure(ServerError(code: -1, message: "", detail: nil))
+        videoService?.allVideosMock[1] = .failure(ServerError(code: -1, message: "", detail: nil))
 
         var successCalled: Bool = false
         var errorCatched: KinescopeInspectError?

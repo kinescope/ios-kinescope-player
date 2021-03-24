@@ -1,4 +1,8 @@
-struct Response<D: Codable, M: Codable>: Codable {
+struct Response<D: Codable>: Codable {
     let data: D
-    let meta: M?
+}
+
+struct MetaResponse<D: Codable, M: Codable>: Codable {
+    let data: D
+    let meta: M
 }
