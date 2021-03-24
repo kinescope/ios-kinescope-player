@@ -8,7 +8,7 @@ This example shows how to use KinescopeSDK.
 
 ### KinescopeConfig.plist
 
-Use `KinescopeConfig.plist` to add real **apiKey** for testing real user account. **Plist** can store multiple users.
+Add `KinescopeConfig.plist` to add real **apiKey** for testing real user account. **Plist** can store multiple users.
 
 `KinescopeConfig.plist` seems like usual property list.
 
