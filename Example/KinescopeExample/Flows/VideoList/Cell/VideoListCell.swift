@@ -32,11 +32,11 @@ final class VideoListCell: UITableViewCell {
     // MARK: - Public Methods
 
     func start() {
-        // TODO: - start playing video inside playerView
+        playerView?.player?.play()
     }
 
     func stop() {
-        // TODO: - stop playing video inside playerView
+        playerView?.player?.stop()
     }
 
 }

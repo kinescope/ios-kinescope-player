@@ -94,7 +94,7 @@ private extension VideoListController {
     }
 
     func makeGenerator() -> BaseCellGenerator<VideoListCell> {
-        VideoListCell.rddm.baseGenerator(with: .init(title: ""))
+        VideoListFocusableCellGenerator(with: .init(title: ""))
     }
 
     func fillNext() -> Bool {
