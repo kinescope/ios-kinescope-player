@@ -25,7 +25,10 @@ final class VideosService {
             }
 
             do {
-                let requestData = try JSONEncoder().encode(request)
+                let encoder = JSONEncoder()
+                encoder.keyEncodingStrategy = .convertToSnakeCase
+                let requestData = try encoder.encode(request)
+                
                 let requestDictionary = try JSONSerialization.jsonObject(with: requestData) as? [String: Any] ?? [:]
                 let params = requestDictionary.compactMapValues { String(describing: $0) }
 

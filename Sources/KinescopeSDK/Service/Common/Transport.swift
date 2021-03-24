@@ -25,7 +25,9 @@ final class Transport {
                let responseData = data {
 
                 do {
-                    let response = try JSONDecoder().decode(Response<R>.self, from: responseData)
+                    let decoder = JSONDecoder()
+                    decoder.keyDecodingStrategy = .convertFromSnakeCase
+                    let response = try decoder.decode(Response<R>.self, from: responseData)
 
                     DispatchQueue.main.async {
                         completion(.success(response.data))

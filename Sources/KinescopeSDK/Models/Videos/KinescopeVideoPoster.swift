@@ -1,7 +1,7 @@
 public struct KinescopeVideoPoster: Codable {
-    let id: String
-    let original: String
-    let md: String
-    let sm: String
-    let xs: String
+    public let id: String
+    public let original: String
+    public let md: String
+    public let sm: String
+    public let xs: String
 }
