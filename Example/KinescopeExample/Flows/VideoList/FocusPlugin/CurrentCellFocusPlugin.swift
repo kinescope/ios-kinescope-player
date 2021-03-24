@@ -25,12 +25,12 @@ final class CurrentCellFocusPlugin: BaseTablePlugin<ScrollEvent> {
         switch event {
         case .didScroll:
 
-            guard let visiblePaths = manager?.view.indexPathsForVisibleRows,
-                  !visiblePaths.isEmpty else {
+            guard let table = manager?.view,
+                let firstVisibleCell = getFirstVisibleCell(from: table),
+                let firstVisiblePath = table.indexPath(for: firstVisibleCell) else {
                 return
             }
 
-            let firstVisiblePath = visiblePaths[0]
             let newFocusedGenerator = getGenerator(from: manager, at: firstVisiblePath)
 
             if let oldFocusedGenerator = focusedGenerator {
@@ -67,6 +67,12 @@ private extension CurrentCellFocusPlugin {
             return nil
         }
         return generator as? GeneratorType
+    }
+
+    func getFirstVisibleCell(from table: UITableView) -> UITableViewCell? {
+        let visibleY = table.contentOffset.y
+        let visibleCells = table.visibleCells.filter { $0.frame.origin.y > visibleY }
+        return visibleCells.min(by: { $0.frame.origin.y < $1.frame.origin.y })
     }
 
 }
