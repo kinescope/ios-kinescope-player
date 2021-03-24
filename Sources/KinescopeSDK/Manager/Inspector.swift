@@ -22,7 +22,7 @@ class Inspector: KinescopeInspectable {
     // MARK: - Methods
 
     func list(request: KinescopeVideosRequest,
-              onSuccess: @escaping (([KinescopeVideo], KinescopeMetaData?)) -> Void,
+              onSuccess: @escaping (([KinescopeVideo], KinescopeMetaData)) -> Void,
               onError: @escaping (KinescopeInspectError) -> Void) {
         videosService.getAll(request: request) { result in
             switch result {

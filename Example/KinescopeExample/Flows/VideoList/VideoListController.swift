@@ -12,13 +12,6 @@ import KinescopeSDK
 /// Example of video gallery
 final class VideoListController: UIViewController {
 
-    // MARK: - Constants
-
-    private enum Constants {
-        static let pageSize = 16
-        static let pagesCount = 3
-    }
-
     // MARK: - IBOutlet
 
     @IBOutlet private weak var tableView: UITableView!
@@ -35,7 +28,9 @@ final class VideoListController: UIViewController {
 
     private weak var paginatableInput: PaginatableInput?
 
-    private var currentPage = 0
+    private weak var inspector: KinescopeInspectable? = Kinescope.shared.inspector
+    private var request = KinescopeVideosRequest(page: 1)
+    private var totalCount = 0
 
     // MARK: - UIViewController
 
@@ -56,57 +51,43 @@ private extension VideoListController {
         // show loader
         activityIndicator.isHidden = false
         activityIndicator.startAnimating()
+        activityIndicator.hidesWhenStopped = true
 
         // hide footer
         paginatableInput?.updatePagination(canIterate: false)
 
         // imitation of loading first page
-        delay(.now() + .seconds(3)) { [weak self] in
-
-            // fill table
-            self?.fillAdapter()
-
-            // hide loader
+        loadVideos { [weak self] canIterate in
             self?.activityIndicator?.stopAnimating()
-            self?.activityIndicator?.isHidden = true
 
-            // show footer
-            self?.paginatableInput?.updatePagination(canIterate: true)
+            self?.paginatableInput?.updatePagination(canIterate: canIterate)
         }
+
     }
 
-    /// This method is used to fill adapter
-    func fillAdapter() {
+    func loadVideos(onComplete: @escaping (Bool) -> Void) {
+        inspector?.list(request: request,
+                        onSuccess: { [weak self] response in
+                            guard let self = self else {
+                                return
+                            }
 
-        for _ in 0...Constants.pageSize {
-            adapter.addCellGenerator(makeGenerator())
-        }
+                            self.fillAdapter(with: response.0)
+                            self.totalCount += response.0.count
+                            onComplete(response.1.pagination.total > self.totalCount)
+                        },
+                        onError: { _ in
+                            print("Error loading videos")
+                        })
+    }
 
+    func fillAdapter(with videos: [KinescopeVideo]) {
+
+        let generators = videos.map { VideoListCell.rddm.baseGenerator(with: $0)}
+
+        adapter.addCellGenerators(generators)
+        
         adapter.forceRefill()
-    }
-
-    func delay(_ deadline: DispatchTime, completion: @escaping () -> Void) {
-        DispatchQueue.global().asyncAfter(deadline: deadline) {
-            DispatchQueue.main.async {
-                completion()
-            }
-        }
-    }
-
-    func makeGenerator() -> BaseCellGenerator<VideoListCell> {
-        VideoListCell.rddm.baseGenerator(with: .init(title: ""))
-    }
-
-    func fillNext() -> Bool {
-        currentPage += 1
-
-        for _ in 0...Constants.pageSize {
-            adapter.addCellGenerator(makeGenerator())
-        }
-
-        adapter.forceRefill()
-
-        return currentPage < Constants.pagesCount
     }
 
 }
@@ -124,8 +105,9 @@ extension VideoListController: PaginatableOutput {
 
         input.updateProgress(isLoading: true)
 
-        delay(.now() + .seconds(3)) { [weak self, weak input] in
-            let canIterate = self?.fillNext() ?? false
+        request = request.next()
+
+        loadVideos { [weak input] canIterate in
 
             input?.updateProgress(isLoading: false)
             input?.updatePagination(canIterate: canIterate)

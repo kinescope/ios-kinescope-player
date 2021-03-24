@@ -45,10 +45,7 @@ final class VideoListCell: UITableViewCell {
 
 extension VideoListCell: ConfigurableItem {
 
-    struct Model {
-//        let player: KinescopePlayer
-        let title: String
-    }
+    typealias Model = KinescopeVideo
 
     func configure(with model: Model) {
 //        playerView.player = model.player
