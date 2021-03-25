@@ -180,7 +180,6 @@
 				CC7912BE2DFA7EF0DACF3472 /* KinescopeInspectError.swift */,
 				3035D2C613166A12A9B5F10A /* KinescopeVideoAssetLink.swift */,
 				61997C7AE5AECC6E91A50EFD /* Pagination */,
-				7C6C38379A504354A9E0FA9F /* Responses */,
 				E72E8C7C9B701B54E13B3D7F /* Videos */,
 			);
 			path = Models;
@@ -272,13 +271,6 @@
 				BC3C0D5E3979F00F86226BB4 /* Common */,
 			);
 			path = Service;
-			sourceTree = "<group>";
-		};
-		7C6C38379A504354A9E0FA9F /* Responses */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Responses;
 			sourceTree = "<group>";
 		};
 		9CFF77E0AC7A0832C1F30198 /* KinescopeSDK */ = {
@@ -573,11 +565,7 @@
 				INFOPLIST_FILE = KinescopeSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = io.kinescope.sdk;
 				SDKROOT = iphoneos;
@@ -601,11 +589,7 @@
 				INFOPLIST_FILE = KinescopeSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = io.kinescope.sdk;
 				SDKROOT = iphoneos;

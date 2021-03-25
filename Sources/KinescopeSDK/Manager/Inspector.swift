@@ -11,11 +11,11 @@ class Inspector: KinescopeInspectable {
 
     // MARK: - Properties
 
-    private let videosService: VideosApiClient
+    private let videosService: VideosService
 
     // MARK: - Initialisation
 
-    init(videosService: VideosApiClient) {
+    init(videosService: VideosService) {
         self.videosService = videosService
     }
 
@@ -29,7 +29,7 @@ class Inspector: KinescopeInspectable {
             case .success(let response):
                 onSuccess((response.data, response.meta))
             case .failure(let error):
-                onError(.from(error: error))
+                onError(Inspector.parse(error: error))
             }
         }
     }
@@ -38,9 +38,9 @@ class Inspector: KinescopeInspectable {
 
 // MARK: - Private
 
-private extension KinescopeInspectError {
+private extension Inspector {
 
-    static func from(error: Error) -> KinescopeInspectError {
+    static func parse(error: Error) -> KinescopeInspectError {
         guard let serverError = error as? ServerError else {
             return .unknown(error)
         }

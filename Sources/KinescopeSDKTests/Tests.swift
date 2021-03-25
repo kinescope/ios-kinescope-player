@@ -22,7 +22,7 @@ final class Tests: XCTestCase {
     override func setUp() {
         super.setUp()
         // FIXME: Remove apikey
-        videosService = VideosService(transport: .init(), config: .init(apiKey: "q9AJMHcAvQaFSiZpsNUVuE"))
+        videosService = VideosNetworkService(transport: .init(), config: .init(apiKey: "q9AJMHcAvQaFSiZpsNUVuE"))
         assetsService = AssetsService(transport: .init(), config: .init(apiKey: "q9AJMHcAvQaFSiZpsNUVuE"))
     }
 

@@ -9,6 +9,8 @@ public struct KinescopeVideosRequest: Encodable {
     public var page: Int
 
     /// Count of videos per page
+    ///
+    /// By default equal to 5
     public let perPage: Int
 
     /// Sort order of videos.

@@ -7,7 +7,7 @@
 
 @testable import KinescopeSDK
 
-final class VideoServiceMock: VideosApiClient {
+final class VideoServiceMock: VideosService {
 
     // MARK: - Properties
 

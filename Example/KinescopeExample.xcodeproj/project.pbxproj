@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		15B50620AB55A15A8CFE5DE7 /* Pods_KinescopeExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFF75F4CAAB6EC452AE79CFB /* Pods_KinescopeExample.framework */; };
 		27803C78BC9292176387B837 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1297BC1CB454C3BA783E4F43 /* Main.storyboard */; };
-		6152E9024F3DA526FA95EA0B /* Pods_KinescopeExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 514F92745E6F8D2C9E0D7D40 /* Pods_KinescopeExample.framework */; };
 		6E4269CADAE4110CF3E96574 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA6D1B1FB02192C67211B98A /* AppDelegate.swift */; };
 		E2E3E7080D78E3690E531239 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B5BA8AD065732355D68FC30 /* UIKit.framework */; };
 /* End PBXBuildFile section */
@@ -16,11 +16,11 @@
 /* Begin PBXFileReference section */
 		1297BC1CB454C3BA783E4F43 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		1B5BA8AD065732355D68FC30 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		514F92745E6F8D2C9E0D7D40 /* Pods_KinescopeExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KinescopeExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		8EB6787641C1F1D159EB745D /* Pods-KinescopeExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KinescopeExample.release.xcconfig"; path = "Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample.release.xcconfig"; sourceTree = "<group>"; };
+		60F7D481C29BA5D2509D2A69 /* Pods-KinescopeExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KinescopeExample.release.xcconfig"; path = "Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample.release.xcconfig"; sourceTree = "<group>"; };
 		96FB4A4491B8B00FA3019B09 /* KinescopeExample.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = KinescopeExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9869F60B183C0145911FF85D /* Pods-KinescopeExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KinescopeExample.debug.xcconfig"; path = "Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample.debug.xcconfig"; sourceTree = "<group>"; };
 		DA6D1B1FB02192C67211B98A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		DF369EDCFFA499AFDA94D912 /* Pods-KinescopeExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KinescopeExample.debug.xcconfig"; path = "Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample.debug.xcconfig"; sourceTree = "<group>"; };
+		FFF75F4CAAB6EC452AE79CFB /* Pods_KinescopeExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KinescopeExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,7 +29,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E2E3E7080D78E3690E531239 /* UIKit.framework in Frameworks */,
-				6152E9024F3DA526FA95EA0B /* Pods_KinescopeExample.framework in Frameworks */,
+				15B50620AB55A15A8CFE5DE7 /* Pods_KinescopeExample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -57,16 +57,16 @@
 			isa = PBXGroup;
 			children = (
 				1B5BA8AD065732355D68FC30 /* UIKit.framework */,
-				514F92745E6F8D2C9E0D7D40 /* Pods_KinescopeExample.framework */,
+				FFF75F4CAAB6EC452AE79CFB /* Pods_KinescopeExample.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		A0F583AD2B0FFCEF2BD7A6DB /* Pods */ = {
+		CCA9AB02B016B8B3CDAB58E8 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				DF369EDCFFA499AFDA94D912 /* Pods-KinescopeExample.debug.xcconfig */,
-				8EB6787641C1F1D159EB745D /* Pods-KinescopeExample.release.xcconfig */,
+				9869F60B183C0145911FF85D /* Pods-KinescopeExample.debug.xcconfig */,
+				60F7D481C29BA5D2509D2A69 /* Pods-KinescopeExample.release.xcconfig */,
 			);
 			name = Pods;
 			path = Pods;
@@ -78,7 +78,7 @@
 				7450ED92051EFFF412035B45 /* KinescopeExample */,
 				81BB57F38255C447C00A8B35 /* Frameworks */,
 				0E1DEFEC7B456B248F1F6FF5 /* Products */,
-				A0F583AD2B0FFCEF2BD7A6DB /* Pods */,
+				CCA9AB02B016B8B3CDAB58E8 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -89,11 +89,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DD131C8ACC5712E5819DCDAE /* Build configuration list for PBXNativeTarget "KinescopeExample" */;
 			buildPhases = (
-				86CECA4DDB9FFFD5270DC94F /* [CP] Check Pods Manifest.lock */,
+				614AC290BE143E79AC70F969 /* [CP] Check Pods Manifest.lock */,
 				1D1F2DA9F9E7D46D31255291 /* Sources */,
 				75391D939658B78C30F37B07 /* Resources */,
 				CB7AB8D3C554BB3208DC3C46 /* Frameworks */,
-				0B6FA8B1F9CFA3CA1AF45FC7 /* [CP] Embed Pods Frameworks */,
+				2A626FD2EEBBE0BEBD8CB001 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -148,7 +148,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0B6FA8B1F9CFA3CA1AF45FC7 /* [CP] Embed Pods Frameworks */ = {
+		2A626FD2EEBBE0BEBD8CB001 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -165,7 +165,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		86CECA4DDB9FFFD5270DC94F /* [CP] Check Pods Manifest.lock */ = {
+		614AC290BE143E79AC70F969 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -203,7 +203,7 @@
 /* Begin XCBuildConfiguration section */
 		1C486D161EACA453645ACED6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DF369EDCFFA499AFDA94D912 /* Pods-KinescopeExample.debug.xcconfig */;
+			baseConfigurationReference = 9869F60B183C0145911FF85D /* Pods-KinescopeExample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -283,7 +283,7 @@
 		};
 		85CDCF86B3F2840A9AC709CF /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8EB6787641C1F1D159EB745D /* Pods-KinescopeExample.release.xcconfig */;
+			baseConfigurationReference = 60F7D481C29BA5D2509D2A69 /* Pods-KinescopeExample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
