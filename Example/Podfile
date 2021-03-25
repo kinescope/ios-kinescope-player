@@ -7,6 +7,7 @@ target 'KinescopeExample' do
 
   # Pods for KinescopeExample
   pod 'ReactiveDataDisplayManager', :git => 'https://github.com/surfstudio/ReactiveDataDisplayManager', :commit => 'b5b0f360ecfad8ed892a53c431ce1f1baad82dfe'
+  pod 'Kingfisher', '~> 6.2.1'
   pod 'KinescopeSDK', :path => '../'
 
 end

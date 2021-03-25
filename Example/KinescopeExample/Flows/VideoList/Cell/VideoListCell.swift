@@ -8,6 +8,7 @@
 import UIKit
 import ReactiveDataDisplayManager
 import KinescopeSDK
+import Kingfisher
 
 final class VideoListCell: UITableViewCell {
 
@@ -48,7 +49,7 @@ extension VideoListCell: ConfigurableItem {
     typealias Model = KinescopeVideo
 
     func configure(with model: Model) {
-//        playerView.player = model.player
+        playerView.previewView.kf.setImage(with: URL(string: model.poster.md))
     }
 
 }

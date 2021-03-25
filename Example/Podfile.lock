@@ -1,10 +1,16 @@
 PODS:
   - KinescopeSDK (0.1)
+  - Kingfisher (6.2.1)
   - ReactiveDataDisplayManager (6.0.0)
 
 DEPENDENCIES:
   - KinescopeSDK (from `../`)
+  - Kingfisher (~> 6.2.1)
   - ReactiveDataDisplayManager (from `https://github.com/surfstudio/ReactiveDataDisplayManager`, commit `b5b0f360ecfad8ed892a53c431ce1f1baad82dfe`)
+
+SPEC REPOS:
+  trunk:
+    - Kingfisher
 
 EXTERNAL SOURCES:
   KinescopeSDK:
@@ -20,8 +26,9 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   KinescopeSDK: 95b2da2e14411157a669a9f70bd536c82fcacde9
+  Kingfisher: e71c6fac2aebb1262888cabc2cb13d313362a48f
   ReactiveDataDisplayManager: 53c14bb0e0ccef2047a4816651ef904500cf83da
 
-PODFILE CHECKSUM: 6e0e85b0c3be408e8d71035077f6cf8694ee04ca
+PODFILE CHECKSUM: b0a2f02b8c175353e7e7f0770fd38f2f50d0ce0a
 
 COCOAPODS: 1.10.1
