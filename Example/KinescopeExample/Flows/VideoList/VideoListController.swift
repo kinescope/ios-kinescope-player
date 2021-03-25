@@ -24,6 +24,7 @@ final class VideoListController: UIViewController {
     private lazy var adapter = tableView.rddm.baseBuilder
         .add(plugin: .paginatable(progressView: progressView,
                                   output: self))
+        .add(plugin: .currentFocus())
         .build()
 
     private weak var paginatableInput: PaginatableInput?
