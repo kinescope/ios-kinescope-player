@@ -20,6 +20,8 @@ final class VideoListCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
+        selectionStyle = .none
+
         playerView.backgroundColor = .green
         playerView.layer.cornerRadius = 20
         playerView.layer.masksToBounds = true
