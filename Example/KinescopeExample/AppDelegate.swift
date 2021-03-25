@@ -19,12 +19,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             window?.overrideUserInterfaceStyle = .light
         }
 
-        //  KIN-28: Replace with apiKeySelector
-        let users = ConfigStorage.read()
-        let surfUser = users.first(where: { $0.name == "surf" })
-        // swiftlint:disable:next force_unwrapping
-        Kinescope.shared.setConfig(.init(apiKey: surfUser!.apiKey))
-
         return true
     }
 

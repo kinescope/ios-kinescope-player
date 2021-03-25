@@ -36,7 +36,7 @@ final class VideoListController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Video List"
+        title = "Your videos"
         loadFirstPage()
     }
 
