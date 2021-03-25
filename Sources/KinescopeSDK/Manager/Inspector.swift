@@ -21,8 +21,40 @@ class Inspector: KinescopeInspectable {
 
     // MARK: - Methods
 
-    func list(onSuccess: ([KinescopeVideo]) -> Void, onError: (KinescopeInspectError) -> Void) {
-        preconditionFailure("Implement")
+    func list(request: KinescopeVideosRequest,
+              onSuccess: @escaping (([KinescopeVideo], KinescopeMetaData?)) -> Void,
+              onError: @escaping (KinescopeInspectError) -> Void) {
+        videosService.getAll(request: request) { result in
+            switch result {
+            case .success(let response):
+                onSuccess((response.data, response.meta))
+            case .failure(let error):
+                onError(Inspector.parse(error: error))
+            }
+        }
+    }
+
+}
+
+// MARK: - Private
+
+private extension Inspector {
+
+    static func parse(error: Error) -> KinescopeInspectError {
+        guard let serverError = error as? ServerError else {
+            return .unknown(error)
+        }
+
+        switch serverError.code {
+        case 404:
+            return .notFound
+        case 403:
+            return .denied
+        case ..<0:
+            return .network
+        default:
+            return .unknown(error)
+        }
     }
 
 }

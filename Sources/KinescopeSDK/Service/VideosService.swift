@@ -1,6 +1,15 @@
 import Foundation
 
-final class VideosService {
+typealias AllVideosResponse = MetaResponse<[KinescopeVideo], KinescopeMetaData>
+
+protocol VideosService {
+    func getAll(request: KinescopeVideosRequest,
+                completion: @escaping (Result<AllVideosResponse, Error>) -> Void)
+    func getVideo(by id: String,
+                  completion: @escaping (Result<KinescopeVideo, Error>) -> Void)
+}
+
+final class VideosNetworkService: VideosService {
 
     // MARK: - Private Properties
 
@@ -16,7 +25,8 @@ final class VideosService {
 
     // MARK: - Public Methods
 
-    func getAll(request: KinescopeVideosRequest, completion: @escaping (Result<[KinescopeVideo], Error>) -> Void) {
+    func getAll(request: KinescopeVideosRequest,
+                completion: @escaping (Result<AllVideosResponse, Error>) -> Void) {
         DispatchQueue.global(qos: .utility).async { [weak self] in
             guard
                 let self = self
@@ -28,7 +38,7 @@ final class VideosService {
                 let encoder = JSONEncoder()
                 encoder.keyEncodingStrategy = .convertToSnakeCase
                 let requestData = try encoder.encode(request)
-                
+
                 let requestDictionary = try JSONSerialization.jsonObject(with: requestData) as? [String: Any] ?? [:]
                 let params = requestDictionary.compactMapValues { String(describing: $0) }
 

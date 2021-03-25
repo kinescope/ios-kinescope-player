@@ -14,7 +14,16 @@ final class Transport {
 
     // MARK: - Public Methods
 
-    func perform<R: Codable>(request: URLRequest, completion: @escaping (Result<R, Error>) -> Void) {
+    /// Perform request with composite response
+    ///
+    /// Example of expected response:
+    /// ```
+    ///{
+    ///  "meta":  //some struct
+    ///  "data": // some struct or array
+    ///}
+    ///```
+    func perform<D: Codable, M: Codable>(request: URLRequest, completion: @escaping (Result<MetaResponse<D, M>, Error>) -> Void) {
         session.dataTask(with: request) { data, response, error in
             if let error = error {
                 DispatchQueue.main.async {
@@ -27,7 +36,54 @@ final class Transport {
                 do {
                     let decoder = JSONDecoder()
                     decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    let response = try decoder.decode(Response<R>.self, from: responseData)
+                    let response = try decoder.decode(MetaResponse<D, M>.self, from: responseData)
+
+                    DispatchQueue.main.async {
+                        completion(.success(response))
+                    }
+                } catch let error {
+                    DispatchQueue.main.async {
+                        completion(.failure(error))
+                    }
+                }
+            } else if let responseData = data {
+                do {
+                    let error = try JSONDecoder().decode(ServerErrorWrapper.self, from: responseData)
+
+                    DispatchQueue.main.async {
+                        completion(.failure(error.error))
+                    }
+                } catch let error {
+                    DispatchQueue.main.async {
+                        completion(.failure(error))
+                    }
+                }
+            }
+        }.resume()
+    }
+
+    /// Perform request with simple response
+    ///
+    /// Example of expected response:
+    /// ```
+    ///{
+    ///  "data": // some struct or array
+    ///}
+    ///```
+    func perform<D: Codable>(request: URLRequest, completion: @escaping (Result<D, Error>) -> Void) {
+        session.dataTask(with: request) { data, response, error in
+            if let error = error {
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+            } else if let httpResponse = response as? HTTPURLResponse,
+               (200..<300).contains(httpResponse.statusCode),
+               let responseData = data {
+
+                do {
+                    let decoder = JSONDecoder()
+                    decoder.keyDecodingStrategy = .convertFromSnakeCase
+                    let response = try decoder.decode(Response<D>.self, from: responseData)
 
                     DispatchQueue.main.async {
                         completion(.success(response.data))
@@ -52,4 +108,5 @@ final class Transport {
             }
         }.resume()
     }
+
 }

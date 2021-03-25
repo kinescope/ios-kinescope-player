@@ -22,7 +22,7 @@ final class Tests: XCTestCase {
     override func setUp() {
         super.setUp()
         // FIXME: Remove apikey
-        videosService = VideosService(transport: .init(), config: .init(apiKey: "q9AJMHcAvQaFSiZpsNUVuE"))
+        videosService = VideosNetworkService(transport: .init(), config: .init(apiKey: "q9AJMHcAvQaFSiZpsNUVuE"))
         assetsService = AssetsService(transport: .init(), config: .init(apiKey: "q9AJMHcAvQaFSiZpsNUVuE"))
     }
 
@@ -54,8 +54,8 @@ final class Tests: XCTestCase {
 
         videosService.getAll(request: request) { result in
             switch result {
-            case .success(let videos):
-                res = videos
+            case .success(let response):
+                res = response.data
             case .failure(let error):
                 err = error
             }
@@ -69,8 +69,8 @@ final class Tests: XCTestCase {
 
         videosService.getAll(request: request.next()) { result in
             switch result {
-            case .success(let videos):
-                res?.append(contentsOf: videos)
+            case .success(let response):
+                res?.append(contentsOf: response.data)
             case .failure(let error):
                 err = error
             }
