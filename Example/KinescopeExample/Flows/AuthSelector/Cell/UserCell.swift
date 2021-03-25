@@ -20,7 +20,6 @@ final class UserCell: UITableViewCell {
         backgroundColor = .white
     }
 
-
 }
 
 // MARK: - ConfigurableItem

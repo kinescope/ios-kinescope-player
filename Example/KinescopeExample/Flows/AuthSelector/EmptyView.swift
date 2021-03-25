@@ -14,8 +14,7 @@ final class EmptyView: UIView {
 
     private var label = UILabel()
 
-    @IBInspectable
-    var text: String? {
+    @IBInspectable var text: String? {
         didSet {
             label.text = text
         }
