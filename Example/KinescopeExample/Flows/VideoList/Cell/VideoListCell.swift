@@ -22,6 +22,7 @@ final class VideoListCell: UITableViewCell {
         super.awakeFromNib()
         playerView.backgroundColor = .green
         playerView.layer.cornerRadius = 20
+        playerView.layer.masksToBounds = true
     }
 
     override func prepareForReuse() {
