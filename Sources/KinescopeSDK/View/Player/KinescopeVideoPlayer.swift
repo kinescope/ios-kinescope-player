@@ -5,6 +5,8 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     // MARK: - Private Properties
 
     private let player: AVPlayer
+    private let looped: Bool
+    private var looper: AVPlayerLooper?
     private let videoId: String
 
     // MARK: - KinescopePlayer
@@ -15,8 +17,9 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
     public var delegate: KinescopePlayerDelegate?
     
-    public required init(videoId: String) {
-        self.player = AVPlayer()
+    public required init(videoId: String, looped: Bool = false) {
+        self.player = looped ? AVQueuePlayer() : AVPlayer()
+        self.looped = looped
         self.videoId = videoId
         self.configure()
     }
@@ -45,7 +48,12 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
                 let asset = AVAsset(url: url)
                 let item = AVPlayerItem(asset: asset)
-                self.player.replaceCurrentItem(with: item)
+
+                if self.looped, let player = self.player as? AVQueuePlayer {
+                    self.looper = AVPlayerLooper(player: player, templateItem: item)
+                } else {
+                    self.player.replaceCurrentItem(with: item)
+                }
 
                 self.delegate?.kinescopePlayerDidReadyToPlay(player: self)
             },
