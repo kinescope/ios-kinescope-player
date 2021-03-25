@@ -64,7 +64,7 @@
                     <connections>
                         <outlet property="emptyView" destination="Ff2-Ay-2BF" id="STZ-Lg-csw"/>
                         <outlet property="tableView" destination="vfF-sv-7ss" id="jhD-sS-vJx"/>
-                        <segue destination="QTb-d7-Rhh" kind="show" id="3Pd-MQ-L3e"/>
+                        <segue destination="QTb-d7-Rhh" kind="show" identifier="toVideos" id="3Pd-MQ-L3e"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SN2-cr-X6f" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

@@ -7,6 +7,7 @@
 
 import UIKit
 import ReactiveDataDisplayManager
+import KinescopeSDK
 
 final class AuthSelectorController: UIViewController {
 
@@ -23,7 +24,11 @@ final class AuthSelectorController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Who are you?"
+        navigationItem.title = "Who are you?"
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: nil,
+                                                           style: .plain,
+                                                           target: nil,
+                                                           action: nil)
         loadUsers()
     }
 
@@ -47,11 +52,31 @@ private extension AuthSelectorController {
 
         adapter.clearCellGenerators()
 
-        let generators = users.map { UserCell.rddm.baseGenerator(with: $0) }
+        let generators = users.map(makeGenerator(from:))
 
         adapter.addCellGenerators(generators)
 
         adapter.forceRefill()
+    }
+
+    func makeGenerator(from user: User) -> BaseCellGenerator<UserCell> {
+        let generator = UserCell.rddm.baseGenerator(with: user)
+
+        generator.didSelectEvent += { [weak self] in
+            self?.onSelect(user: user)
+        }
+
+        return generator
+    }
+
+    func onSelect(user: User) {
+
+        /// Set apiKey
+        Kinescope.shared.setConfig(.init(apiKey: user.apiKey))
+
+        /// Push to next
+        performSegue(withIdentifier: "toVideos", sender: nil)
+
     }
 
 }
