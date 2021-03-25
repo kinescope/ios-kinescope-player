@@ -28,8 +28,7 @@ public class KinescopePlayerView: UIView {
 
     public var player: KinescopePlayer? {
         didSet {
-            // Bind player with player view
-            // KinescopePlayer should provide AVPlayer for playerView
+            playerView.player = player?.avPlayer
         }
     }
 
@@ -46,6 +45,12 @@ public class KinescopePlayerView: UIView {
     }
 
     private func setupInitialState() {
+        let playerView = PlayerView()
+        addSubview(playerView)
+        stretch(view: playerView)
+        self.playerView = playerView
+
+        previewView.isHidden = true
         addSubview(previewView)
         stretch(view: previewView)
     }
