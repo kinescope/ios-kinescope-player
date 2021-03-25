@@ -14,11 +14,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        Kinescope.shared.setConfig(.init(apiKey: "stub"))
+
         if #available(iOS 13.0, *) {
             window?.overrideUserInterfaceStyle = .light
         }
+
+        //  KIN-28: Replace with apiKeySelector
+        let users = ConfigStorage.read()
+        let surfUser = users.first(where: { $0.name == "surf" })
+        // swiftlint:disable:next force_unwrapping
+        Kinescope.shared.setConfig(.init(apiKey: surfUser!.apiKey))
+
         return true
     }
 

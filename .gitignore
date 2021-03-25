@@ -51,3 +51,5 @@ report/
 node_modules/
 package-lock.json
 .build/
+
+/Example/KinescopeExample/KinescopeConfig.plist

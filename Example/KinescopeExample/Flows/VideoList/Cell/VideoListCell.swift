@@ -8,6 +8,7 @@
 import UIKit
 import ReactiveDataDisplayManager
 import KinescopeSDK
+import Kingfisher
 
 final class VideoListCell: UITableViewCell {
 
@@ -15,34 +16,29 @@ final class VideoListCell: UITableViewCell {
 
     @IBOutlet private weak var playerView: KinescopePlayerView!
 
-    // MARK: - Properties
-
-    var title: String?
-
     // MARK: - Lifecycle
 
     override func awakeFromNib() {
         super.awakeFromNib()
         playerView.backgroundColor = .green
         playerView.layer.cornerRadius = 20
+        playerView.layer.masksToBounds = true
     }
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        
+
         playerView.player = nil
     }
 
     // MARK: - Public Methods
 
     func start() {
-        print("KIN start \(title)")
-        playerView?.player?.play()
+        // KIN-21:  start playing video inside playerView
     }
 
     func stop() {
-        print("KIN stop \(title)")
-        playerView?.player?.stop()
+        // KIN-21: - stop playing video inside playerView
     }
 
 }
@@ -51,15 +47,10 @@ final class VideoListCell: UITableViewCell {
 
 extension VideoListCell: ConfigurableItem {
 
-    struct Model {
-//        let player: KinescopePlayer
-        let title: String
-    }
+    typealias Model = KinescopeVideo
 
     func configure(with model: Model) {
-        title = model.title
-//        playerView.player = model.player
+        playerView.previewView.kf.setImage(with: URL(string: model.poster.md))
     }
 
 }
-
