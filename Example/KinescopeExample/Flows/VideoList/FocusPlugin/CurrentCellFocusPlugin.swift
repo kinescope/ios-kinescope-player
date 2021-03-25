@@ -69,7 +69,7 @@ private extension CurrentCellFocusPlugin {
     func getFirstVisibleCell(from table: UITableView) -> UITableViewCell? {
         let visibleY = table.contentOffset.y
         let visibleCells = table.visibleCells.filter { $0.frame.origin.y > visibleY }
-        return visibleCells.min(by: { $0.frame.origin.y > $1.frame.origin.y })
+        return visibleCells.min(by: { $0.frame.origin.y < $1.frame.origin.y })
     }
 
 }
