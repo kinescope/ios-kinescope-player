@@ -10,6 +10,9 @@ import ReactiveDataDisplayManager
 import KinescopeSDK
 import Kingfisher
 
+// TODO: - Move work with AVFoundation inside KinescopePlayerView
+import AVFoundation
+
 final class VideoListCell: UITableViewCell {
 
     // MARK: - IBOutlets
@@ -20,6 +23,7 @@ final class VideoListCell: UITableViewCell {
 
     // TODO: - Remove
     private var name: String = ""
+    private var player: AVPlayer?
 
     // MARK: - Lifecycle
 
@@ -43,11 +47,13 @@ final class VideoListCell: UITableViewCell {
     func start() {
         // KIN-21:  start playing video inside playerView
         print("KIN - START - play video with name: \(name)")
+        player?.play()
     }
 
     func stop() {
         // KIN-21: - stop playing video inside playerView
         print("KIN - STOP -  play video with name: \(name)")
+        player?.pause()
     }
 
 }
@@ -62,6 +68,17 @@ extension VideoListCell: ConfigurableItem {
         name = model.title
 
         playerView.previewView.kf.setImage(with: URL(string: model.poster.md))
+
+        // TODO: - Remove
+        guard let url = URL(string: model.hlsLink) else {
+            return
+        }
+
+        let asset = AVURLAsset(url: url)
+        let item = AVPlayerItem(asset: asset)
+        let player = AVPlayer(playerItem: item)
+        playerView.playerView.player = player
+        self.player = player
     }
 
 }

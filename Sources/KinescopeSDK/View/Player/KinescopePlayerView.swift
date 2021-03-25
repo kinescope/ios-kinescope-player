@@ -14,7 +14,14 @@ public class KinescopePlayerView: UIView {
     // MARK: - Private Properties
 
     /// View with AVPlayerLayer to fill size
-    var playerView: PlayerView!
+    ///
+    /// - Warning: should be internal or private
+    public private(set) var playerView: PlayerView = {
+        $0.layer.shouldRasterize = true
+        $0.layer.rasterizationScale = UIScreen.main.scale
+        $0.playerLayer.videoGravity = .resizeAspectFill
+        return $0
+    }(PlayerView())
     var playerControlView: PlayerControlView!
 
     // MARK: - Internal Properties
@@ -46,8 +53,13 @@ public class KinescopePlayerView: UIView {
     }
 
     private func setupInitialState() {
+
+        addSubview(playerView)
+        stretch(view: playerView)
+
         addSubview(previewView)
         stretch(view: previewView)
+        previewView.isHidden = true
     }
 
 }

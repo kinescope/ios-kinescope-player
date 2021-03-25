@@ -8,11 +8,11 @@
 import UIKit
 import AVFoundation
 
-class PlayerView: UIView {
+public class PlayerView: UIView {
 
     // MARK: - Private Properties
 
-    var player: AVPlayer? {
+    public var player: AVPlayer? {
         get {
             playerLayer.player
         }
@@ -26,7 +26,7 @@ class PlayerView: UIView {
         return layer as! AVPlayerLayer
     }
 
-    override static var layerClass: AnyClass {
+    public override static var layerClass: AnyClass {
         return AVPlayerLayer.self
     }
 }
