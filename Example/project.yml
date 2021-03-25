@@ -21,11 +21,11 @@ targets:
       sources:
         - path: KinescopeExample
       info:
-        path: Kinescope/Application/Info.plist
+        path: KinescopeExample/Application/Info.plist
         properties:
           UILaunchStoryboardName: LaunchScreen
           UIMainStoryboardFile: Main
-          CFBundleName: ReactiveDataDisplayManagerExample
+          CFBundleName: KinescopeExample
           CFBundleShortVersionString: $(MARKETING_VERSION)
           CFBundleVersion: $(CURRENT_PROJECT_VERSION)
       settings:
