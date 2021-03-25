@@ -14,6 +14,15 @@ final class Transport {
 
     // MARK: - Public Methods
 
+    /// Perform request with composite response
+    ///
+    /// Example of expected response:
+    /// ```
+    ///{
+    ///  "meta":  //some struct
+    ///  "data": // some struct or array
+    ///}
+    ///```
     func perform<D: Codable, M: Codable>(request: URLRequest, completion: @escaping (Result<MetaResponse<D, M>, Error>) -> Void) {
         session.dataTask(with: request) { data, response, error in
             if let error = error {
@@ -53,6 +62,14 @@ final class Transport {
         }.resume()
     }
 
+    /// Perform request with simple response
+    ///
+    /// Example of expected response:
+    /// ```
+    ///{
+    ///  "data": // some struct or array
+    ///}
+    ///```
     func perform<D: Codable>(request: URLRequest, completion: @escaping (Result<D, Error>) -> Void) {
         session.dataTask(with: request) { data, response, error in
             if let error = error {
