@@ -29,7 +29,7 @@ final class VideoListController: UIViewController {
     private weak var paginatableInput: PaginatableInput?
 
     private lazy var inspector: KinescopeInspectable = Kinescope.shared.inspector
-    private var request = KinescopeVideosRequest(page: 1)
+    private var request = KinescopeVideosRequest(page: 1, perPage: 2)
     private var totalCount = 0
 
     // MARK: - UIViewController
@@ -68,16 +68,16 @@ private extension VideoListController {
     func loadVideos(onComplete: @escaping (Bool) -> Void) {
         inspector.list(request: request,
                        onSuccess: { [weak self] response in
-                        guard let self = self else {
-                            return
-                        }
+                            guard let self = self else {
+                                return
+                            }
 
-                        self.fillAdapter(with: response.0)
-                        self.totalCount += response.0.count
-                        onComplete(response.1.pagination.total > self.totalCount)
+                            self.fillAdapter(with: response.0)
+                            self.totalCount += response.0.count
+                            onComplete(response.1.pagination.total > self.totalCount)
                        },
                        onError: { _ in
-                        print("Error loading videos")
+                            print("Error loading videos")
                        })
     }
 
