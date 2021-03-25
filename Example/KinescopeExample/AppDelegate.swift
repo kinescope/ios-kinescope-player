@@ -15,17 +15,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
-        // FIXME: Remove when start KIN-28
+        if #available(iOS 13.0, *) {
+            window?.overrideUserInterfaceStyle = .light
+        }
+
+        //  KIN-28: Replace with apiKeySelector
         let users = ConfigStorage.read()
         let surfUser = users.first(where: { $0.name == "surf" })
+        // swiftlint:disable:next force_unwrapping
         Kinescope.shared.setConfig(.init(apiKey: surfUser!.apiKey))
-
-        Kinescope.shared.inspector.list(request: .init(page: 1),
-                                        onSuccess: { result in
-                                            print("KIN list result: \(result)")
-                                        }, onError: { error in
-                                            print("KIN list error: \(error)")
-                                        })
 
         return true
     }
