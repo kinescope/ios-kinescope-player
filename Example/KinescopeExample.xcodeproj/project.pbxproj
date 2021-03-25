@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		13A9640A4F37BBF6E2F6064E /* Pods_KinescopeExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA34FA6CCF8139D935E01F48 /* Pods_KinescopeExample.framework */; };
 		27803C78BC9292176387B837 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1297BC1CB454C3BA783E4F43 /* Main.storyboard */; };
 		4CE8078E78304438232FCD0D /* ConfigStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B71D3741FB772726928CC02 /* ConfigStorage.swift */; };
 		4F66AFB3A32776CED4598E42 /* VideoListFocusableCellGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A366BFC33AA765D5889FCA5 /* VideoListFocusableCellGenerator.swift */; };
@@ -22,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		080D75CD3D8C06C10AC67298 /* Pods-KinescopeExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KinescopeExample.release.xcconfig"; path = "Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample.release.xcconfig"; sourceTree = "<group>"; };
 		1297BC1CB454C3BA783E4F43 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		1697D697E9F0904B87B756B7 /* PaginatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginatorView.swift; sourceTree = "<group>"; };
 		1B5BA8AD065732355D68FC30 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -35,6 +37,8 @@
 		C03FA76E45742849B9B29429 /* FocusableItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusableItem.swift; sourceTree = "<group>"; };
 		DA6D1B1FB02192C67211B98A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F59A91C77A3A14596F5C5226 /* VideoListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListCell.swift; sourceTree = "<group>"; };
+		F72862E5DC161B276CA58E83 /* Pods-KinescopeExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KinescopeExample.debug.xcconfig"; path = "Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample.debug.xcconfig"; sourceTree = "<group>"; };
+		FA34FA6CCF8139D935E01F48 /* Pods_KinescopeExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KinescopeExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD747CF272A25BB0F30BB85A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -44,6 +48,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E2E3E7080D78E3690E531239 /* UIKit.framework in Frameworks */,
+				13A9640A4F37BBF6E2F6064E /* Pods_KinescopeExample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,8 +87,19 @@
 			isa = PBXGroup;
 			children = (
 				1B5BA8AD065732355D68FC30 /* UIKit.framework */,
+				FA34FA6CCF8139D935E01F48 /* Pods_KinescopeExample.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9793DA77F3799D6C43A6F48C /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F72862E5DC161B276CA58E83 /* Pods-KinescopeExample.debug.xcconfig */,
+				080D75CD3D8C06C10AC67298 /* Pods-KinescopeExample.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
 			sourceTree = "<group>";
 		};
 		AF687273EFB801F59B28F156 /* VideoList */ = {
@@ -112,6 +128,7 @@
 				7450ED92051EFFF412035B45 /* KinescopeExample */,
 				81BB57F38255C447C00A8B35 /* Frameworks */,
 				0E1DEFEC7B456B248F1F6FF5 /* Products */,
+				9793DA77F3799D6C43A6F48C /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -149,9 +166,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DD131C8ACC5712E5819DCDAE /* Build configuration list for PBXNativeTarget "KinescopeExample" */;
 			buildPhases = (
+				B366AB764B1D49A40D4C581D /* [CP] Check Pods Manifest.lock */,
 				1D1F2DA9F9E7D46D31255291 /* Sources */,
 				75391D939658B78C30F37B07 /* Resources */,
 				CB7AB8D3C554BB3208DC3C46 /* Frameworks */,
+				3230642F84CCF51267947746 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -185,6 +204,7 @@
 				en,
 			);
 			mainGroup = D09F6815030B468C4B8FCCBD;
+			productRefGroup = 0E1DEFEC7B456B248F1F6FF5 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -204,6 +224,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3230642F84CCF51267947746 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B366AB764B1D49A40D4C581D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-KinescopeExample-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1D1F2DA9F9E7D46D31255291 /* Sources */ = {
@@ -227,6 +289,7 @@
 /* Begin XCBuildConfiguration section */
 		1C486D161EACA453645ACED6 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F72862E5DC161B276CA58E83 /* Pods-KinescopeExample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -235,7 +298,11 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				INFOPLIST_FILE = Kinescope/Application/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = io.kinescope.example;
 				SDKROOT = iphoneos;
@@ -302,6 +369,7 @@
 		};
 		85CDCF86B3F2840A9AC709CF /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 080D75CD3D8C06C10AC67298 /* Pods-KinescopeExample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -310,7 +378,11 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				INFOPLIST_FILE = Kinescope/Application/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = io.kinescope.example;
 				SDKROOT = iphoneos;
