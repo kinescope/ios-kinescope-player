@@ -10,6 +10,7 @@
 		010A47AD260C6CA7008180DC /* AuthSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010A47AC260C6CA7008180DC /* AuthSelectorController.swift */; };
 		010A47B2260C6CBF008180DC /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010A47B1260C6CBF008180DC /* UserCell.swift */; };
 		010A47B5260C6E5C008180DC /* UserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 010A47B4260C6E5C008180DC /* UserCell.xib */; };
+		010A47B8260C73FD008180DC /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010A47B7260C73FD008180DC /* EmptyView.swift */; };
 		27803C78BC9292176387B837 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1297BC1CB454C3BA783E4F43 /* Main.storyboard */; };
 		4CE8078E78304438232FCD0D /* ConfigStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B71D3741FB772726928CC02 /* ConfigStorage.swift */; };
 		6E4269CADAE4110CF3E96574 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA6D1B1FB02192C67211B98A /* AppDelegate.swift */; };
@@ -27,6 +28,7 @@
 		010A47AC260C6CA7008180DC /* AuthSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSelectorController.swift; sourceTree = "<group>"; };
 		010A47B1260C6CBF008180DC /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
 		010A47B4260C6E5C008180DC /* UserCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserCell.xib; sourceTree = "<group>"; };
+		010A47B7260C73FD008180DC /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
 		1297BC1CB454C3BA783E4F43 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		1697D697E9F0904B87B756B7 /* PaginatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginatorView.swift; sourceTree = "<group>"; };
 		1B5BA8AD065732355D68FC30 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -62,6 +64,7 @@
 			children = (
 				010A47B0260C6CB4008180DC /* Cell */,
 				010A47AC260C6CA7008180DC /* AuthSelectorController.swift */,
+				010A47B7260C73FD008180DC /* EmptyView.swift */,
 			);
 			path = AuthSelector;
 			sourceTree = "<group>";
@@ -285,6 +288,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				010A47B2260C6CBF008180DC /* UserCell.swift in Sources */,
+				010A47B8260C73FD008180DC /* EmptyView.swift in Sources */,
 				010A47AD260C6CA7008180DC /* AuthSelectorController.swift in Sources */,
 				6E4269CADAE4110CF3E96574 /* AppDelegate.swift in Sources */,
 				4CE8078E78304438232FCD0D /* ConfigStorage.swift in Sources */,
