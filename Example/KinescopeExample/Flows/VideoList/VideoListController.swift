@@ -83,15 +83,14 @@ private extension VideoListController {
 
     func fillAdapter(with videos: [KinescopeVideo]) {
 
-        let generators = videos.map { VideoListCell.rddm.baseGenerator(with: $0)}
+        let generators = videos.map { VideoListCell.rddm.baseGenerator(with: $0) }
 
         adapter.addCellGenerators(generators)
-        
+
         adapter.forceRefill()
     }
 
 }
-
 
 // MARK: - RefreshableOutput
 

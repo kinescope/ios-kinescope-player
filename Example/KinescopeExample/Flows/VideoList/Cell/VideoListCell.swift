@@ -27,18 +27,18 @@ final class VideoListCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        
+
         playerView.player = nil
     }
 
     // MARK: - Public Methods
 
     func start() {
-        // TODO: - start playing video inside playerView
+        // KIN-21:  start playing video inside playerView
     }
 
     func stop() {
-        // TODO: - stop playing video inside playerView
+        // KIN-21: - stop playing video inside playerView
     }
 
 }
@@ -54,4 +54,3 @@ extension VideoListCell: ConfigurableItem {
     }
 
 }
-
