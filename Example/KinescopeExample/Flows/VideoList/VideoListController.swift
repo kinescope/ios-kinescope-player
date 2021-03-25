@@ -83,7 +83,7 @@ private extension VideoListController {
 
     func fillAdapter(with videos: [KinescopeVideo]) {
 
-        let generators = videos.map { VideoListCell.rddm.baseGenerator(with: $0) }
+        let generators = videos.map { VideoListFocusableCellGenerator(with: $0) }
 
         adapter.addCellGenerators(generators)
 

@@ -16,6 +16,11 @@ final class VideoListCell: UITableViewCell {
 
     @IBOutlet private weak var playerView: KinescopePlayerView!
 
+    // MARK: - Properties
+
+    // TODO: - Remove
+    private var name: String = ""
+
     // MARK: - Lifecycle
 
     override func awakeFromNib() {
@@ -37,10 +42,12 @@ final class VideoListCell: UITableViewCell {
 
     func start() {
         // KIN-21:  start playing video inside playerView
+        print("KIN - START - play video with name: \(name)")
     }
 
     func stop() {
         // KIN-21: - stop playing video inside playerView
+        print("KIN - STOP -  play video with name: \(name)")
     }
 
 }
@@ -52,6 +59,8 @@ extension VideoListCell: ConfigurableItem {
     typealias Model = KinescopeVideo
 
     func configure(with model: Model) {
+        name = model.title
+
         playerView.previewView.kf.setImage(with: URL(string: model.poster.md))
     }
 
