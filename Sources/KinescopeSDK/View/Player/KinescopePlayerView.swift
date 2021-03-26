@@ -35,8 +35,7 @@ public class KinescopePlayerView: UIView {
 
     public var player: KinescopePlayer? {
         didSet {
-            // Bind player with player view
-            // KinescopePlayer should provide AVPlayer for playerView
+            playerView.player = player?.avPlayer
         }
     }
 
@@ -59,7 +58,6 @@ public class KinescopePlayerView: UIView {
 
         addSubview(previewView)
         stretch(view: previewView)
-        previewView.isHidden = true
     }
 
 }

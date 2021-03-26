@@ -22,6 +22,7 @@ final class VideoListController: UIViewController {
     private lazy var progressView = PaginatorView(frame: .init(x: 0, y: 0, width: tableView.frame.width, height: 80))
 
     private lazy var adapter = tableView.rddm.baseBuilder
+        .add(plugin: .selectable())
         .add(plugin: .paginatable(progressView: progressView,
                                   output: self))
         .add(plugin: .currentFocus())
@@ -41,6 +42,17 @@ final class VideoListController: UIViewController {
         loadFirstPage()
     }
 
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        guard
+            let destination = segue.destination as? VideoViewController,
+            let id = sender as? String
+        else {
+            return
+        }
+
+        destination.videoId = id
+    }
 }
 
 // MARK: - Private Methods
@@ -84,7 +96,16 @@ private extension VideoListController {
 
     func fillAdapter(with videos: [KinescopeVideo]) {
 
-        let generators = videos.map { VideoListFocusableCellGenerator(with: $0) }
+
+        let generators = videos.map { video -> BaseCellGenerator<VideoListCell> in
+            let generator = VideoListFocusableCellGenerator(with: video)
+
+            generator.didSelectEvent.addListner { [weak self] in
+                self?.performSegue(withIdentifier: "toVideo", sender: video.id)
+            }
+
+            return generator
+        }
 
         adapter.addCellGenerators(generators)
 

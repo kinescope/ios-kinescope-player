@@ -34,6 +34,18 @@ class Inspector: KinescopeInspectable {
         }
     }
 
+    func video(id: String,
+               onSuccess: @escaping (KinescopeVideo) -> Void,
+               onError: @escaping (KinescopeInspectError) -> Void) {
+        videosService.getVideo(by: id) { result in
+            switch result {
+            case .success(let response):
+                onSuccess(response)
+            case .failure(let error):
+                onError(Inspector.parse(error: error))
+            }
+        }
+    }
 }
 
 // MARK: - Private
