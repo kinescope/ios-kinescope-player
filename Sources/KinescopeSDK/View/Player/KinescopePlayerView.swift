@@ -14,14 +14,7 @@ public class KinescopePlayerView: UIView {
     // MARK: - Private Properties
 
     /// View with AVPlayerLayer to fill size
-    ///
-    /// - Warning: should be internal or private
-    public private(set) var playerView: PlayerView = {
-        $0.layer.shouldRasterize = true
-        $0.layer.rasterizationScale = UIScreen.main.scale
-        $0.playerLayer.videoGravity = .resizeAspectFill
-        return $0
-    }(PlayerView())
+    var playerView: PlayerView!
     var playerControlView: PlayerControlView!
 
     // MARK: - Internal Properties
@@ -31,15 +24,9 @@ public class KinescopePlayerView: UIView {
 
     // MARK: - Public Properties
 
-    public var progressview: UIActivityIndicatorView!
+    public var progressView: UIActivityIndicatorView!
 
-    public var player: KinescopePlayer? {
-        didSet {
-            playerView.player = player?.avPlayer
-        }
-    }
-
-    // MARK: - Init
+    // MARK: - Lifecycle
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -51,13 +38,54 @@ public class KinescopePlayerView: UIView {
         setupInitialState()
     }
 
-    private func setupInitialState() {
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        progressView.center = playerView.center
+    }
 
+    // MARK: - Public Methods
+
+    public func set(videoGravity: AVLayerVideoGravity) {
+        playerView.playerLayer.videoGravity = videoGravity
+    }
+
+    // MARK: - Internal Methods
+
+    func startLoader() {
+        progressView.isHidden = false
+        progressView.startAnimating()
+    }
+
+    func stopLoader() {
+        progressView.stopAnimating()
+    }
+
+    // MARK: - Private Methods
+
+    private func setupInitialState() {
+        configurePlayerView()
+        configurePreviewView()
+        configureProgressView()
+    }
+
+    private func configurePlayerView() {
+        let playerView = PlayerView()
+        playerView.layer.shouldRasterize = true
+        playerView.layer.rasterizationScale = UIScreen.main.scale
         addSubview(playerView)
         stretch(view: playerView)
+        self.playerView = playerView
+    }
 
+    private func configurePreviewView() {
         addSubview(previewView)
         stretch(view: previewView)
     }
 
+    private func configureProgressView() {
+        let progressView = UIActivityIndicatorView(style: .whiteLarge)
+        progressView.hidesWhenStopped = true
+        addSubview(progressView)
+        self.progressView = progressView
+    }
 }

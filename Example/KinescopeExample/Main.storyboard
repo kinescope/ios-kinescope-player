@@ -119,12 +119,8 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Mt-Oj-buA" customClass="KinescopePlayerView" customModule="KinescopeSDK">
                                 <rect key="frame" x="0.0" y="88" width="414" height="774"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <color key="backgroundColor" systemColor="systemIndigoColor"/>
                             </view>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="DPu-ay-fTZ">
-                                <rect key="frame" x="188.5" y="456.5" width="37" height="37"/>
-                                <color key="color" systemColor="systemIndigoColor"/>
-                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="GgO-Ol-gXU"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -132,14 +128,11 @@
                             <constraint firstItem="GgO-Ol-gXU" firstAttribute="trailing" secondItem="0Mt-Oj-buA" secondAttribute="trailing" id="2NM-Xr-JMK"/>
                             <constraint firstItem="0Mt-Oj-buA" firstAttribute="top" secondItem="GgO-Ol-gXU" secondAttribute="top" id="ET8-F8-TEh"/>
                             <constraint firstItem="0Mt-Oj-buA" firstAttribute="leading" secondItem="GgO-Ol-gXU" secondAttribute="leading" id="LjU-VV-QKJ"/>
-                            <constraint firstItem="DPu-ay-fTZ" firstAttribute="centerY" secondItem="GgO-Ol-gXU" secondAttribute="centerY" id="MPO-vb-h6E"/>
                             <constraint firstItem="GgO-Ol-gXU" firstAttribute="bottom" secondItem="0Mt-Oj-buA" secondAttribute="bottom" id="W88-OG-6Nw"/>
-                            <constraint firstItem="DPu-ay-fTZ" firstAttribute="centerX" secondItem="GgO-Ol-gXU" secondAttribute="centerX" id="eFJ-cg-27g"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Quj-GN-m8L"/>
                     <connections>
-                        <outlet property="activityIndicator" destination="DPu-ay-fTZ" id="hjh-TK-SNb"/>
                         <outlet property="playerView" destination="0Mt-Oj-buA" id="EkF-2Z-qNh"/>
                     </connections>
                 </viewController>

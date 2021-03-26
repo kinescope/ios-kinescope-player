@@ -37,7 +37,7 @@ final class VideoListCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        playerView.player = nil
+        player?.detach(view: playerView)
     }
 
     // MARK: - Public Methods
@@ -64,9 +64,9 @@ extension VideoListCell: ConfigurableItem {
         name = model.title
 
         playerView.previewView.kf.setImage(with: URL(string: model.poster.md))
-
+        playerView.set(videoGravity: .resizeAspectFill)
         player = KinescopeVideoPlayer(videoId: model.id, looped: true)
-        playerView.player = player
+        player?.attach(view: playerView)
     }
 
 }

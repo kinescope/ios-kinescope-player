@@ -10,12 +10,6 @@ import AVKit
 /// Control protocol for player
 public protocol KinescopePlayer {
 
-    /// Uses for binding to playerView
-    var avPlayer: AVPlayer { get }
-
-    /// Uses for binding to playerView
-    var delegate: KinescopePlayerDelegate? { get set }
-
     /// - parameter videoId: Id of concrete video. For example from [GET Videos list](https://documenter.getpostman.com/view/10589901/TVCcXpNM)
     /// - parameter looped: show video in infinite loop
     init(videoId: String, looped: Bool)
@@ -25,4 +19,15 @@ public protocol KinescopePlayer {
 
     /// Pause playing of video
     func pause()
+
+    /// Stops playing video
+    func stop()
+
+    /// Bind player to view
+    /// - Parameter view: view for binding
+    func attach(view: KinescopePlayerView)
+
+    /// Unbind player to view
+    /// - Parameter view: view for unbinding
+    func detach(view: KinescopePlayerView)
 }
