@@ -41,12 +41,10 @@ final class VideoListCell: UITableViewCell {
 
     func start() {
         player?.play()
-        // KIN-21:  start playing video inside playerView
     }
 
     func stop() {
         player?.pause()
-        // KIN-21: - stop playing video inside playerView
     }
 
 }
@@ -61,20 +59,6 @@ extension VideoListCell: ConfigurableItem {
         playerView.previewView.kf.setImage(with: URL(string: model.poster.md))
         player = KinescopeVideoPlayer(videoId: model.id, looped: true)
         playerView.player = player
-        player?.delegate = self
     }
 
-}
-
-// MARK: - ConfigurableItem
-
-extension VideoListCell: KinescopePlayerDelegate {
-    func kinescopePlayerDidReadyToPlay(player: KinescopePlayer) {
-        playerView.previewView.isHidden = true
-        player.play()
-    }
-
-    func kinescopePlayerDataLoadingFailed(player: KinescopePlayer, error: Error) {
-        playerView.previewView.isHidden = true
-    }
 }
