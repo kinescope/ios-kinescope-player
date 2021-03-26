@@ -48,9 +48,11 @@ public class KinescopePlayerView: UIView {
         let playerView = PlayerView()
         addSubview(playerView)
         stretch(view: playerView)
+        playerView.layer.shouldRasterize = true
+        playerView.layer.rasterizationScale = UIScreen.main.scale
+        playerView.playerLayer.videoGravity = .resizeAspectFill
         self.playerView = playerView
 
-        previewView.isHidden = true
         addSubview(previewView)
         stretch(view: previewView)
     }

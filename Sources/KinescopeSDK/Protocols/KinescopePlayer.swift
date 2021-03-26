@@ -17,7 +17,8 @@ public protocol KinescopePlayer {
     var delegate: KinescopePlayerDelegate? { get set }
 
     /// - parameter videoId: Id of concrete video. For example from [GET Videos list](https://documenter.getpostman.com/view/10589901/TVCcXpNM)
-    init(videoId: String)
+    /// - parameter looped: show video in infinite loop
+    init(videoId: String, looped: Bool)
 
     /// Start playing of video
     func play()
