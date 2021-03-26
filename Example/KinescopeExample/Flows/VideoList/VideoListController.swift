@@ -25,14 +25,15 @@ final class VideoListController: UIViewController {
     // MARK: - Private Properties
 
     private lazy var progressView = PaginatorView(frame: .init(x: 0, y: 0, width: tableView.frame.width, height: 80))
-
+    
     private lazy var adapter = tableView.rddm.baseBuilder
         .add(plugin: .selectable())
         .add(plugin: .paginatable(progressView: progressView,
                                   output: self))
-        .add(plugin: .currentFocus())
+        .add(plugin: .currentFocus(output: self))
         .build()
 
+    private weak var focusInput: CurrentCellFocusInput?
     private weak var paginatableInput: PaginatableInput?
 
     private lazy var inspector: KinescopeInspectable = Kinescope.shared.inspector
@@ -114,12 +115,24 @@ private extension VideoListController {
 
         adapter.addCellGenerators(generators)
 
-        adapter.forceRefill()
+        adapter.forceRefill { [weak self] in
+            self?.focusInput?.updateFocus()
+        }
     }
 
 }
 
-// MARK: - RefreshableOutput
+// MARK: - CurrentCellFocusOutput
+
+extension VideoListController: CurrentCellFocusOutput {
+
+    func onFocusInitialized(with input: CurrentCellFocusInput) {
+        self.focusInput = input
+    }
+
+}
+
+// MARK: - PaginatableOutput
 
 extension VideoListController: PaginatableOutput {
 

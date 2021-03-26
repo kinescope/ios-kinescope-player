@@ -7,6 +7,16 @@
 
 import ReactiveDataDisplayManager
 
+public protocol CurrentCellFocusInput: class {
+
+    func updateFocus()
+}
+
+public protocol CurrentCellFocusOutput: class {
+
+    func onFocusInitialized(with input: CurrentCellFocusInput)
+}
+
 /// Plugin to Detect Most Visible Cell in `UITableView`
 final class CurrentCellFocusPlugin: BaseTablePlugin<ScrollEvent> {
 
@@ -16,28 +26,54 @@ final class CurrentCellFocusPlugin: BaseTablePlugin<ScrollEvent> {
 
     // MARK: - Properties
 
-    weak var focusedGenerator: GeneratorType?
+    private weak var focusedGenerator: GeneratorType?
+
+    private weak var manager: BaseTableManager?
+
+    private weak var output: CurrentCellFocusOutput?
+
+    // MARK: - Init
+
+    init(output: CurrentCellFocusOutput) {
+        self.output = output
+    }
 
     // MARK: - Public Methods
+
+    override func setup(with manager: BaseTableManager?) {
+        self.manager = manager
+        output?.onFocusInitialized(with: self)
+    }
 
     override func process(event: ScrollEvent, with manager: BaseTableManager?) {
 
         switch event {
         case .didScroll:
-
-            guard let table = manager?.view,
-                let firstVisibleCell = getFirstVisibleCell(from: table),
-                let firstVisiblePath = table.indexPath(for: firstVisibleCell),
-                let currentFocusedGenerator = getGenerator(from: manager, at: firstVisiblePath) else {
-                return
-            }
-
-            updateFocus(old: focusedGenerator, new: currentFocusedGenerator)
-
+            updateFocus()
         default:
             break
         }
 
+    }
+
+}
+
+// MARK: - CurrentCellFocusInput
+
+extension CurrentCellFocusPlugin: CurrentCellFocusInput {
+
+    func updateFocus() {
+        guard let table = manager?.view,
+            let firstVisibleCell = getFirstVisibleCell(from: table),
+            let firstVisiblePath = table.indexPath(for: firstVisibleCell),
+            let currentFocusedGenerator = getGenerator(from: manager, at: firstVisiblePath),
+            let focused = compare(old: focusedGenerator, new: currentFocusedGenerator) else {
+            return
+        }
+
+        focusedGenerator?.focusUpdated(isFocused: false)
+        focusedGenerator = focused
+        focused.focusUpdated(isFocused: true)
     }
 
 }
@@ -59,17 +95,11 @@ private extension CurrentCellFocusPlugin {
         return visibleCells.min(by: { $0.frame.origin.y < $1.frame.origin.y })
     }
 
-    func updateFocus(old: FocusableItem?, new: FocusableItem) {
-        if let old = old {
-            if !(old === new) {
-                old.focusUpdated(isFocused: false)
-                focusedGenerator = new
-                focusedGenerator?.focusUpdated(isFocused: true)
-            }
-        } else {
-            focusedGenerator = new
-            focusedGenerator?.focusUpdated(isFocused: true)
+    func compare(old: FocusableItem?, new: FocusableItem) -> FocusableItem? {
+        guard let old = old else {
+            return new
         }
+        return old === new ? nil : new
     }
 
 }
@@ -78,8 +108,8 @@ private extension CurrentCellFocusPlugin {
 
 extension BaseTablePlugin {
 
-    static func currentFocus() -> CurrentCellFocusPlugin {
-        .init()
+    static func currentFocus(output: CurrentCellFocusOutput) -> CurrentCellFocusPlugin {
+        .init(output: output)
     }
 
 }
