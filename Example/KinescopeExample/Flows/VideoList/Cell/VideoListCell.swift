@@ -16,7 +16,7 @@ final class VideoListCell: UITableViewCell {
 
     @IBOutlet private weak var playerView: KinescopePlayerView!
 
-    // MARK: - Private properties
+    // MARK: - Properties
 
     private var player: KinescopePlayer?
 
@@ -26,7 +26,7 @@ final class VideoListCell: UITableViewCell {
         super.awakeFromNib()
         selectionStyle = .none
 
-        playerView.backgroundColor = .green
+        playerView.backgroundColor = .black
         playerView.layer.cornerRadius = 20
         playerView.layer.masksToBounds = true
     }
@@ -41,12 +41,12 @@ final class VideoListCell: UITableViewCell {
 
     func start() {
         player?.play()
-        // KIN-21:  start playing video inside playerView
+        playerView.previewView.isHidden = true
     }
 
     func stop() {
-        player?.stop()
-        // KIN-21: - stop playing video inside playerView
+        player?.pause()
+        playerView.previewView.isHidden = false
     }
 
 }
@@ -58,6 +58,7 @@ extension VideoListCell: ConfigurableItem {
     typealias Model = KinescopeVideo
 
     func configure(with model: Model) {
+
         playerView.previewView.kf.setImage(with: URL(string: model.poster.md))
         playerView.set(videoGravity: .resizeAspectFill)
         player = KinescopeVideoPlayer(videoId: model.id, looped: true)

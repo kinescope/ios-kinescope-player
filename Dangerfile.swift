@@ -2,6 +2,10 @@ import Danger
 
 let danger = Danger()
 
+if danger.github.pullRequest.title.starts(with: "[WIP]") {
+    danger.fail("WIP means work in progress. In other words author wants merge freeze ❄️")
+}
+
 var violations = [SwiftLintViolation]()
 
 violations.append(contentsOf: SwiftLint.lint(.modifiedAndCreatedFiles(directory: "Sources"),

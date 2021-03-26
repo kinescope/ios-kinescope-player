@@ -16,7 +16,7 @@ public protocol KinescopeInspectable: class {
     func list(request: KinescopeVideosRequest,
               onSuccess: @escaping (([KinescopeVideo], KinescopeMetaData)) -> Void,
               onError: @escaping (KinescopeInspectError) -> Void)
-    
+
     func video(id: String,
                onSuccess: @escaping (KinescopeVideo) -> Void,
                onError: @escaping (KinescopeInspectError) -> Void)

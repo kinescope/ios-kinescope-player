@@ -14,7 +14,12 @@ final class VideoListController: UIViewController {
 
     // MARK: - IBOutlet
 
-    @IBOutlet private weak var tableView: UITableView!
+    @IBOutlet private weak var tableView: UITableView! {
+        didSet {
+            // Needs to make last cell focusable
+            tableView.contentInset.bottom = 200
+        }
+    }
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
 
     // MARK: - Private Properties
@@ -25,8 +30,10 @@ final class VideoListController: UIViewController {
         .add(plugin: .selectable())
         .add(plugin: .paginatable(progressView: progressView,
                                   output: self))
+        .add(plugin: .currentFocus(output: self))
         .build()
 
+    private weak var focusInput: CurrentCellFocusInput?
     private weak var paginatableInput: PaginatableInput?
 
     private lazy var inspector: KinescopeInspectable = Kinescope.shared.inspector
@@ -96,7 +103,7 @@ private extension VideoListController {
     func fillAdapter(with videos: [KinescopeVideo]) {
 
         let generators = videos.map { video -> BaseCellGenerator<VideoListCell> in
-            let generator = VideoListCell.rddm.baseGenerator(with: video)
+            let generator = VideoListFocusableCellGenerator(with: video)
 
             generator.didSelectEvent.addListner { [weak self] in
                 self?.performSegue(withIdentifier: "toVideo", sender: video.id)
@@ -107,12 +114,24 @@ private extension VideoListController {
 
         adapter.addCellGenerators(generators)
 
-        adapter.forceRefill()
+        adapter.forceRefill { [weak self] in
+            self?.focusInput?.updateFocus()
+        }
     }
 
 }
 
-// MARK: - RefreshableOutput
+// MARK: - CurrentCellFocusOutput
+
+extension VideoListController: CurrentCellFocusOutput {
+
+    func onFocusInitialized(with input: CurrentCellFocusInput) {
+        self.focusInput = input
+    }
+
+}
+
+// MARK: - PaginatableOutput
 
 extension VideoListController: PaginatableOutput {
 
