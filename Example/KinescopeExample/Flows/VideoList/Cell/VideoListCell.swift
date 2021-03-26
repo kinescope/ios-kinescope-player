@@ -18,9 +18,6 @@ final class VideoListCell: UITableViewCell {
 
     // MARK: - Properties
 
-    // TODO: - Remove
-    private var name: String = ""
-
     private var player: KinescopePlayer?
 
     // MARK: - Lifecycle
@@ -61,7 +58,6 @@ extension VideoListCell: ConfigurableItem {
     typealias Model = KinescopeVideo
 
     func configure(with model: Model) {
-        name = model.title
 
         playerView.previewView.kf.setImage(with: URL(string: model.poster.md))
         playerView.set(videoGravity: .resizeAspectFill)

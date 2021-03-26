@@ -25,7 +25,7 @@ final class VideoListController: UIViewController {
     // MARK: - Private Properties
 
     private lazy var progressView = PaginatorView(frame: .init(x: 0, y: 0, width: tableView.frame.width, height: 80))
-    
+
     private lazy var adapter = tableView.rddm.baseBuilder
         .add(plugin: .selectable())
         .add(plugin: .paginatable(progressView: progressView,
@@ -101,7 +101,6 @@ private extension VideoListController {
     }
 
     func fillAdapter(with videos: [KinescopeVideo]) {
-
 
         let generators = videos.map { video -> BaseCellGenerator<VideoListCell> in
             let generator = VideoListFocusableCellGenerator(with: video)
