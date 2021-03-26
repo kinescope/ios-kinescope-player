@@ -1,42 +1,69 @@
-import AVKit
+import AVFoundation
 
 public class KinescopeVideoPlayer: KinescopePlayer {
 
     // MARK: - Private Properties
 
+    private let inspector: KinescopeInspectable
     private let player: AVPlayer
     private let looped: Bool
     private var looper: AVPlayerLooper?
     private let videoId: String
+    private weak var view: KinescopePlayerView?
 
-    // MARK: - KinescopePlayer
+    // MARK: - Lifecycle
 
-    public var avPlayer: AVPlayer {
-        return self.player
-    }
-
-    public var delegate: KinescopePlayerDelegate?
-    
-    public required init(videoId: String, looped: Bool = false) {
+    init(videoId: String, looped: Bool = false, inspector: KinescopeInspectable) {
+        self.inspector = inspector
         self.player = looped ? AVQueuePlayer() : AVPlayer()
         self.looped = looped
         self.videoId = videoId
-        self.configure()
+    }
+
+    // MARK: - KinescopePlayer
+
+    public required init(videoId: String, looped: Bool = false) {
+        self.inspector = Kinescope.shared.inspector
+        self.player = looped ? AVQueuePlayer() : AVPlayer()
+        self.looped = looped
+        self.videoId = videoId
     }
 
     public func play() {
-        self.player.play()
+        self.configure()
     }
 
     public func pause() {
         self.player.pause()
     }
 
+    public func stop() {
+        self.player.pause()
+
+        if self.looped {
+            self.looper = nil
+        } else {
+            self.player.replaceCurrentItem(with: nil)
+        }
+    }
+
+    public func attach(view: KinescopePlayerView) {
+        view.playerView.player = self.player
+        self.view = view
+    }
+
+    public func detach(view: KinescopePlayerView) {
+        view.playerView.player = nil
+        self.view = view
+    }
+
     // MARK: - Private Methods
 
     /// Sends request video by id and sets player's item
     private func configure() {
-        Kinescope.shared.inspector.video(
+        view?.startLoader()
+
+        inspector.video(
             id: videoId,
             onSuccess: { [weak self] video in
                 guard
@@ -55,16 +82,12 @@ public class KinescopeVideoPlayer: KinescopePlayer {
                     self.player.replaceCurrentItem(with: item)
                 }
 
-                self.delegate?.kinescopePlayerDidReadyToPlay(player: self)
+                self.view?.stopLoader()
+                self.player.play()
             },
             onError: { [weak self] error in
-                guard
-                    let self = self
-                else {
-                    return
-                }
-
-                self.delegate?.kinescopePlayerDataLoadingFailed(player: self, error: error)
+                self?.view?.stopLoader()
+                debugPrint(error)
             }
         )
     }

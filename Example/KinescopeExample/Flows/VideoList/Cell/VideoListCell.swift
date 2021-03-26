@@ -34,7 +34,7 @@ final class VideoListCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        playerView.player = nil
+        player?.detach(view: playerView)
     }
 
     // MARK: - Public Methods
@@ -45,7 +45,7 @@ final class VideoListCell: UITableViewCell {
     }
 
     func stop() {
-        player?.pause()
+        player?.stop()
         // KIN-21: - stop playing video inside playerView
     }
 
@@ -59,22 +59,9 @@ extension VideoListCell: ConfigurableItem {
 
     func configure(with model: Model) {
         playerView.previewView.kf.setImage(with: URL(string: model.poster.md))
+        playerView.set(videoGravity: .resizeAspectFill)
         player = KinescopeVideoPlayer(videoId: model.id, looped: true)
-        playerView.player = player
-        player?.delegate = self
+        player?.attach(view: playerView)
     }
 
-}
-
-// MARK: - ConfigurableItem
-
-extension VideoListCell: KinescopePlayerDelegate {
-    func kinescopePlayerDidReadyToPlay(player: KinescopePlayer) {
-        playerView.previewView.isHidden = true
-        player.play()
-    }
-
-    func kinescopePlayerDataLoadingFailed(player: KinescopePlayer, error: Error) {
-        playerView.previewView.isHidden = true
-    }
 }
