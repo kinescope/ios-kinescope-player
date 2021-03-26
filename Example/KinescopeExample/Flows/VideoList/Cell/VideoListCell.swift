@@ -43,14 +43,13 @@ final class VideoListCell: UITableViewCell {
     // MARK: - Public Methods
 
     func start() {
-        print("KIN - START - play video with name: \(name)")
         player?.play()
+        playerView.previewView.isHidden = true
     }
 
     func stop() {
-        // KIN-21: - stop playing video inside playerView
-        print("KIN - STOP -  play video with name: \(name)")
         player?.pause()
+        playerView.previewView.isHidden = false
     }
 
 }

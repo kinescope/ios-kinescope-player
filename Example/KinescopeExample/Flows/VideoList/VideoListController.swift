@@ -14,7 +14,12 @@ final class VideoListController: UIViewController {
 
     // MARK: - IBOutlet
 
-    @IBOutlet private weak var tableView: UITableView!
+    @IBOutlet private weak var tableView: UITableView! {
+        didSet {
+            // Needs to make last cell focusable
+            tableView.contentInset.bottom = 200
+        }
+    }
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
 
     // MARK: - Private Properties
