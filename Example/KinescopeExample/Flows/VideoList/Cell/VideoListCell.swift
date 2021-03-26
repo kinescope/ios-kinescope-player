@@ -29,7 +29,7 @@ final class VideoListCell: UITableViewCell {
         super.awakeFromNib()
         selectionStyle = .none
 
-        playerView.backgroundColor = .green
+        playerView.backgroundColor = .black
         playerView.layer.cornerRadius = 20
         playerView.layer.masksToBounds = true
     }
