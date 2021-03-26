@@ -27,25 +27,12 @@ final class CurrentCellFocusPlugin: BaseTablePlugin<ScrollEvent> {
 
             guard let table = manager?.view,
                 let firstVisibleCell = getFirstVisibleCell(from: table),
-                let firstVisiblePath = table.indexPath(for: firstVisibleCell) else {
+                let firstVisiblePath = table.indexPath(for: firstVisibleCell),
+                let currentFocusedGenerator = getGenerator(from: manager, at: firstVisiblePath) else {
                 return
             }
 
-            let newFocusedGenerator = getGenerator(from: manager, at: firstVisiblePath)
-
-            if let oldFocusedGenerator = focusedGenerator {
-                if oldFocusedGenerator === newFocusedGenerator {
-
-                } else {
-                    oldFocusedGenerator.focusUpdated(isFocused: false)
-                    focusedGenerator = newFocusedGenerator
-                    focusedGenerator?.focusUpdated(isFocused: true)
-                }
-
-            } else {
-                focusedGenerator = newFocusedGenerator
-                focusedGenerator?.focusUpdated(isFocused: true)
-            }
+            updateFocus(old: focusedGenerator, new: currentFocusedGenerator)
 
         default:
             break
@@ -70,6 +57,19 @@ private extension CurrentCellFocusPlugin {
         let visibleY = table.contentOffset.y
         let visibleCells = table.visibleCells.filter { $0.frame.origin.y > visibleY }
         return visibleCells.min(by: { $0.frame.origin.y < $1.frame.origin.y })
+    }
+
+    func updateFocus(old: FocusableItem?, new: FocusableItem) {
+        if let old = old {
+            if !(old === new) {
+                old.focusUpdated(isFocused: false)
+                focusedGenerator = new
+                focusedGenerator?.focusUpdated(isFocused: true)
+            }
+        } else {
+            focusedGenerator = new
+            focusedGenerator?.focusUpdated(isFocused: true)
+        }
     }
 
 }
