@@ -11,6 +11,8 @@
 		4CE8078E78304438232FCD0D /* ConfigStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B71D3741FB772726928CC02 /* ConfigStorage.swift */; };
 		6E4269CADAE4110CF3E96574 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA6D1B1FB02192C67211B98A /* AppDelegate.swift */; };
 		7368F7676D135E40AA776C50 /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508C4602E3E4B5D5D5BA8FD8 /* EmptyView.swift */; };
+		89AFDADF260CBFAA00E094AB /* KinescopeConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 89AFDADE260CBFAA00E094AB /* KinescopeConfig.plist */; };
+		89AFDAE6260CF78900E094AB /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AFDAE5260CF78900E094AB /* VideoViewController.swift */; };
 		9F1820D56B96774A31DFEBED /* AuthSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72FC26817E3EC28FCC3B21E /* AuthSelectorController.swift */; };
 		B1E9AE507740662091763DC9 /* VideoListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246B7F2D473017AA57153302 /* VideoListController.swift */; };
 		C37AD95F62ABC930BE625443 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD747CF272A25BB0F30BB85A /* User.swift */; };
@@ -20,7 +22,6 @@
 		E2E3E7080D78E3690E531239 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B5BA8AD065732355D68FC30 /* UIKit.framework */; };
 		E6F14042128A330F268DBED7 /* UserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 51123599CB6E5F785E81071F /* UserCell.xib */; };
 		EF7B79BD9F3FF48202DC3E54 /* Pods_KinescopeExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 041A7713B1701D0A0030CD8A /* Pods_KinescopeExample.framework */; };
-		FA0B3C752FBA9905C7353D1C /* KinescopeConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 78C442C19E61EBCB16A746A3 /* KinescopeConfig.plist */; };
 		FDE7CBB089D7D45FA27883F5 /* PaginatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1697D697E9F0904B87B756B7 /* PaginatorView.swift */; };
 /* End PBXBuildFile section */
 
@@ -35,8 +36,9 @@
 		508C4602E3E4B5D5D5BA8FD8 /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
 		51123599CB6E5F785E81071F /* UserCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserCell.xib; sourceTree = "<group>"; };
 		673D4928B6BEA235B0FB66D0 /* Pods-KinescopeExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KinescopeExample.debug.xcconfig"; path = "Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample.debug.xcconfig"; sourceTree = "<group>"; };
-		78C442C19E61EBCB16A746A3 /* KinescopeConfig.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = KinescopeConfig.plist; sourceTree = "<group>"; };
 		7B71D3741FB772726928CC02 /* ConfigStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigStorage.swift; sourceTree = "<group>"; };
+		89AFDADE260CBFAA00E094AB /* KinescopeConfig.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = KinescopeConfig.plist; sourceTree = "<group>"; };
+		89AFDAE5260CF78900E094AB /* VideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = VideoViewController.swift; path = KinescopeExample/Flows/VideoViewController.swift; sourceTree = SOURCE_ROOT; };
 		8DA6E3DD8840BCD239516A03 /* VideoListCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VideoListCell.xib; sourceTree = "<group>"; };
 		92FD2922DA5F752442766523 /* Pods-KinescopeExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KinescopeExample.release.xcconfig"; path = "Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample.release.xcconfig"; sourceTree = "<group>"; };
 		96FB4A4491B8B00FA3019B09 /* KinescopeExample.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = KinescopeExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -75,13 +77,13 @@
 				673D4928B6BEA235B0FB66D0 /* Pods-KinescopeExample.debug.xcconfig */,
 				92FD2922DA5F752442766523 /* Pods-KinescopeExample.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
 		04605A919CA4A5FDF6394B74 /* Flows */ = {
 			isa = PBXGroup;
 			children = (
+				89AFDAE5260CF78900E094AB /* VideoViewController.swift */,
 				039CE0E6CF6B49D51422D717 /* AuthSelector */,
 				AF687273EFB801F59B28F156 /* VideoList */,
 			);
@@ -100,7 +102,7 @@
 			isa = PBXGroup;
 			children = (
 				DA6D1B1FB02192C67211B98A /* AppDelegate.swift */,
-				78C442C19E61EBCB16A746A3 /* KinescopeConfig.plist */,
+				89AFDADE260CBFAA00E094AB /* KinescopeConfig.plist */,
 				1297BC1CB454C3BA783E4F43 /* Main.storyboard */,
 				F21B407A21937579E5951A32 /* Application */,
 				04605A919CA4A5FDF6394B74 /* Flows */,
@@ -232,9 +234,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA0B3C752FBA9905C7353D1C /* KinescopeConfig.plist in Resources */,
 				27803C78BC9292176387B837 /* Main.storyboard in Resources */,
 				E6F14042128A330F268DBED7 /* UserCell.xib in Resources */,
+				89AFDADF260CBFAA00E094AB /* KinescopeConfig.plist in Resources */,
 				DBD96A231FB2F7CDED8CEDDD /* VideoListCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -296,6 +298,7 @@
 				C37AD95F62ABC930BE625443 /* User.swift in Sources */,
 				CCCAFC2092F5E99F1DCEC001 /* UserCell.swift in Sources */,
 				E27847B7474CE6E6D06D2793 /* VideoListCell.swift in Sources */,
+				89AFDAE6260CF78900E094AB /* VideoViewController.swift in Sources */,
 				B1E9AE507740662091763DC9 /* VideoListController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
