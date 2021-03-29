@@ -9,7 +9,7 @@
 
 extension KinescopeVideo {
 
-    static func stub(id: String = "") -> KinescopeVideo {
+    static func stub(id: String = "", hlsLink: String = "") -> KinescopeVideo {
         .init(id: id,
               projectId: "",
               version: 0,
@@ -23,7 +23,7 @@ extension KinescopeVideo {
               poster: .init(id: "", original: "", md: "", sm: "", xs: ""),
               additionalMaterials: [],
               subtitles: [],
-              hlsLink: "")
+              hlsLink: hlsLink)
 
     }
 

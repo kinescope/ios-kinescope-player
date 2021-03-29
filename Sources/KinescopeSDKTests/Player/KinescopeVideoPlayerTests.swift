@@ -10,6 +10,12 @@ import XCTest
 
 final class KinescopeVideoPlayerTests: XCTestCase {
 
+    private enum Constants {
+        static let hlsStub = "https://msk-vod-2.cdn.kinescope.io/vod-enc/313c2721-938e-43f0-997a-4cdf3c27c7a8/0f0fbe28-552a-4cb7-81c3-41bc11c4eb20/master.m3u8"
+        static let videoId = "123"
+        static let videoStub: KinescopeVideo = .stub(id: videoId, hlsLink: hlsStub)
+    }
+
     var player: KinescopeVideoPlayer?
     var inspector: KinescopeInspectableMock?
     var strategy: PlayingStrategyMock?
@@ -19,7 +25,12 @@ final class KinescopeVideoPlayerTests: XCTestCase {
 
         let inspector = KinescopeInspectableMock()
         let strategy = PlayingStrategyMock()
-        self.player = KinescopeVideoPlayer(config: .init(videoId: "123"), dependencies: KinescopeVideoPlayerDependenciesMock(inspectorMock: inspector, strategyMock: strategy))
+
+        let dependencies = KinescopeVideoPlayerDependenciesMock(inspectorMock: inspector,
+                                                                strategyMock: strategy)
+
+        self.player = KinescopeVideoPlayer(config: .init(videoId: Constants.videoId),
+                                           dependencies: dependencies)
 
         self.inspector = inspector
         self.strategy = strategy
@@ -30,5 +41,71 @@ final class KinescopeVideoPlayerTests: XCTestCase {
 
         inspector = nil
         strategy = nil
+    }
+
+    func testPlayInitiateLoadingAndDelegateToStrategy() {
+
+        // given
+
+        inspector?.videoSuccessMock[Constants.videoId] = Constants.videoStub
+
+        // when
+
+        player?.play()
+
+        // then
+
+        XCTAssertEqual(inspector?.videoRequests.count, 1)
+        XCTAssertEqual(strategy?.bindItems.count, 1)
+        XCTAssertEqual(strategy?.playCalledCount, 1)
+        XCTAssertEqual(strategy?.pauseCalledCount, 0)
+        XCTAssertEqual(strategy?.unbindCalledCount, 0)
+
+    }
+
+    func testPauseDelegateToStrategy() {
+
+        // when
+
+        player?.pause()
+
+        // then
+
+        XCTAssertEqual(strategy?.bindItems.count, 0)
+        XCTAssertEqual(strategy?.playCalledCount, 0)
+        XCTAssertEqual(strategy?.pauseCalledCount, 1)
+        XCTAssertEqual(strategy?.unbindCalledCount, 0)
+    }
+
+    func testStopDelegateToStrategy() {
+
+        // when
+
+        player?.stop()
+
+        // then
+
+        XCTAssertEqual(strategy?.bindItems.count, 0)
+        XCTAssertEqual(strategy?.playCalledCount, 0)
+        XCTAssertEqual(strategy?.pauseCalledCount, 1)
+        XCTAssertEqual(strategy?.unbindCalledCount, 1)
+
+    }
+
+    func testSelectQualityDelegateToStrategy() {
+        // given
+
+        let quality: KinescopeVideoQuality = .auto(hlsLink: Constants.hlsStub)
+
+        // when
+
+        player?.select(quality: quality)
+
+        // then
+
+        XCTAssertEqual(strategy?.bindItems.count, 1)
+        XCTAssertEqual(strategy?.playCalledCount, 0)
+        XCTAssertEqual(strategy?.pauseCalledCount, 0)
+        XCTAssertEqual(strategy?.unbindCalledCount, 0)
     }
 }
