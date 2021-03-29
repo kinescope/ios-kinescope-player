@@ -16,7 +16,7 @@ final class KinescopeVideoPlaySingleStrategy: KinescopeVideoPlayStrategy {
         player.replaceCurrentItem(with: item)
     }
 
-    func ubind() {
+    func unbind() {
         player.replaceCurrentItem(with: nil)
     }
 }

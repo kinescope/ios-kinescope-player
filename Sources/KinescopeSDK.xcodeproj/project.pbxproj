@@ -35,6 +35,7 @@
 		6875316A9DBF9590786F1E4D /* KinescopeVideoQuality.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3524D4C8EC76ECD600E8B57A /* KinescopeVideoQuality.swift */; };
 		6A63BACE0BC29F6E8C01A361 /* Kinescope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C898E08998AC8797023512B /* Kinescope.swift */; };
 		70A52C77C283DD336EF9884A /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8565E17932353269761D45DF /* Response.swift */; };
+		7834073EA5C19851D0A6B318 /* KinescopePlayerConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26109EF12D90263671B5B10 /* KinescopePlayerConfig.swift */; };
 		79BE7727B9226A837F72AB44 /* KinescopeMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2AE32DEFC8E442E6B4421D /* KinescopeMetaData.swift */; };
 		86E179C9CDF3A1C6C4E3C4CF /* KinescopeVideoAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E407782BA7D02852AF0AF8 /* KinescopeVideoAsset.swift */; };
 		9187A4013B2557E5DAC63E72 /* VideoDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB502E10695CE3F406F50648 /* VideoDownloader.swift */; };
@@ -122,6 +123,7 @@
 		A887142A46B88A00CB8FA2F3 /* KinescopeDownloadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeDownloadable.swift; sourceTree = "<group>"; };
 		ABD93361D4C1C2D576633CE7 /* KinescopeVideoPlaySingleStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeVideoPlaySingleStrategy.swift; sourceTree = "<group>"; };
 		B06277E1DAD79267DB21BB74 /* Method.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Method.swift; sourceTree = "<group>"; };
+		B26109EF12D90263671B5B10 /* KinescopePlayerConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopePlayerConfig.swift; sourceTree = "<group>"; };
 		B4E407782BA7D02852AF0AF8 /* KinescopeVideoAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeVideoAsset.swift; sourceTree = "<group>"; };
 		BC87DD8EA32020DEA2459733 /* KinescopeVideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeVideoPlayer.swift; sourceTree = "<group>"; };
 		BE2456A6038EA0745A04A87D /* TransportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportTests.swift; sourceTree = "<group>"; };
@@ -207,6 +209,7 @@
 				9F1E62E9DDA7F32CD5E4C8B7 /* KinescopeConfig.swift */,
 				2ED597E38CDC471571F7F371 /* KinescopeDownloadError.swift */,
 				CC7912BE2DFA7EF0DACF3472 /* KinescopeInspectError.swift */,
+				B26109EF12D90263671B5B10 /* KinescopePlayerConfig.swift */,
 				3035D2C613166A12A9B5F10A /* KinescopeVideoAssetLink.swift */,
 				61997C7AE5AECC6E91A50EFD /* Pagination */,
 				E72E8C7C9B701B54E13B3D7F /* Videos */,
@@ -494,6 +497,7 @@
 				79BE7727B9226A837F72AB44 /* KinescopeMetaData.swift in Sources */,
 				D4E28DB826C13352C8E384C3 /* KinescopePagination.swift in Sources */,
 				FFFEB83093302DDEB9FDB89C /* KinescopePlayer.swift in Sources */,
+				7834073EA5C19851D0A6B318 /* KinescopePlayerConfig.swift in Sources */,
 				CE6616FF465EF217E2ADD649 /* KinescopePlayerConfigurable.swift in Sources */,
 				0C1657DC1247E55DCE576629 /* KinescopePlayerView.swift in Sources */,
 				91DE0B1BC6C08747AA54E213 /* KinescopeServicesProvider.swift in Sources */,

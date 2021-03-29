@@ -11,12 +11,7 @@ import AVKit
 public protocol KinescopePlayer {
 
     /// - parameter videoId: Id of concrete video. For example from [GET Videos list](https://documenter.getpostman.com/view/10589901/TVCcXpNM)
-    init(videoId: String)
-
-    /// If value is `true` show video in infinite loop.
-    ///
-    /// - Warning: configure this property before attaching player to view
-    var looped: Bool { get set }
+    init(config: KinescopePlayerConfig)
 
     /// Start playing of video
     func play()

@@ -17,5 +17,23 @@ protocol KinescopeVideoPlayStrategy {
     func bind(item: AVPlayerItem)
 
     /// Stop playing. Clear AVPlayer item
-    func ubind()
+    func unbind()
+
+    /// Start playing of video
+    func play()
+
+    /// Pause playing of video
+    func pause()
+}
+
+extension KinescopeVideoPlayStrategy {
+
+    func play() {
+        player.play()
+    }
+
+    func pause() {
+        player.pause()
+    }
+
 }

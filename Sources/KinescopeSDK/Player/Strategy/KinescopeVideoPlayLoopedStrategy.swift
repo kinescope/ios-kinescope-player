@@ -21,7 +21,7 @@ final class KinescopeVideoPlayLoopedStrategy: KinescopeVideoPlayStrategy {
         looper = AVPlayerLooper(player: queuePlayer, templateItem: item)
     }
 
-    func ubind() {
+    func unbind() {
         looper = nil
     }
 

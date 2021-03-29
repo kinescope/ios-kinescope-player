@@ -5,56 +5,48 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     // MARK: - Private Properties
 
     private let inspector: KinescopeInspectable
-    private var strategy: KinescopeVideoPlayStrategy
+    private lazy var strategy: KinescopeVideoPlayStrategy = {
+        if config.looped {
+            return KinescopeVideoPlayLoopedStrategy()
+        } else {
+            return KinescopeVideoPlaySingleStrategy()
+        }
+    }()
 
     private weak var view: KinescopePlayerView?
 
     private var video: KinescopeVideo?
-    private let videoId: String
-
-    // MARK: - Public Properties
-
-    public var looped: Bool = false {
-        didSet {
-            if looped {
-                strategy = KinescopeVideoPlayLoopedStrategy()
-            } else {
-                strategy = KinescopeVideoPlaySingleStrategy()
-            }
-        }
-    }
+    private let config: KinescopePlayerConfig
 
     // MARK: - Lifecycle
 
-    init(videoId: String, inspector: KinescopeInspectable) {
+    init(config: KinescopePlayerConfig, inspector: KinescopeInspectable) {
         self.inspector = inspector
-        self.strategy = KinescopeVideoPlaySingleStrategy()
-        self.videoId = videoId
+        self.config = config
     }
 
     // MARK: - KinescopePlayer
 
-    public required init(videoId: String) {
+    public required init(config: KinescopePlayerConfig) {
         self.inspector = Kinescope.shared.inspector
-        self.strategy = KinescopeVideoPlaySingleStrategy()
-        self.videoId = videoId
+        self.config = config
     }
 
     public func play() {
         if let _ = self.video {
-            self.strategy.player.play()
+            self.strategy.play()
         } else {
             self.load()
         }
     }
 
     public func pause() {
-        self.strategy.player.pause()
+        self.strategy.pause()
     }
 
     public func stop() {
-        self.strategy.player.pause()
-        self.strategy.ubind()
+        self.strategy.pause()
+        self.strategy.unbind()
     }
 
     public func attach(view: KinescopePlayerView) {
@@ -90,7 +82,7 @@ private extension KinescopeVideoPlayer {
         view?.startLoader()
 
         inspector.video(
-            id: videoId,
+            id: config.videoId,
             onSuccess: { [weak self] video in
                 self?.video = video
                 self?.select(quality: .auto(hlsLink: video.hlsLink))
