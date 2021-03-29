@@ -54,6 +54,58 @@ playerView.player = player
 
 Enjoy.
 
+### Logger
+
+For logging network request, player events or something else use `KinescopeLogger`.
+
+First step is set `KinescopeLoggerType` into configuration at application startup:
+
+```swift
+Kinescope.shared.set(logingTypes: [KinescopeLoggerType.network, KinescopeLoggerType.player])
+```
+
+Use logger like this:
+
+```swift
+Kinescope.shared.logger.log(message: "Bad Request", type: KinescopeLoggerType.network)
+```
+
+or 
+
+```swift
+Kinescope.shared.logger.log(error: NSError(), type: KinescopeLoggerType.network)
+```
+
+Also SDK has opportunity to use custom logger. Just use these protocols:
+
+```swift
+/// Interface for logging type
+public protocol KinescopeLoggingType {
+    /// Checks that element is part of array
+    /// - Parameter array: array of elements
+    func part(of array: [KinescopeLoggingType]) -> Bool
+}
+
+/// Interface for logging
+public protocol KinescopeLogging {
+
+    /// - Parameter types: types of logging
+    init(types: [KinescopeLoggingType])
+
+    /// Log message
+    /// - Parameters:
+    ///   - message: string message
+    ///   - type: type of logging
+    func log(message: String, type: KinescopeLoggingType)
+
+    /// Log error
+    /// - Parameters:
+    ///   - error: error type
+    ///   - type: type of logging
+    func log(error: Error, type: KinescopeLoggingType)
+}
+```
+
 ## Installation
 
 Just add KinescopeSDK to your `Podfile` like this
