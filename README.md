@@ -61,7 +61,7 @@ player.attach(view: playerView)
 Enjoy.
 
 All controls already included into `KinescopePlayerView` and can be hidden optionally.
-You can find more examples in our [Example-project](/Example).  
+You can read full [documentation](./DOCUMENTATION.md) or find more examples in our [Example-project](/Example).  
 
 ## Installation
 
