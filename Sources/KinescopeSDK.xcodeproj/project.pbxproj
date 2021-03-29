@@ -10,6 +10,11 @@
 		018912BF2611C2E300284936 /* PlayingStrategyProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018912BE2611C2E300284936 /* PlayingStrategyProvider.swift */; };
 		018912C32611C64100284936 /* KinescopePlayerDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018912C22611C64100284936 /* KinescopePlayerDependencies.swift */; };
 		018912C82611C74500284936 /* KinescopeVideoPlayerDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018912C72611C74500284936 /* KinescopeVideoPlayerDependencies.swift */; };
+		018912CB2611C90800284936 /* PlayingStrategyMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018912CA2611C90800284936 /* PlayingStrategyMock.swift */; };
+		018912CE2611CA5E00284936 /* KinescopeInspectableMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018912CD2611CA5E00284936 /* KinescopeInspectableMock.swift */; };
+		018912D62611CC9300284936 /* KinescopeVideo+Stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018912D52611CC9300284936 /* KinescopeVideo+Stub.swift */; };
+		018912DA2611CD5200284936 /* KinescopeVideoPlayerDependenciesMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018912D92611CD5200284936 /* KinescopeVideoPlayerDependenciesMock.swift */; };
+		018912DE2611CDFD00284936 /* KinescopeVideoPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018912DD2611CDFD00284936 /* KinescopeVideoPlayerTests.swift */; };
 		019BE3A15D8833FB4B17BF85 /* RequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57787D9E7DA2F62069166D0 /* RequestBuilder.swift */; };
 		01C772F62FB45A601F8B5872 /* KinescopeVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611C5D1CBB38D103C3D7715A /* KinescopeVideo.swift */; };
 		02F22B83CEF527C23750DBA7 /* KinescopeVideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC87DD8EA32020DEA2459733 /* KinescopeVideoPlayer.swift */; };
@@ -94,6 +99,11 @@
 		018912BE2611C2E300284936 /* PlayingStrategyProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayingStrategyProvider.swift; sourceTree = "<group>"; };
 		018912C22611C64100284936 /* KinescopePlayerDependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopePlayerDependencies.swift; sourceTree = "<group>"; };
 		018912C72611C74500284936 /* KinescopeVideoPlayerDependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeVideoPlayerDependencies.swift; sourceTree = "<group>"; };
+		018912CA2611C90800284936 /* PlayingStrategyMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayingStrategyMock.swift; sourceTree = "<group>"; };
+		018912CD2611CA5E00284936 /* KinescopeInspectableMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeInspectableMock.swift; sourceTree = "<group>"; };
+		018912D52611CC9300284936 /* KinescopeVideo+Stub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KinescopeVideo+Stub.swift"; sourceTree = "<group>"; };
+		018912D92611CD5200284936 /* KinescopeVideoPlayerDependenciesMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeVideoPlayerDependenciesMock.swift; sourceTree = "<group>"; };
+		018912DD2611CDFD00284936 /* KinescopeVideoPlayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeVideoPlayerTests.swift; sourceTree = "<group>"; };
 		07899D9E5DD7637FA8A3022A /* KinescopePlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopePlayer.swift; sourceTree = "<group>"; };
 		087F0FDA92B482F898FD5BB0 /* VideosService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideosService.swift; sourceTree = "<group>"; };
 		14289950B9DEA174065501DD /* EmptyRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyRequest.swift; sourceTree = "<group>"; };
@@ -191,6 +201,22 @@
 			path = Dependencies;
 			sourceTree = "<group>";
 		};
+		018912D42611CC8400284936 /* Stub */ = {
+			isa = PBXGroup;
+			children = (
+				018912D52611CC9300284936 /* KinescopeVideo+Stub.swift */,
+			);
+			path = Stub;
+			sourceTree = "<group>";
+		};
+		018912DC2611CDD000284936 /* Player */ = {
+			isa = PBXGroup;
+			children = (
+				018912DD2611CDFD00284936 /* KinescopeVideoPlayerTests.swift */,
+			);
+			path = Player;
+			sourceTree = "<group>";
+		};
 		1A5206CC959BE73E5A547155 /* Common */ = {
 			isa = PBXGroup;
 			children = (
@@ -259,6 +285,7 @@
 		370D05E666542032C8C710E3 /* KinescopeSDKTests */ = {
 			isa = PBXGroup;
 			children = (
+				018912DC2611CDD000284936 /* Player */,
 				D1F37AA2D3FA8B6A08D5C9E0 /* Info.plist */,
 				6997EB6F8792881C3D227C83 /* Mock */,
 				BB777A275FFA8D99E4212F66 /* Service */,
@@ -296,7 +323,11 @@
 		6997EB6F8792881C3D227C83 /* Mock */ = {
 			isa = PBXGroup;
 			children = (
+				018912D42611CC8400284936 /* Stub */,
 				34760388A98AB16D860AC056 /* VideoServiceMock.swift */,
+				018912CA2611C90800284936 /* PlayingStrategyMock.swift */,
+				018912CD2611CA5E00284936 /* KinescopeInspectableMock.swift */,
+				018912D92611CD5200284936 /* KinescopeVideoPlayerDependenciesMock.swift */,
 			);
 			path = Mock;
 			sourceTree = "<group>";
@@ -489,8 +520,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				F01FFB38E8BF8B06913B99BA /* InspectorTests.swift in Sources */,
+				018912D62611CC9300284936 /* KinescopeVideo+Stub.swift in Sources */,
 				67407834D21BA4E2566C04B2 /* RequestBuilderTests.swift in Sources */,
+				018912DA2611CD5200284936 /* KinescopeVideoPlayerDependenciesMock.swift in Sources */,
+				018912CB2611C90800284936 /* PlayingStrategyMock.swift in Sources */,
 				FC3D1CD4CA1A73C56239163F /* TransportTests.swift in Sources */,
+				018912DE2611CDFD00284936 /* KinescopeVideoPlayerTests.swift in Sources */,
+				018912CE2611CA5E00284936 /* KinescopeInspectableMock.swift in Sources */,
 				31D77F721DFBE1858D5E6B1D /* VideoServiceMock.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
