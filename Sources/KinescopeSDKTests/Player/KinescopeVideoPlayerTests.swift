@@ -11,7 +11,7 @@ import XCTest
 final class KinescopeVideoPlayerTests: XCTestCase {
 
     private enum Constants {
-        static let hlsStub = "https://msk-vod-2.cdn.kinescope.io/vod-enc/313c2721-938e-43f0-997a-4cdf3c27c7a8/0f0fbe28-552a-4cb7-81c3-41bc11c4eb20/master.m3u8"
+        static let hlsStub = "https://example.com/playlist.m3u8"
         static let videoId = "123"
         static let videoStub: KinescopeVideo = .stub(id: videoId, hlsLink: hlsStub)
     }

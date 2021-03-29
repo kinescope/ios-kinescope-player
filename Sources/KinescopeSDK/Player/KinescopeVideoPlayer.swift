@@ -28,7 +28,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     }
 
     public func play() {
-        if let _ = self.video {
+        if video != nil {
             self.strategy.play()
         } else {
             self.load()
@@ -66,7 +66,6 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     }
 
 }
-
 
 // MARK: - Private
 

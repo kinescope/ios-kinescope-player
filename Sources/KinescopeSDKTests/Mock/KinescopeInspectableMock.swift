@@ -21,7 +21,9 @@ final class KinescopeInspectableMock: KinescopeInspectable {
 
     // MARK: - Methods
 
-    func list(request: KinescopeVideosRequest, onSuccess: @escaping (([KinescopeVideo], KinescopeMetaData)) -> Void, onError: @escaping (KinescopeInspectError) -> Void) {
+    func list(request: KinescopeVideosRequest,
+              onSuccess: @escaping (([KinescopeVideo], KinescopeMetaData)) -> Void,
+              onError: @escaping (KinescopeInspectError) -> Void) {
         listRequests.append(request)
 
         if let result = listSuccessMock[request.page] {
