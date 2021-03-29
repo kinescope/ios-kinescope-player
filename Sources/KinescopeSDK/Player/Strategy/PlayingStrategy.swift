@@ -7,7 +7,7 @@
 
 import AVFoundation
 
-protocol KinescopeVideoPlayStrategy {
+protocol PlayingStrategy {
 
     var player: AVPlayer { get }
 
@@ -26,7 +26,7 @@ protocol KinescopeVideoPlayStrategy {
     func pause()
 }
 
-extension KinescopeVideoPlayStrategy {
+extension PlayingStrategy {
 
     func play() {
         player.play()

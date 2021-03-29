@@ -1,5 +1,5 @@
 //
-//  KinescopeVideoPlaySingleStrategy.swift
+//  SequentialPlayingStrategy.swift
 //  KinescopeSDK
 //
 //  Created by Никита Коробейников on 29.03.2021.
@@ -8,7 +8,7 @@
 import AVFoundation
 
 /// Strategy to play item from start to end
-final class KinescopeVideoPlaySingleStrategy: KinescopeVideoPlayStrategy {
+final class SequentialPlayingStrategy: PlayingStrategy {
 
     let player = AVPlayer()
 

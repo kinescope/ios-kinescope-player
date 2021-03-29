@@ -4,13 +4,9 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
     // MARK: - Private Properties
 
-    private let inspector: KinescopeInspectable
-    private lazy var strategy: KinescopeVideoPlayStrategy = {
-        if config.looped {
-            return KinescopeVideoPlayLoopedStrategy()
-        } else {
-            return KinescopeVideoPlaySingleStrategy()
-        }
+    private let dependencies: KinescopePlayerDependencies
+    private lazy var strategy: PlayingStrategy = {
+        dependencies.provide(for: config)
     }()
 
     private weak var view: KinescopePlayerView?
@@ -20,16 +16,15 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
     // MARK: - Lifecycle
 
-    init(config: KinescopePlayerConfig, inspector: KinescopeInspectable) {
-        self.inspector = inspector
+    init(config: KinescopePlayerConfig, dependencies: KinescopePlayerDependencies) {
+        self.dependencies = dependencies
         self.config = config
     }
 
     // MARK: - KinescopePlayer
 
-    public required init(config: KinescopePlayerConfig) {
-        self.inspector = Kinescope.shared.inspector
-        self.config = config
+    public required convenience init(config: KinescopePlayerConfig) {
+        self.init(config: config, dependencies: KinescopeVideoPlayerDependencies())
     }
 
     public func play() {
@@ -81,7 +76,7 @@ private extension KinescopeVideoPlayer {
     func load() {
         view?.startLoader()
 
-        inspector.video(
+        dependencies.inspector.video(
             id: config.videoId,
             onSuccess: { [weak self] video in
                 self?.video = video
