@@ -61,7 +61,8 @@ extension VideoListCell: ConfigurableItem {
 
         playerView.previewView.kf.setImage(with: URL(string: model.poster.md))
         playerView.set(videoGravity: .resizeAspectFill)
-        player = KinescopeVideoPlayer(videoId: model.id, looped: true)
+        player = KinescopeVideoPlayer(videoId: model.id)
+        player?.looped = true
         player?.attach(view: playerView)
     }
 
