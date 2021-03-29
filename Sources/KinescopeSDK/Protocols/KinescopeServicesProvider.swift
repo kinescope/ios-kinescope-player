@@ -15,4 +15,7 @@ public protocol KinescopeServicesProvider {
     /// Service managing inspectations of dashboard content like videos, projects etc
     var inspector: KinescopeInspectable! { get }
 
+    /// Service managing logging process
+    var logger: KinescopeLogging! { get }
+
 }
