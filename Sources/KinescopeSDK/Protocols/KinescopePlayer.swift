@@ -11,8 +11,7 @@ import AVKit
 public protocol KinescopePlayer {
 
     /// - parameter videoId: Id of concrete video. For example from [GET Videos list](https://documenter.getpostman.com/view/10589901/TVCcXpNM)
-    /// - parameter looped: show video in infinite loop
-    init(videoId: String, looped: Bool)
+    init(config: KinescopePlayerConfig)
 
     /// Start playing of video
     func play()
@@ -22,6 +21,11 @@ public protocol KinescopePlayer {
 
     /// Stops playing video
     func stop()
+
+    /// Generate new playerItem with selected quality resource
+    ///
+    /// - parameter quality: Quality of video to play.
+    func select(quality: KinescopeVideoQuality)
 
     /// Bind player to view
     /// - Parameter view: view for binding

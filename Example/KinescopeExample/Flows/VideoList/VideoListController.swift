@@ -37,7 +37,7 @@ final class VideoListController: UIViewController {
     private weak var paginatableInput: PaginatableInput?
 
     private lazy var inspector: KinescopeInspectable = Kinescope.shared.inspector
-    private var request = KinescopeVideosRequest(page: 1, perPage: 2)
+    private var request = KinescopeVideosRequest(page: 1)
     private var totalCount = 0
 
     // MARK: - UIViewController
