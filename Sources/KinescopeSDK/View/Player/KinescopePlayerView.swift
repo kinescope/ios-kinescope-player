@@ -14,66 +14,76 @@ public class KinescopePlayerView: UIView {
     // MARK: - Private Properties
 
     /// View with AVPlayerLayer to fill size
-    var playerView: PlayerView!
-    var playerControlView: PlayerControlView!
+    private var playerView: PlayerView!
+    private var controlPanel: PlayerControlView?
+    private var overlay: PlayerOverlayView?
 
     // MARK: - Internal Properties
 
-    ///
+    var progressView: KinescopeActivityIndicator!
     public private(set) var previewView: UIImageView = UIImageView()
 
     // MARK: - Public Properties
-
-    public var progressView: UIActivityIndicatorView!
 
     // MARK: - Lifecycle
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupInitialState()
+        setLayout(with: .default)
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        setupInitialState()
-    }
-
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-        progressView.center = playerView.center
-    }
-
-    // MARK: - Public Methods
-
-    public func set(videoGravity: AVLayerVideoGravity) {
-        playerView.playerLayer.videoGravity = videoGravity
+        setLayout(with: .default)
     }
 
     // MARK: - Internal Methods
 
     func startLoader() {
-        progressView.isHidden = false
-        progressView.startAnimating()
+        previewView.isHidden = false
+        progressView.showVideoProgress(isLoading: true)
     }
 
     func stopLoader() {
-        progressView.stopAnimating()
+        progressView.showVideoProgress(isLoading: false)
+        previewView.isHidden = true
     }
 
-    // MARK: - Private Methods
+}
 
-    private func setupInitialState() {
-        configurePlayerView()
+// MARK: - Public
+
+public extension KinescopePlayerView {
+
+    func setLayout(with config: KinescopePlayerViewConfiguration) {
+
+        clearSubviews()
+
+        configurePlayerView(with: config.gravity)
         configurePreviewView()
         configureProgressView()
     }
 
-    private func configurePlayerView() {
+}
+
+// MARK: - Private
+
+private extension KinescopePlayerView {
+
+    func clearSubviews() {
+        subviews.forEach {
+            $0.removeFromSuperview()
+        }
+    }
+
+    private func configurePlayerView(with gravity: AVLayerVideoGravity) {
         let playerView = PlayerView()
         playerView.layer.shouldRasterize = true
         playerView.layer.rasterizationScale = UIScreen.main.scale
+        playerView.playerLayer.videoGravity = gravity
         addSubview(playerView)
         stretch(view: playerView)
+
         self.playerView = playerView
     }
 
@@ -88,4 +98,5 @@ public class KinescopePlayerView: UIView {
         addSubview(progressView)
         self.progressView = progressView
     }
+
 }

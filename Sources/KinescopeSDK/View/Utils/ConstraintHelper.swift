@@ -19,4 +19,12 @@ extension UIView {
         ])
     }
 
+    func centerChild(view: UIView) {
+        view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            view.centerXAnchor.constraint(equalTo: centerXAnchor),
+            view.centerYAnchor.constraint(equalTo: centerYAnchor)
+        ])
+    }
+
 }

@@ -11,10 +11,8 @@ import UIKit
 /// Appearance preferences of player view
 public struct KinescopePlayerViewConfiguration {
 
-    public typealias ActivityIndicator = UIView & KinescopeActivityIndicating
-
     let gravity: AVLayerVideoGravity
-    let activityIndicator: ActivityIndicator
+    let activityIndicator: KinescopeActivityIndicator
     let overlay: KinescopePlayerOverlayConfiguration?
     let controlPanel: KinescopeControlPanelConfiguration?
 
@@ -25,13 +23,24 @@ public struct KinescopePlayerViewConfiguration {
     /// - parameter controlPanel: Configuration of control panel with play/pause buttons and other controls
     /// Set `nil` to hide control panel
     public init(gravity: AVLayerVideoGravity,
-                activityIndicator: ActivityIndicator,
-                overlay: KinescopePlayerOverlayConfiguration,
+                activityIndicator: KinescopeActivityIndicator,
+                overlay: KinescopePlayerOverlayConfiguration?,
                 controlPanel: KinescopeControlPanelConfiguration?) {
         self.gravity = gravity
         self.activityIndicator = activityIndicator
         self.overlay = overlay
         self.controlPanel = controlPanel
     }
+
+}
+
+// MARK: - Defaults
+
+public extension KinescopePlayerViewConfiguration {
+
+    static let `default`: KinescopePlayerViewConfiguration = .init(gravity: .resizeAspectFill,
+                                                                   activityIndicator: UIActivityIndicatorView(style: .whiteLarge),
+                                                                   overlay: nil,
+                                                                   controlPanel: nil)
 
 }

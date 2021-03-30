@@ -9,4 +9,23 @@ import UIKit
 
 class PlayerControlView: UIControl {
 
+    init(config: KinescopeControlPanelConfiguration) {
+        super.init(frame: .zero)
+        setupInitialState(with: config)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+}
+
+// MARK: - Private
+
+private extension PlayerControlView {
+
+    func setupInitialState(with config: KinescopeControlPanelConfiguration) {
+        // configure control panel
+    }
+
 }
