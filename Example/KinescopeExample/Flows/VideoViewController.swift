@@ -18,7 +18,7 @@ final class VideoViewController: UIViewController {
         super.viewDidLoad()
 
         playerView.set(videoGravity: .resizeAspect)
-        player = KinescopeVideoPlayer(videoId: videoId)
+        player = KinescopeVideoPlayer(config: .init(videoId: videoId))
         player?.attach(view: playerView)
         player?.play()
     }
