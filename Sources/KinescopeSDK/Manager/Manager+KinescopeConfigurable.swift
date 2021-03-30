@@ -16,7 +16,7 @@ extension Manager: KinescopeConfigurable {
                                                                        config: config))
     }
 
-    func set(logingTypes: [KinescopeLoggingType]) {
-        self.logger = KinescopeLogger(types: logingTypes)
+    func set(logger: KinescopeLogging, levels: [KinescopeLoggingLevel]) {
+        self.logger = KinescopeLogger(logger: logger, levels: levels)
     }
 }

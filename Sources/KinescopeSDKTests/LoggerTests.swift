@@ -4,65 +4,21 @@ import XCTest
 //swiftlint:disable all
 final class LoggerTests: XCTestCase {
 
-    // MARK: - Nested
+    // MARK: - Properties
 
-    enum MockError: Error {
-        case err
-    }
-
-    enum MockKinescope {
-        static let shared = MockManager()
-    }
-
-    final class MockLogger: KinescopeLogging {
-        public var printValue = ""
-        private var types: [KinescopeLoggingType]
-
-        init(types: [KinescopeLoggingType]) {
-            self.types = types
-        }
-
-        func log(message: String, type: KinescopeLoggingType) {
-            log(msg: message, type: type)
-        }
-
-        func log(error: Error, type: KinescopeLoggingType) {
-            log(msg: error.localizedDescription, type: type)
-        }
-
-        private func log(msg: String, type: KinescopeLoggingType) {
-            guard
-                type.part(of: types)
-            else {
-                printValue = "\(types) does not contains selected type – \(type)"
-                return
-            }
-
-            printValue = "\(type): \(msg)"
-        }
-    }
-
-    final class MockManager: KinescopeServicesProvider, KinescopeConfigurable {
-
-        // MARK: - KinescopeServicesProvider
-
-        var downloader: KinescopeDownloadable!
-        var inspector: KinescopeInspectable!
-        var logger: KinescopeLogging!
-
-        // MARK: - KinescopeConfigurable
-
-        func setConfig(_ config: KinescopeConfig) {
-        }
-
-        func set(logingTypes: [KinescopeLoggingType]) {
-            self.logger = MockLogger(types: logingTypes)
-        }
-    }
+    var logger: LoggerMock!
 
     // MARK: - XCTestCase
 
+    override func setUp() {
+        super.setUp()
+        logger = LoggerMock()
+    }
 
+    override func tearDown() {
+        super.tearDown()
+        logger = nil
+    }
 
     // MARK: - Tests
 
@@ -70,31 +26,31 @@ final class LoggerTests: XCTestCase {
 
         // given
 
-        let expectedSuccess = "\([]) does not contains selected type – \(KinescopeLoggerType.player)"
-        let expectedFailure = "\(KinescopeLoggerType.player): Message"
-        MockKinescope.shared.set(logingTypes: [])
+        let expectedSuccess = ""
+        let expectedFailure = "\(KinescopeLoggerLevel.player): Message"
+        Kinescope.shared.set(logger: logger, levels: [])
 
         // when
 
-        MockKinescope.shared.logger.log(message: "Message", type: KinescopeLoggerType.player)
+        Kinescope.shared.logger.log(message: "Message", level: KinescopeLoggerLevel.player)
 
         // then
 
-        XCTAssertEqual(expectedSuccess, (MockKinescope.shared.logger as! MockLogger).printValue)
-        XCTAssertNotEqual(expectedFailure, (MockKinescope.shared.logger as! MockLogger).printValue)
+        XCTAssertEqual(expectedSuccess, logger.printValue)
+        XCTAssertNotEqual(expectedFailure, logger.printValue)
     }
 
     func testAllTypes() {
 
-        let expectedNetwork = "\(KinescopeLoggerType.network): Network"
-        let expectedPlayer = "\(KinescopeLoggerType.player): Player"
-        MockKinescope.shared.set(logingTypes: KinescopeLoggerType.allCases)
+        let expectedNetwork = "\(KinescopeLoggerLevel.network): Network"
+        let expectedPlayer = "\(KinescopeLoggerLevel.player): Player"
+        Kinescope.shared.set(logger: logger, levels: KinescopeLoggerLevel.allCases)
 
-        MockKinescope.shared.logger.log(message: "Network", type: KinescopeLoggerType.network)
-        XCTAssertEqual(expectedNetwork, (MockKinescope.shared.logger as! MockLogger).printValue)
+        Kinescope.shared.logger.log(message: "Network", level: KinescopeLoggerLevel.network)
+        XCTAssertEqual(expectedNetwork, logger.printValue)
 
-        MockKinescope.shared.logger.log(message: "Player", type: KinescopeLoggerType.player)
-        XCTAssertEqual(expectedPlayer, (MockKinescope.shared.logger as! MockLogger).printValue)
+        Kinescope.shared.logger.log(message: "Player", level: KinescopeLoggerLevel.player)
+        XCTAssertEqual(expectedPlayer, logger.printValue)
 
     }
 
@@ -102,48 +58,48 @@ final class LoggerTests: XCTestCase {
 
         // given
 
-        let expected = "\(KinescopeLoggerType.player): Message"
-        MockKinescope.shared.set(logingTypes: [KinescopeLoggerType.player])
+        let expected = "\(KinescopeLoggerLevel.player): Message"
+        Kinescope.shared.set(logger: logger, levels: [KinescopeLoggerLevel.player])
 
         // when
 
-        MockKinescope.shared.logger.log(message: "Message", type: KinescopeLoggerType.player)
+        Kinescope.shared.logger.log(message: "Message", level: KinescopeLoggerLevel.player)
 
         // then
 
-        XCTAssertEqual(expected, (MockKinescope.shared.logger as! MockLogger).printValue)
+        XCTAssertEqual(expected, logger.printValue)
     }
 
     func testOneTypeFailure() {
 
         // given
 
-        let expected = "\([KinescopeLoggerType.player]) does not contains selected type – \(KinescopeLoggerType.network)"
-        MockKinescope.shared.set(logingTypes: [KinescopeLoggerType.player])
+        let expected = ""
+        Kinescope.shared.set(logger: logger, levels: [KinescopeLoggerLevel.player])
 
         // when
 
-        MockKinescope.shared.logger.log(message: "Message", type: KinescopeLoggerType.network)
+        Kinescope.shared.logger.log(message: "Message", level: KinescopeLoggerLevel.network)
 
         // then
 
-        XCTAssertEqual(expected, (MockKinescope.shared.logger as! MockLogger).printValue)
+        XCTAssertEqual(expected, logger.printValue)
     }
 
     func testLogError() {
 
         // given
 
-        let expected = "\(KinescopeLoggerType.player): The operation couldn’t be completed. (KinescopeSDKTests.LoggerTests.MockError error 0.)"
-        MockKinescope.shared.set(logingTypes: [KinescopeLoggerType.player])
+        let expected = "\(KinescopeLoggerLevel.player): The operation couldn’t be completed. (KinescopeSDKTests.ErrorMock error 0.)"
+        Kinescope.shared.set(logger: logger, levels: [KinescopeLoggerLevel.player])
 
         // when
 
-        MockKinescope.shared.logger.log(error: MockError.err, type: KinescopeLoggerType.player)
+        Kinescope.shared.logger.log(error: ErrorMock.err, level: KinescopeLoggerLevel.player)
 
         // then
 
-        XCTAssertEqual(expected, (MockKinescope.shared.logger as! MockLogger).printValue)
+        XCTAssertEqual(expected, logger.printValue)
     }
 }
 //swiftlint:enable all

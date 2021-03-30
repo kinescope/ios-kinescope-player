@@ -56,55 +56,27 @@ Enjoy.
 
 ### Logger
 
-For logging network request, player events or something else use `KinescopeLogger`.
+For logging network request, player events or something else use `KinescopeDefaultLogger`.
 
-First step is set `KinescopeLoggerType` into configuration at application startup:
+First step is set `KinescopeLoggerLevel` into configuration at application startup:
 
 ```swift
-Kinescope.shared.set(logingTypes: [KinescopeLoggerType.network, KinescopeLoggerType.player])
+Kinescope.shared.set(logger: KinescopeDefaultLogger(), levels: [KinescopeLoggerLevel.network, KinescopeLoggerLevel.player])
 ```
 
 Use logger like this:
 
 ```swift
-Kinescope.shared.logger.log(message: "Bad Request", type: KinescopeLoggerType.network)
+Kinescope.shared.logger.log(message: "Bad Request", level: KinescopeLoggerLevel.network)
 ```
 
 or 
 
 ```swift
-Kinescope.shared.logger.log(error: NSError(), type: KinescopeLoggerType.network)
+Kinescope.shared.logger.log(error: NSError(), level: KinescopeLoggerLevel.network)
 ```
 
-Also SDK has opportunity to use custom logger. Just use these protocols:
-
-```swift
-/// Interface for logging type
-public protocol KinescopeLoggingType {
-    /// Checks that element is part of array
-    /// - Parameter array: array of elements
-    func part(of array: [KinescopeLoggingType]) -> Bool
-}
-
-/// Interface for logging
-public protocol KinescopeLogging {
-
-    /// - Parameter types: types of logging
-    init(types: [KinescopeLoggingType])
-
-    /// Log message
-    /// - Parameters:
-    ///   - message: string message
-    ///   - type: type of logging
-    func log(message: String, type: KinescopeLoggingType)
-
-    /// Log error
-    /// - Parameters:
-    ///   - error: error type
-    ///   - type: type of logging
-    func log(error: Error, type: KinescopeLoggingType)
-}
-```
+Also SDK has opportunity to use custom logger. Just use protocols `KinescopeLoggingType`, `KinescopeLogging`.
 
 ## Installation
 

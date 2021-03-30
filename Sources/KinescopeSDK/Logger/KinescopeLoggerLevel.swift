@@ -1,4 +1,4 @@
-public enum KinescopeLoggerType: KinescopeLoggingType, Equatable, CaseIterable {
+public enum KinescopeLoggerLevel: KinescopeLoggingLevel, Equatable, CaseIterable {
     /// Network logs
     case network
     /// Player logs
@@ -6,9 +6,9 @@ public enum KinescopeLoggerType: KinescopeLoggingType, Equatable, CaseIterable {
 
     // MARK: - KinescopeLoggingType
 
-    public func part(of array: [KinescopeLoggingType]) -> Bool {
+    public func part(of array: [KinescopeLoggingLevel]) -> Bool {
         guard
-            let array = array as? [KinescopeLoggerType]
+            let array = array as? [KinescopeLoggerLevel]
         else {
             return false
         }

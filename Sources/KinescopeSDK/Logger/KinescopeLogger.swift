@@ -1,36 +1,43 @@
-public final class KinescopeLogger: KinescopeLogging {
+final class KinescopeLogger: KinescopeLogging {
 
     // MARK: - Properties
 
-    private var types: [KinescopeLoggingType]
+    private let logger: KinescopeLogging
+    private let levels: [KinescopeLoggingLevel]
+
+    // MARK: - Lifecycle
+
+    public init(logger: KinescopeLogging, levels: [KinescopeLoggingLevel]) {
+        self.logger = logger
+        self.levels = levels
+    }
 
     // MARK: - KinescopeLogging
 
-    public init(types: [KinescopeLoggingType]) {
-        self.types = types
+    public func log(message: String, level: KinescopeLoggingLevel) {
+        handle(level: level) { [weak self] in
+            self?.logger.log(message: message, level: level)
+        }
     }
 
-    public func log(message: String, type: KinescopeLoggingType) {
-        log(msg: message, type: type)
-    }
-
-    public func log(error: Error, type: KinescopeLoggingType) {
-        log(msg: error.localizedDescription, type: type)
+    public func log(error: Error, level: KinescopeLoggingLevel) {
+        handle(level: level) { [weak self] in
+            self?.logger.log(error: error, level: level)
+        }
     }
 
     // MARK: - Private Methods
 
-    private func log(msg: String, type: KinescopeLoggingType) {
+    private func handle(level: KinescopeLoggingLevel, completion: () -> Void) {
         #if DEBUG
 
         guard
-            type.part(of: types)
+            level.part(of: levels)
         else {
-            print("\(types) does not contains selected type – \(type)")
             return
         }
 
-        print("\(type): \(msg)")
+        completion()
 
         #endif
     }

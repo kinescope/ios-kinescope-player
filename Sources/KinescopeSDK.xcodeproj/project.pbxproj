@@ -31,9 +31,12 @@
 		70A52C77C283DD336EF9884A /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8565E17932353269761D45DF /* Response.swift */; };
 		79BE7727B9226A837F72AB44 /* KinescopeMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2AE32DEFC8E442E6B4421D /* KinescopeMetaData.swift */; };
 		86E179C9CDF3A1C6C4E3C4CF /* KinescopeVideoAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E407782BA7D02852AF0AF8 /* KinescopeVideoAsset.swift */; };
+		89BD4DF026133F9300D06C98 /* LoggerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BD4DEF26133F9300D06C98 /* LoggerMock.swift */; };
+		89BD4DF426133FBE00D06C98 /* ErrorMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BD4DF326133FBE00D06C98 /* ErrorMock.swift */; };
+		89BD4DFD261359B900D06C98 /* KinescopeDefaultLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BD4DFC261359B900D06C98 /* KinescopeDefaultLogger.swift */; };
 		89CD1525261215D5003F0B1A /* KinescopeLogging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD1524261215D5003F0B1A /* KinescopeLogging.swift */; };
 		89CD152B261217DB003F0B1A /* KinescopeLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD152A261217DB003F0B1A /* KinescopeLogger.swift */; };
-		89CD153026121883003F0B1A /* KinescopeLoggerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD152F26121883003F0B1A /* KinescopeLoggerType.swift */; };
+		89CD153026121883003F0B1A /* KinescopeLoggerLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD152F26121883003F0B1A /* KinescopeLoggerLevel.swift */; };
 		89CD153326121B27003F0B1A /* LoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD153226121B27003F0B1A /* LoggerTests.swift */; };
 		9187A4013B2557E5DAC63E72 /* VideoDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB502E10695CE3F406F50648 /* VideoDownloader.swift */; };
 		91DE0B1BC6C08747AA54E213 /* KinescopeServicesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52FD36324CD4FBB4651A0A6 /* KinescopeServicesProvider.swift */; };
@@ -111,9 +114,12 @@
 		75E6EE2D041EE4AC1E5C7B1B /* KinescopeVideoSubtitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeVideoSubtitle.swift; sourceTree = "<group>"; };
 		8565E17932353269761D45DF /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		869CE1C2AE20F92390A017BF /* Manager+KinescopeConfigurable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Manager+KinescopeConfigurable.swift"; sourceTree = "<group>"; };
+		89BD4DEF26133F9300D06C98 /* LoggerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerMock.swift; sourceTree = "<group>"; };
+		89BD4DF326133FBE00D06C98 /* ErrorMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorMock.swift; sourceTree = "<group>"; };
+		89BD4DFC261359B900D06C98 /* KinescopeDefaultLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeDefaultLogger.swift; sourceTree = "<group>"; };
 		89CD1524261215D5003F0B1A /* KinescopeLogging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeLogging.swift; sourceTree = "<group>"; };
 		89CD152A261217DB003F0B1A /* KinescopeLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeLogger.swift; sourceTree = "<group>"; };
-		89CD152F26121883003F0B1A /* KinescopeLoggerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeLoggerType.swift; sourceTree = "<group>"; };
+		89CD152F26121883003F0B1A /* KinescopeLoggerLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeLoggerLevel.swift; sourceTree = "<group>"; };
 		89CD153226121B27003F0B1A /* LoggerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerTests.swift; sourceTree = "<group>"; };
 		9348E4AA264325E1FA2D042B /* KinescopeConfigurable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeConfigurable.swift; sourceTree = "<group>"; };
 		94DBF9B3A80960DAC1FEDF4B /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
@@ -280,6 +286,8 @@
 			isa = PBXGroup;
 			children = (
 				34760388A98AB16D860AC056 /* VideoServiceMock.swift */,
+				89BD4DEF26133F9300D06C98 /* LoggerMock.swift */,
+				89BD4DF326133FBE00D06C98 /* ErrorMock.swift */,
 			);
 			path = Mock;
 			sourceTree = "<group>";
@@ -306,7 +314,8 @@
 			isa = PBXGroup;
 			children = (
 				89CD152A261217DB003F0B1A /* KinescopeLogger.swift */,
-				89CD152F26121883003F0B1A /* KinescopeLoggerType.swift */,
+				89BD4DFC261359B900D06C98 /* KinescopeDefaultLogger.swift */,
+				89CD152F26121883003F0B1A /* KinescopeLoggerLevel.swift */,
 			);
 			path = Logger;
 			sourceTree = "<group>";
@@ -457,11 +466,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				89BD4DF426133FBE00D06C98 /* ErrorMock.swift in Sources */,
 				89CD153326121B27003F0B1A /* LoggerTests.swift in Sources */,
 				F01FFB38E8BF8B06913B99BA /* InspectorTests.swift in Sources */,
 				67407834D21BA4E2566C04B2 /* RequestBuilderTests.swift in Sources */,
 				FC3D1CD4CA1A73C56239163F /* TransportTests.swift in Sources */,
 				31D77F721DFBE1858D5E6B1D /* VideoServiceMock.swift in Sources */,
+				89BD4DF026133F9300D06C98 /* LoggerMock.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -481,12 +492,13 @@
 				89CD1525261215D5003F0B1A /* KinescopeLogging.swift in Sources */,
 				49795AB6F472DC4C6B4053B6 /* KinescopeDownloadableDelegate.swift in Sources */,
 				DF3295D797816EB901E5535F /* KinescopeInspectError.swift in Sources */,
-				89CD153026121883003F0B1A /* KinescopeLoggerType.swift in Sources */,
+				89CD153026121883003F0B1A /* KinescopeLoggerLevel.swift in Sources */,
 				5EA1942AECC7E0B5C6AC1753 /* KinescopeInspectable.swift in Sources */,
 				79BE7727B9226A837F72AB44 /* KinescopeMetaData.swift in Sources */,
 				D4E28DB826C13352C8E384C3 /* KinescopePagination.swift in Sources */,
 				FFFEB83093302DDEB9FDB89C /* KinescopePlayer.swift in Sources */,
 				CE6616FF465EF217E2ADD649 /* KinescopePlayerConfigurable.swift in Sources */,
+				89BD4DFD261359B900D06C98 /* KinescopeDefaultLogger.swift in Sources */,
 				0C1657DC1247E55DCE576629 /* KinescopePlayerView.swift in Sources */,
 				91DE0B1BC6C08747AA54E213 /* KinescopeServicesProvider.swift in Sources */,
 				01C772F62FB45A601F8B5872 /* KinescopeVideo.swift in Sources */,
