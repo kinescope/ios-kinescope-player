@@ -28,15 +28,21 @@ From now you can use most of API through SDK
 
 For example, to get list of videos just call
 ```
-Kinescope.shared.inspector.list(onSuccess: { videos in
-  // save video models somewhere
-})
+Kinescope.shared.inspector.list(request: .init(page: 1),
+                                onSuccess: { result in
+
+                                  let videos = result.0
+                                  // save video models somewhere
+
+                                  let metaData = result.1
+                                  // check metadata
+                                })
 ```
 
 Than init player instance
 
 ```
-let player = KinescopePlayer(video_id: "some video id")
+let player = KinescopePlayer(videoId: "some video id")
 ```
 
 Add player view somewhere in your layout
@@ -49,10 +55,13 @@ view.addSubview(playerView)
 Connect player and playerView together
 
 ```
-playerView.player = player
+player.attach(view: playerView)
 ```
 
 Enjoy.
+
+All controls already included into `KinescopePlayerView` and can be hidden optionally.
+You can read full [documentation](./DOCUMENTATION.md) or find more examples in our [Example-project](/Example).  
 
 ### Logger
 
@@ -76,7 +85,7 @@ or
 Kinescope.shared.logger.log(error: NSError(), level: KinescopeLoggerLevel.network)
 ```
 
-Also SDK has opportunity to use custom logger. Just use protocols `KinescopeLoggingType`, `KinescopeLogging`.
+Also SDK has opportunity to use custom logger. Just use protocols `KinescopeLoggingLevel`, `KinescopeLogging`.
 
 ## Installation
 
