@@ -26,6 +26,8 @@ private extension PlayerControlView {
 
     func setupInitialState(with config: KinescopeControlPanelConfiguration) {
         // configure control panel
+
+        backgroundColor = config.backgroundColor
     }
 
 }

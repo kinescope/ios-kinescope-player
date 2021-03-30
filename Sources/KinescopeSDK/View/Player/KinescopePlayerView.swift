@@ -14,13 +14,13 @@ public class KinescopePlayerView: UIView {
     // MARK: - Private Properties
 
     /// View with AVPlayerLayer to fill size
-    private var playerView: PlayerView!
     private var controlPanel: PlayerControlView?
     private var overlay: PlayerOverlayView?
+    private var progressView: KinescopeActivityIndicator!
 
     // MARK: - Internal Properties
 
-    var progressView: KinescopeActivityIndicator!
+    var playerView: PlayerView!
     public private(set) var previewView: UIImageView = UIImageView()
 
     // MARK: - Public Properties
@@ -61,7 +61,16 @@ public extension KinescopePlayerView {
 
         configurePlayerView(with: config.gravity)
         configurePreviewView()
-        configureProgressView()
+
+        if let overlay = config.overlay {
+            configureOverlay(with: overlay)
+        }
+
+        if let controlPanel = config.controlPanel {
+            configureControlPanel(with: controlPanel)
+        }
+
+        configureProgressView(with: config.activityIndicator)
     }
 
 }
@@ -76,7 +85,7 @@ private extension KinescopePlayerView {
         }
     }
 
-    private func configurePlayerView(with gravity: AVLayerVideoGravity) {
+    func configurePlayerView(with gravity: AVLayerVideoGravity) {
         let playerView = PlayerView()
         playerView.layer.shouldRasterize = true
         playerView.layer.rasterizationScale = UIScreen.main.scale
@@ -87,16 +96,28 @@ private extension KinescopePlayerView {
         self.playerView = playerView
     }
 
-    private func configurePreviewView() {
+    func configurePreviewView() {
         addSubview(previewView)
         stretch(view: previewView)
     }
 
-    private func configureProgressView() {
-        let progressView = UIActivityIndicatorView(style: .whiteLarge)
-        progressView.hidesWhenStopped = true
+    func configureProgressView(with progressView: KinescopeActivityIndicator) {
         addSubview(progressView)
+        centerChild(view: progressView)
+
         self.progressView = progressView
+    }
+
+    func configureControlPanel(with config: KinescopeControlPanelConfiguration) {
+        let controlPanel = PlayerControlView(config: config)
+        addSubview(controlPanel)
+        bottomChild(view: controlPanel, with: config.preferedHeigh)
+    }
+
+    func configureOverlay(with config: KinescopePlayerOverlayConfiguration) {
+        let overlay = PlayerOverlayView(config: config)
+        addSubview(overlay)
+        stretch(view: overlay)
     }
 
 }

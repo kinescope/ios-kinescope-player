@@ -29,6 +29,10 @@ final class VideoListCell: UITableViewCell {
         playerView.backgroundColor = .black
         playerView.layer.cornerRadius = 20
         playerView.layer.masksToBounds = true
+        playerView.setLayout(with: .init(gravity: .resizeAspectFill,
+                                         activityIndicator: UIActivityIndicatorView(style: .white),
+                                         overlay: nil,
+                                         controlPanel: nil))
     }
 
     override func prepareForReuse() {
@@ -41,12 +45,10 @@ final class VideoListCell: UITableViewCell {
 
     func start() {
         player?.play()
-        playerView.previewView.isHidden = true
     }
 
     func stop() {
         player?.pause()
-        playerView.previewView.isHidden = false
     }
 
 }
@@ -60,7 +62,6 @@ extension VideoListCell: ConfigurableItem {
     func configure(with model: Model) {
 
         playerView.previewView.kf.setImage(with: URL(string: model.poster.md))
-        playerView.set(videoGravity: .resizeAspectFill)
         player = KinescopeVideoPlayer(config: .init(videoId: model.id, looped: true))
         player?.attach(view: playerView)
     }

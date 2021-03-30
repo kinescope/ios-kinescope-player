@@ -28,6 +28,7 @@ private extension PlayerOverlayView {
 
     func setupInitialState(with config: KinescopePlayerOverlayConfiguration) {
         // configure overlay
+        backgroundColor = config.backgroundColor
         configureImageView()
     }
 
