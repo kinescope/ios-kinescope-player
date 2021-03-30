@@ -55,6 +55,9 @@ public class KinescopePlayerView: UIView {
 
 public extension KinescopePlayerView {
 
+    /// Set Layout and Appearance Configuration
+    ///
+    /// - parameter config: Configuration of player
     func setLayout(with config: KinescopePlayerViewConfiguration) {
 
         clearSubviews()
