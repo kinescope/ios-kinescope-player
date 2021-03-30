@@ -11,7 +11,7 @@ import UIKit
 /// Appearance preferences of player view
 public struct KinescopePlayerViewConfiguration {
 
-    public typealias ActivityIndicator = UIView & KinescopeActivityIndicator
+    public typealias ActivityIndicator = UIView & KinescopeActivityIndicating
 
     let gravity: AVLayerVideoGravity
     let activityIndicator: ActivityIndicator
