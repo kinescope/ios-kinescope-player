@@ -7,7 +7,7 @@
 
 import UIKit
 
-/// Appearence preferences for control panel with timeline and settings buttons
+/// Appearence preferences for timeline
 public struct KinescopePlayerTimelineConfiguration {
 
     let activeColor: UIColor
