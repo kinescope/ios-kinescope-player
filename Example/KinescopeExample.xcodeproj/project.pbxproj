@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		27803C78BC9292176387B837 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1297BC1CB454C3BA783E4F43 /* Main.storyboard */; };
-		29D0F6DD5F62B4320690814A /* Pods_KinescopeExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C853E8A1D5DF64FDB3B90AB /* Pods_KinescopeExample.framework */; };
 		4CE8078E78304438232FCD0D /* ConfigStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B71D3741FB772726928CC02 /* ConfigStorage.swift */; };
 		4F66AFB3A32776CED4598E42 /* VideoListFocusableCellGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A366BFC33AA765D5889FCA5 /* VideoListFocusableCellGenerator.swift */; };
 		58B43A1C8C518A286DB9EBEB /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8FAFE6D902EDF9332B6176 /* VideoViewController.swift */; };
@@ -20,6 +19,7 @@
 		B1E9AE507740662091763DC9 /* VideoListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246B7F2D473017AA57153302 /* VideoListController.swift */; };
 		C37AD95F62ABC930BE625443 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD747CF272A25BB0F30BB85A /* User.swift */; };
 		CCCAFC2092F5E99F1DCEC001 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406FFA096A7AD6CD8255B8AC /* UserCell.swift */; };
+		D502A362908C7BDCF5318CB2 /* Pods_KinescopeExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74E8DA7F91D7EC7BBEEC2CDD /* Pods_KinescopeExample.framework */; };
 		DBD96A231FB2F7CDED8CEDDD /* VideoListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DA6E3DD8840BCD239516A03 /* VideoListCell.xib */; };
 		E27847B7474CE6E6D06D2793 /* VideoListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59A91C77A3A14596F5C5226 /* VideoListCell.swift */; };
 		E2E3E7080D78E3690E531239 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B5BA8AD065732355D68FC30 /* UIKit.framework */; };
@@ -34,14 +34,15 @@
 		1B5BA8AD065732355D68FC30 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		246B7F2D473017AA57153302 /* VideoListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListController.swift; sourceTree = "<group>"; };
 		3299E0B8F9C5E0E62196C129 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		3BB482107DAF2E582B9D3785 /* Pods-KinescopeExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KinescopeExample.debug.xcconfig"; path = "Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample.debug.xcconfig"; sourceTree = "<group>"; };
 		406FFA096A7AD6CD8255B8AC /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
 		4A366BFC33AA765D5889FCA5 /* VideoListFocusableCellGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListFocusableCellGenerator.swift; sourceTree = "<group>"; };
-		4C853E8A1D5DF64FDB3B90AB /* Pods_KinescopeExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KinescopeExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		508C4602E3E4B5D5D5BA8FD8 /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
 		51123599CB6E5F785E81071F /* UserCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserCell.xib; sourceTree = "<group>"; };
+		63FED66CAF836911140C3666 /* Pods-KinescopeExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KinescopeExample.release.xcconfig"; path = "Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample.release.xcconfig"; sourceTree = "<group>"; };
+		74E8DA7F91D7EC7BBEEC2CDD /* Pods_KinescopeExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KinescopeExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		78C442C19E61EBCB16A746A3 /* KinescopeConfig.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = KinescopeConfig.plist; sourceTree = "<group>"; };
 		7B71D3741FB772726928CC02 /* ConfigStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigStorage.swift; sourceTree = "<group>"; };
-		8956ED76B06914E6F7F6D267 /* Pods-KinescopeExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KinescopeExample.release.xcconfig"; path = "Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample.release.xcconfig"; sourceTree = "<group>"; };
 		8DA6E3DD8840BCD239516A03 /* VideoListCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VideoListCell.xib; sourceTree = "<group>"; };
 		96FB4A4491B8B00FA3019B09 /* KinescopeExample.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = KinescopeExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B72FC26817E3EC28FCC3B21E /* AuthSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSelectorController.swift; sourceTree = "<group>"; };
@@ -49,7 +50,6 @@
 		C03FA76E45742849B9B29429 /* FocusableItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusableItem.swift; sourceTree = "<group>"; };
 		DA6D1B1FB02192C67211B98A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EB8FAFE6D902EDF9332B6176 /* VideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
-		ED49E7009D2537F8C0B14575 /* Pods-KinescopeExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KinescopeExample.debug.xcconfig"; path = "Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample.debug.xcconfig"; sourceTree = "<group>"; };
 		F59A91C77A3A14596F5C5226 /* VideoListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListCell.swift; sourceTree = "<group>"; };
 		FD747CF272A25BB0F30BB85A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -60,7 +60,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E2E3E7080D78E3690E531239 /* UIKit.framework in Frameworks */,
-				29D0F6DD5F62B4320690814A /* Pods_KinescopeExample.framework in Frameworks */,
+				D502A362908C7BDCF5318CB2 /* Pods_KinescopeExample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -108,23 +108,23 @@
 			path = KinescopeExample;
 			sourceTree = "<group>";
 		};
+		78FD8CDFB078B8EDB84FCAE6 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				3BB482107DAF2E582B9D3785 /* Pods-KinescopeExample.debug.xcconfig */,
+				63FED66CAF836911140C3666 /* Pods-KinescopeExample.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		81BB57F38255C447C00A8B35 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				1B5BA8AD065732355D68FC30 /* UIKit.framework */,
-				4C853E8A1D5DF64FDB3B90AB /* Pods_KinescopeExample.framework */,
+				74E8DA7F91D7EC7BBEEC2CDD /* Pods_KinescopeExample.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		9D43468B184D449EB2A89792 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				ED49E7009D2537F8C0B14575 /* Pods-KinescopeExample.debug.xcconfig */,
-				8956ED76B06914E6F7F6D267 /* Pods-KinescopeExample.release.xcconfig */,
-			);
-			name = Pods;
-			path = Pods;
 			sourceTree = "<group>";
 		};
 		AF687273EFB801F59B28F156 /* VideoList */ = {
@@ -153,7 +153,7 @@
 				7450ED92051EFFF412035B45 /* KinescopeExample */,
 				81BB57F38255C447C00A8B35 /* Frameworks */,
 				0E1DEFEC7B456B248F1F6FF5 /* Products */,
-				9D43468B184D449EB2A89792 /* Pods */,
+				78FD8CDFB078B8EDB84FCAE6 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -200,11 +200,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DD131C8ACC5712E5819DCDAE /* Build configuration list for PBXNativeTarget "KinescopeExample" */;
 			buildPhases = (
-				D5CC4EF4CFDF2EA0058AC100 /* [CP] Check Pods Manifest.lock */,
+				F816A3A1A8E473D052B0A944 /* [CP] Check Pods Manifest.lock */,
 				1D1F2DA9F9E7D46D31255291 /* Sources */,
 				75391D939658B78C30F37B07 /* Resources */,
 				CB7AB8D3C554BB3208DC3C46 /* Frameworks */,
-				C109D083937AA013C38C6BEC /* [CP] Embed Pods Frameworks */,
+				5DFC7874FB1FCCC4B4866911 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -262,7 +262,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		C109D083937AA013C38C6BEC /* [CP] Embed Pods Frameworks */ = {
+		5DFC7874FB1FCCC4B4866911 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -279,7 +279,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D5CC4EF4CFDF2EA0058AC100 /* [CP] Check Pods Manifest.lock */ = {
+		F816A3A1A8E473D052B0A944 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -329,7 +329,7 @@
 /* Begin XCBuildConfiguration section */
 		1C486D161EACA453645ACED6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = ED49E7009D2537F8C0B14575 /* Pods-KinescopeExample.debug.xcconfig */;
+			baseConfigurationReference = 3BB482107DAF2E582B9D3785 /* Pods-KinescopeExample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -361,7 +361,6 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -377,7 +376,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -397,19 +395,17 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
 		85CDCF86B3F2840A9AC709CF /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8956ED76B06914E6F7F6D267 /* Pods-KinescopeExample.release.xcconfig */;
+			baseConfigurationReference = 63FED66CAF836911140C3666 /* Pods-KinescopeExample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -441,7 +437,6 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -457,7 +452,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -483,8 +477,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
+				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
