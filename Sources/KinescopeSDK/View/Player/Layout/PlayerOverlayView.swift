@@ -28,7 +28,8 @@ class PlayerOverlayView: UIControl {
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(didEndPlayingAction),
-                                               name: .AVPlayerItemDidPlayToEndTime, object: nil)
+                                               name: .AVPlayerItemDidPlayToEndTime,
+                                               object: nil)
     }
 
     required init?(coder: NSCoder) {

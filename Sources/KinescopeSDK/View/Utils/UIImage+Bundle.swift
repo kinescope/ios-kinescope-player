@@ -13,6 +13,7 @@ extension UIImage {
             bundle = resourceBundle
         }
 
+        // swiftlint:disable:next image_name_initialization
         return UIImage(named: named, in: bundle, compatibleWith: traitCollection) ?? UIImage()
     }
 }
