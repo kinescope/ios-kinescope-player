@@ -26,13 +26,20 @@ protocol TimelineOutput: class {
 
 class TimelineView: UIControl {
 
+    private let config: KinescopePlayerTimelineConfiguration
+
     init(config: KinescopePlayerTimelineConfiguration) {
+        self.config = config
         super.init(frame: .zero)
         setupInitialState(with: config)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override var intrinsicContentSize: CGSize {
+        .init(width: config.circleRadius * 10, height: config.circleRadius * 2)
     }
 
 }

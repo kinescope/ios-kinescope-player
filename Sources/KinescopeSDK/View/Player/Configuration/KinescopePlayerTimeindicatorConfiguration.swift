@@ -21,3 +21,12 @@ public struct KinescopePlayerTimeindicatorConfiguration {
         self.font = font
     }
 }
+
+// MARK: - Defaults
+
+public extension KinescopePlayerTimeindicatorConfiguration {
+
+    static let `default`: KinescopePlayerTimeindicatorConfiguration = .init(color: .white,
+                                                                            font: .systemFont(ofSize: 18))
+
+}

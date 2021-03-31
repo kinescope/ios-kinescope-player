@@ -17,13 +17,20 @@ protocol TimeIndicatorInput {
 
 class TimeIndicatorView: UIView {
 
+    private let config: KinescopePlayerTimeindicatorConfiguration
+
     init(config: KinescopePlayerTimeindicatorConfiguration) {
+        self.config = config
         super.init(frame: .zero)
         setupInitialState(with: config)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override var intrinsicContentSize: CGSize {
+        .init(width: config.font.capHeight * 6, height: config.font.lineHeight)
     }
 
 }

@@ -29,3 +29,14 @@ public struct KinescopePlayerTimelineConfiguration {
         self.circleRadius = circleRadius
     }
 }
+
+// MARK: - Defaults
+
+public extension KinescopePlayerTimelineConfiguration {
+
+    static let `default`: KinescopePlayerTimelineConfiguration = .init(activeColor: .magenta,
+                                                                       inactiveColor: .gray,
+                                                                       lineHeight: 4,
+                                                                       circleRadius: 8)
+
+}

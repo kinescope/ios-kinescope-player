@@ -27,13 +27,20 @@ protocol PlayerControlOptionsOutput: class {
 
 class PlayerControlOptionsView: UIControl {
 
+    private let config: KinescopePlayerOptionsConfiguration
+
     init(config: KinescopePlayerOptionsConfiguration) {
+        self.config = config
         super.init(frame: .zero)
         setupInitialState(with: config)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override var intrinsicContentSize: CGSize {
+        .init(width: config.iconSize * 2, height: config.iconSize)
     }
 
 }

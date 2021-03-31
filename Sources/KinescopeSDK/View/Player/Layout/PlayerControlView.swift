@@ -9,6 +9,10 @@ import UIKit
 
 class PlayerControlView: UIControl {
 
+    private(set) var timeIndicator: TimeIndicatorView!
+    private(set) var timeline: TimelineView!
+    private(set) var optionsMenu: PlayerControlOptionsView!
+
     init(config: KinescopeControlPanelConfiguration) {
         super.init(frame: .zero)
         setupInitialState(with: config)
@@ -28,6 +32,41 @@ private extension PlayerControlView {
         // configure control panel
 
         backgroundColor = config.backgroundColor
+
+        timeIndicator = TimeIndicatorView(config: config.timeIndicator)
+        timeline = TimelineView(config: config.timeline)
+        optionsMenu = PlayerControlOptionsView(config: config.optionsMenu)
+
+        addSubviews(timeIndicator, timeline, optionsMenu)
+
+        setupConstraints()
+    }
+
+    func setupConstraints() {
+
+        subviews.forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
+
+        timeIndicator.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        timeIndicator.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+
+        timeline.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        timeline.setContentHuggingPriority(.defaultLow, for: .horizontal)
+
+        optionsMenu.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        optionsMenu.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+
+        NSLayoutConstraint.activate([
+            timeIndicator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            timeIndicator.centerYAnchor.constraint(equalTo: centerYAnchor),
+            timeline.leadingAnchor.constraint(equalTo: timeIndicator.trailingAnchor, constant: 16),
+            timeline.centerYAnchor.constraint(equalTo: centerYAnchor),
+            timeline.trailingAnchor.constraint(equalTo: optionsMenu.leadingAnchor, constant: -16),
+            optionsMenu.centerYAnchor.constraint(equalTo: centerYAnchor),
+            optionsMenu.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
+        ])
+
     }
 
 }

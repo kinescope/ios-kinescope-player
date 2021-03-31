@@ -25,3 +25,13 @@ public struct KinescopePlayerOptionsConfiguration {
         self.iconSize = iconSize
     }
 }
+
+// MARK: - Defaults
+
+public extension KinescopePlayerOptionsConfiguration {
+
+    static let `default`: KinescopePlayerOptionsConfiguration = .init(normalColor: .white,
+                                                                      highlightedColor: .gray,
+                                                                      iconSize: 16)
+
+}
