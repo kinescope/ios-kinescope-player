@@ -16,7 +16,7 @@ final class VideoViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         playerView.setLayout(with: .default)
 
         player = KinescopeVideoPlayer(config: .init(videoId: videoId))
