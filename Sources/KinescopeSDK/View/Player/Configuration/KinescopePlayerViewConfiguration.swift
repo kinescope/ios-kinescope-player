@@ -38,9 +38,15 @@ public struct KinescopePlayerViewConfiguration {
 
 public extension KinescopePlayerViewConfiguration {
 
-    static let `default`: KinescopePlayerViewConfiguration = .init(gravity: .resizeAspectFill,
-                                                                   activityIndicator: UIActivityIndicatorView(style: .whiteLarge),
-                                                                   overlay: nil,
-                                                                   controlPanel: nil)
+    static let `default`: KinescopePlayerViewConfiguration = .init(gravity: .resizeAspect,
+                                                                    activityIndicator: UIActivityIndicatorView(style: .whiteLarge),
+                                                                    overlay: nil,
+                                                                    controlPanel: .init(tintColor: .gray,
+                                                                                        backgroundColor: .systemBlue,
+                                                                                        preferedHeight: 40,
+                                                                                        hideOnPlayTimeout: 2,
+                                                                                        timeIndicator: .default,
+                                                                                        timeline: .default,
+                                                                                        optionsMenu: .default))
 
 }

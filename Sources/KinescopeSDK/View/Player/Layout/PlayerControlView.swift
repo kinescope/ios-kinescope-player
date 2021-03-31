@@ -7,19 +7,30 @@
 
 import UIKit
 
+protocol PlayerControlInput: TimelineInput, TimeIndicatorInput, PlayerControlOptionsInput {}
+
+protocol PlayerControlOutput: TimelineOutput {}
+
 class PlayerControlView: UIControl {
 
     private(set) var timeIndicator: TimeIndicatorView!
     private(set) var timeline: TimelineView!
     private(set) var optionsMenu: PlayerControlOptionsView!
 
+    private let config: KinescopeControlPanelConfiguration
+
     init(config: KinescopeControlPanelConfiguration) {
+        self.config = config
         super.init(frame: .zero)
         setupInitialState(with: config)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override var intrinsicContentSize: CGSize {
+        .init(width: .greatestFiniteMagnitude, height: config.preferedHeight)
     }
 
 }
