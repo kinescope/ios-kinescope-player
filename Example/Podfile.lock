@@ -1,7 +1,7 @@
 PODS:
   - KinescopeSDK (0.1)
   - Kingfisher (6.2.1)
-  - ReactiveDataDisplayManager (7.0.0-beta)
+  - ReactiveDataDisplayManager (7.0.0)
 
 DEPENDENCIES:
   - KinescopeSDK (from `../`)
@@ -18,9 +18,9 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  KinescopeSDK: 95b2da2e14411157a669a9f70bd536c82fcacde9
+  KinescopeSDK: 0c9befe962e7272f6dcb4b371e83492a2e012b96
   Kingfisher: e71c6fac2aebb1262888cabc2cb13d313362a48f
-  ReactiveDataDisplayManager: 5873e932d6ff270f52f0a5b2e9368227c362f7ba
+  ReactiveDataDisplayManager: 0ff30e94f5c9785e4f366ca5e09bef00eb6a8ba8
 
 PODFILE CHECKSUM: fb0d15bae13d5dc28726393231e72f0658d0b214
 

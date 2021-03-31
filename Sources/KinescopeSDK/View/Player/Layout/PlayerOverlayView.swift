@@ -9,33 +9,124 @@ import UIKit
 
 class PlayerOverlayView: UIControl {
 
-    let imageView: UIImageView = UIImageView()
+    // MARK: - Properties
 
-    init(config: KinescopePlayerOverlayConfiguration) {
+    let playPauseImageView = UIImageView()
+    private let contentView = UIView()
+    private let config: KinescopePlayerOverlayConfiguration
+    private weak var delegate: PlayerOverlayViewDelegate?
+    private var isPlaying = false
+    private var isEndPlaying = false
+
+    // MARK: - Lifecycle
+
+    init(config: KinescopePlayerOverlayConfiguration, delegate: PlayerOverlayViewDelegate? = nil) {
+        self.config = config
+        self.delegate = delegate
         super.init(frame: .zero)
-        setupInitialState(with: config)
+        self.setupInitialState()
+
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(didEndPlayingAction),
+                                               name: .AVPlayerItemDidPlayToEndTime, object: nil)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    // MARK: - UIControl
+
+    override var isSelected: Bool {
+        didSet {
+            isSelected ? setSelectedState() : setDeselectedState()
+        }
+    }
+
+    override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
+        super.endTracking(touch, with: event)
+
+        guard
+            let location = touch?.location(in: contentView)
+        else {
+            return
+        }
+
+        if isSelected && playPauseImageView.frame.contains(location) {
+            playPauseAction()
+        } else {
+            isSelected.toggle()
+        }
+    }
 }
 
 // MARK: - Private
 
 private extension PlayerOverlayView {
+    func setupInitialState() {
+        isSelected = true
+        isPlaying = true
 
-    func setupInitialState(with config: KinescopePlayerOverlayConfiguration) {
-        // configure overlay
-        backgroundColor = config.backgroundColor
+        configureContentView()
+    }
+
+    func configureContentView() {
+        contentView.isUserInteractionEnabled = false
+        contentView.backgroundColor = config.backgroundColor
+        addSubview(contentView)
+        stretch(view: contentView)
         configureImageView()
     }
 
     func configureImageView() {
-        addSubview(imageView)
-        centerChild(view: imageView)
-        imageView.isHidden = true
+        playPauseImageView.image = isPlaying ? config.pauseImage : config.playImage
+        contentView.addSubview(playPauseImageView)
+        contentView.centerChild(view: playPauseImageView)
     }
 
+    func setSelectedState() {
+        UIView.animate(withDuration: 0.3) {
+            self.contentView.alpha = 1.0
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + config.animationDuration) {
+            self.isSelected = false
+        }
+    }
+
+    func setDeselectedState() {
+        UIView.animate(withDuration: 0.3) {
+            self.contentView.alpha = .zero
+        }
+    }
+}
+
+// MARK: - Actions
+
+private extension PlayerOverlayView {
+    @objc
+    func playPauseAction() {
+        isPlaying.toggle()
+
+        if isPlaying {
+            playPauseImageView.image = config.pauseImage
+            delegate?.didPlay(videoEnded: isEndPlaying)
+        } else {
+            playPauseImageView.image = config.playImage
+            delegate?.didPause()
+        }
+
+        isEndPlaying = false
+    }
+
+    @objc
+    func didEndPlayingAction() {
+        isEndPlaying = true
+        isPlaying = false
+        playPauseImageView.image = config.playImage
+    }
 }

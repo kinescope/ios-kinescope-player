@@ -11,4 +11,6 @@ Pod::Spec.new do |s|
   s.framework = 'UIKit'
   s.ios.deployment_target = '10.0'
   s.swift_version = '5.0'
+
+  s.resource_bundles = { 'KinescopeSDK' => ['Sources/KinescopeSDK/Resources/Images/*.{png}'] }
 end
