@@ -20,8 +20,8 @@ protocol PlayerControlOptionsOutput: class {
 
     /// Callback of user initiated expand action. Called on three dots tapped.
     ///
-    /// - parameter isExpanded: Value of `true` when all options expanded. `false` when visible only `2` options.
-    func didOptions(isExpanded: Bool)
+    /// - parameter expanded: Value of `true` when all options expanded. `false` when visible only `2` options.
+    func didOptions(expanded: Bool)
 
 }
 
