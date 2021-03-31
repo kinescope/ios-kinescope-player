@@ -48,6 +48,11 @@ final class VideoListController: UIViewController {
         loadFirstPage()
     }
 
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        focusInput?.clearFocus()
+    }
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         guard

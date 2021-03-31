@@ -10,6 +10,8 @@ import ReactiveDataDisplayManager
 public protocol CurrentCellFocusInput: class {
 
     func updateFocus()
+
+    func clearFocus()
 }
 
 public protocol CurrentCellFocusOutput: class {
@@ -74,6 +76,11 @@ extension CurrentCellFocusPlugin: CurrentCellFocusInput {
         focusedGenerator?.focusUpdated(isFocused: false)
         focusedGenerator = focused
         focused.focusUpdated(isFocused: true)
+    }
+
+    func clearFocus() {
+        focusedGenerator?.focusUpdated(isFocused: false)
+        focusedGenerator = nil
     }
 
 }
