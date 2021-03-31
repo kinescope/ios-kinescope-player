@@ -17,13 +17,7 @@ final class VideoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        playerView.setLayout(with: .init(gravity: .resizeAspect,
-                                         activityIndicator: UIActivityIndicatorView(style: .whiteLarge),
-                                         overlay: nil,
-                                         controlPanel: .init(tintColor: .gray,
-                                                             backgroundColor: .systemBlue,
-                                                             preferedHeigh: 40,
-                                                             hideOnPlayTimeout: 20)))
+        playerView.setLayout(with: .default)
 
         player = KinescopeVideoPlayer(config: .init(videoId: videoId))
         player?.attach(view: playerView)

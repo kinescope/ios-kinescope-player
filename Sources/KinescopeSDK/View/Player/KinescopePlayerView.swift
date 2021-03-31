@@ -114,7 +114,7 @@ private extension KinescopePlayerView {
     func configureControlPanel(with config: KinescopeControlPanelConfiguration) {
         let controlPanel = PlayerControlView(config: config)
         addSubview(controlPanel)
-        bottomChild(view: controlPanel, with: config.preferedHeigh)
+        bottomChild(view: controlPanel)
     }
 
     func configureOverlay(with config: KinescopePlayerOverlayConfiguration) {
