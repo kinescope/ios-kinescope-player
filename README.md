@@ -63,6 +63,30 @@ Enjoy.
 All controls already included into `KinescopePlayerView` and can be hidden optionally.
 You can read full [documentation](./DOCUMENTATION.md) or find more examples in our [Example-project](/Example).  
 
+### Logger
+
+For logging network request, player events or something else use `KinescopeDefaultLogger`.
+
+First step is set `KinescopeLoggerLevel` into configuration at application startup:
+
+```swift
+Kinescope.shared.set(logger: KinescopeDefaultLogger(), levels: [KinescopeLoggerLevel.network, KinescopeLoggerLevel.player])
+```
+
+Use logger like this:
+
+```swift
+Kinescope.shared.logger.log(message: "Bad Request", level: KinescopeLoggerLevel.network)
+```
+
+or 
+
+```swift
+Kinescope.shared.logger.log(error: NSError(), level: KinescopeLoggerLevel.network)
+```
+
+Also SDK has opportunity to use custom logger. Just use protocols `KinescopeLoggingLevel`, `KinescopeLogging`.
+
 ## Installation
 
 Just add KinescopeSDK to your `Podfile` like this
