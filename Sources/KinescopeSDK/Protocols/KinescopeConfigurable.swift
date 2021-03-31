@@ -11,4 +11,7 @@ public protocol KinescopeConfigurable {
     /// - parameter config: Configuration parameters required to connection
     func setConfig(_ config: KinescopeConfig)
 
+    /// - parameter logger: opportunity to set custom logger
+    /// - parameter levels: levels of logging
+    func set(logger: KinescopeLogging, levels: [KinescopeLoggingLevel])
 }

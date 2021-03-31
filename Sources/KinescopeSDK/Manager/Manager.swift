@@ -17,4 +17,5 @@ class Manager: KinescopeServicesProvider {
 
     var inspector: KinescopeInspectable!
 
+    var logger: KinescopeLogging!
 }
