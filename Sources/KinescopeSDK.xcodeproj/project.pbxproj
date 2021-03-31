@@ -12,6 +12,8 @@
 		018F960726145C7E0084AE37 /* KinescopePlayerTimelineConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018F960626145C7E0084AE37 /* KinescopePlayerTimelineConfiguration.swift */; };
 		018F960A261460410084AE37 /* PlayerControlOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018F9609261460410084AE37 /* PlayerControlOptionsView.swift */; };
 		018F960D261463C80084AE37 /* KinescopePlayerOptionsConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018F960C261463C80084AE37 /* KinescopePlayerOptionsConfiguration.swift */; };
+		018F9610261465140084AE37 /* TimeIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018F960F261465140084AE37 /* TimeIndicator.swift */; };
+		018F96132614656F0084AE37 /* KinescopePlayerTimeindicatorConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018F96122614656F0084AE37 /* KinescopePlayerTimeindicatorConfiguration.swift */; };
 		019BE3A15D8833FB4B17BF85 /* RequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57787D9E7DA2F62069166D0 /* RequestBuilder.swift */; };
 		01C772F62FB45A601F8B5872 /* KinescopeVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611C5D1CBB38D103C3D7715A /* KinescopeVideo.swift */; };
 		02F22B83CEF527C23750DBA7 /* KinescopeVideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC87DD8EA32020DEA2459733 /* KinescopeVideoPlayer.swift */; };
@@ -117,6 +119,8 @@
 		018F960626145C7E0084AE37 /* KinescopePlayerTimelineConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopePlayerTimelineConfiguration.swift; sourceTree = "<group>"; };
 		018F9609261460410084AE37 /* PlayerControlOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerControlOptionsView.swift; sourceTree = "<group>"; };
 		018F960C261463C80084AE37 /* KinescopePlayerOptionsConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopePlayerOptionsConfiguration.swift; sourceTree = "<group>"; };
+		018F960F261465140084AE37 /* TimeIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIndicator.swift; sourceTree = "<group>"; };
+		018F96122614656F0084AE37 /* KinescopePlayerTimeindicatorConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopePlayerTimeindicatorConfiguration.swift; sourceTree = "<group>"; };
 		028AF24ED28E18823066B898 /* PlayingStrategyProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayingStrategyProvider.swift; sourceTree = "<group>"; };
 		07899D9E5DD7637FA8A3022A /* KinescopePlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopePlayer.swift; sourceTree = "<group>"; };
 		087F0FDA92B482F898FD5BB0 /* VideosService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideosService.swift; sourceTree = "<group>"; };
@@ -357,6 +361,7 @@
 				E583C1E83CCFC9E4E65C3763 /* UIActivityIndicator+KinescopeActivityIndicating.swift */,
 				018F960326145C560084AE37 /* TimelineView.swift */,
 				018F9609261460410084AE37 /* PlayerControlOptionsView.swift */,
+				018F960F261465140084AE37 /* TimeIndicator.swift */,
 			);
 			path = Layout;
 			sourceTree = "<group>";
@@ -402,6 +407,7 @@
 				C8F7CD9833B5EB4BBB99D94E /* KinescopePlayerViewConfiguration.swift */,
 				018F960626145C7E0084AE37 /* KinescopePlayerTimelineConfiguration.swift */,
 				018F960C261463C80084AE37 /* KinescopePlayerOptionsConfiguration.swift */,
+				018F96122614656F0084AE37 /* KinescopePlayerTimeindicatorConfiguration.swift */,
 			);
 			path = Configuration;
 			sourceTree = "<group>";
@@ -673,7 +679,9 @@
 				312F48634722FCBD2CADFFC2 /* ServerError.swift in Sources */,
 				BE8A43CD8109ADDC1824B42C /* Transport.swift in Sources */,
 				572D6D178F6B2DB3DE5BCFFB /* UIActivityIndicator+KinescopeActivityIndicating.swift in Sources */,
+				018F96132614656F0084AE37 /* KinescopePlayerTimeindicatorConfiguration.swift in Sources */,
 				9187A4013B2557E5DAC63E72 /* VideoDownloader.swift in Sources */,
+				018F9610261465140084AE37 /* TimeIndicator.swift in Sources */,
 				D2E499AF493C70B1732B252D /* VideosService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -9,7 +9,7 @@ import UIKit
 
 protocol PlayerControlOptionsInput {
 
-    /// Update timeline position manualy
+    /// Set available options
     ///
     /// - Warning: Will be replaced with enum in KIN-51
     /// - parameter options: Set of option

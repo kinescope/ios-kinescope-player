@@ -7,7 +7,7 @@
 
 import UIKit
 
-/// Appearence preferences for control panel with timeline and settings buttons
+/// Appearence preferences for expandable menu with options
 public struct KinescopePlayerOptionsConfiguration {
 
     let normalColor: UIColor
