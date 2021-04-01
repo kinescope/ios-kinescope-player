@@ -106,12 +106,17 @@ private extension KinescopeVideoPlayer {
         }
 
         let timeScale = CMTimeScale(NSEC_PER_SEC)
-        let period = CMTimeMakeWithSeconds(0.1, preferredTimescale: timeScale)
+        let period = CMTimeMakeWithSeconds(0.05, preferredTimescale: timeScale)
 
         timeObserver = strategy.player.addPeriodicTimeObserver(forInterval: period,
                                                                queue: .main) { [weak self] time in
             let time = time.seconds
             self?.view?.controlPanel?.setIndicator(to: time)
+
+            let duration = self?.strategy.player.currentItem?.duration.seconds ?? 0
+
+            self?.view?.controlPanel?.setTimeline(to: CGFloat(time/duration))
+
             Kinescope.shared.logger?.log(message: "current time \(time)", level: KinescopeLoggerLevel.player)
         }
 

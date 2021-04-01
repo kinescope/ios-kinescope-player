@@ -40,7 +40,7 @@ class PlayerControlView: UIControl {
 
 extension PlayerControlView: PlayerControlInput {
     func setTimeline(to position: CGFloat) {
-
+        timeline.setTimeline(to: position)
     }
 
     func setIndicator(to time: TimeInterval) {

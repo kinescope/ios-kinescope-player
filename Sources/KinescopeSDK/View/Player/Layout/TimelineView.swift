@@ -67,6 +67,21 @@ extension TimelineView: TimelineInput {
 
     func setTimeline(to position: CGFloat) {
         // TODO: - устанавливать таймлайн
+
+        let circleX = position * frame.width
+        let centerY = frame.height / 2
+
+        circleView.center = .init(x: circleX, y: centerY)
+
+        let progressOrigin = CGPoint(x: config.circleRadius, y: centerY)
+
+        futureProgress.frame = .init(origin: progressOrigin,
+                                     size: .init(width: frame.width - config.circleRadius * 2,
+                                                 height: config.lineHeight))
+
+        pastProgress.frame = .init(origin: progressOrigin,
+                                     size: .init(width: circleX,
+                                                 height: config.lineHeight))
     }
 
 }
@@ -76,7 +91,6 @@ extension TimelineView: TimelineInput {
 private extension TimelineView {
 
     func setupInitialState(with config: KinescopePlayerTimelineConfiguration) {
-        // configure timeline
 
         backgroundColor = .clear
 
@@ -106,7 +120,7 @@ private extension TimelineView {
     func createCircle(with color: UIColor, radius: CGFloat) -> UIView {
         let view = UIView(frame: .init(origin: .zero, size: .init(width: radius * 2, height: radius * 2)))
         view.backgroundColor = color
-        view.layer.cornerRadius = radius * 2
+        view.layer.cornerRadius = radius
         return view
     }
 
