@@ -36,7 +36,7 @@ class PlayerControlView: UIControl {
 
 }
 
-// MARK: - name
+// MARK: - PlayerControlOptionsOutput
 
 extension PlayerControlView: PlayerControlOptionsOutput {
 
