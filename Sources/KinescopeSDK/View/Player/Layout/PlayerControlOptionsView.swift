@@ -93,7 +93,9 @@ private extension PlayerControlOptionsView {
         button.tintColor = config.highlightedColor
         button.squareSize(with: config.iconSize)
 
-        // TODO: - add selector
+        button.tag = option.hashValue
+
+        button.addTarget(nil, action: #selector(buttonTapped(sender:)), for: .touchUpInside)
 
         return button
     }
@@ -119,6 +121,11 @@ private extension PlayerControlOptionsView {
             $0.removeFromSuperview()
             stackView.removeArrangedSubview($0)
         }
+    }
+
+    @objc func buttonTapped(sender: UIButton) {
+        Kinescope.shared.logger?.log(message: "Options menu button tapped with tag: \(sender.tag)",
+                                     level: KinescopeLoggerLevel.player)
     }
 
 }

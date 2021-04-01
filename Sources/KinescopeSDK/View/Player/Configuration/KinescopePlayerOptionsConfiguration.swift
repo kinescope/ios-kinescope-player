@@ -32,6 +32,6 @@ public extension KinescopePlayerOptionsConfiguration {
 
     static let `default`: KinescopePlayerOptionsConfiguration = .init(normalColor: .white,
                                                                       highlightedColor: .gray,
-                                                                      iconSize: 16)
+                                                                      iconSize: 24)
 
 }
