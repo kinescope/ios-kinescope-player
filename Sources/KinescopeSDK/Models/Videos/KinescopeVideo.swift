@@ -16,7 +16,7 @@ public struct KinescopeVideo: Codable {
     public let duration: Double
     public let assets: [KinescopeVideoAsset]
     public let chapters: KinescopeVideoChapter
-    public let poster: KinescopeVideoPoster
+    public let poster: KinescopeVideoPoster?
     public let additionalMaterials: [KinescopeVideoAdditionalMaterial]
     public let subtitles: [KinescopeVideoSubtitle]
     public let hlsLink: String

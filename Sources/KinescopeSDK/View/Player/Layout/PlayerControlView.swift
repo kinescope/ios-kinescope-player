@@ -36,6 +36,22 @@ class PlayerControlView: UIControl {
 
 }
 
+// MARK: - PlayerControlInput
+
+extension PlayerControlView: PlayerControlInput {
+    func seek(to position: CGFloat) {
+
+    }
+
+    func setIndicator(to time: TimeInterval) {
+        timeIndicator.setIndicator(to: time)
+    }
+
+    func set(options: [KinescopePlayerOption]) {
+        optionsMenu.set(options: options)
+    }
+}
+
 // MARK: - PlayerControlOptionsOutput
 
 extension PlayerControlView: PlayerControlOptionsOutput {
@@ -68,7 +84,6 @@ private extension PlayerControlView {
 
         setupConstraints()
 
-        optionsMenu.set(options: [.settings, .fullscreen, .more])
         optionsMenu.output = self
     }
 

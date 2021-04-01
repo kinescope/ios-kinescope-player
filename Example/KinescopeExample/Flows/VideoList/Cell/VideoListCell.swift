@@ -61,7 +61,7 @@ extension VideoListCell: ConfigurableItem {
 
     func configure(with model: Model) {
 
-        playerView.previewView.kf.setImage(with: URL(string: model.poster.md))
+        playerView.previewView.kf.setImage(with: URL(string: model.poster?.md ?? ""))
         player = KinescopeVideoPlayer(config: .init(videoId: model.id, looped: true))
         player?.attach(view: playerView)
     }
