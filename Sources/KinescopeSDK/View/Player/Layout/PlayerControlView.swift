@@ -10,7 +10,9 @@ import UIKit
 
 protocol PlayerControlInput: TimelineInput, TimeIndicatorInput, PlayerControlOptionsInput {}
 
-protocol PlayerControlOutput: TimelineOutput {}
+protocol PlayerControlOutput: TimelineOutput {
+    func didSelect(option: KinescopePlayerOption)
+}
 
 class PlayerControlView: UIControl {
 
@@ -19,9 +21,11 @@ class PlayerControlView: UIControl {
     private(set) var optionsMenu: PlayerControlOptionsView!
 
     private let config: KinescopeControlPanelConfiguration
+    private weak var delegate: PlayerControlOutput?
 
-    init(config: KinescopeControlPanelConfiguration) {
+    init(config: KinescopeControlPanelConfiguration, delegate: PlayerControlOutput? = nil) {
         self.config = config
+        self.delegate = delegate
         super.init(frame: .zero)
         setupInitialState(with: config)
     }
@@ -62,7 +66,7 @@ extension PlayerControlView: PlayerControlOptionsOutput {
     }
 
     func didSelect(option: KinescopePlayerOption) {
-        // implement options handling here
+        delegate?.didSelect(option: option)
     }
 
 }

@@ -10,6 +10,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     }()
 
     private weak var view: KinescopePlayerView?
+    private weak var delegate: KinescopePlayerDelegate?
     private var timeObserver: Any?
 
     private var video: KinescopeVideo?
@@ -17,15 +18,16 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
     // MARK: - Lifecycle
 
-    init(config: KinescopePlayerConfig, dependencies: KinescopePlayerDependencies) {
+    init(config: KinescopePlayerConfig, dependencies: KinescopePlayerDependencies, delegate: KinescopePlayerDelegate? = nil) {
         self.dependencies = dependencies
         self.config = config
+        self.delegate = delegate
     }
 
     // MARK: - KinescopePlayer
 
-    public required convenience init(config: KinescopePlayerConfig) {
-        self.init(config: config, dependencies: KinescopeVideoPlayerDependencies())
+    public required convenience init(config: KinescopePlayerConfig, delegate: KinescopePlayerDelegate? = nil) {
+        self.init(config: config, dependencies: KinescopeVideoPlayerDependencies(), delegate: delegate)
     }
 
     public func play() {
@@ -138,5 +140,9 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
     func didPause() {
         self.pause()
+    }
+
+    func didSelect(option: KinescopePlayerOption) {
+        delegate?.didSelect(option: option)
     }
 }

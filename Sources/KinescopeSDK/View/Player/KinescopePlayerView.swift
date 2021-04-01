@@ -112,7 +112,7 @@ private extension KinescopePlayerView {
     }
 
     func configureControlPanel(with config: KinescopeControlPanelConfiguration) {
-        let controlPanel = PlayerControlView(config: config)
+        let controlPanel = PlayerControlView(config: config, delegate: self)
         addSubview(controlPanel)
         bottomChild(view: controlPanel)
 
@@ -140,5 +140,16 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
 
     func didPause() {
         delegate?.didPause()
+    }
+}
+
+// MARK: - PlayerOverlayViewDelegate
+
+extension KinescopePlayerView: PlayerControlOutput {
+    func onTimelinePositionChanged(to position: CGFloat) {
+    }
+
+    func didSelect(option: KinescopePlayerOption) {
+        delegate?.didSelect(option: option)
     }
 }
