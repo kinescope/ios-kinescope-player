@@ -108,7 +108,9 @@ private extension KinescopeVideoPlayer {
 
         timeObserver = strategy.player.addPeriodicTimeObserver(forInterval: period,
                                                                queue: .main) { [weak self] time in
-            self?.view?.controlPanel?.setIndicator(to: time.seconds)
+            let time = time.seconds
+            self?.view?.controlPanel?.setIndicator(to: time)
+            Kinescope.shared.logger.log(message: "current time \(time)", level: KinescopeLoggerLevel.player)
         }
 
     }
