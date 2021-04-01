@@ -18,7 +18,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  KinescopeSDK: 0c9befe962e7272f6dcb4b371e83492a2e012b96
+  KinescopeSDK: a95c22666bca0b647fab64ea5eb34c093cac49d5
   Kingfisher: e71c6fac2aebb1262888cabc2cb13d313362a48f
   ReactiveDataDisplayManager: 0ff30e94f5c9785e4f366ca5e09bef00eb6a8ba8
 

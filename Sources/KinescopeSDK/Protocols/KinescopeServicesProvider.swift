@@ -16,6 +16,6 @@ public protocol KinescopeServicesProvider {
     var inspector: KinescopeInspectable! { get }
 
     /// Service managing logging process
-    var logger: KinescopeLogging! { get }
+    var logger: KinescopeLogging? { get }
 
 }
