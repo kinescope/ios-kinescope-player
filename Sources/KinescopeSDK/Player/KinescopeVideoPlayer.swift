@@ -103,9 +103,12 @@ private extension KinescopeVideoPlayer {
             return
         }
 
-        view?.controlPanel?.setIndicator(to: strategy.player.currentTime().seconds)
-        
-        timeObserver = strategy.player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1, preferredTimescale: 1),
+        view?.controlPanel?.setIndicator(to: 0)
+
+        let timeScale = CMTimeScale(NSEC_PER_SEC)
+        let period = CMTimeMakeWithSeconds(0.5, preferredTimescale: timeScale)
+
+        timeObserver = strategy.player.addPeriodicTimeObserver(forInterval: period,
                                                                queue: .main) { [weak self] time in
             self?.view?.controlPanel?.setIndicator(to: time.seconds)
         }
@@ -113,10 +116,9 @@ private extension KinescopeVideoPlayer {
     }
 
     func removePlaybackTimeObserver() {
-        guard let observer = timeObserver else {
-            return
+        if let timeObserver = timeObserver {
+            strategy.player.removeTimeObserver(timeObserver)
+            self.timeObserver = nil
         }
-        strategy.player.removeTimeObserver(observer)
-        timeObserver = nil
     }
 }
