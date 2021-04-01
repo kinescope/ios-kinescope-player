@@ -112,7 +112,7 @@ private extension KinescopeVideoPlayer {
                                                                queue: .main) { [weak self] time in
             let time = time.seconds
             self?.view?.controlPanel?.setIndicator(to: time)
-            Kinescope.shared.logger.log(message: "current time \(time)", level: KinescopeLoggerLevel.player)
+            Kinescope.shared.logger?.log(message: "current time \(time)", level: KinescopeLoggerLevel.player)
         }
 
     }

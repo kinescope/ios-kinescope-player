@@ -116,6 +116,8 @@ private extension KinescopePlayerView {
         addSubview(controlPanel)
         bottomChild(view: controlPanel)
 
+        controlPanel.set(options: [.settings, .fullscreen, .more])
+
         self.controlPanel = controlPanel
     }
 
@@ -123,6 +125,8 @@ private extension KinescopePlayerView {
         let overlay = PlayerOverlayView(config: config, delegate: self)
         addSubview(overlay)
         stretch(view: overlay)
+
+        self.overlay = overlay
     }
 
 }

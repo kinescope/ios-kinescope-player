@@ -47,7 +47,7 @@ extension PlayerControlView: PlayerControlInput {
         timeIndicator.setIndicator(to: time)
     }
 
-    func set(options: [String]) {
+    func set(options: [KinescopePlayerOption]) {
         optionsMenu.set(options: options)
     }
 }
