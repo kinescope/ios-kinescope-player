@@ -103,8 +103,6 @@ private extension KinescopeVideoPlayer {
             return
         }
 
-        view?.controlPanel?.setIndicator(to: 0)
-
         let timeScale = CMTimeScale(NSEC_PER_SEC)
         let period = CMTimeMakeWithSeconds(0.5, preferredTimescale: timeScale)
 

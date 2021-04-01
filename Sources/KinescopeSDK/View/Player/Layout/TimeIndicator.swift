@@ -33,7 +33,11 @@ class TimeIndicatorView: UIView {
     }
 
     override var intrinsicContentSize: CGSize {
-        .init(width: config.font.capHeight * 6, height: config.font.lineHeight)
+        let label = UILabel()
+        label.font = config.font
+        label.text = getText(from: .infinity)
+        label.sizeToFit()
+        return .init(width: label.frame.size.width, height: config.font.lineHeight)
     }
 
 }
@@ -56,12 +60,18 @@ private extension TimeIndicatorView {
 
         backgroundColor = .clear
 
+        configureLabel()
+    }
+
+    func configureLabel() {
         label.textColor = config.color
         label.font = config.font
         label.textAlignment = .right
 
         addSubview(label)
         stretch(view: label)
+
+        label.text = getText(from: 0)
     }
 
     func getText(from time: TimeInterval) -> String {
