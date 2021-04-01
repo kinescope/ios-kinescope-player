@@ -31,7 +31,10 @@ public struct KinescopePlayerOptionsConfiguration {
 public extension KinescopePlayerOptionsConfiguration {
 
     static let `default`: KinescopePlayerOptionsConfiguration = .init(normalColor: .white,
-                                                                      highlightedColor: .gray,
-                                                                      iconSize: 16)
+                                                                      highlightedColor: UIColor(red: 1,
+                                                                                                green: 1,
+                                                                                                blue: 1,
+                                                                                                alpha: 0.32),
+                                                                      iconSize: 24)
 
 }

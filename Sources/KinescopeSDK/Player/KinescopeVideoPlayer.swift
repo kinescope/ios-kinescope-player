@@ -46,7 +46,9 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     }
 
     public func attach(view: KinescopePlayerView) {
-        view.playerView.player = strategy.player
+
+        view.playerView.player = self.strategy.player
+        view.delegate = self
 
         self.view = view
 
@@ -56,6 +58,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     public func detach(view: KinescopePlayerView) {
         view.playerView.player = nil
         self.view = nil
+        view.delegate = nil
 
         removePlaybackTimeObserver()
     }
@@ -119,5 +122,21 @@ private extension KinescopeVideoPlayer {
             strategy.player.removeTimeObserver(timeObserver)
             self.timeObserver = nil
         }
+    }
+}
+
+// MARK: - PlayerOverlayViewDelegate
+
+extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
+    func didPlay(videoEnded: Bool) {
+        if videoEnded {
+            self.strategy.player.seek(to: .zero)
+        }
+
+        self.play()
+    }
+
+    func didPause() {
+        self.pause()
     }
 }

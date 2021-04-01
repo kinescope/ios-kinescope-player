@@ -36,7 +36,7 @@ class PlayerControlView: UIControl {
 
 }
 
-// MARK: - Input
+// MARK: - PlayerControlInput
 
 extension PlayerControlView: PlayerControlInput {
     func seek(to position: CGFloat) {
@@ -48,7 +48,21 @@ extension PlayerControlView: PlayerControlInput {
     }
 
     func set(options: [String]) {
+        optionsMenu.set(options: options)
+    }
+}
 
+// MARK: - PlayerControlOptionsOutput
+
+extension PlayerControlView: PlayerControlOptionsOutput {
+
+    func didOptions(expanded: Bool) {
+        timeIndicator.isHidden = expanded
+        timeline.isHidden = expanded
+    }
+
+    func didSelect(option: KinescopePlayerOption) {
+        // implement options handling here
     }
 
 }
@@ -69,6 +83,8 @@ private extension PlayerControlView {
         addSubviews(timeIndicator, timeline, optionsMenu)
 
         setupConstraints()
+
+        optionsMenu.output = self
     }
 
     func setupConstraints() {
