@@ -123,7 +123,8 @@ private extension PlayerControlOptionsView {
         }
     }
 
-    @objc func buttonTapped(sender: OptionButton) {
+    @objc
+    func buttonTapped(sender: OptionButton) {
         let option = sender.option
 
         Kinescope.shared.logger?.log(message: "Options menu button tapped: \(option)",
