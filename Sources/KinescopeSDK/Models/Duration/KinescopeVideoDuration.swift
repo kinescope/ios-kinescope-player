@@ -5,6 +5,8 @@
 //  Created by Никита Коробейников on 01.04.2021.
 //
 
+import Foundation
+
 public enum KinescopeVideoDuration: String {
 
     case inTenMinute = "m:ss"

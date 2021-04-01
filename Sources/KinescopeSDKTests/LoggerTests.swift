@@ -32,7 +32,7 @@ final class LoggerTests: XCTestCase {
 
         // when
 
-        Kinescope.shared.logger.log(message: "Message", level: KinescopeLoggerLevel.player)
+        Kinescope.shared.logger?.log(message: "Message", level: KinescopeLoggerLevel.player)
 
         // then
 
@@ -46,10 +46,10 @@ final class LoggerTests: XCTestCase {
         let expectedPlayer = "\(KinescopeLoggerLevel.player): Player"
         Kinescope.shared.set(logger: logger, levels: KinescopeLoggerLevel.allCases)
 
-        Kinescope.shared.logger.log(message: "Network", level: KinescopeLoggerLevel.network)
+        Kinescope.shared.logger?.log(message: "Network", level: KinescopeLoggerLevel.network)
         XCTAssertEqual(expectedNetwork, logger.printValue)
 
-        Kinescope.shared.logger.log(message: "Player", level: KinescopeLoggerLevel.player)
+        Kinescope.shared.logger?.log(message: "Player", level: KinescopeLoggerLevel.player)
         XCTAssertEqual(expectedPlayer, logger.printValue)
 
     }
@@ -63,7 +63,7 @@ final class LoggerTests: XCTestCase {
 
         // when
 
-        Kinescope.shared.logger.log(message: "Message", level: KinescopeLoggerLevel.player)
+        Kinescope.shared.logger?.log(message: "Message", level: KinescopeLoggerLevel.player)
 
         // then
 
@@ -79,7 +79,7 @@ final class LoggerTests: XCTestCase {
 
         // when
 
-        Kinescope.shared.logger.log(message: "Message", level: KinescopeLoggerLevel.network)
+        Kinescope.shared.logger?.log(message: "Message", level: KinescopeLoggerLevel.network)
 
         // then
 
@@ -95,7 +95,7 @@ final class LoggerTests: XCTestCase {
 
         // when
 
-        Kinescope.shared.logger.log(error: ErrorMock.err, level: KinescopeLoggerLevel.player)
+        Kinescope.shared.logger?.log(error: ErrorMock.err, level: KinescopeLoggerLevel.player)
 
         // then
 
