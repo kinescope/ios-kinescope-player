@@ -39,7 +39,7 @@ class PlayerControlView: UIControl {
 // MARK: - Input
 
 extension PlayerControlView: PlayerControlInput {
-    func seek(to position: CGFloat) {
+    func setTimeline(to position: CGFloat) {
 
     }
 
