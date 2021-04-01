@@ -26,6 +26,11 @@ protocol TimelineOutput: class {
 
 class TimelineView: UIControl {
 
+    private weak var circleView: UIView!
+    private weak var futureProgress: UIView!
+    private weak var pastProgress: UIView!
+    private weak var preloadProgress: UIView!
+
     private let config: KinescopePlayerTimelineConfiguration
 
     weak var output: TimelineOutput?
@@ -41,19 +46,7 @@ class TimelineView: UIControl {
     }
 
     override var intrinsicContentSize: CGSize {
-        .init(width: config.circleRadius * 10, height: config.circleRadius * 2)
-    }
-
-    // MARK: - Draw
-
-    override func draw(_ rect: CGRect) {
-        super.draw(rect)
-
-        guard let context = UIGraphicsGetCurrentContext() else {
-            return
-        }
-
-        
+        .init(width: config.circleRadius * 10, height: config.circleRadius * 4)
     }
 
     // MARK: - Touches
@@ -85,9 +78,36 @@ private extension TimelineView {
     func setupInitialState(with config: KinescopePlayerTimelineConfiguration) {
         // configure timeline
 
-        backgroundColor = config.activeColor
+        backgroundColor = .clear
+
+        let futureProgress = createLine(with: config.inactiveColor, and: config.lineHeight)
+        addSubview(futureProgress)
+        self.futureProgress = futureProgress
+
+        let preloadProgress = createLine(with: config.inactiveColor, and: config.lineHeight)
+        addSubview(preloadProgress)
+        self.preloadProgress = preloadProgress
+
+        let pastProgress = createLine(with: config.activeColor, and: config.lineHeight)
+        addSubview(pastProgress)
+        self.pastProgress = pastProgress
+
+        let circleView = createCircle(with: config.activeColor, radius: config.circleRadius)
+        addSubview(circleView)
+        self.circleView = circleView
     }
 
+    func createLine(with color: UIColor, and height: CGFloat) -> UIView {
+        let view = UIView(frame: .init(origin: .zero, size: .init(width: .zero, height: height)))
+        view.backgroundColor = color
+        return view
+    }
 
+    func createCircle(with color: UIColor, radius: CGFloat) -> UIView {
+        let view = UIView(frame: .init(origin: .zero, size: .init(width: radius * 2, height: radius * 2)))
+        view.backgroundColor = color
+        view.layer.cornerRadius = radius * 2
+        return view
+    }
 
 }
