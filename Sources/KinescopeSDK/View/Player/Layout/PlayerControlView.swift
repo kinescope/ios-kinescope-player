@@ -36,6 +36,21 @@ class PlayerControlView: UIControl {
 
 }
 
+// MARK: - name
+
+extension PlayerControlView: PlayerControlOptionsOutput {
+
+    func didOptions(expanded: Bool) {
+        timeIndicator.isHidden = expanded
+        timeline.isHidden = expanded
+    }
+
+    func didSelect(option: KinescopePlayerOption) {
+        // implement options handling here
+    }
+
+}
+
 // MARK: - Private
 
 private extension PlayerControlView {
@@ -54,6 +69,7 @@ private extension PlayerControlView {
         setupConstraints()
 
         optionsMenu.set(options: [.settings, .fullscreen, .more])
+        optionsMenu.output = self
     }
 
     func setupConstraints() {

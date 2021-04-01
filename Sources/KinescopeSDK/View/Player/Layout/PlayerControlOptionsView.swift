@@ -37,6 +37,8 @@ class PlayerControlOptionsView: UIControl {
     private var options: [KinescopePlayerOption] = []
     private var isExpanded: Bool = false
 
+    weak var output: PlayerControlOptionsOutput?
+
     init(config: KinescopePlayerOptionsConfiguration) {
         self.config = config
         super.init(frame: .zero)
@@ -88,12 +90,10 @@ private extension PlayerControlOptionsView {
     }
 
     func createButton(from option: KinescopePlayerOption) -> UIButton {
-        let button = UIButton()
-        button.setImage(UIImage.image(named: option.rawValue), for: .normal)
+        let button = OptionButton(option: option)
+
         button.tintColor = config.highlightedColor
         button.squareSize(with: config.iconSize)
-
-        button.tag = option.hashValue
 
         button.addTarget(nil, action: #selector(buttonTapped(sender:)), for: .touchUpInside)
 
@@ -123,9 +123,21 @@ private extension PlayerControlOptionsView {
         }
     }
 
-    @objc func buttonTapped(sender: UIButton) {
-        Kinescope.shared.logger?.log(message: "Options menu button tapped with tag: \(sender.tag)",
+    @objc func buttonTapped(sender: OptionButton) {
+        let option = sender.option
+
+        Kinescope.shared.logger?.log(message: "Options menu button tapped: \(option)",
                                      level: KinescopeLoggerLevel.player)
+
+        switch option {
+        case .more:
+            isExpanded.toggle()
+            fillStack(with: options, expanded: isExpanded)
+
+            output?.didOptions(expanded: isExpanded)
+        default:
+            output?.didSelect(option: option)
+        }
     }
 
 }
