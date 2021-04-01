@@ -40,7 +40,7 @@ public extension KinescopePlayerViewConfiguration {
 
     static let `default`: KinescopePlayerViewConfiguration = .init(gravity: .resizeAspect,
                                                                     activityIndicator: UIActivityIndicatorView(style: .whiteLarge),
-                                                                    overlay: nil,
+                                                                    overlay: .default,
                                                                     controlPanel: .init(tintColor: .gray,
                                                                                         backgroundColor: .systemBlue,
                                                                                         preferedHeight: 40,

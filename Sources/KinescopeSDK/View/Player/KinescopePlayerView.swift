@@ -16,9 +16,12 @@ public class KinescopePlayerView: UIView {
     /// View with AVPlayerLayer to fill size
     private(set) var playerView: PlayerView!
     private(set) weak var controlPanel: PlayerControlView?
-    private(set) var overlay: PlayerOverlayView?
+    private(set) weak var overlay: PlayerOverlayView?
     private(set) var progressView: KinescopeActivityIndicator!
 
+    // MARK: - Internal Properties
+
+    weak var delegate: KinescopePlayerViewDelegate?
     public private(set) var previewView: UIImageView = UIImageView()
 
     // MARK: - Public Properties
@@ -46,7 +49,6 @@ public class KinescopePlayerView: UIView {
         progressView.showVideoProgress(isLoading: false)
         previewView.isHidden = true
     }
-
 }
 
 // MARK: - Public
@@ -114,13 +116,29 @@ private extension KinescopePlayerView {
         addSubview(controlPanel)
         bottomChild(view: controlPanel)
 
+        controlPanel.set(options: [.settings, .fullscreen, .more])
+
         self.controlPanel = controlPanel
     }
 
     func configureOverlay(with config: KinescopePlayerOverlayConfiguration) {
-        let overlay = PlayerOverlayView(config: config)
+        let overlay = PlayerOverlayView(config: config, delegate: self)
         addSubview(overlay)
         stretch(view: overlay)
+
+        self.overlay = overlay
     }
 
+}
+
+// MARK: - PlayerOverlayViewDelegate
+
+extension KinescopePlayerView: PlayerOverlayViewDelegate {
+    func didPlay(videoEnded: Bool) {
+        delegate?.didPlay(videoEnded: videoEnded)
+    }
+
+    func didPause() {
+        delegate?.didPause()
+    }
 }
