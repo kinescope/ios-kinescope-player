@@ -10,6 +10,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     }()
 
     private weak var view: KinescopePlayerView?
+    private var timeObserver: Any?
 
     private var video: KinescopeVideo?
     private let config: KinescopePlayerConfig
@@ -45,13 +46,21 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     }
 
     public func attach(view: KinescopePlayerView) {
+
         view.playerView.player = self.strategy.player
+        view.delegate = self
+
         self.view = view
+
+        observePlaybackTime()
     }
 
     public func detach(view: KinescopePlayerView) {
         view.playerView.player = nil
-        self.view = view
+        self.view = nil
+        view.delegate = nil
+
+        removePlaybackTimeObserver()
     }
 
     public func select(quality: KinescopeVideoQuality) {
@@ -88,5 +97,46 @@ private extension KinescopeVideoPlayer {
                 debugPrint(error)
             }
         )
+    }
+
+    func observePlaybackTime() {
+
+        guard view?.controlPanel != nil else {
+            return
+        }
+
+        let timeScale = CMTimeScale(NSEC_PER_SEC)
+        let period = CMTimeMakeWithSeconds(0.1, preferredTimescale: timeScale)
+
+        timeObserver = strategy.player.addPeriodicTimeObserver(forInterval: period,
+                                                               queue: .main) { [weak self] time in
+            let time = time.seconds
+            self?.view?.controlPanel?.setIndicator(to: time)
+            Kinescope.shared.logger?.log(message: "current time \(time)", level: KinescopeLoggerLevel.player)
+        }
+
+    }
+
+    func removePlaybackTimeObserver() {
+        if let timeObserver = timeObserver {
+            strategy.player.removeTimeObserver(timeObserver)
+            self.timeObserver = nil
+        }
+    }
+}
+
+// MARK: - PlayerOverlayViewDelegate
+
+extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
+    func didPlay(videoEnded: Bool) {
+        if videoEnded {
+            self.strategy.player.seek(to: .zero)
+        }
+
+        self.play()
+    }
+
+    func didPause() {
+        self.pause()
     }
 }

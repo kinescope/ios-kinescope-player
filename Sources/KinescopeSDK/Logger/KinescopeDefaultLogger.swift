@@ -1,5 +1,7 @@
 public final class KinescopeDefaultLogger: KinescopeLogging {
 
+    public init() {}
+
     // MARK: - KinescopeLogging
 
     public func log(message: String, level: KinescopeLoggingLevel) {

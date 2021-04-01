@@ -13,7 +13,7 @@ public struct KinescopePlayerOverlayConfiguration {
     let playImage: UIImage
     let pauseImage: UIImage
     let backgroundColor: UIColor
-    let animationDuration: TimeInterval?
+    let animationDuration: TimeInterval
 
     /// - parameter playImage: Image showing If video started after tapping on overlay
     /// - parameter pauseImage: Image showing If video paused after tapping on overlay
@@ -25,4 +25,17 @@ public struct KinescopePlayerOverlayConfiguration {
         self.backgroundColor = backgroundColor
         self.animationDuration = animationDuration
     }
+}
+
+// MARK: - Defaults
+
+public extension KinescopePlayerOverlayConfiguration {
+
+    static let `default`: KinescopePlayerOverlayConfiguration = .init(
+        playImage: UIImage.image(named: "play"),
+        pauseImage: UIImage.image(named: "pause"),
+        backgroundColor: UIColor.black.withAlphaComponent(0.3),
+        animationDuration: 5.0
+    )
+
 }
