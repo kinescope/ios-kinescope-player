@@ -36,6 +36,23 @@ class PlayerControlView: UIControl {
 
 }
 
+// MARK: - Input
+
+extension PlayerControlView: PlayerControlInput {
+    func seek(to position: CGFloat) {
+
+    }
+
+    func setIndicator(to time: TimeInterval) {
+        timeIndicator.setIndicator(to: time)
+    }
+
+    func set(options: [String]) {
+
+    }
+
+}
+
 // MARK: - Private
 
 private extension PlayerControlView {
@@ -52,8 +69,6 @@ private extension PlayerControlView {
         addSubviews(timeIndicator, timeline, optionsMenu)
 
         setupConstraints()
-
-        timeIndicator.seek(to: 0)
     }
 
     func setupConstraints() {

@@ -12,7 +12,7 @@ protocol TimeIndicatorInput {
     /// Update time value
     ///
     /// - parameter time: Positive time interval describes current moment in video
-    func seek(to time: TimeInterval)
+    func setIndicator(to time: TimeInterval)
 }
 
 class TimeIndicatorView: UIView {
@@ -42,7 +42,7 @@ class TimeIndicatorView: UIView {
 
 extension TimeIndicatorView: TimeIndicatorInput {
 
-    func seek(to time: TimeInterval) {
+    func setIndicator(to time: TimeInterval) {
         label.text = getText(from: time)
     }
 

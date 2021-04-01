@@ -10,9 +10,11 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     }()
 
     private weak var view: KinescopePlayerView?
+    private var timeObserver: Any?
 
     private var video: KinescopeVideo?
     private let config: KinescopePlayerConfig
+
 
     // MARK: - Lifecycle
 
@@ -45,13 +47,18 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     }
 
     public func attach(view: KinescopePlayerView) {
-        view.playerView.player = self.strategy.player
+        view.playerView.player = strategy.player
+
         self.view = view
+
+        observePlaybackTime()
     }
 
     public func detach(view: KinescopePlayerView) {
         view.playerView.player = nil
-        self.view = view
+        self.view = nil
+
+        removePlaybackTimeObserver()
     }
 
     public func select(quality: KinescopeVideoQuality) {
@@ -88,5 +95,28 @@ private extension KinescopeVideoPlayer {
                 debugPrint(error)
             }
         )
+    }
+
+    func observePlaybackTime() {
+
+        guard view?.controlPanel != nil else {
+            return
+        }
+
+        view?.controlPanel?.setIndicator(to: strategy.player.currentTime().seconds)
+        
+        timeObserver = strategy.player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 1, preferredTimescale: 1),
+                                                               queue: .main) { [weak self] time in
+            self?.view?.controlPanel?.setIndicator(to: time.seconds)
+        }
+
+    }
+
+    func removePlaybackTimeObserver() {
+        guard let observer = timeObserver else {
+            return
+        }
+        strategy.player.removeTimeObserver(observer)
+        timeObserver = nil
     }
 }

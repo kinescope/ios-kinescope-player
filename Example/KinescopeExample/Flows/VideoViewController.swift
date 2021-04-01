@@ -10,7 +10,7 @@ final class VideoViewController: UIViewController {
     // MARK: - Private properties
 
     var videoId = ""
-    private var player: KinescopeVideoPlayer?
+    private var player: KinescopePlayer?
 
     // MARK: - Lifecycle
 

@@ -14,13 +14,11 @@ public class KinescopePlayerView: UIView {
     // MARK: - Private Properties
 
     /// View with AVPlayerLayer to fill size
-    private var controlPanel: PlayerControlView?
-    private var overlay: PlayerOverlayView?
-    private var progressView: KinescopeActivityIndicator!
+    private(set) var playerView: PlayerView!
+    private(set) weak var controlPanel: PlayerControlView?
+    private(set) var overlay: PlayerOverlayView?
+    private(set) var progressView: KinescopeActivityIndicator!
 
-    // MARK: - Internal Properties
-
-    var playerView: PlayerView!
     public private(set) var previewView: UIImageView = UIImageView()
 
     // MARK: - Public Properties
@@ -95,7 +93,7 @@ private extension KinescopePlayerView {
         playerView.playerLayer.videoGravity = gravity
         addSubview(playerView)
         stretch(view: playerView)
-
+        
         self.playerView = playerView
     }
 
@@ -115,6 +113,8 @@ private extension KinescopePlayerView {
         let controlPanel = PlayerControlView(config: config)
         addSubview(controlPanel)
         bottomChild(view: controlPanel)
+
+        self.controlPanel = controlPanel
     }
 
     func configureOverlay(with config: KinescopePlayerOverlayConfiguration) {
