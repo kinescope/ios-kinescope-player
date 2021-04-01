@@ -52,6 +52,8 @@ private extension PlayerControlView {
         addSubviews(timeIndicator, timeline, optionsMenu)
 
         setupConstraints()
+
+        optionsMenu.set(options: [.settings, .fullscreen, .more])
     }
 
     func setupConstraints() {

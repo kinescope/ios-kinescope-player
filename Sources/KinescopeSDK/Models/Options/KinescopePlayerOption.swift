@@ -1,0 +1,18 @@
+//
+//  KinescopePlayerOption.swift
+//  KinescopeSDK
+//
+//  Created by Никита Коробейников on 01.04.2021.
+//
+
+/// Options available in player control panel
+public enum KinescopePlayerOption: String {
+
+    /// Option to expand control panel and show all available options
+    case more
+    /// Option to open player in fullscreen mode
+    case fullscreen
+    /// Option to open settings slide menu
+    case settings
+
+}

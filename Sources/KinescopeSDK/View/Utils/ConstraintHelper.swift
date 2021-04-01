@@ -36,4 +36,12 @@ extension UIView {
         ])
     }
 
+    func squareSize(with side: CGFloat) {
+        translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            widthAnchor.constraint(equalToConstant: side),
+            heightAnchor.constraint(equalToConstant: side)
+        ])
+    }
+
 }
