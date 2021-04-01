@@ -49,6 +49,15 @@
 		8459882913BD8DC4713D07BF /* KinescopePlayerDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8C5FEC1E56F2E5F33328A2 /* KinescopePlayerDependencies.swift */; };
 		865CE94DDDC8CA4F2D225722 /* KinescopePlayerOverlayConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FF05915EADDB93B4D15676E /* KinescopePlayerOverlayConfiguration.swift */; };
 		86E179C9CDF3A1C6C4E3C4CF /* KinescopeVideoAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E407782BA7D02852AF0AF8 /* KinescopeVideoAsset.swift */; };
+		8952E83B2614D621001BFA37 /* UIImage+Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8952E83A2614D621001BFA37 /* UIImage+Bundle.swift */; };
+		8952E86D2614DE57001BFA37 /* pause@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8952E8672614DE57001BFA37 /* pause@2x.png */; };
+		8952E86E2614DE57001BFA37 /* play@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8952E8682614DE57001BFA37 /* play@3x.png */; };
+		8952E86F2614DE57001BFA37 /* play@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8952E8692614DE57001BFA37 /* play@2x.png */; };
+		8952E8702614DE57001BFA37 /* pause@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8952E86A2614DE57001BFA37 /* pause@3x.png */; };
+		8952E8712614DE57001BFA37 /* pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 8952E86B2614DE57001BFA37 /* pause.png */; };
+		8952E8722614DE57001BFA37 /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = 8952E86C2614DE57001BFA37 /* play.png */; };
+		89ABD80426151A6400EA59B8 /* KinescopePlayerViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89ABD80326151A6400EA59B8 /* KinescopePlayerViewDelegate.swift */; };
+		89ABD80726151A7400EA59B8 /* PlayerOverlayViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89ABD80626151A7400EA59B8 /* PlayerOverlayViewDelegate.swift */; };
 		8EB165D38D1F89B52DD0053F /* LoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DFC086DCAA17E36CC1C508C /* LoggerTests.swift */; };
 		9187A4013B2557E5DAC63E72 /* VideoDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB502E10695CE3F406F50648 /* VideoDownloader.swift */; };
 		91DE0B1BC6C08747AA54E213 /* KinescopeServicesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52FD36324CD4FBB4651A0A6 /* KinescopeServicesProvider.swift */; };
@@ -157,6 +166,15 @@
 		8565E17932353269761D45DF /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		869CE1C2AE20F92390A017BF /* Manager+KinescopeConfigurable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Manager+KinescopeConfigurable.swift"; sourceTree = "<group>"; };
 		87A8BADF1E24AECDD3627033 /* SubviewsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubviewsHelper.swift; sourceTree = "<group>"; };
+		8952E83A2614D621001BFA37 /* UIImage+Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Bundle.swift"; sourceTree = "<group>"; };
+		8952E8672614DE57001BFA37 /* pause@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pause@2x.png"; sourceTree = "<group>"; };
+		8952E8682614DE57001BFA37 /* play@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play@3x.png"; sourceTree = "<group>"; };
+		8952E8692614DE57001BFA37 /* play@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play@2x.png"; sourceTree = "<group>"; };
+		8952E86A2614DE57001BFA37 /* pause@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pause@3x.png"; sourceTree = "<group>"; };
+		8952E86B2614DE57001BFA37 /* pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause.png; sourceTree = "<group>"; };
+		8952E86C2614DE57001BFA37 /* play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play.png; sourceTree = "<group>"; };
+		89ABD80326151A6400EA59B8 /* KinescopePlayerViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KinescopePlayerViewDelegate.swift; sourceTree = "<group>"; };
+		89ABD80626151A7400EA59B8 /* PlayerOverlayViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerOverlayViewDelegate.swift; sourceTree = "<group>"; };
 		8CE4F7885425DE5FAE5A153D /* KinescopeVideo+Stub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KinescopeVideo+Stub.swift"; sourceTree = "<group>"; };
 		8FB2B666A42BF85FB5B99C95 /* KinescopeDefaultLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeDefaultLogger.swift; sourceTree = "<group>"; };
 		8FC285297DB11EDAA88ABA54 /* KinescopeControlPanelConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeControlPanelConfiguration.swift; sourceTree = "<group>"; };
@@ -229,6 +247,7 @@
 			children = (
 				7113C41E34E2AD6D4EBA47B0 /* ConstraintHelper.swift */,
 				87A8BADF1E24AECDD3627033 /* SubviewsHelper.swift */,
+				8952E83A2614D621001BFA37 /* UIImage+Bundle.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -285,6 +304,7 @@
 		3679D84A311E6A40A4EFD5A5 /* Player */ = {
 			isa = PBXGroup;
 			children = (
+				89ABD80326151A6400EA59B8 /* KinescopePlayerViewDelegate.swift */,
 				22C52549B0D681DE85A0A800 /* KinescopePlayerView.swift */,
 				7DD6662B74FDA72EB42202E0 /* Configuration */,
 				659320BD79D04D2BBF0ED19F /* Layout */,
@@ -361,6 +381,7 @@
 				D75F4484E565BBABC302CCF7 /* PlayerControlOptionsView.swift */,
 				A429BF92F67FB71A84E55D17 /* PlayerControlView.swift */,
 				0A307714F096D04AFF98DFBB /* PlayerOverlayView.swift */,
+				89ABD80626151A7400EA59B8 /* PlayerOverlayViewDelegate.swift */,
 				B694E749BABC6FDC5CB1776C /* PlayerView.swift */,
 				E0FB01A7353CAA501FE53DF1 /* TimeIndicator.swift */,
 				AFEB439BF271EE16DABFE454 /* TimelineView.swift */,
@@ -415,6 +436,27 @@
 			path = Configuration;
 			sourceTree = "<group>";
 		};
+		8952E8652614DE57001BFA37 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8952E8662614DE57001BFA37 /* Images */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		8952E8662614DE57001BFA37 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				8952E8672614DE57001BFA37 /* pause@2x.png */,
+				8952E8682614DE57001BFA37 /* play@3x.png */,
+				8952E8692614DE57001BFA37 /* play@2x.png */,
+				8952E86A2614DE57001BFA37 /* pause@3x.png */,
+				8952E86B2614DE57001BFA37 /* pause.png */,
+				8952E86C2614DE57001BFA37 /* play.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
 		9464E53ED421539B630980F1 /* Logger */ = {
 			isa = PBXGroup;
 			children = (
@@ -428,6 +470,7 @@
 		9CFF77E0AC7A0832C1F30198 /* KinescopeSDK */ = {
 			isa = PBXGroup;
 			children = (
+				8952E8652614DE57001BFA37 /* Resources */,
 				D4AB73C6ED4BAA1D36BECAE1 /* Info.plist */,
 				9464E53ED421539B630980F1 /* Logger */,
 				E0D2916B83EEB02651BA614D /* Manager */,
@@ -538,6 +581,7 @@
 			buildConfigurationList = 2C64C144043585DC68B70BD6 /* Build configuration list for PBXNativeTarget "KinescopeSDK" */;
 			buildPhases = (
 				98BC7DA6712D524EF9DC27A9 /* Sources */,
+				6C50FD953AEC487B3BB11B84 /* Resources */,
 				CE893E3830BB7323F572AC96 /* Frameworks */,
 			);
 			buildRules = (
@@ -598,6 +642,22 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		6C50FD953AEC487B3BB11B84 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8952E8702614DE57001BFA37 /* pause@3x.png in Resources */,
+				8952E86D2614DE57001BFA37 /* pause@2x.png in Resources */,
+				8952E8712614DE57001BFA37 /* pause.png in Resources */,
+				8952E8722614DE57001BFA37 /* play.png in Resources */,
+				8952E86F2614DE57001BFA37 /* play@2x.png in Resources */,
+				8952E86E2614DE57001BFA37 /* play@3x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		2981DAC62A0B6CFD6C1EE6E4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -631,6 +691,7 @@
 				E81F40B0262C274DE3F10479 /* KinescopeConfig.swift in Sources */,
 				D0B5CF733F6609C8DEB04F63 /* KinescopeConfigurable.swift in Sources */,
 				B3E0666356BCB1EC0F0B22EF /* KinescopeControlPanelConfiguration.swift in Sources */,
+				8952E83B2614D621001BFA37 /* UIImage+Bundle.swift in Sources */,
 				284C1A1C0BA1D9C44295FD24 /* KinescopeDefaultLogger.swift in Sources */,
 				15BB42C1275B1DC959E2ADBE /* KinescopeDownloadError.swift in Sources */,
 				17948C8DEABBC24549BAA165 /* KinescopeDownloadable.swift in Sources */,
@@ -640,6 +701,7 @@
 				6F0F177C917359D68CA76299 /* KinescopeLogger.swift in Sources */,
 				C6B8C62DC486BEF1E363918D /* KinescopeLoggerLevel.swift in Sources */,
 				F9C01DD14D4B5A5B75A1D5DA /* KinescopeLogging.swift in Sources */,
+				89ABD80726151A7400EA59B8 /* PlayerOverlayViewDelegate.swift in Sources */,
 				79BE7727B9226A837F72AB44 /* KinescopeMetaData.swift in Sources */,
 				D4E28DB826C13352C8E384C3 /* KinescopePagination.swift in Sources */,
 				FFFEB83093302DDEB9FDB89C /* KinescopePlayer.swift in Sources */,
@@ -679,6 +741,7 @@
 				019BE3A15D8833FB4B17BF85 /* RequestBuilder.swift in Sources */,
 				70A52C77C283DD336EF9884A /* Response.swift in Sources */,
 				1EFD0D912BF4B9D19802578F /* SequentialPlayingStrategy.swift in Sources */,
+				89ABD80426151A6400EA59B8 /* KinescopePlayerViewDelegate.swift in Sources */,
 				312F48634722FCBD2CADFFC2 /* ServerError.swift in Sources */,
 				73447723DCAEA9BCB446D247 /* SubviewsHelper.swift in Sources */,
 				D5E831331C9184D869118FE2 /* TimeIndicator.swift in Sources */,
@@ -727,7 +790,6 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -743,7 +805,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -768,8 +829,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
+				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -793,7 +853,11 @@
 				INFOPLIST_FILE = KinescopeSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = io.kinescope.sdk;
 				SDKROOT = iphoneos;
@@ -817,7 +881,11 @@
 				INFOPLIST_FILE = KinescopeSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = io.kinescope.sdk;
 				SDKROOT = iphoneos;
@@ -854,7 +922,6 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -870,7 +937,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -889,13 +955,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
