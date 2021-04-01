@@ -34,9 +34,11 @@ public struct KinescopePlayerTimelineConfiguration {
 
 public extension KinescopePlayerTimelineConfiguration {
 
-    static let `default`: KinescopePlayerTimelineConfiguration = .init(activeColor: .magenta,
-                                                                       inactiveColor: .gray,
-                                                                       lineHeight: 4,
-                                                                       circleRadius: 8)
+    static let `default`: KinescopePlayerTimelineConfiguration = {
+        .init(activeColor: UIColor(red: 0.38, green: 0.38, blue: 0.988, alpha: 1),
+            inactiveColor: UIColor(red: 1, green: 1, blue: 1, alpha: 0.32),
+            lineHeight: 4,
+            circleRadius: 8)
+    }()
 
 }
