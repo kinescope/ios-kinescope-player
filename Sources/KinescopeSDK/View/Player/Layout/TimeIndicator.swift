@@ -17,7 +17,10 @@ protocol TimeIndicatorInput {
 
 class TimeIndicatorView: UIView {
 
+    private let label = UILabel()
+
     private let config: KinescopePlayerTimeindicatorConfiguration
+    private let formatter = DateFormatter()
 
     init(config: KinescopePlayerTimeindicatorConfiguration) {
         self.config = config
@@ -35,14 +38,40 @@ class TimeIndicatorView: UIView {
 
 }
 
+// MARK: - TimeIndicatorInput
+
+extension TimeIndicatorView: TimeIndicatorInput {
+
+    func seek(to time: TimeInterval) {
+        label.text = getText(from: time)
+    }
+
+}
+
 // MARK: - Private
 
 private extension TimeIndicatorView {
 
     func setupInitialState(with config: KinescopePlayerTimeindicatorConfiguration) {
-        // configure timeline
 
-        backgroundColor = config.color
+        backgroundColor = .clear
+
+        label.textColor = config.color
+        label.font = config.font
+        label.textAlignment = .right
+
+        addSubview(label)
+        stretch(view: label)
     }
 
+    func getText(from time: TimeInterval) -> String {
+
+        let date = Date(timeIntervalSince1970: 0)
+
+        let duration = KinescopeVideoDuration.from(raw: time)
+
+        formatter.dateFormat = duration.rawValue
+
+        return formatter.string(from: date)
+    }
 }

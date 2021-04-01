@@ -52,6 +52,8 @@ private extension PlayerControlView {
         addSubviews(timeIndicator, timeline, optionsMenu)
 
         setupConstraints()
+
+        timeIndicator.seek(to: 0)
     }
 
     func setupConstraints() {
