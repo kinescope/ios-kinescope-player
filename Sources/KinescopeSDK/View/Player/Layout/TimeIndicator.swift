@@ -35,7 +35,7 @@ class TimeIndicatorView: UIView {
     override var intrinsicContentSize: CGSize {
         let label = UILabel()
         label.font = config.font
-        label.text = getText(from: .infinity)
+        label.text = getText(from: 3600 * 24)
         label.sizeToFit()
         return .init(width: label.frame.size.width, height: config.font.lineHeight)
     }
