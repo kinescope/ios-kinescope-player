@@ -12,12 +12,15 @@ protocol TimeIndicatorInput {
     /// Update time value
     ///
     /// - parameter time: Positive time interval describes current moment in video
-    func seek(to time: TimeInterval)
+    func setIndicator(to time: TimeInterval)
 }
 
 class TimeIndicatorView: UIView {
 
+    private let label = UILabel()
+
     private let config: KinescopePlayerTimeindicatorConfiguration
+    private let formatter = DateFormatter()
 
     init(config: KinescopePlayerTimeindicatorConfiguration) {
         self.config = config
@@ -30,7 +33,21 @@ class TimeIndicatorView: UIView {
     }
 
     override var intrinsicContentSize: CGSize {
-        .init(width: config.font.capHeight * 6, height: config.font.lineHeight)
+        let label = UILabel()
+        label.font = config.font
+        label.text = getText(from: 3600 * 24)
+        label.sizeToFit()
+        return .init(width: label.frame.size.width, height: config.font.lineHeight)
+    }
+
+}
+
+// MARK: - TimeIndicatorInput
+
+extension TimeIndicatorView: TimeIndicatorInput {
+
+    func setIndicator(to time: TimeInterval) {
+        label.text = getText(from: time)
     }
 
 }
@@ -40,9 +57,31 @@ class TimeIndicatorView: UIView {
 private extension TimeIndicatorView {
 
     func setupInitialState(with config: KinescopePlayerTimeindicatorConfiguration) {
-        // configure timeline
 
-        backgroundColor = config.color
+        backgroundColor = .clear
+
+        configureLabel()
     }
 
+    func configureLabel() {
+        label.textColor = config.color
+        label.font = config.font
+        label.textAlignment = .right
+
+        addSubview(label)
+        stretch(view: label)
+
+        label.text = getText(from: 0)
+    }
+
+    func getText(from time: TimeInterval) -> String {
+
+        let date = Date(timeIntervalSince1970: time)
+
+        let duration = KinescopeVideoDuration.from(raw: time)
+
+        formatter.dateFormat = duration.rawValue
+
+        return formatter.string(from: date)
+    }
 }

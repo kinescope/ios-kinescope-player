@@ -36,6 +36,37 @@ class PlayerControlView: UIControl {
 
 }
 
+// MARK: - PlayerControlInput
+
+extension PlayerControlView: PlayerControlInput {
+    func seek(to position: CGFloat) {
+
+    }
+
+    func setIndicator(to time: TimeInterval) {
+        timeIndicator.setIndicator(to: time)
+    }
+
+    func set(options: [KinescopePlayerOption]) {
+        optionsMenu.set(options: options)
+    }
+}
+
+// MARK: - PlayerControlOptionsOutput
+
+extension PlayerControlView: PlayerControlOptionsOutput {
+
+    func didOptions(expanded: Bool) {
+        timeIndicator.isHidden = expanded
+        timeline.isHidden = expanded
+    }
+
+    func didSelect(option: KinescopePlayerOption) {
+        // implement options handling here
+    }
+
+}
+
 // MARK: - Private
 
 private extension PlayerControlView {
@@ -52,6 +83,8 @@ private extension PlayerControlView {
         addSubviews(timeIndicator, timeline, optionsMenu)
 
         setupConstraints()
+
+        optionsMenu.output = self
     }
 
     func setupConstraints() {
