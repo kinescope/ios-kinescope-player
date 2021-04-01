@@ -76,7 +76,7 @@ private extension TimeIndicatorView {
 
     func getText(from time: TimeInterval) -> String {
 
-        let date = Date(timeIntervalSince1970: 0)
+        let date = Date(timeIntervalSince1970: time)
 
         let duration = KinescopeVideoDuration.from(raw: time)
 

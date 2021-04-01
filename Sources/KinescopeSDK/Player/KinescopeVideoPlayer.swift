@@ -104,7 +104,7 @@ private extension KinescopeVideoPlayer {
         }
 
         let timeScale = CMTimeScale(NSEC_PER_SEC)
-        let period = CMTimeMakeWithSeconds(0.5, preferredTimescale: timeScale)
+        let period = CMTimeMakeWithSeconds(0.1, preferredTimescale: timeScale)
 
         timeObserver = strategy.player.addPeriodicTimeObserver(forInterval: period,
                                                                queue: .main) { [weak self] time in
