@@ -15,7 +15,6 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private var video: KinescopeVideo?
     private let config: KinescopePlayerConfig
 
-
     // MARK: - Lifecycle
 
     init(config: KinescopePlayerConfig, dependencies: KinescopePlayerDependencies) {

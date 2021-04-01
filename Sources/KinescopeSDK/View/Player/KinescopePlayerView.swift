@@ -93,7 +93,7 @@ private extension KinescopePlayerView {
         playerView.playerLayer.videoGravity = gravity
         addSubview(playerView)
         stretch(view: playerView)
-        
+
         self.playerView = playerView
     }
 
