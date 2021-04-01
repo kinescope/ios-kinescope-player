@@ -5,13 +5,18 @@
 //  Created by Никита Коробейников on 30.03.2021.
 //
 
+protocol PlayerOverlayInput: VideoNameInput {
+}
+
 import UIKit
+
 
 class PlayerOverlayView: UIControl {
 
     // MARK: - Properties
 
     let playPauseImageView = UIImageView()
+    let nameView: VideoNameView
     private let contentView = UIView()
     private let config: KinescopePlayerOverlayConfiguration
     private weak var delegate: PlayerOverlayViewDelegate?
@@ -23,6 +28,7 @@ class PlayerOverlayView: UIControl {
     init(config: KinescopePlayerOverlayConfiguration, delegate: PlayerOverlayViewDelegate? = nil) {
         self.config = config
         self.delegate = delegate
+        self.nameView = VideoNameView(config: config.nameConfiguration)
         super.init(frame: .zero)
         self.setupInitialState()
 
@@ -65,6 +71,14 @@ class PlayerOverlayView: UIControl {
     }
 }
 
+// MARK: - PlayerOverlayInput
+
+extension PlayerOverlayView: PlayerOverlayInput {
+    func set(title: String, subtitle: String) {
+        nameView.set(title: title, subtitle: subtitle)
+    }
+}
+
 // MARK: - Private
 
 private extension PlayerOverlayView {
@@ -81,12 +95,24 @@ private extension PlayerOverlayView {
         addSubview(contentView)
         stretch(view: contentView)
         configureImageView()
+        configureNameView()
     }
 
     func configureImageView() {
         playPauseImageView.image = isPlaying ? config.pauseImage : config.playImage
         contentView.addSubview(playPauseImageView)
         contentView.centerChild(view: playPauseImageView)
+    }
+
+    func configureNameView() {
+        nameView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(nameView)
+
+        NSLayoutConstraint.activate([
+            nameView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16.0),
+            nameView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16.0),
+            nameView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16.0)
+        ])
     }
 
     func setSelectedState() {
