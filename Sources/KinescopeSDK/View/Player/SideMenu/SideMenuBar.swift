@@ -83,6 +83,7 @@ private extension SideMenuBar {
         let label = UILabel()
         label.font = config.titleFont
         label.textColor = config.titleColor
+        label.text = model.title
 
         addSubview(label)
 
