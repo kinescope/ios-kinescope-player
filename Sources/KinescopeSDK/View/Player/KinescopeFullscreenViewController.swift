@@ -4,6 +4,7 @@
 //
 //  Created by Никита Коробейников on 02.04.2021.
 //
+// swiftlint:disable implicitly_unwrapped_optional
 
 import UIKit
 

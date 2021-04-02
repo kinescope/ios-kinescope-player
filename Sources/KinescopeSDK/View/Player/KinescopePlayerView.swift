@@ -176,5 +176,4 @@ extension KinescopePlayerView: PlayerControlOutput {
         delegate?.didSeek(to: Double(position))
     }
 
-
 }
