@@ -15,6 +15,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private var statusObserver: NSKeyValueObservation?
 
     private var isSeeking = false
+    private weak var miniView: KinescopePlayerView?
 
     private var video: KinescopeVideo?
     private let config: KinescopePlayerConfig
@@ -224,16 +225,27 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         let rootVC = UIApplication.shared.keyWindow?.rootViewController
 
         if rootVC?.presentedViewController is KinescopeFullscreenViewController {
+            pause()
             detach(view: view)
-            /// dismiss previously presented vc
-            rootVC?.dismiss(animated: true, completion: nil)
+
+            rootVC?.dismiss(animated: true, completion: { [weak self] in
+                guard let miniView = self?.miniView else {
+                    return
+                }
+                self?.attach(view: miniView)
+                self?.play()
+            })
         } else {
+            miniView = view
+
             pause()
             detach(view: view)
 
             let playerVC = KinescopeFullscreenViewController(player: self)
             playerVC.modalPresentationStyle = .overFullScreen
-            rootVC?.present(playerVC, animated: true, completion: nil)
+            rootVC?.present(playerVC, animated: true, completion: { [weak self] in
+                self?.play()
+            })
         }
     }
 }
