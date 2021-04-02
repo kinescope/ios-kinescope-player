@@ -149,7 +149,7 @@ private extension KinescopeVideoPlayer {
 
             let duration = currentItem.duration.seconds
 
-            controlPanel.setTimeline(to: CGFloat(time/duration))
+            controlPanel.setTimeline(to: CGFloat(time / duration))
 
             // MARK: - Preload observation
 
@@ -157,7 +157,7 @@ private extension KinescopeVideoPlayer {
 
             Kinescope.shared.logger?.log(message: "playback buffered \(buferredTime) seconds", level: KinescopeLoggerLevel.player)
 
-            controlPanel.setBufferred(progress: CGFloat(buferredTime/duration))
+            controlPanel.setBufferred(progress: CGFloat(buferredTime / duration))
         }
 
     }
@@ -172,7 +172,7 @@ private extension KinescopeVideoPlayer {
     func addItemStatusObserver() {
         self.statusObserver = self.strategy.player.currentItem?.observe(
             \.status,
-            options:  [.new, .old],
+            options: [.new, .old],
             changeHandler: { [weak self] item, _ in
                 self?.view?.change(status: item.status)
             }

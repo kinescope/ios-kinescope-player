@@ -4,6 +4,7 @@
 //
 //  Created by Никита Коробейников on 31.03.2021.
 //
+// swiftlint:disable implicitly_unwrapped_optional
 
 import UIKit
 
@@ -69,7 +70,6 @@ class TimelineView: UIControl {
 
         return true
     }
-
 
     override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
 
