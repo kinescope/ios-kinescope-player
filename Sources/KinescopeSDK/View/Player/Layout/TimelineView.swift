@@ -117,6 +117,7 @@ private extension TimelineView {
     func createLine(with color: UIColor, and height: CGFloat) -> UIView {
         let view = UIView(frame: .init(origin: .zero, size: .init(width: .zero, height: height)))
         view.backgroundColor = color
+        view.isUserInteractionEnabled = false
         return view
     }
 
@@ -124,6 +125,7 @@ private extension TimelineView {
         let view = UIView(frame: .init(origin: .zero, size: .init(width: radius * 2, height: radius * 2)))
         view.backgroundColor = color
         view.layer.cornerRadius = radius
+        view.isUserInteractionEnabled = false
         return view
     }
 
