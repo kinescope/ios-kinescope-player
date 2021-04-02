@@ -12,6 +12,8 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private weak var view: KinescopePlayerView?
     private var timeObserver: Any?
 
+    private var isSeeking = false
+
     private var video: KinescopeVideo?
     private let config: KinescopePlayerConfig
 
@@ -110,14 +112,22 @@ private extension KinescopeVideoPlayer {
 
         timeObserver = strategy.player.addPeriodicTimeObserver(forInterval: period,
                                                                queue: .main) { [weak self] time in
+            let isSeeking = self?.isSeeking ?? false
+
+            /// Do not update timeline and indicator value when seeking to new position
+            guard !isSeeking else {
+                return
+            }
+
             let time = time.seconds
+
+            Kinescope.shared.logger?.log(message: "playback position changed to \(time) seconds", level: KinescopeLoggerLevel.player)
+
             self?.view?.controlPanel?.setIndicator(to: time)
 
             let duration = self?.strategy.player.currentItem?.duration.seconds ?? 0
 
             self?.view?.controlPanel?.setTimeline(to: CGFloat(time/duration))
-
-            Kinescope.shared.logger?.log(message: "current time \(time)", level: KinescopeLoggerLevel.player)
         }
 
     }
@@ -151,9 +161,16 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             return
         }
 
+        Kinescope.shared.logger?.log(message: "timeline changed to \(position)", level: KinescopeLoggerLevel.player)
+
         let seconds = position * duration
         let time = CMTime(seconds: seconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
 
-        strategy.player.seek(to: time)
+        Kinescope.shared.logger?.log(message: "timeline changed to \(seconds) seconds", level: KinescopeLoggerLevel.player)
+
+        isSeeking = true
+        strategy.player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] _ in
+            self?.isSeeking = false
+        }
     }
 }

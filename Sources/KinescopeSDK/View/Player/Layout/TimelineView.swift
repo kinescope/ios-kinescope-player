@@ -68,15 +68,17 @@ class TimelineView: UIControl {
 
     override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
 
-        isTouching = false
-
         guard let point = touch?.location(in: self) else {
+            isTouching = false
             return
         }
 
         isAnimating = true
+        isTouching = false
 
-        let relativePosition = point.x / frame.width
+        let relativePosition = getRelativePosition(from: point.x)
+
+        Kinescope.shared.logger?.log(message: "timeline changed to \(relativePosition)", level: KinescopeLoggerLevel.player)
 
         output?.onTimelinePositionChanged(to: relativePosition)
 
@@ -102,7 +104,10 @@ extension TimelineView: TimelineInput {
             return
         }
 
-        updateFrames(with: position * frame.width)
+        Kinescope.shared.logger?.log(message: "playback position changed to \(position)", level: KinescopeLoggerLevel.player)
+
+        let coordinate = getCoordinateFrom(relative: position)
+        updateFrames(with: coordinate)
     }
 
 }
@@ -130,6 +135,8 @@ private extension TimelineView {
         let circleView = createCircle(with: config.activeColor, radius: config.circleRadius)
         addSubview(circleView)
         self.circleView = circleView
+
+        updateFrames(with: .zero)
     }
 
     func createLine(with color: UIColor, and height: CGFloat) -> UIView {
@@ -149,16 +156,7 @@ private extension TimelineView {
 
     func updateFrames(with circleX: CGFloat) {
 
-        // Keep center in view bounds
-        let normalizedX: CGFloat = {
-            if circleX < config.circleRadius {
-                return config.circleRadius
-            } else if circleX > frame.width - config.circleRadius {
-                return frame.width - config.circleRadius
-            } else {
-                return circleX
-            }
-        }()
+        let normalizedX = getNormalisedCoordinate(from: circleX)
 
         let centerY = frame.height / 2
 
@@ -173,6 +171,28 @@ private extension TimelineView {
         pastProgress.frame = .init(origin: progressOrigin,
                                      size: .init(width: normalizedX,
                                                  height: config.lineHeight))
+    }
+
+    /// Convert circle center coordinate to relative value from `0` to `1`
+    func getRelativePosition(from coordinate: CGFloat) -> CGFloat {
+        let normalisedCoordinate = getNormalisedCoordinate(from: coordinate) - config.circleRadius
+        return normalisedCoordinate / futureProgress.frame.width
+    }
+
+    /// Convert relative value from `0` to `1` to circle center coordinate
+    func getCoordinateFrom(relative position: CGFloat) -> CGFloat {
+        position * futureProgress.frame.width
+    }
+
+    /// Keep circle center x in view bounds
+    func getNormalisedCoordinate(from coordinate: CGFloat) -> CGFloat {
+        if coordinate < config.circleRadius {
+            return config.circleRadius
+        } else if coordinate > frame.width - config.circleRadius {
+            return frame.width - config.circleRadius
+        } else {
+            return coordinate
+        }
     }
 
 }
