@@ -48,10 +48,6 @@ class TimelineView: UIControl {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override var intrinsicContentSize: CGSize {
-        .init(width: config.circleRadius * 8, height: config.circleRadius * 8)
-    }
-
     // MARK: - Touches
 
     override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {

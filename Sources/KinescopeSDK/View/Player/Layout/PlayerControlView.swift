@@ -119,7 +119,8 @@ private extension PlayerControlView {
             timeIndicator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             timeIndicator.centerYAnchor.constraint(equalTo: centerYAnchor),
             timeline.leadingAnchor.constraint(equalTo: timeIndicator.trailingAnchor, constant: 16),
-            timeline.centerYAnchor.constraint(equalTo: centerYAnchor),
+            timeline.topAnchor.constraint(equalTo: topAnchor),
+            timeline.bottomAnchor.constraint(equalTo: bottomAnchor),
             timeline.trailingAnchor.constraint(equalTo: optionsMenu.leadingAnchor, constant: -16),
             optionsMenu.centerYAnchor.constraint(equalTo: centerYAnchor),
             optionsMenu.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
