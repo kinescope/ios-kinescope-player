@@ -136,7 +136,7 @@ private extension TimelineView {
 
         circleView.center = .init(x: circleX, y: centerY)
 
-        let progressOrigin = CGPoint(x: config.circleRadius, y: centerY)
+        let progressOrigin = CGPoint(x: config.circleRadius, y: centerY - config.lineHeight / 2)
 
         futureProgress.frame = .init(origin: progressOrigin,
                                      size: .init(width: frame.width - config.circleRadius * 2,
