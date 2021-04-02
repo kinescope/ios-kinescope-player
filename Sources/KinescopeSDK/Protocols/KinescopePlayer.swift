@@ -10,7 +10,7 @@ import AVKit
 /// Control protocol for player
 public protocol KinescopePlayer {
 
-    /// - parameter videoId: Id of concrete video. For example from [GET Videos list](https://documenter.getpostman.com/view/10589901/TVCcXpNM)
+    /// - parameter config: player config
     init(config: KinescopePlayerConfig)
 
     /// Start playing of video

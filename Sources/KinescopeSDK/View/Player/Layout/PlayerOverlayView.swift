@@ -7,11 +7,15 @@
 
 import UIKit
 
+protocol PlayerOverlayInput: VideoNameInput {
+}
+
 class PlayerOverlayView: UIControl {
 
     // MARK: - Properties
 
     let playPauseImageView = UIImageView()
+    let nameView: VideoNameView
     private let contentView = UIView()
     private let config: KinescopePlayerOverlayConfiguration
     private weak var delegate: PlayerOverlayViewDelegate?
@@ -23,6 +27,7 @@ class PlayerOverlayView: UIControl {
     init(config: KinescopePlayerOverlayConfiguration, delegate: PlayerOverlayViewDelegate? = nil) {
         self.config = config
         self.delegate = delegate
+        self.nameView = VideoNameView(config: config.nameConfiguration)
         super.init(frame: .zero)
         self.setupInitialState()
 
@@ -65,6 +70,14 @@ class PlayerOverlayView: UIControl {
     }
 }
 
+// MARK: - PlayerOverlayInput
+
+extension PlayerOverlayView: PlayerOverlayInput {
+    func set(title: String, subtitle: String) {
+        nameView.set(title: title, subtitle: subtitle)
+    }
+}
+
 // MARK: - Private
 
 private extension PlayerOverlayView {
@@ -81,12 +94,18 @@ private extension PlayerOverlayView {
         addSubview(contentView)
         stretch(view: contentView)
         configureImageView()
+        configureNameView()
     }
 
     func configureImageView() {
         playPauseImageView.image = isPlaying ? config.pauseImage : config.playImage
         contentView.addSubview(playPauseImageView)
         contentView.centerChild(view: playPauseImageView)
+    }
+
+    func configureNameView() {
+        contentView.addSubview(nameView)
+        contentView.topChild(view: nameView)
     }
 
     func setSelectedState() {

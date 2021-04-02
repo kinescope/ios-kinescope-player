@@ -49,6 +49,23 @@ public class KinescopePlayerView: UIView {
         progressView.showVideoProgress(isLoading: false)
         previewView.isHidden = true
     }
+
+    func change(status: AVPlayer.Status) {
+        switch status {
+        case .readyToPlay:
+            overlay?.isHidden = false
+            progressView.showVideoProgress(isLoading: false)
+            previewView.isHidden = true
+        case .failed, .unknown:
+            // FIXME: Error handling
+            break
+        @unknown default:
+            break
+        }
+
+        Kinescope.shared.logger?.log(message: "AVPlayer.Status – \(status)",
+                                     level: KinescopeLoggerLevel.player)
+    }
 }
 
 // MARK: - Public
@@ -112,7 +129,7 @@ private extension KinescopePlayerView {
     }
 
     func configureControlPanel(with config: KinescopeControlPanelConfiguration) {
-        let controlPanel = PlayerControlView(config: config)
+        let controlPanel = PlayerControlView(config: config, delegate: self)
         addSubview(controlPanel)
         bottomChild(view: controlPanel)
 
@@ -123,6 +140,7 @@ private extension KinescopePlayerView {
 
     func configureOverlay(with config: KinescopePlayerOverlayConfiguration) {
         let overlay = PlayerOverlayView(config: config, delegate: self)
+        overlay.isHidden = true
         addSubview(overlay)
         stretch(view: overlay)
 
@@ -140,5 +158,16 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
 
     func didPause() {
         delegate?.didPause()
+    }
+}
+
+// MARK: - PlayerOverlayViewDelegate
+
+extension KinescopePlayerView: PlayerControlOutput {
+    func onTimelinePositionChanged(to position: CGFloat) {
+    }
+
+    func didSelect(option: KinescopePlayerOption) {
+        delegate?.didSelect(option: option)
     }
 }

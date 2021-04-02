@@ -11,6 +11,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
     private weak var view: KinescopePlayerView?
     private var timeObserver: Any?
+    private var statusObserver: NSKeyValueObservation?
 
     private var video: KinescopeVideo?
     private let config: KinescopePlayerConfig
@@ -53,6 +54,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         self.view = view
 
         observePlaybackTime()
+        addPlayerStatusObserver()
     }
 
     public func detach(view: KinescopePlayerView) {
@@ -61,6 +63,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         view.delegate = nil
 
         removePlaybackTimeObserver()
+        removePlayerStatusObserver()
     }
 
     public func select(quality: KinescopeVideoQuality) {
@@ -89,7 +92,7 @@ private extension KinescopeVideoPlayer {
             onSuccess: { [weak self] video in
                 self?.video = video
                 self?.select(quality: .auto(hlsLink: video.hlsLink))
-                self?.view?.stopLoader()
+                self?.view?.overlay?.set(title: video.title, subtitle: video.description)
                 self?.play()
             },
             onError: { [weak self] error in
@@ -123,6 +126,21 @@ private extension KinescopeVideoPlayer {
             self.timeObserver = nil
         }
     }
+
+    func addPlayerStatusObserver() {
+        self.statusObserver = self.strategy.player.observe(
+            \.status,
+            options: [.new, .old],
+            changeHandler: { [weak self] item, _ in
+                self?.view?.change(status: item.status)
+            }
+        )
+    }
+
+    func removePlayerStatusObserver() {
+        self.statusObserver?.invalidate()
+        self.statusObserver = nil
+    }
 }
 
 // MARK: - PlayerOverlayViewDelegate
@@ -138,5 +156,8 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
     func didPause() {
         self.pause()
+    }
+
+    func didSelect(option: KinescopePlayerOption) {
     }
 }
