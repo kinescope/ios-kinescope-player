@@ -135,8 +135,6 @@ private extension TimelineView {
         let circleView = createCircle(with: config.activeColor, radius: config.circleRadius)
         addSubview(circleView)
         self.circleView = circleView
-
-        updateFrames(with: .zero)
     }
 
     func createLine(with color: UIColor, and height: CGFloat) -> UIView {
