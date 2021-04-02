@@ -59,6 +59,7 @@ private extension VideoNameView {
 
     func configureTitleLabel() {
         titleLabel.font = config.titleFont
+        titleLabel.numberOfLines = 2
         titleLabel.textColor = config.titleColor
         stackView.addArrangedSubview(titleLabel)
     }
