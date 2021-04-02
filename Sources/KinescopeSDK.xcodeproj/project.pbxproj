@@ -39,6 +39,7 @@
 		572D6D178F6B2DB3DE5BCFFB /* UIActivityIndicator+KinescopeActivityIndicating.swift in Sources */ = {isa = PBXBuildFile; fileRef = E583C1E83CCFC9E4E65C3763 /* UIActivityIndicator+KinescopeActivityIndicating.swift */; };
 		5C38E1021A03C8E1BECD1891 /* KinescopeVideoNameConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E413348BB8D49D82D0434853 /* KinescopeVideoNameConfiguration.swift */; };
 		5EA1942AECC7E0B5C6AC1753 /* KinescopeInspectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FEE513248194C4BD09E687 /* KinescopeInspectable.swift */; };
+		60D4A992B72B801B9138C4DF /* SideMenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BAAAB28ECEB8C0051A918DE /* SideMenuBar.swift */; };
 		67407834D21BA4E2566C04B2 /* RequestBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF22ABE916D41E4FB89B2589 /* RequestBuilderTests.swift */; };
 		6875316A9DBF9590786F1E4D /* KinescopeVideoQuality.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3524D4C8EC76ECD600E8B57A /* KinescopeVideoQuality.swift */; };
 		6A63BACE0BC29F6E8C01A361 /* Kinescope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C898E08998AC8797023512B /* Kinescope.swift */; };
@@ -152,6 +153,7 @@
 		34760388A98AB16D860AC056 /* VideoServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoServiceMock.swift; sourceTree = "<group>"; };
 		3524D4C8EC76ECD600E8B57A /* KinescopeVideoQuality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeVideoQuality.swift; sourceTree = "<group>"; };
 		38FEE513248194C4BD09E687 /* KinescopeInspectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeInspectable.swift; sourceTree = "<group>"; };
+		3BAAAB28ECEB8C0051A918DE /* SideMenuBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuBar.swift; sourceTree = "<group>"; };
 		3ECE8E5A44CEF309F6946EC2 /* OptionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionButton.swift; sourceTree = "<group>"; };
 		44FC784B0E1378791ACB00D5 /* KinescopeFullscreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeFullscreenViewController.swift; sourceTree = "<group>"; };
 		4690FAB544D0F69E6CE17238 /* KinescopePagination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopePagination.swift; sourceTree = "<group>"; };
@@ -282,6 +284,7 @@
 			isa = PBXGroup;
 			children = (
 				C6958F46BEF2B6EC0D99E178 /* SideMenu.swift */,
+				3BAAAB28ECEB8C0051A918DE /* SideMenuBar.swift */,
 			);
 			path = SideMenu;
 			sourceTree = "<group>";
@@ -773,6 +776,7 @@
 				1EFD0D912BF4B9D19802578F /* SequentialPlayingStrategy.swift in Sources */,
 				312F48634722FCBD2CADFFC2 /* ServerError.swift in Sources */,
 				F5105F9A9A762F62D053A88E /* SideMenu.swift in Sources */,
+				60D4A992B72B801B9138C4DF /* SideMenuBar.swift in Sources */,
 				73447723DCAEA9BCB446D247 /* SubviewsHelper.swift in Sources */,
 				D5E831331C9184D869118FE2 /* TimeIndicator.swift in Sources */,
 				81B89227444CD9D51294ACC6 /* TimelineView.swift in Sources */,

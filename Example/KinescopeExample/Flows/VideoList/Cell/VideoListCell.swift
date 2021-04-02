@@ -32,7 +32,8 @@ final class VideoListCell: UITableViewCell {
         playerView.setLayout(with: .init(gravity: .resizeAspect,
                                          activityIndicator: UIActivityIndicatorView(style: .white),
                                          overlay: nil,
-                                         controlPanel: nil))
+                                         controlPanel: nil,
+                                         sideMenu: .default))
     }
 
     override func prepareForReuse() {
