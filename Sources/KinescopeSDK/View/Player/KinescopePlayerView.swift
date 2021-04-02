@@ -166,7 +166,7 @@ extension KinescopePlayerView: PlayerControlOutput {
     func didSelect(option: KinescopePlayerOption) {
         switch option {
         case .fullscreen:
-            delegate?.presentFullscreen()
+            delegate?.presentFullscreen(from: self)
         default:
             break
         }
