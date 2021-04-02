@@ -50,10 +50,12 @@ public class KinescopePlayerView: UIView {
         previewView.isHidden = true
     }
 
-    func change(status: AVPlayerItem.Status) {
+    func change(status: AVPlayer.Status) {
         switch status {
         case .readyToPlay:
             overlay?.isHidden = false
+            progressView.showVideoProgress(isLoading: false)
+            previewView.isHidden = true
         case .failed, .unknown:
             // FIXME: Error handling
             break
@@ -61,7 +63,7 @@ public class KinescopePlayerView: UIView {
             break
         }
 
-        Kinescope.shared.logger?.log(message: "AVPlayerItem.Status – \(status)",
+        Kinescope.shared.logger?.log(message: "AVPlayer.Status – \(status)",
                                      level: KinescopeLoggerLevel.player)
     }
 }

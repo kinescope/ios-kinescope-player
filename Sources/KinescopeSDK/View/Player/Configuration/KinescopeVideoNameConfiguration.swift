@@ -8,7 +8,6 @@ public struct KinescopeVideoNameConfiguration {
     let subtitleFont: UIFont
     let subtitleColor: UIColor
 
-
     /// - Parameters:
     ///   - titleFont: font for top title text
     ///   - titleColor: color for top title text

@@ -13,8 +13,8 @@ final class VideoNameView: UIView {
 
     // MARK: - Properties
 
-    let titleLabel = UILabel()
-    let subtitleLabel = UILabel()
+    private let titleLabel = UILabel()
+    private let subtitleLabel = UILabel()
     private let config: KinescopeVideoNameConfiguration
     private let stackView = UIStackView()
 
