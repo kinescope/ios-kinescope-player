@@ -5,11 +5,10 @@
 //  Created by Никита Коробейников on 30.03.2021.
 //
 
-protocol PlayerOverlayInput: VideoNameInput {
-}
-
 import UIKit
 
+protocol PlayerOverlayInput: VideoNameInput {
+}
 
 class PlayerOverlayView: UIControl {
 
@@ -105,14 +104,8 @@ private extension PlayerOverlayView {
     }
 
     func configureNameView() {
-        nameView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(nameView)
-
-        NSLayoutConstraint.activate([
-            nameView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16.0),
-            nameView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16.0),
-            nameView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16.0)
-        ])
+        contentView.topChild(view: nameView)
     }
 
     func setSelectedState() {
