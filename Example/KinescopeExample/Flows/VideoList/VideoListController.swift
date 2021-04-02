@@ -18,6 +18,7 @@ final class VideoListController: UIViewController {
         didSet {
             // Needs to make last cell focusable
             tableView.contentInset.bottom = 200
+            tableView.estimatedRowHeight = 200
         }
     }
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!

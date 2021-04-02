@@ -219,4 +219,17 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             self?.isSeeking = false
         }
     }
+
+    func presentFullscreen() {
+        let rootVC = UIApplication.shared.keyWindow?.rootViewController
+
+        if rootVC?.presentedViewController is KinescopeFullscreenViewController {
+            /// dismiss previously presented vc
+            rootVC?.dismiss(animated: true, completion: nil)
+        } else {
+            let playerVC = KinescopeFullscreenViewController(player: self)
+            playerVC.modalPresentationStyle = .overFullScreen
+            rootVC?.present(playerVC, animated: true, completion: nil)
+        }
+    }
 }
