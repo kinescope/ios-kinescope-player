@@ -29,7 +29,7 @@ final class VideoListCell: UITableViewCell {
         playerView.backgroundColor = .black
         playerView.layer.cornerRadius = 20
         playerView.layer.masksToBounds = true
-        playerView.setLayout(with: .init(gravity: .resizeAspectFill,
+        playerView.setLayout(with: .init(gravity: .resizeAspect,
                                          activityIndicator: UIActivityIndicatorView(style: .white),
                                          overlay: nil,
                                          controlPanel: nil))
