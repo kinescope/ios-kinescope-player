@@ -10,7 +10,9 @@ import UIKit
 
 protocol PlayerControlInput: TimelineInput, TimeIndicatorInput, PlayerControlOptionsInput {}
 
-protocol PlayerControlOutput: TimelineOutput {}
+protocol PlayerControlOutput: TimelineOutput {
+    func didSelect(option: KinescopePlayerOption)
+}
 
 class PlayerControlView: UIControl {
 
@@ -73,13 +75,7 @@ extension PlayerControlView: PlayerControlOptionsOutput {
     }
 
     func didSelect(option: KinescopePlayerOption) {
-        switch option {
-        case .fullscreen:
-            // Temporary hack to dismiss controller
-            UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
-        default:
-            break
-        }
+        output?.didSelect(option: option)
     }
 
 }

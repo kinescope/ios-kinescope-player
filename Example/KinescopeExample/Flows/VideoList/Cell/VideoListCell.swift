@@ -29,7 +29,7 @@ final class VideoListCell: UITableViewCell {
         playerView.backgroundColor = .black
         playerView.layer.cornerRadius = 20
         playerView.layer.masksToBounds = true
-        playerView.setLayout(with: .init(gravity: .resizeAspectFill,
+        playerView.setLayout(with: .init(gravity: .resizeAspect,
                                          activityIndicator: UIActivityIndicatorView(style: .white),
                                          overlay: nil,
                                          controlPanel: nil))
@@ -61,6 +61,7 @@ extension VideoListCell: ConfigurableItem {
 
     func configure(with model: Model) {
 
+        playerView.previewView.contentMode = .scaleAspectFit
         playerView.previewView.kf.setImage(with: URL(string: model.poster?.md ?? ""))
         player = KinescopeVideoPlayer(config: .init(videoId: model.id, looped: true))
         player?.attach(view: playerView)

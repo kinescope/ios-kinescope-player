@@ -165,7 +165,17 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
 // MARK: - PlayerControlOutput
 
 extension KinescopePlayerView: PlayerControlOutput {
+    func didSelect(option: KinescopePlayerOption) {
+        switch option {
+        case .fullscreen:
+            delegate?.presentFullscreen(from: self)
+        default:
+            break
+        }
+    }
+
     func onTimelinePositionChanged(to position: CGFloat) {
         delegate?.didSeek(to: Double(position))
     }
+
 }
