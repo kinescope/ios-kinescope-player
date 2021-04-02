@@ -27,7 +27,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
     deinit {
         self.removePlaybackTimeObserver()
-        self.removeItemStatusObserver()
+        self.removePlayerStatusObserver()
     }
 
     // MARK: - KinescopePlayer
