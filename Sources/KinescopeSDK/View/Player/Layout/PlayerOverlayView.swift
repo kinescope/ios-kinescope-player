@@ -8,6 +8,7 @@
 import UIKit
 
 protocol PlayerOverlayInput: VideoNameInput {
+    func set(playing: Bool)
 }
 
 class PlayerOverlayView: UIControl {
@@ -62,6 +63,11 @@ extension PlayerOverlayView: PlayerOverlayInput {
     func set(title: String, subtitle: String) {
         nameView.set(title: title, subtitle: subtitle)
     }
+
+    func set(playing: Bool) {
+        self.isPlaying = playing
+        playPauseImageView.image = playing ? config.pauseImage : config.playImage
+    }
 }
 
 // MARK: - Private
@@ -69,7 +75,6 @@ extension PlayerOverlayView: PlayerOverlayInput {
 private extension PlayerOverlayView {
     func setupInitialState() {
         isSelected = true
-        isPlaying = true
 
         addGestureRecognizers()
         configureContentView()
