@@ -144,4 +144,16 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     func didPause() {
         self.pause()
     }
+
+    func didSeek(to position: Double) {
+
+        guard let duration = strategy.player.currentItem?.duration.seconds else {
+            return
+        }
+
+        let seconds = position * duration
+        let time = CMTime(seconds: seconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+
+        strategy.player.seek(to: time)
+    }
 }

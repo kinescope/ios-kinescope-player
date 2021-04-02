@@ -119,6 +119,7 @@ private extension KinescopePlayerView {
         controlPanel.set(options: [.settings, .fullscreen, .more])
 
         self.controlPanel = controlPanel
+        controlPanel.output = self
     }
 
     func configureOverlay(with config: KinescopePlayerOverlayConfiguration) {
@@ -141,4 +142,14 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
     func didPause() {
         delegate?.didPause()
     }
+}
+
+// MARK: - TimelineOutput
+
+extension KinescopePlayerView: PlayerControlOutput {
+
+    func onTimelinePositionChanged(to position: CGFloat) {
+        delegate?.didSeek(to: Double(position))
+    }
+
 }

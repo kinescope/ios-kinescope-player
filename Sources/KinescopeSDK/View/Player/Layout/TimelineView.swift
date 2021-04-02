@@ -33,6 +33,9 @@ class TimelineView: UIControl {
 
     private let config: KinescopePlayerTimelineConfiguration
 
+    private var isTouching = false
+    private var isAnimating = false
+
     weak var output: TimelineOutput?
 
     init(config: KinescopePlayerTimelineConfiguration) {
@@ -46,17 +49,31 @@ class TimelineView: UIControl {
     }
 
     override var intrinsicContentSize: CGSize {
-        .init(width: config.circleRadius * 10, height: config.circleRadius * 4)
+        .init(width: config.circleRadius * 8, height: config.circleRadius * 8)
     }
 
     // MARK: - Touches
 
     override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
-        return false
+        return true
     }
 
     override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
 
+        guard let point = touch?.location(in: self) else {
+            return
+        }
+
+        isAnimating = true
+
+        output?.onTimelinePositionChanged(to: point.x/frame.width)
+
+        UIView.animate(withDuration: 0.2,
+                       animations: { [weak self, point] in
+                        self?.updateFrames(with: point.x)
+                       }, completion: { [weak self] _ in
+                        self?.isAnimating = false
+                       })
     }
 
 }
@@ -66,22 +83,12 @@ class TimelineView: UIControl {
 extension TimelineView: TimelineInput {
 
     func setTimeline(to position: CGFloat) {
-        // TODO: - устанавливать таймлайн
 
-        let circleX = position * frame.width
-        let centerY = frame.height / 2
+        guard !isTouching && !isAnimating else {
+            return
+        }
 
-        circleView.center = .init(x: circleX, y: centerY)
-
-        let progressOrigin = CGPoint(x: config.circleRadius, y: centerY)
-
-        futureProgress.frame = .init(origin: progressOrigin,
-                                     size: .init(width: frame.width - config.circleRadius * 2,
-                                                 height: config.lineHeight))
-
-        pastProgress.frame = .init(origin: progressOrigin,
-                                     size: .init(width: circleX,
-                                                 height: config.lineHeight))
+        updateFrames(with: position * frame.width)
     }
 
 }
@@ -122,6 +129,22 @@ private extension TimelineView {
         view.backgroundColor = color
         view.layer.cornerRadius = radius
         return view
+    }
+
+    func updateFrames(with circleX: CGFloat) {
+        let centerY = frame.height / 2
+
+        circleView.center = .init(x: circleX, y: centerY)
+
+        let progressOrigin = CGPoint(x: config.circleRadius, y: centerY)
+
+        futureProgress.frame = .init(origin: progressOrigin,
+                                     size: .init(width: frame.width - config.circleRadius * 2,
+                                                 height: config.lineHeight))
+
+        pastProgress.frame = .init(origin: progressOrigin,
+                                     size: .init(width: circleX,
+                                                 height: config.lineHeight))
     }
 
 }

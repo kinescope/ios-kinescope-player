@@ -20,6 +20,8 @@ class PlayerControlView: UIControl {
 
     private let config: KinescopeControlPanelConfiguration
 
+    weak var output: PlayerControlOutput?
+
     init(config: KinescopeControlPanelConfiguration) {
         self.config = config
         super.init(frame: .zero)
@@ -67,6 +69,16 @@ extension PlayerControlView: PlayerControlOptionsOutput {
 
 }
 
+// MARK: - TimelineOutput
+
+extension PlayerControlView: TimelineOutput {
+
+    func onTimelinePositionChanged(to position: CGFloat) {
+        output?.onTimelinePositionChanged(to: position)
+    }
+
+}
+
 // MARK: - Private
 
 private extension PlayerControlView {
@@ -85,6 +97,7 @@ private extension PlayerControlView {
         setupConstraints()
 
         optionsMenu.output = self
+        timeline.output = self
     }
 
     func setupConstraints() {
