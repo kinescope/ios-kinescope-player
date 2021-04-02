@@ -34,6 +34,8 @@ final class CurrentCellFocusPlugin: BaseTablePlugin<ScrollEvent> {
 
     private weak var output: CurrentCellFocusOutput?
 
+    private lazy var debouncer = Debouncer(queue: .global(qos: .userInteractive), delay: .milliseconds(500))
+
     // MARK: - Init
 
     init(output: CurrentCellFocusOutput) {
@@ -50,8 +52,12 @@ final class CurrentCellFocusPlugin: BaseTablePlugin<ScrollEvent> {
     override func process(event: ScrollEvent, with manager: BaseTableManager?) {
 
         switch event {
-        case .didScroll, .didEndDecelerating:
-            updateFocus()
+        case .didScroll:
+            debouncer.run { [weak self] in
+                DispatchQueue.main.async { [weak self] in
+                    self?.updateFocus()
+                }
+            }
         default:
             break
         }
@@ -106,7 +112,7 @@ private extension CurrentCellFocusPlugin {
         guard let old = old else {
             return new
         }
-        return old === new ? nil : new
+        return old.uuid == new.uuid ? nil : new
     }
 
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01895CCE261736CA0041C16E /* Debouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01895CCD261736CA0041C16E /* Debouncer.swift */; };
 		22CF92DB04A4B4BE49674726 /* Pods_KinescopeExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C964DBA510E2176D056F97E /* Pods_KinescopeExample.framework */; };
 		27803C78BC9292176387B837 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1297BC1CB454C3BA783E4F43 /* Main.storyboard */; };
 		4CE8078E78304438232FCD0D /* ConfigStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B71D3741FB772726928CC02 /* ConfigStorage.swift */; };
@@ -29,6 +30,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		01895CCD261736CA0041C16E /* Debouncer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debouncer.swift; sourceTree = "<group>"; };
 		0C3574EDE3872458BB63A232 /* Pods-KinescopeExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KinescopeExample.debug.xcconfig"; path = "Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample.debug.xcconfig"; sourceTree = "<group>"; };
 		1297BC1CB454C3BA783E4F43 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		1697D697E9F0904B87B756B7 /* PaginatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginatorView.swift; sourceTree = "<group>"; };
@@ -123,7 +125,6 @@
 				0C3574EDE3872458BB63A232 /* Pods-KinescopeExample.debug.xcconfig */,
 				4770EC2B9EC14233026F45AE /* Pods-KinescopeExample.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -172,6 +173,7 @@
 			children = (
 				BFA0B2A73C59AD113CB5976A /* CurrentCellFocusPlugin.swift */,
 				C03FA76E45742849B9B29429 /* FocusableItem.swift */,
+				01895CCD261736CA0041C16E /* Debouncer.swift */,
 			);
 			path = FocusPlugin;
 			sourceTree = "<group>";
@@ -317,6 +319,7 @@
 				FDE7CBB089D7D45FA27883F5 /* PaginatorView.swift in Sources */,
 				C37AD95F62ABC930BE625443 /* User.swift in Sources */,
 				CCCAFC2092F5E99F1DCEC001 /* UserCell.swift in Sources */,
+				01895CCE261736CA0041C16E /* Debouncer.swift in Sources */,
 				E27847B7474CE6E6D06D2793 /* VideoListCell.swift in Sources */,
 				B1E9AE507740662091763DC9 /* VideoListController.swift in Sources */,
 				4F66AFB3A32776CED4598E42 /* VideoListFocusableCellGenerator.swift in Sources */,
