@@ -10,8 +10,9 @@ import AVKit
 /// Control protocol for player
 public protocol KinescopePlayer {
 
-    /// - parameter videoId: Id of concrete video. For example from [GET Videos list](https://documenter.getpostman.com/view/10589901/TVCcXpNM)
-    init(config: KinescopePlayerConfig)
+    /// - parameter config: playe config
+    /// - parameter delegate: receive player events
+    init(config: KinescopePlayerConfig, delegate: KinescopePlayerDelegate?)
 
     /// Start playing of video
     func play()

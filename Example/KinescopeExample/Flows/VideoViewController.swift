@@ -23,7 +23,7 @@ final class VideoViewController: UIViewController {
 
         playerView.setLayout(with: .default)
 
-        player = KinescopeVideoPlayer(config: .init(videoId: videoId))
+        player = KinescopeVideoPlayer(config: .init(videoId: videoId), delegate: self)
         player?.attach(view: playerView)
         player?.play()
     }
@@ -31,5 +31,18 @@ final class VideoViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         player?.stop()
+    }
+}
+
+// MARK: - KinescopePlayerDelegate
+
+extension VideoViewController: KinescopePlayerDelegate {
+    func didSelect(option: KinescopePlayerOption) {
+        switch option {
+        case .fullscreen:
+            dismiss(animated: true, completion: nil)
+        case .more, .settings:
+            break
+        }
     }
 }

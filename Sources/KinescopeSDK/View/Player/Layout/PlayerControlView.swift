@@ -69,7 +69,7 @@ extension PlayerControlView: PlayerControlOptionsOutput {
     }
 
     func didSelect(option: KinescopePlayerOption) {
-        // implement options handling here
+        delegate?.didSelect(option: option)
     }
 
 }

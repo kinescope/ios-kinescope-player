@@ -10,7 +10,9 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     }()
 
     private weak var view: KinescopePlayerView?
+    private weak var delegate: KinescopePlayerDelegate?
     private var timeObserver: Any?
+    private var statusObserver: NSKeyValueObservation?
 
     private var isSeeking = false
 
@@ -19,15 +21,22 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
     // MARK: - Lifecycle
 
-    init(config: KinescopePlayerConfig, dependencies: KinescopePlayerDependencies) {
+    init(config: KinescopePlayerConfig,
+         dependencies: KinescopePlayerDependencies,
+         delegate: KinescopePlayerDelegate? = nil) {
         self.dependencies = dependencies
         self.config = config
+        self.delegate = delegate
+    }
+
+    deinit {
+        self.removeItemStatusObserver()
     }
 
     // MARK: - KinescopePlayer
 
-    public required convenience init(config: KinescopePlayerConfig) {
-        self.init(config: config, dependencies: KinescopeVideoPlayerDependencies())
+    public required convenience init(config: KinescopePlayerConfig, delegate: KinescopePlayerDelegate? = nil) {
+        self.init(config: config, dependencies: KinescopeVideoPlayerDependencies(), delegate: delegate)
     }
 
     public func play() {
@@ -40,11 +49,13 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
     public func pause() {
         self.strategy.pause()
+        self.removeItemStatusObserver()
     }
 
     public func stop() {
         self.strategy.pause()
         self.strategy.unbind()
+        self.removeItemStatusObserver()
     }
 
     public func attach(view: KinescopePlayerView) {
@@ -74,6 +85,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         // Restore here sek position
 
         strategy.bind(item: item)
+        self.addItemStatusObserver()
     }
 
 }
@@ -91,6 +103,7 @@ private extension KinescopeVideoPlayer {
             onSuccess: { [weak self] video in
                 self?.video = video
                 self?.select(quality: .auto(hlsLink: video.hlsLink))
+                self?.view?.overlay?.set(title: video.title, subtitle: video.description)
                 self?.view?.stopLoader()
                 self?.play()
             },
@@ -137,6 +150,21 @@ private extension KinescopeVideoPlayer {
             strategy.player.removeTimeObserver(timeObserver)
             self.timeObserver = nil
         }
+    }
+
+    func addItemStatusObserver() {
+        self.statusObserver = self.strategy.player.currentItem?.observe(
+            \.status,
+            options:  [.new, .old],
+            changeHandler: { [weak self] item, _ in
+                self?.view?.change(status: item.status)
+            }
+        )
+    }
+
+    func removeItemStatusObserver() {
+        self.statusObserver?.invalidate()
+        self.statusObserver = nil
     }
 }
 
