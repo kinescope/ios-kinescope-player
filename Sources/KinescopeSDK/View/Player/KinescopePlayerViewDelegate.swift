@@ -1,5 +1,5 @@
 protocol KinescopePlayerViewDelegate: class {
     func didPlay(videoEnded: Bool)
     func didPause()
-    func didSelect(option: KinescopePlayerOption)
+    func didSeek(to position: Double)
 }

@@ -4,6 +4,7 @@
 //
 //  Created by Никита Коробейников on 31.03.2021.
 //
+// swiftlint:disable implicitly_unwrapped_optional
 
 import UIKit
 
@@ -12,7 +13,12 @@ protocol TimelineInput {
     /// Update timeline position manualy
     ///
     /// - parameter position: Value from `0` (start) to `1` (end)
-    func seek(to position: CGFloat)
+    func setTimeline(to position: CGFloat)
+
+    /// Update timeline position manualy
+    ///
+    /// - parameter progress: Value from `0` (start) to `1` (end)
+    func setBufferred(progress: CGFloat)
 }
 
 protocol TimelineOutput: class {
@@ -26,7 +32,17 @@ protocol TimelineOutput: class {
 
 class TimelineView: UIControl {
 
+    private weak var circleView: UIView!
+    private weak var futureProgress: UIView!
+    private weak var pastProgress: UIView!
+    private weak var preloadProgress: UIView!
+
     private let config: KinescopePlayerTimelineConfiguration
+
+    private var isTouching = false
+    private var isAnimating = false
+
+    weak var output: TimelineOutput?
 
     init(config: KinescopePlayerTimelineConfiguration) {
         self.config = config
@@ -38,8 +54,66 @@ class TimelineView: UIControl {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override var intrinsicContentSize: CGSize {
-        .init(width: config.circleRadius * 10, height: config.circleRadius * 2)
+    // MARK: - Touches
+
+    override func continueTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
+
+        guard isTouchInside else {
+            return false
+        }
+
+        isTouching = true
+
+        let point = touch.location(in: self)
+
+        updateFrames(with: point.x)
+
+        return true
+    }
+
+    override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
+
+        guard let point = touch?.location(in: self) else {
+            isTouching = false
+            return
+        }
+
+        isAnimating = true
+        isTouching = false
+
+        let relativePosition = getRelativePosition(from: point.x)
+
+        output?.onTimelinePositionChanged(to: relativePosition)
+
+        UIView.animate(withDuration: 0.2,
+                       animations: { [weak self] in
+                        self?.updateFrames(with: point.x)
+                       },
+                       completion: { [weak self] _ in
+                        self?.isAnimating = false
+                       })
+
+    }
+
+}
+
+// MARK: - TimelineInput
+
+extension TimelineView: TimelineInput {
+
+    func setTimeline(to position: CGFloat) {
+
+        guard !isTouching && !isAnimating else {
+            return
+        }
+
+        let coordinate = getCoordinateFrom(relative: position)
+        updateFrames(with: coordinate)
+    }
+
+    func setBufferred(progress: CGFloat) {
+        let coordinate = getCoordinateFrom(relative: progress)
+        updatePreloadFrames(with: coordinate)
     }
 
 }
@@ -49,9 +123,93 @@ class TimelineView: UIControl {
 private extension TimelineView {
 
     func setupInitialState(with config: KinescopePlayerTimelineConfiguration) {
-        // configure timeline
 
-        backgroundColor = config.activeColor
+        backgroundColor = .clear
+
+        let futureProgress = createLine(with: config.inactiveColor, and: config.lineHeight)
+        addSubview(futureProgress)
+        self.futureProgress = futureProgress
+
+        let preloadProgress = createLine(with: config.inactiveColor, and: config.lineHeight)
+        addSubview(preloadProgress)
+        self.preloadProgress = preloadProgress
+
+        let pastProgress = createLine(with: config.activeColor, and: config.lineHeight)
+        addSubview(pastProgress)
+        self.pastProgress = pastProgress
+
+        let circleView = createCircle(with: config.activeColor, radius: config.circleRadius)
+        addSubview(circleView)
+        self.circleView = circleView
+    }
+
+    func createLine(with color: UIColor, and height: CGFloat) -> UIView {
+        let view = UIView(frame: .init(origin: .zero, size: .init(width: .zero, height: height)))
+        view.backgroundColor = color
+        view.isUserInteractionEnabled = false
+        return view
+    }
+
+    func createCircle(with color: UIColor, radius: CGFloat) -> UIView {
+        let view = UIView(frame: .init(origin: .zero, size: .init(width: radius * 2, height: radius * 2)))
+        view.backgroundColor = color
+        view.layer.cornerRadius = radius
+        view.isUserInteractionEnabled = false
+        return view
+    }
+
+    func updateFrames(with circleX: CGFloat) {
+
+        let normalizedX = getNormalisedCoordinate(from: circleX)
+
+        let centerY = frame.height / 2
+
+        circleView.center = .init(x: normalizedX, y: centerY)
+
+        let progressOrigin = CGPoint(x: config.circleRadius, y: centerY - config.lineHeight / 2)
+
+        futureProgress.frame = .init(origin: progressOrigin,
+                                     size: .init(width: frame.width - config.circleRadius * 2,
+                                                 height: config.lineHeight))
+
+        pastProgress.frame = .init(origin: progressOrigin,
+                                     size: .init(width: normalizedX,
+                                                 height: config.lineHeight))
+    }
+
+    func updatePreloadFrames(with position: CGFloat) {
+
+        let normalizedX = getNormalisedCoordinate(from: position)
+
+        let centerY = frame.height / 2
+
+        let progressOrigin = CGPoint(x: config.circleRadius, y: centerY - config.lineHeight / 2)
+
+        preloadProgress.frame = .init(origin: progressOrigin,
+                                      size: .init(width: normalizedX,
+                                                  height: config.lineHeight))
+    }
+
+    /// Convert circle center coordinate to relative value from `0` to `1`
+    func getRelativePosition(from coordinate: CGFloat) -> CGFloat {
+        let normalisedCoordinate = getNormalisedCoordinate(from: coordinate) - config.circleRadius
+        return normalisedCoordinate / futureProgress.frame.width
+    }
+
+    /// Convert relative value from `0` to `1` to circle center coordinate
+    func getCoordinateFrom(relative position: CGFloat) -> CGFloat {
+        position * futureProgress.frame.width
+    }
+
+    /// Keep circle center x in view bounds
+    func getNormalisedCoordinate(from coordinate: CGFloat) -> CGFloat {
+        if coordinate < config.circleRadius {
+            return config.circleRadius
+        } else if coordinate > frame.width - config.circleRadius {
+            return frame.width - config.circleRadius
+        } else {
+            return coordinate
+        }
     }
 
 }

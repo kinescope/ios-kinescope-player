@@ -10,9 +10,7 @@ import UIKit
 
 protocol PlayerControlInput: TimelineInput, TimeIndicatorInput, PlayerControlOptionsInput {}
 
-protocol PlayerControlOutput: TimelineOutput {
-    func didSelect(option: KinescopePlayerOption)
-}
+protocol PlayerControlOutput: TimelineOutput {}
 
 class PlayerControlView: UIControl {
 
@@ -21,11 +19,11 @@ class PlayerControlView: UIControl {
     private(set) var optionsMenu: PlayerControlOptionsView!
 
     private let config: KinescopeControlPanelConfiguration
-    private weak var delegate: PlayerControlOutput?
 
-    init(config: KinescopeControlPanelConfiguration, delegate: PlayerControlOutput? = nil) {
+    weak var output: PlayerControlOutput?
+
+    init(config: KinescopeControlPanelConfiguration) {
         self.config = config
-        self.delegate = delegate
         super.init(frame: .zero)
         setupInitialState(with: config)
     }
@@ -38,13 +36,22 @@ class PlayerControlView: UIControl {
         .init(width: .greatestFiniteMagnitude, height: config.preferedHeight)
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        timeline.setTimeline(to: 0)
+    }
+
 }
 
 // MARK: - PlayerControlInput
 
 extension PlayerControlView: PlayerControlInput {
-    func seek(to position: CGFloat) {
+    func setTimeline(to position: CGFloat) {
+        timeline.setTimeline(to: position)
+    }
 
+    func setBufferred(progress: CGFloat) {
+        timeline.setBufferred(progress: progress)
     }
 
     func setIndicator(to time: TimeInterval) {
@@ -66,7 +73,23 @@ extension PlayerControlView: PlayerControlOptionsOutput {
     }
 
     func didSelect(option: KinescopePlayerOption) {
-        delegate?.didSelect(option: option)
+        switch option {
+        case .fullscreen:
+            // Temporary hack to dismiss controller
+            UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
+        default:
+            break
+        }
+    }
+
+}
+
+// MARK: - TimelineOutput
+
+extension PlayerControlView: TimelineOutput {
+
+    func onTimelinePositionChanged(to position: CGFloat) {
+        output?.onTimelinePositionChanged(to: position)
     }
 
 }
@@ -89,6 +112,7 @@ private extension PlayerControlView {
         setupConstraints()
 
         optionsMenu.output = self
+        timeline.output = self
     }
 
     func setupConstraints() {
@@ -110,7 +134,8 @@ private extension PlayerControlView {
             timeIndicator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             timeIndicator.centerYAnchor.constraint(equalTo: centerYAnchor),
             timeline.leadingAnchor.constraint(equalTo: timeIndicator.trailingAnchor, constant: 16),
-            timeline.centerYAnchor.constraint(equalTo: centerYAnchor),
+            timeline.topAnchor.constraint(equalTo: topAnchor),
+            timeline.bottomAnchor.constraint(equalTo: bottomAnchor),
             timeline.trailingAnchor.constraint(equalTo: optionsMenu.leadingAnchor, constant: -16),
             optionsMenu.centerYAnchor.constraint(equalTo: centerYAnchor),
             optionsMenu.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)

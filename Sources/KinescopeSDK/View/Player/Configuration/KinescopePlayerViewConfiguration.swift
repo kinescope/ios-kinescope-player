@@ -42,7 +42,7 @@ public extension KinescopePlayerViewConfiguration {
                                                                     activityIndicator: UIActivityIndicatorView(style: .whiteLarge),
                                                                     overlay: .default,
                                                                     controlPanel: .init(tintColor: .gray,
-                                                                                        backgroundColor: .systemBlue,
+                                                                                        backgroundColor: .clear,
                                                                                         preferedHeight: 40,
                                                                                         hideOnPlayTimeout: 2,
                                                                                         timeIndicator: .default,
