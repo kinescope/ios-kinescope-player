@@ -10,9 +10,8 @@ import AVKit
 /// Control protocol for player
 public protocol KinescopePlayer {
 
-    /// - parameter config: playe config
-    /// - parameter delegate: receive player events
-    init(config: KinescopePlayerConfig, delegate: KinescopePlayerDelegate?)
+    /// - parameter config: player config
+    init(config: KinescopePlayerConfig)
 
     /// Start playing of video
     func play()

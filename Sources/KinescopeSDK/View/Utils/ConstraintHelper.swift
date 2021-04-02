@@ -36,6 +36,15 @@ extension UIView {
         ])
     }
 
+    func topChild(view: UIView, padding: CGFloat = 16.0) {
+        view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            view.topAnchor.constraint(equalTo: topAnchor, constant: padding),
+            view.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
+            view.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding)
+        ])
+    }
+
     func squareSize(with side: CGFloat) {
         translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
