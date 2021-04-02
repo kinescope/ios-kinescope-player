@@ -50,11 +50,25 @@ class TimelineView: UIControl {
 
     // MARK: - Touches
 
-    override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
+    override func continueTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
+
+        guard isTouchInside else {
+            return false
+        }
+
+        isTouching = true
+
+        let point = touch.location(in: self)
+
+        updateFrames(with: point.x)
+
         return true
     }
 
+
     override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
+
+        isTouching = false
 
         guard let point = touch?.location(in: self) else {
             return
@@ -62,14 +76,18 @@ class TimelineView: UIControl {
 
         isAnimating = true
 
-        output?.onTimelinePositionChanged(to: point.x/frame.width)
+        let relativePosition = point.x / frame.width
+
+        output?.onTimelinePositionChanged(to: relativePosition)
 
         UIView.animate(withDuration: 0.2,
-                       animations: { [weak self, point] in
+                       animations: { [weak self] in
                         self?.updateFrames(with: point.x)
-                       }, completion: { [weak self] _ in
+                       },
+                       completion: { [weak self] _ in
                         self?.isAnimating = false
                        })
+
     }
 
 }
@@ -130,9 +148,21 @@ private extension TimelineView {
     }
 
     func updateFrames(with circleX: CGFloat) {
+
+        // Keep center in view bounds
+        let normalizedX: CGFloat = {
+            if circleX < config.circleRadius {
+                return config.circleRadius
+            } else if circleX > frame.width - config.circleRadius {
+                return frame.width - config.circleRadius
+            } else {
+                return circleX
+            }
+        }()
+
         let centerY = frame.height / 2
 
-        circleView.center = .init(x: circleX, y: centerY)
+        circleView.center = .init(x: normalizedX, y: centerY)
 
         let progressOrigin = CGPoint(x: config.circleRadius, y: centerY - config.lineHeight / 2)
 
@@ -141,7 +171,7 @@ private extension TimelineView {
                                                  height: config.lineHeight))
 
         pastProgress.frame = .init(origin: progressOrigin,
-                                     size: .init(width: circleX,
+                                     size: .init(width: normalizedX,
                                                  height: config.lineHeight))
     }
 
