@@ -64,6 +64,7 @@
 		A00B31B56AB5057F4FC5FFC2 /* AssetsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F1E40F717DDF46B97C47FA /* AssetsService.swift */; };
 		A2698DC22C1DF19CA0E223D5 /* KinescopeVideoPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23BE651C440A4C2EDC4131E1 /* KinescopeVideoPlayerTests.swift */; };
 		AAB98EC0F67C269DA2E6EC31 /* KinescopeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20D4D486064D5C046AA39415 /* KinescopeSDK.framework */; };
+		ACAAA9593453A9AB7170BB11 /* KinescopeSideMenuConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E6B915710AF50EDFE20A1B7 /* KinescopeSideMenuConfiguration.swift */; };
 		AF513796EC98C52C83936C1F /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1648B3BF451573C4D95229F /* AVFoundation.framework */; };
 		B39B0100B5D076379C188FF7 /* PlayingStrategyProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 028AF24ED28E18823066B898 /* PlayingStrategyProvider.swift */; };
 		B3E0666356BCB1EC0F0B22EF /* KinescopeControlPanelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC285297DB11EDAA88ABA54 /* KinescopeControlPanelConfiguration.swift */; };
@@ -93,6 +94,7 @@
 		ED5D82EEDD23A52867EF6744 /* OptionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ECE8E5A44CEF309F6946EC2 /* OptionButton.swift */; };
 		F01FFB38E8BF8B06913B99BA /* InspectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75BCA647AC2B57BC5C662086 /* InspectorTests.swift */; };
 		F0A9B8F6ACA1DCDA58C08ED8 /* PlayerControlOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D75F4484E565BBABC302CCF7 /* PlayerControlOptionsView.swift */; };
+		F5105F9A9A762F62D053A88E /* SideMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6958F46BEF2B6EC0D99E178 /* SideMenu.swift */; };
 		F9C01DD14D4B5A5B75A1D5DA /* KinescopeLogging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1722962B9FD72AA3EE9B4EBC /* KinescopeLogging.swift */; };
 		FAB161BAF4738C14028AC4D9 /* LoopedPlayingStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBF2C707B8708B7FF322296 /* LoopedPlayingStrategy.swift */; };
 		FC0184222AECF9C94FC6622C /* KinescopeInspectableMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E479B1687B06842CC63ECB /* KinescopeInspectableMock.swift */; };
@@ -155,6 +157,7 @@
 		4690FAB544D0F69E6CE17238 /* KinescopePagination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopePagination.swift; sourceTree = "<group>"; };
 		4BA5B686232E779D15560FC6 /* KinescopeDownloadableDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeDownloadableDelegate.swift; sourceTree = "<group>"; };
 		4BD617E8874535AFE6347320 /* KinescopeVideoPlayerDependenciesMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeVideoPlayerDependenciesMock.swift; sourceTree = "<group>"; };
+		4E6B915710AF50EDFE20A1B7 /* KinescopeSideMenuConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeSideMenuConfiguration.swift; sourceTree = "<group>"; };
 		4E78E23612C669936E1B2506 /* KinescopePlayerTimeindicatorConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopePlayerTimeindicatorConfiguration.swift; sourceTree = "<group>"; };
 		57F26BA927C1E89047C06770 /* KinescopeFullscreenConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeFullscreenConfiguration.swift; sourceTree = "<group>"; };
 		5F2AE32DEFC8E442E6B4421D /* KinescopeMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeMetaData.swift; sourceTree = "<group>"; };
@@ -196,6 +199,7 @@
 		C1648B3BF451573C4D95229F /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		C1F0B4DE9BF10F61E8AA01F5 /* SequentialPlayingStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequentialPlayingStrategy.swift; sourceTree = "<group>"; };
 		C39CA80AC77409AF8090563A /* PlayingStrategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayingStrategy.swift; sourceTree = "<group>"; };
+		C6958F46BEF2B6EC0D99E178 /* SideMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenu.swift; sourceTree = "<group>"; };
 		C8028A62D54CDA632ABE7BB9 /* KinescopeLoggerLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeLoggerLevel.swift; sourceTree = "<group>"; };
 		C8060C4F9E534D65BF3897CF /* VideoNameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoNameView.swift; sourceTree = "<group>"; };
 		C8F7CD9833B5EB4BBB99D94E /* KinescopePlayerViewConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopePlayerViewConfiguration.swift; sourceTree = "<group>"; };
@@ -274,6 +278,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		25BF6A18A7AA2A887240F8B2 /* SideMenu */ = {
+			isa = PBXGroup;
+			children = (
+				C6958F46BEF2B6EC0D99E178 /* SideMenu.swift */,
+			);
+			path = SideMenu;
+			sourceTree = "<group>";
+		};
 		26960327718688C7CDC429DD /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -315,6 +327,7 @@
 				EA27256B8AD2CC8FC409A13B /* KinescopePlayerViewDelegate.swift */,
 				7DD6662B74FDA72EB42202E0 /* Configuration */,
 				659320BD79D04D2BBF0ED19F /* Layout */,
+				25BF6A18A7AA2A887240F8B2 /* SideMenu */,
 			);
 			path = Player;
 			sourceTree = "<group>";
@@ -450,6 +463,7 @@
 				4E78E23612C669936E1B2506 /* KinescopePlayerTimeindicatorConfiguration.swift */,
 				AF09FDC099EB55A8508162D1 /* KinescopePlayerTimelineConfiguration.swift */,
 				C8F7CD9833B5EB4BBB99D94E /* KinescopePlayerViewConfiguration.swift */,
+				4E6B915710AF50EDFE20A1B7 /* KinescopeSideMenuConfiguration.swift */,
 				E413348BB8D49D82D0434853 /* KinescopeVideoNameConfiguration.swift */,
 			);
 			path = Configuration;
@@ -726,6 +740,7 @@
 				D5DBC02DF54FD091473D65E9 /* KinescopePlayerViewConfiguration.swift in Sources */,
 				B813EDCCEEA1659537CE1150 /* KinescopePlayerViewDelegate.swift in Sources */,
 				91DE0B1BC6C08747AA54E213 /* KinescopeServicesProvider.swift in Sources */,
+				ACAAA9593453A9AB7170BB11 /* KinescopeSideMenuConfiguration.swift in Sources */,
 				01C772F62FB45A601F8B5872 /* KinescopeVideo.swift in Sources */,
 				99F46F2B326DFF75C2BC9CF4 /* KinescopeVideoAdditionalMaterial.swift in Sources */,
 				86E179C9CDF3A1C6C4E3C4CF /* KinescopeVideoAsset.swift in Sources */,
@@ -757,6 +772,7 @@
 				70A52C77C283DD336EF9884A /* Response.swift in Sources */,
 				1EFD0D912BF4B9D19802578F /* SequentialPlayingStrategy.swift in Sources */,
 				312F48634722FCBD2CADFFC2 /* ServerError.swift in Sources */,
+				F5105F9A9A762F62D053A88E /* SideMenu.swift in Sources */,
 				73447723DCAEA9BCB446D247 /* SubviewsHelper.swift in Sources */,
 				D5E831331C9184D869118FE2 /* TimeIndicator.swift in Sources */,
 				81B89227444CD9D51294ACC6 /* TimelineView.swift in Sources */,
