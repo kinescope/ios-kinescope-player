@@ -50,7 +50,7 @@ final class CurrentCellFocusPlugin: BaseTablePlugin<ScrollEvent> {
     override func process(event: ScrollEvent, with manager: BaseTableManager?) {
 
         switch event {
-        case .didScroll:
+        case .didScroll, .didEndDecelerating:
             updateFocus()
         default:
             break

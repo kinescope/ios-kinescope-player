@@ -9,18 +9,19 @@ import UIKit
 
 final public class KinescopeFullscreenViewController: UIViewController {
 
-    // MARK: - IBOutlets
+    // MARK: - Private properties
 
     private weak var playerView: KinescopePlayerView!
 
-    // MARK: - Private properties
-
     private var player: KinescopePlayer!
+
+    private let config: KinescopeFullscreenConfiguration
 
     // MARK: - Init
 
-    public init(player: KinescopePlayer) {
+    public init(player: KinescopePlayer, config: KinescopeFullscreenConfiguration) {
         self.player = player
+        self.config = config
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -31,11 +32,11 @@ final public class KinescopeFullscreenViewController: UIViewController {
     // MARK: - Orientation style
 
     public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        .landscapeRight
+        config.orientationMask
     }
 
     public override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-        .landscapeRight
+        config.orientation
     }
 
     // MARK: - Lifecycle
@@ -70,6 +71,8 @@ final public class KinescopeFullscreenViewController: UIViewController {
 private extension KinescopeFullscreenViewController {
 
     func setupInitialState() {
+
+        view.backgroundColor = config.backgroundColor
 
         let playerView = KinescopePlayerView()
         playerView.setLayout(with: .default)

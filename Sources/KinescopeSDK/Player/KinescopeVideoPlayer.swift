@@ -241,7 +241,8 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             pause()
             detach(view: view)
 
-            let playerVC = KinescopeFullscreenViewController(player: self)
+            let playerVC = KinescopeFullscreenViewController(player: self,
+                                                             config: .preferred(for: video))
             playerVC.modalPresentationStyle = .overFullScreen
             rootVC?.present(playerVC, animated: true, completion: { [weak self] in
                 self?.play()
