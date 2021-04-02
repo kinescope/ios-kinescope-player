@@ -178,6 +178,18 @@ private extension KinescopeVideoPlayer {
         self.statusObserver = nil
     }
 
+
+    func seek(to seconds: TimeInterval) {
+        let time = CMTime(seconds: seconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+
+        Kinescope.shared.logger?.log(message: "timeline changed to \(seconds) seconds",
+                                     level: KinescopeLoggerLevel.player)
+
+        isSeeking = true
+        strategy.player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] _ in
+            self?.isSeeking = false
+        }
+    }
 }
 
 // MARK: - PlayerOverlayViewDelegate
@@ -201,19 +213,45 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             return
         }
 
-        Kinescope.shared.logger?.log(message: "timeline changed to \(position)", level: KinescopeLoggerLevel.player)
+        Kinescope.shared.logger?.log(message: "timeline changed to \(position)",
+                                     level: KinescopeLoggerLevel.player)
 
         let seconds = position * duration
-        let time = CMTime(seconds: seconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-
-        Kinescope.shared.logger?.log(message: "timeline changed to \(seconds) seconds", level: KinescopeLoggerLevel.player)
-
-        isSeeking = true
-        strategy.player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] _ in
-            self?.isSeeking = false
-        }
+        seek(to: seconds)
     }
 
     func didSelect(option: KinescopePlayerOption) {
+    }
+
+    func didFastForward() {
+        let currentTime = strategy.player.currentTime().seconds
+
+        guard
+            let duration = strategy.player.currentItem?.duration.seconds
+        else {
+            return
+        }
+
+        Kinescope.shared.logger?.log(message: "fast forward +15s", level: KinescopeLoggerLevel.player)
+
+        let seconds = currentTime + 15.0
+        if seconds < duration {
+            seek(to: seconds)
+        } else {
+            seek(to: duration)
+        }
+    }
+
+    func didFastBackward() {
+        let currentTime = strategy.player.currentTime().seconds
+
+        Kinescope.shared.logger?.log(message: "fast backward -15s", level: KinescopeLoggerLevel.player)
+
+        let seconds = currentTime - 15.0
+        if seconds > .zero {
+            seek(to: seconds)
+        } else {
+            seek(to: .zero)
+        }
     }
 }

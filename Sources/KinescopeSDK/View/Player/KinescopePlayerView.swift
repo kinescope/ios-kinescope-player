@@ -160,6 +160,14 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
     func didPause() {
         delegate?.didPause()
     }
+
+    func didFastForward() {
+        delegate?.didFastForward()
+    }
+
+    func didFastBackward() {
+        delegate?.didFastBackward()
+    }
 }
 
 // MARK: - PlayerControlOutput
