@@ -1,4 +1,5 @@
 import AVFoundation
+import UIKit
 
 public class KinescopeVideoPlayer: KinescopePlayer {
 
