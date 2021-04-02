@@ -184,6 +184,11 @@ private extension KinescopeVideoPlayer {
         self.statusObserver = nil
     }
 
+    func copy() -> KinescopePlayer {
+        let player = KinescopeVideoPlayer(config: config, dependencies: dependencies)
+        return player
+    }
+
 }
 
 // MARK: - PlayerOverlayViewDelegate
@@ -227,7 +232,9 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             /// dismiss previously presented vc
             rootVC?.dismiss(animated: true, completion: nil)
         } else {
-            let playerVC = KinescopeFullscreenViewController(player: self)
+            pause()
+            
+            let playerVC = KinescopeFullscreenViewController(player: copy())
             playerVC.modalPresentationStyle = .overFullScreen
             rootVC?.present(playerVC, animated: true, completion: nil)
         }
