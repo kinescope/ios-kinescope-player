@@ -127,7 +127,7 @@ private extension KinescopePlayerView {
     }
 
     func configureControlPanel(with config: KinescopeControlPanelConfiguration) {
-        let controlPanel = PlayerControlView(config: config, delegate: self)
+        let controlPanel = PlayerControlView(config: config)
         addSubview(controlPanel)
         bottomChild(view: controlPanel)
 

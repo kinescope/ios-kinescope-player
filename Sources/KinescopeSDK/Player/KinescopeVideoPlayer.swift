@@ -30,6 +30,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     }
 
     deinit {
+        self.removePlaybackTimeObserver()
         self.removeItemStatusObserver()
     }
 
@@ -132,15 +133,31 @@ private extension KinescopeVideoPlayer {
                 return
             }
 
+            /// Dose not make sense without control panel and curremtItem
+            guard let controlPanel = self?.view?.controlPanel,
+                  let currentItem = self?.strategy.player.currentItem else {
+                return
+            }
+
+            // MARK: - Current time observation
+
             let time = time.seconds
 
             Kinescope.shared.logger?.log(message: "playback position changed to \(time) seconds", level: KinescopeLoggerLevel.player)
 
-            self?.view?.controlPanel?.setIndicator(to: time)
+            controlPanel.setIndicator(to: time)
 
-            let duration = self?.strategy.player.currentItem?.duration.seconds ?? 0
+            let duration = currentItem.duration.seconds
 
-            self?.view?.controlPanel?.setTimeline(to: CGFloat(time/duration))
+            controlPanel.setTimeline(to: CGFloat(time/duration))
+
+            // MARK: - Preload observation
+
+            let buferredTime = currentItem.loadedTimeRanges.first?.timeRangeValue.end.seconds ?? 0
+
+            Kinescope.shared.logger?.log(message: "playback buffered \(buferredTime) seconds", level: KinescopeLoggerLevel.player)
+
+            controlPanel.setBufferred(progress: CGFloat(buferredTime/duration))
         }
 
     }
@@ -166,6 +183,7 @@ private extension KinescopeVideoPlayer {
         self.statusObserver?.invalidate()
         self.statusObserver = nil
     }
+
 }
 
 // MARK: - PlayerOverlayViewDelegate

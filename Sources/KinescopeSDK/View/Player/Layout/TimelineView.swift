@@ -13,6 +13,11 @@ protocol TimelineInput {
     ///
     /// - parameter position: Value from `0` (start) to `1` (end)
     func setTimeline(to position: CGFloat)
+
+    /// Update timeline position manualy
+    ///
+    /// - parameter progress: Value from `0` (start) to `1` (end)
+    func setBufferred(progress: CGFloat)
 }
 
 protocol TimelineOutput: class {
@@ -78,8 +83,6 @@ class TimelineView: UIControl {
 
         let relativePosition = getRelativePosition(from: point.x)
 
-        Kinescope.shared.logger?.log(message: "timeline changed to \(relativePosition)", level: KinescopeLoggerLevel.player)
-
         output?.onTimelinePositionChanged(to: relativePosition)
 
         UIView.animate(withDuration: 0.2,
@@ -104,10 +107,13 @@ extension TimelineView: TimelineInput {
             return
         }
 
-        Kinescope.shared.logger?.log(message: "playback position changed to \(position)", level: KinescopeLoggerLevel.player)
-
         let coordinate = getCoordinateFrom(relative: position)
         updateFrames(with: coordinate)
+    }
+
+    func setBufferred(progress: CGFloat) {
+        let coordinate = getCoordinateFrom(relative: progress)
+        updatePreloadFrames(with: coordinate)
     }
 
 }
@@ -169,6 +175,19 @@ private extension TimelineView {
         pastProgress.frame = .init(origin: progressOrigin,
                                      size: .init(width: normalizedX,
                                                  height: config.lineHeight))
+    }
+
+    func updatePreloadFrames(with position: CGFloat) {
+
+        let normalizedX = getNormalisedCoordinate(from: position)
+
+        let centerY = frame.height / 2
+
+        let progressOrigin = CGPoint(x: config.circleRadius, y: centerY - config.lineHeight / 2)
+
+        preloadProgress.frame = .init(origin: progressOrigin,
+                                      size: .init(width: normalizedX,
+                                                  height: config.lineHeight))
     }
 
     /// Convert circle center coordinate to relative value from `0` to `1`

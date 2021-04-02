@@ -50,6 +50,10 @@ extension PlayerControlView: PlayerControlInput {
         timeline.setTimeline(to: position)
     }
 
+    func setBufferred(progress: CGFloat) {
+        timeline.setBufferred(progress: progress)
+    }
+
     func setIndicator(to time: TimeInterval) {
         timeIndicator.setIndicator(to: time)
     }
@@ -69,7 +73,13 @@ extension PlayerControlView: PlayerControlOptionsOutput {
     }
 
     func didSelect(option: KinescopePlayerOption) {
-        delegate?.didSelect(option: option)
+        switch option {
+        case .fullscreen:
+            // Temporary hack to dismiss controller
+            UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
+        default:
+            break
+        }
     }
 
 }
