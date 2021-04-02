@@ -4,4 +4,5 @@ protocol KinescopePlayerViewDelegate: class {
     func didSeek(to position: Double)
     func didFastForward()
     func didFastBackward()
+    func didPresentFullscreen(from view: KinescopePlayerView)
 }

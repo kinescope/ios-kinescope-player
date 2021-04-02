@@ -11,6 +11,8 @@ final class VideoListFocusableCellGenerator: BaseCellGenerator<VideoListCell>, F
 
     // MARK: - Properties
 
+    var uuid: String = ""
+
     var isFocused = false
 
     weak var cell: VideoListCell?
@@ -28,6 +30,7 @@ final class VideoListFocusableCellGenerator: BaseCellGenerator<VideoListCell>, F
         super.configure(cell: cell, with: model)
 
         self.cell = cell
+        self.uuid = model.id
         self.updateCell(isFocused: isFocused)
     }
 

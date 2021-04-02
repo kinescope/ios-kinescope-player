@@ -14,10 +14,6 @@ final class VideoViewController: UIViewController {
 
     // MARK: - Lifecycle
 
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .landscapeRight
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
