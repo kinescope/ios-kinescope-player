@@ -57,6 +57,8 @@
 		865CE94DDDC8CA4F2D225722 /* KinescopePlayerOverlayConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FF05915EADDB93B4D15676E /* KinescopePlayerOverlayConfiguration.swift */; };
 		86E179C9CDF3A1C6C4E3C4CF /* KinescopeVideoAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E407782BA7D02852AF0AF8 /* KinescopeVideoAsset.swift */; };
 		888F8E4B59845119977F9F96 /* KinescopeSideMenuItemConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5F76BC3E74E66083F9F803A /* KinescopeSideMenuItemConfiguration.swift */; };
+		8908BD52261B737900DD9A87 /* String+AssetIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8908BD51261B737800DD9A87 /* String+AssetIcon.swift */; };
+		8908BD55261B759800DD9A87 /* CheckmarkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8908BD54261B759800DD9A87 /* CheckmarkCell.swift */; };
 		8EB165D38D1F89B52DD0053F /* LoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DFC086DCAA17E36CC1C508C /* LoggerTests.swift */; };
 		9187A4013B2557E5DAC63E72 /* VideoDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB502E10695CE3F406F50648 /* VideoDownloader.swift */; };
 		91DE0B1BC6C08747AA54E213 /* KinescopeServicesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52FD36324CD4FBB4651A0A6 /* KinescopeServicesProvider.swift */; };
@@ -186,6 +188,8 @@
 		8565E17932353269761D45DF /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		869CE1C2AE20F92390A017BF /* Manager+KinescopeConfigurable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Manager+KinescopeConfigurable.swift"; sourceTree = "<group>"; };
 		87A8BADF1E24AECDD3627033 /* SubviewsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubviewsHelper.swift; sourceTree = "<group>"; };
+		8908BD51261B737800DD9A87 /* String+AssetIcon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+AssetIcon.swift"; sourceTree = "<group>"; };
+		8908BD54261B759800DD9A87 /* CheckmarkCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckmarkCell.swift; sourceTree = "<group>"; };
 		8CE4F7885425DE5FAE5A153D /* KinescopeVideo+Stub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KinescopeVideo+Stub.swift"; sourceTree = "<group>"; };
 		8FB2B666A42BF85FB5B99C95 /* KinescopeDefaultLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeDefaultLogger.swift; sourceTree = "<group>"; };
 		8FC285297DB11EDAA88ABA54 /* KinescopeControlPanelConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeControlPanelConfiguration.swift; sourceTree = "<group>"; };
@@ -268,6 +272,7 @@
 				7113C41E34E2AD6D4EBA47B0 /* ConstraintHelper.swift */,
 				87A8BADF1E24AECDD3627033 /* SubviewsHelper.swift */,
 				77EDEE83CBE8ED05A8962D25 /* UIImage+Bundle.swift */,
+				8908BD51261B737800DD9A87 /* String+AssetIcon.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -331,6 +336,7 @@
 			isa = PBXGroup;
 			children = (
 				2BE8E65CFDF9074DD17D40B5 /* DisclosureCell.swift */,
+				8908BD54261B759800DD9A87 /* CheckmarkCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -802,11 +808,13 @@
 				1EFD0D912BF4B9D19802578F /* SequentialPlayingStrategy.swift in Sources */,
 				312F48634722FCBD2CADFFC2 /* ServerError.swift in Sources */,
 				F5105F9A9A762F62D053A88E /* SideMenu.swift in Sources */,
+				8908BD55261B759800DD9A87 /* CheckmarkCell.swift in Sources */,
 				60D4A992B72B801B9138C4DF /* SideMenuBar.swift in Sources */,
 				B3EE986AA7B11BCF5CD27F09 /* SideMenuCoordinator.swift in Sources */,
 				6C748A34F03E25016D42BBAF /* SideMenuSlideCoordinator.swift in Sources */,
 				73447723DCAEA9BCB446D247 /* SubviewsHelper.swift in Sources */,
 				D5E831331C9184D869118FE2 /* TimeIndicator.swift in Sources */,
+				8908BD52261B737900DD9A87 /* String+AssetIcon.swift in Sources */,
 				81B89227444CD9D51294ACC6 /* TimelineView.swift in Sources */,
 				BE8A43CD8109ADDC1824B42C /* Transport.swift in Sources */,
 				572D6D178F6B2DB3DE5BCFFB /* UIActivityIndicator+KinescopeActivityIndicating.swift in Sources */,
@@ -854,7 +862,6 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -870,7 +877,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -895,8 +901,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
+				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -920,7 +925,11 @@
 				INFOPLIST_FILE = KinescopeSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = io.kinescope.sdk;
 				SDKROOT = iphoneos;
@@ -944,7 +953,11 @@
 				INFOPLIST_FILE = KinescopeSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = io.kinescope.sdk;
 				SDKROOT = iphoneos;
@@ -981,7 +994,6 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -997,7 +1009,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1016,13 +1027,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};

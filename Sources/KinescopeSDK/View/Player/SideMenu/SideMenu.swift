@@ -10,13 +10,23 @@ import UIKit
 
 protocol SideMenuDelegate: class {
     func sideMenuWillBeDismissed(_ sideMenu: SideMenu, withRoot: Bool)
-    func sideMenuDidSelect(item: SideMenu.Item)
+    func sideMenuDidSelect(item: SideMenu.Item, sideMenu: SideMenu)
 }
 
 final class SideMenu: UIView {
 
+    // FIXME: Add localization
+    enum Settings: String {
+        case playbackSpeed = "Playback speed"
+        case subtitles = "Subtitles"
+        case quality = "Quality"
+
+        static var title = "Settings"
+    }
+
     enum Item {
         case disclosure(title: String, value: NSAttributedString?)
+        case checkmark(title: NSAttributedString, selected: Bool = false)
     }
 
     struct Model {
@@ -61,10 +71,18 @@ extension SideMenu: UITableViewDataSource {
 
         switch item {
         case .disclosure(let title, let value):
-            let cell = tableView.dequeueReusableCell(withIdentifier: DisclosureCell.description(), for: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: DisclosureCell.description(),
+                                                     for: indexPath)
             (cell as? DisclosureCell)?.configure(with: .init(title: title,
                                                              value: value,
                                                              config: config.item))
+            return cell
+        case .checkmark(let title, let selected):
+            let cell = tableView.dequeueReusableCell(withIdentifier: CheckmarkCell.description(),
+                                                     for: indexPath)
+            (cell as? CheckmarkCell)?.configure(with: .init(title: title,
+                                                            selected: selected,
+                                                            config: config.item))
             return cell
         }
     }
@@ -91,7 +109,7 @@ extension SideMenu: UITableViewDelegate {
 
         let item = model.items[indexPath.row]
 
-        delegate?.sideMenuDidSelect(item: item)
+        delegate?.sideMenuDidSelect(item: item, sideMenu: self)
 
         tableView.deselectRow(at: indexPath, animated: true)
 
@@ -140,6 +158,7 @@ private extension SideMenu {
         tableView.dataSource = self
 
         tableView.register(DisclosureCell.self, forCellReuseIdentifier: DisclosureCell.description())
+        tableView.register(CheckmarkCell.self, forCellReuseIdentifier: CheckmarkCell.description())
 
         self.tableView = tableView
     }

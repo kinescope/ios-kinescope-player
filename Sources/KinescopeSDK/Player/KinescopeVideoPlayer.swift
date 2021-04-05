@@ -313,4 +313,16 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             })
         }
     }
+
+    func didShowQuality() -> [String] {
+        return video?.assets
+            .compactMap { $0.quality }
+            .filter { $0 != "original" } ?? []
+    }
+
+    func didSelect(quality: String) {
+        // FIXME: Add logic
+        Kinescope.shared.logger?.log(message: "Select quality: \(quality)",
+                                     level: KinescopeLoggerLevel.player)
+    }
 }

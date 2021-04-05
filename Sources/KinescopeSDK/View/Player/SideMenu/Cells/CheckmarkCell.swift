@@ -1,0 +1,74 @@
+import UIKit
+
+final class CheckmarkCell: UITableViewCell {
+
+    // MARK: - Nested
+
+    struct Model {
+        let title: NSAttributedString
+        let selected: Bool
+        let config: KinescopeSideMenuItemConfiguration
+    }
+
+    // MARK: - Properties
+
+    private weak var titleLabel: UILabel!
+    private weak var iconView: UIImageView!
+
+    // MARK: - Lifecycle
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.setupInitialState()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    // MARK: - Public Methods
+
+    func configure(with model: Model) {
+        iconView.isHidden = !model.selected
+
+        titleLabel.attributedText = model.title.string
+            .attributedStringWithAssetIconIfNeeded(attributes: [
+                .font: model.config.titleFont,
+                .foregroundColor: model.config.titleColor
+            ])
+    }
+}
+
+// MARK: - Private
+
+private extension CheckmarkCell {
+    func setupInitialState() {
+        backgroundColor = .clear
+        setupLayout()
+    }
+
+    func setupLayout() {
+        let titleLabel = UILabel()
+        let iconView = UIImageView(image: .image(named: "checkmark"))
+
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        iconView.translatesAutoresizingMaskIntoConstraints = false
+
+        addSubview(titleLabel)
+        addSubview(iconView)
+        
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8.0),
+            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8.0),
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24.0),
+            titleLabel.trailingAnchor.constraint(equalTo: iconView.leadingAnchor, constant: -4.0),
+
+            iconView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            iconView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16.0)
+        ])
+
+        self.titleLabel = titleLabel
+        self.iconView = iconView
+
+    }
+}
