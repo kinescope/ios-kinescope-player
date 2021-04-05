@@ -108,7 +108,7 @@ extension SideMenu: SideMenuBarDelegate {
     }
 
     func backTapped() {
-        delegate?.sideMenuWillBeDismissed(self, withRoot: true)
+        delegate?.sideMenuWillBeDismissed(self, withRoot: false)
     }
 
 }

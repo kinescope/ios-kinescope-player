@@ -204,12 +204,30 @@ extension KinescopePlayerView: PlayerControlOutput {
 extension KinescopePlayerView: SideMenuDelegate {
 
     func sideMenuWillBeDismissed(_ sideMenu: SideMenu, withRoot: Bool) {
-        /// Hide root sideMenu if `withRoot`  setted to `true`
-        sideMenuCoordinator.dismiss(view: sideMenu, from: self, animated: true)
+
+        if withRoot {
+            let sideMenus = subviews.compactMap { $0 as? SideMenu }
+            sideMenus.forEach { [weak self] sideMenu in
+                guard let parentView = self else {
+                    return
+                }
+                self?.sideMenuCoordinator.dismiss(view: sideMenu, from: parentView, animated: true)
+            }
+        } else {
+            sideMenuCoordinator.dismiss(view: sideMenu, from: self, animated: true)
+        }
     }
 
     func sideMenuDidSelect(item: SideMenu.Item) {
-        // TODO: - add item handling
+        switch item {
+        case .disclosure(let title, _):
+            let model = SideMenu.Model(title: title,
+                                       isRoot: false,
+                                       items: [])
+            let sideMenu = SideMenu(config: config.sideMenu, model: model)
+            sideMenu.delegate = self
+            sideMenuCoordinator.present(view: sideMenu, in: self, animated: true)
+        }
     }
 
 }
