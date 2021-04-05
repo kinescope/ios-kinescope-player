@@ -88,7 +88,7 @@ extension SideMenu: UITableViewDataSource {
 extension SideMenu: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+
         let item = model.items[indexPath.row]
 
         delegate?.sideMenuDidSelect(item: item)

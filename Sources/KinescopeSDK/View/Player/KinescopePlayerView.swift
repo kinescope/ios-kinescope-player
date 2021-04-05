@@ -192,7 +192,7 @@ extension KinescopePlayerView: PlayerControlOutput {
     func didSelect(option: KinescopePlayerOption) {
         switch option {
         case .fullscreen:
-            delegate?.presentFullscreen(from: self)
+            delegate?.didPresentFullscreen(from: self)
         case .settings:
             // Add localisation?
             let model = SideMenu.Model(title: "Settings",
