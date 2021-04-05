@@ -20,6 +20,8 @@ public class KinescopePlayerView: UIView {
     private(set) var progressView: KinescopeActivityIndicator!
 
     private var config: KinescopePlayerViewConfiguration!
+
+    /// One coordination for phones and other for pads
     private let sideMenuCoordinator = SideMenuSlideCoordinator()
 
     // MARK: - Internal Properties
@@ -176,7 +178,14 @@ extension KinescopePlayerView: PlayerControlOutput {
             delegate?.presentFullscreen(from: self)
         case .settings:
             // Add localisation?
-            let sideMenu = SideMenu(config: config.sideMenu, model: .init(title: "Settings", isRoot: true, items: []))
+            let model = SideMenu.Model(title: "Settings",
+                                       isRoot: true,
+                                       items: [
+                                         .disclosure(title: "Playback speed", value: nil),
+                                         .disclosure(title: "Subtitles", value: nil),
+                                         .disclosure(title: "Quality", value: .init(string: "Auto"))
+                                       ])
+            let sideMenu = SideMenu(config: config.sideMenu, model: model)
             sideMenu.delegate = self
             sideMenuCoordinator.present(view: sideMenu, in: self, animated: true)
         default:
@@ -197,6 +206,10 @@ extension KinescopePlayerView: SideMenuDelegate {
     func sideMenuWillBeDismissed(_ sideMenu: SideMenu, withRoot: Bool) {
         /// Hide root sideMenu if `withRoot`  setted to `true`
         sideMenuCoordinator.dismiss(view: sideMenu, from: self, animated: true)
+    }
+
+    func sideMenuDidSelect(item: SideMenu.Item) {
+        // TODO: - add item handling
     }
 
 }
