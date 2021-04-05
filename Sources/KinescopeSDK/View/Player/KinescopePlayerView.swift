@@ -19,6 +19,9 @@ public class KinescopePlayerView: UIView {
     private(set) weak var overlay: PlayerOverlayView?
     private(set) var progressView: KinescopeActivityIndicator!
 
+    private var config: KinescopePlayerViewConfiguration!
+    private let sideMenuCoordinator = SideMenuSlideCoordinator()
+
     // MARK: - Internal Properties
 
     weak var delegate: KinescopePlayerViewDelegate?
@@ -76,6 +79,8 @@ public extension KinescopePlayerView {
     ///
     /// - parameter config: Configuration of player
     func setLayout(with config: KinescopePlayerViewConfiguration) {
+
+        self.config = config
 
         clearSubviews()
 
@@ -169,6 +174,10 @@ extension KinescopePlayerView: PlayerControlOutput {
         switch option {
         case .fullscreen:
             delegate?.presentFullscreen(from: self)
+        case .settings:
+            // Add localisation?
+            let sideMenu = SideMenu(config: config.sideMenu, model: .init(title: "Settings", isRoot: true, items: []))
+            sideMenuCoordinator.present(view: sideMenu, in: self, animated: true)
         default:
             break
         }

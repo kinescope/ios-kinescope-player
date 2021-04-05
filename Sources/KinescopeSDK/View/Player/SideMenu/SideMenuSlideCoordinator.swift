@@ -21,7 +21,7 @@ struct SideMenuSlideCoordinator: SideMenuCoordinator {
     func present(view: SideMenu, in parent: UIView, animated: Bool) {
         parent.addSubview(view)
 
-        view.frame = .init(origin: .init(x: -Constants.width, y: 0),
+        view.frame = .init(origin: .init(x: parent.frame.width, y: 0),
                            size: .init(width: Constants.width, height: parent.frame.height))
 
         let destinationOrigin = CGPoint(x: parent.frame.width - Constants.width, y: 0)
@@ -38,7 +38,7 @@ struct SideMenuSlideCoordinator: SideMenuCoordinator {
 
     func dismiss(view: SideMenu, from parent: UIView, animated: Bool) {
 
-        let destinationOrigin = CGPoint(x: -Constants.width, y: 0)
+        let destinationOrigin = CGPoint(x: parent.frame.width, y: 0)
 
         if animated {
             UIView.animate(withDuration: Constants.animationDuration,
