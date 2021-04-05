@@ -62,7 +62,9 @@ extension SideMenu: UITableViewDataSource {
         switch item {
         case .disclosure(let title, let value):
             let cell = tableView.dequeueReusableCell(withIdentifier: DisclosureCell.description(), for: indexPath)
-            (cell as? DisclosureCell)?.configure(with: title, and: value)
+            (cell as? DisclosureCell)?.configure(with: .init(title: title,
+                                                             value: value,
+                                                             config: config.item))
             return cell
         }
     }
