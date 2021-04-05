@@ -11,8 +11,10 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     }()
 
     private weak var view: KinescopePlayerView?
+
     private var timeObserver: Any?
     private var statusObserver: NSKeyValueObservation?
+    private var timeControlStatusObserver: NSKeyValueObservation?
 
     private var isSeeking = false
     private weak var miniView: KinescopePlayerView?
@@ -30,6 +32,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     deinit {
         self.removePlaybackTimeObserver()
         self.removePlayerStatusObserver()
+        self.removePlayerTimeControlStatusObserver()
     }
 
     // MARK: - KinescopePlayer
@@ -64,6 +67,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
         observePlaybackTime()
         addPlayerStatusObserver()
+        addPlayerTimeControlStatusObserver()
     }
 
     public func detach(view: KinescopePlayerView) {
@@ -73,6 +77,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
         removePlaybackTimeObserver()
         removePlayerStatusObserver()
+        removePlayerTimeControlStatusObserver()
     }
 
     public func select(quality: KinescopeVideoQuality) {
@@ -106,7 +111,7 @@ private extension KinescopeVideoPlayer {
             },
             onError: { [weak self] error in
                 self?.view?.stopLoader()
-                debugPrint(error)
+                Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.network)
             }
         )
     }
@@ -171,6 +176,9 @@ private extension KinescopeVideoPlayer {
             options: [.new, .old],
             changeHandler: { [weak self] item, _ in
                 self?.view?.change(status: item.status)
+
+                Kinescope.shared.logger?.log(message: "AVPlayer.Status – \(item.status)",
+                                             level: KinescopeLoggerLevel.player)
             }
         )
     }
@@ -180,6 +188,37 @@ private extension KinescopeVideoPlayer {
         self.statusObserver = nil
     }
 
+    func addPlayerTimeControlStatusObserver() {
+        self.timeControlStatusObserver = self.strategy.player.observe(
+            \.timeControlStatus,
+            options: [.new, .old],
+            changeHandler: { [weak self] item, _ in
+                self?.view?.change(timeControlStatus: item.timeControlStatus)
+
+                Kinescope.shared.logger?.log(
+                    message: "AVPlayer.TimeControlStatus – \(item.timeControlStatus)",
+                    level: KinescopeLoggerLevel.player
+                )
+            }
+        )
+    }
+
+    func removePlayerTimeControlStatusObserver() {
+        self.timeControlStatusObserver?.invalidate()
+        self.timeControlStatusObserver = nil
+    }
+
+    func seek(to seconds: TimeInterval) {
+        let time = CMTime(seconds: seconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+
+        Kinescope.shared.logger?.log(message: "timeline changed to \(seconds) seconds",
+                                     level: KinescopeLoggerLevel.player)
+
+        isSeeking = true
+        strategy.player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] _ in
+            self?.isSeeking = false
+        }
+    }
 }
 
 // MARK: - PlayerOverlayViewDelegate
@@ -203,20 +242,49 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             return
         }
 
-        Kinescope.shared.logger?.log(message: "timeline changed to \(position)", level: KinescopeLoggerLevel.player)
+        Kinescope.shared.logger?.log(message: "timeline changed to \(position)",
+                                     level: KinescopeLoggerLevel.player)
 
         let seconds = position * duration
-        let time = CMTime(seconds: seconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+        seek(to: seconds)
+    }
 
-        Kinescope.shared.logger?.log(message: "timeline changed to \(seconds) seconds", level: KinescopeLoggerLevel.player)
+    func didSelect(option: KinescopePlayerOption) {
+    }
 
-        isSeeking = true
-        strategy.player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] _ in
-            self?.isSeeking = false
+    func didFastForward() {
+        let currentTime = strategy.player.currentTime().seconds
+
+        guard
+            let duration = strategy.player.currentItem?.duration.seconds
+        else {
+            return
+        }
+
+        Kinescope.shared.logger?.log(message: "fast forward +15s", level: KinescopeLoggerLevel.player)
+
+        let seconds = currentTime + 15.0
+        if seconds < duration {
+            seek(to: seconds)
+        } else {
+            seek(to: duration)
         }
     }
 
-    func presentFullscreen(from view: KinescopePlayerView) {
+    func didFastBackward() {
+        let currentTime = strategy.player.currentTime().seconds
+
+        Kinescope.shared.logger?.log(message: "fast backward -15s", level: KinescopeLoggerLevel.player)
+
+        let seconds = currentTime - 15.0
+        if seconds > .zero {
+            seek(to: seconds)
+        } else {
+            seek(to: .zero)
+        }
+    }
+
+    func didPresentFullscreen(from view: KinescopePlayerView) {
         let rootVC = UIApplication.shared.keyWindow?.rootViewController
 
         if rootVC?.presentedViewController is KinescopeFullscreenViewController {
@@ -241,6 +309,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             playerVC.modalPresentationStyle = .overFullScreen
             rootVC?.present(playerVC, animated: true, completion: { [weak self] in
                 self?.play()
+                self?.view?.change(status: .readyToPlay)
             })
         }
     }
