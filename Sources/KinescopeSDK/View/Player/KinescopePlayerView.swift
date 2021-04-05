@@ -67,9 +67,18 @@ public class KinescopePlayerView: UIView {
         @unknown default:
             break
         }
+    }
 
-        Kinescope.shared.logger?.log(message: "AVPlayer.Status – \(status)",
-                                     level: KinescopeLoggerLevel.player)
+    func change(timeControlStatus: AVPlayer.TimeControlStatus) {
+        switch timeControlStatus {
+        case .playing:
+            overlay?.isHidden = false
+            overlay?.set(playing: true)
+        case .paused, .waitingToPlayAtSpecifiedRate:
+            overlay?.set(playing: false)
+        @unknown default:
+            break
+        }
     }
 }
 
@@ -166,6 +175,14 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
 
     func didPause() {
         delegate?.didPause()
+    }
+
+    func didFastForward() {
+        delegate?.didFastForward()
+    }
+
+    func didFastBackward() {
+        delegate?.didFastBackward()
     }
 }
 

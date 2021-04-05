@@ -8,6 +8,7 @@
 import UIKit
 
 protocol PlayerOverlayInput: VideoNameInput {
+    func set(playing: Bool)
 }
 
 class PlayerOverlayView: UIControl {
@@ -15,6 +16,8 @@ class PlayerOverlayView: UIControl {
     // MARK: - Properties
 
     let playPauseImageView = UIImageView()
+    let fastForwardImageView = UIImageView()
+    let fastBackwardImageView = UIImageView()
     let nameView: VideoNameView
     private let contentView = UIView()
     private let config: KinescopePlayerOverlayConfiguration
@@ -52,22 +55,6 @@ class PlayerOverlayView: UIControl {
             isSelected ? setSelectedState() : setDeselectedState()
         }
     }
-
-    override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
-        super.endTracking(touch, with: event)
-
-        guard
-            let location = touch?.location(in: contentView)
-        else {
-            return
-        }
-
-        if isSelected && playPauseImageView.frame.contains(location) {
-            playPauseAction()
-        } else {
-            isSelected.toggle()
-        }
-    }
 }
 
 // MARK: - PlayerOverlayInput
@@ -76,6 +63,11 @@ extension PlayerOverlayView: PlayerOverlayInput {
     func set(title: String, subtitle: String) {
         nameView.set(title: title, subtitle: subtitle)
     }
+
+    func set(playing: Bool) {
+        self.isPlaying = playing
+        playPauseImageView.image = playing ? config.pauseImage : config.playImage
+    }
 }
 
 // MARK: - Private
@@ -83,8 +75,8 @@ extension PlayerOverlayView: PlayerOverlayInput {
 private extension PlayerOverlayView {
     func setupInitialState() {
         isSelected = true
-        isPlaying = true
 
+        addGestureRecognizers()
         configureContentView()
     }
 
@@ -93,19 +85,50 @@ private extension PlayerOverlayView {
         contentView.backgroundColor = config.backgroundColor
         addSubview(contentView)
         stretch(view: contentView)
-        configureImageView()
+
         configureNameView()
+        configurePlayPauseImageView()
+        configureFastForwardImageView()
+        configureFastBackwardImageView()
     }
 
-    func configureImageView() {
+    func configurePlayPauseImageView() {
         playPauseImageView.image = isPlaying ? config.pauseImage : config.playImage
         contentView.addSubview(playPauseImageView)
         contentView.centerChild(view: playPauseImageView)
     }
 
+    func configureFastForwardImageView() {
+        fastForwardImageView.image = config.fastForwardImage
+        fastForwardImageView.alpha = .zero
+        addSubview(fastForwardImageView)
+        rightCenterChild(view: fastForwardImageView)
+    }
+
+    func configureFastBackwardImageView() {
+        fastBackwardImageView.image = config.fastBackwardImage
+        fastBackwardImageView.alpha = .zero
+        addSubview(fastBackwardImageView)
+        leftCenterChild(view: fastBackwardImageView)
+    }
+
     func configureNameView() {
         contentView.addSubview(nameView)
         contentView.topChild(view: nameView)
+    }
+
+    func addGestureRecognizers() {
+        let singleTapGestureRecognizer = UITapGestureRecognizer(target: self,
+                                                             action: #selector(singleTapAction))
+        singleTapGestureRecognizer.numberOfTapsRequired = 1
+        addGestureRecognizer(singleTapGestureRecognizer)
+
+        let doubleTapGestureRecognizer = UITapGestureRecognizer(target: self,
+                                                             action: #selector(doubleTapAction))
+        doubleTapGestureRecognizer.numberOfTapsRequired = 2
+        addGestureRecognizer(doubleTapGestureRecognizer)
+
+        singleTapGestureRecognizer.require(toFail: doubleTapGestureRecognizer)
     }
 
     func setSelectedState() {
@@ -148,5 +171,62 @@ private extension PlayerOverlayView {
         isEndPlaying = true
         isPlaying = false
         playPauseImageView.image = config.playImage
+    }
+
+    @objc
+    func singleTapAction(recognizer: UITapGestureRecognizer) {
+        let location = recognizer.location(in: contentView)
+
+        if isSelected && playPauseImageView.frame.contains(location) {
+            playPauseAction()
+        } else {
+            isSelected.toggle()
+        }
+    }
+
+    @objc
+    func doubleTapAction(recognizer: UITapGestureRecognizer) {
+        let location = recognizer.location(in: self)
+        let rightFrame = CGRect(x: contentView.center.x + 24.0,
+                                y: .zero,
+                                width: contentView.bounds.width - contentView.center.x + 24.0,
+                                height: contentView.bounds.height)
+
+        let leftFrame = CGRect(x: .zero,
+                               y: .zero,
+                               width: contentView.bounds.width - contentView.center.x - 24.0,
+                               height: contentView.bounds.height)
+
+        if rightFrame.contains(location) {
+            delegate?.didFastForward()
+
+            fastForwardImageView.alpha = 1.0
+            UIView.animate(
+                withDuration: 0.3,
+                animations: {
+                    self.fastForwardImageView.transform = .init(scaleX: 2.0, y: 2.0)
+                    self.fastForwardImageView.alpha = .zero
+                },
+                completion: { _ in
+                    self.fastForwardImageView.alpha = .zero
+                    self.fastForwardImageView.transform = .identity
+                }
+            )
+        } else if leftFrame.contains(location) {
+            delegate?.didFastBackward()
+
+            fastBackwardImageView.alpha = 1.0
+            UIView.animate(
+                withDuration: 0.3,
+                animations: {
+                    self.fastBackwardImageView.transform = .init(scaleX: 2.0, y: 2.0)
+                    self.fastBackwardImageView.alpha = .zero
+                },
+                completion: { _ in
+                    self.fastBackwardImageView.alpha = .zero
+                    self.fastBackwardImageView.transform = .identity
+                }
+            )
+        }
     }
 }
