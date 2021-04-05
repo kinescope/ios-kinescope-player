@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol SideMenuDelegate: class {
+    func sideMenuWillBeDismissed(_ sideMenu: SideMenu, withRoot: Bool)
+}
+
 final class SideMenu: UIView {
 
     struct Model {
@@ -26,6 +30,8 @@ final class SideMenu: UIView {
     private let config: KinescopeSideMenuConfiguration
     private let model: Model
 
+    weak var delegate: SideMenuDelegate?
+
     // MARK: - Init
 
     init(config: KinescopeSideMenuConfiguration, model: Model) {
@@ -37,6 +43,20 @@ final class SideMenu: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+}
+
+// MARK: - SideMenuBarDelegate
+
+extension SideMenu: SideMenuBarDelegate {
+
+    func closeTapped() {
+        delegate?.sideMenuWillBeDismissed(self, withRoot: true)
+    }
+
+    func backTapped() {
+        delegate?.sideMenuWillBeDismissed(self, withRoot: true)
     }
 
 }
@@ -73,6 +93,8 @@ private extension SideMenu {
 
         addSubview(bar)
         topChild(view: bar, padding: 0)
+
+        bar.delegate = self
 
         self.bar = bar
     }

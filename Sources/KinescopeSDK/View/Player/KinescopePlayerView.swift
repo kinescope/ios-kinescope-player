@@ -177,6 +177,7 @@ extension KinescopePlayerView: PlayerControlOutput {
         case .settings:
             // Add localisation?
             let sideMenu = SideMenu(config: config.sideMenu, model: .init(title: "Settings", isRoot: true, items: []))
+            sideMenu.delegate = self
             sideMenuCoordinator.present(view: sideMenu, in: self, animated: true)
         default:
             break
@@ -185,6 +186,17 @@ extension KinescopePlayerView: PlayerControlOutput {
 
     func onTimelinePositionChanged(to position: CGFloat) {
         delegate?.didSeek(to: Double(position))
+    }
+
+}
+
+// MARK: - SideMenuDelegate
+
+extension KinescopePlayerView: SideMenuDelegate {
+
+    func sideMenuWillBeDismissed(_ sideMenu: SideMenu, withRoot: Bool) {
+        /// Hide root sideMenu if `withRoot`  setted to `true`
+        sideMenuCoordinator.dismiss(view: sideMenu, from: self, animated: true)
     }
 
 }

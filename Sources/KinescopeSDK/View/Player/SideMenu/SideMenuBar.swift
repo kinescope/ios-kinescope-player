@@ -8,6 +8,11 @@
 
 import UIKit
 
+protocol SideMenuBarDelegate: class {
+    func closeTapped()
+    func backTapped()
+}
+
 final class SideMenuBar: UIView {
 
     struct Model {
@@ -26,6 +31,8 @@ final class SideMenuBar: UIView {
     private let config: KinescopeSideMenuBarConfiguration
     private let model: Model
 
+    weak var delegate: SideMenuBarDelegate?
+
     // MARK: - Init
 
     init(config: KinescopeSideMenuBarConfiguration, model: Model) {
@@ -41,6 +48,22 @@ final class SideMenuBar: UIView {
 
     override var intrinsicContentSize: CGSize {
         .init(width: .greatestFiniteMagnitude, height: config.preferedHeight)
+    }
+
+}
+
+// MARK: - Actions
+
+private extension SideMenuBar {
+
+    @objc
+    func onCloseTapped() {
+        delegate?.closeTapped()
+    }
+
+    @objc
+    func onBackTapped() {
+        delegate?.backTapped()
     }
 
 }
@@ -97,6 +120,8 @@ private extension SideMenuBar {
         addSubview(button)
         button.squareSize(with: config.iconSize)
 
+        button.addTarget(nil, action: #selector(onCloseTapped), for: .touchUpInside)
+
         self.closeButton = button
     }
 
@@ -106,6 +131,8 @@ private extension SideMenuBar {
 
         addSubview(button)
         button.squareSize(with: config.iconSize)
+
+        button.addTarget(nil, action: #selector(onBackTapped), for: .touchUpInside)
 
         self.backButton = button
     }
