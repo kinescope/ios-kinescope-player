@@ -8,12 +8,12 @@
 
 import UIKit
 
-final class SideMenu<Item>: UIView {
+final class SideMenu: UIView {
 
     struct Model {
         let title: String
         let isRoot: Bool
-        let items: [Item]
+        let items: [Any]
     }
 
     // MARK: - Views
