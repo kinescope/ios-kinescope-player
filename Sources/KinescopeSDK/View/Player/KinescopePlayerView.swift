@@ -19,6 +19,11 @@ public class KinescopePlayerView: UIView {
     private(set) weak var overlay: PlayerOverlayView?
     private(set) var progressView: KinescopeActivityIndicator!
 
+    private var config: KinescopePlayerViewConfiguration!
+
+    /// One coordination for phones and other for pads
+    private let sideMenuCoordinator = SideMenuSlideCoordinator()
+
     // MARK: - Internal Properties
 
     weak var delegate: KinescopePlayerViewDelegate?
@@ -85,6 +90,8 @@ public extension KinescopePlayerView {
     ///
     /// - parameter config: Configuration of player
     func setLayout(with config: KinescopePlayerViewConfiguration) {
+
+        self.config = config
 
         clearSubviews()
 
@@ -186,6 +193,18 @@ extension KinescopePlayerView: PlayerControlOutput {
         switch option {
         case .fullscreen:
             delegate?.didPresentFullscreen(from: self)
+        case .settings:
+            // Add localisation?
+            let model = SideMenu.Model(title: "Settings",
+                                       isRoot: true,
+                                       items: [
+                                         .disclosure(title: "Playback speed", value: nil),
+                                         .disclosure(title: "Subtitles", value: nil),
+                                         .disclosure(title: "Quality", value: .init(string: "Auto"))
+                                       ])
+            let sideMenu = SideMenu(config: config.sideMenu, model: model)
+            sideMenu.delegate = self
+            sideMenuCoordinator.present(view: sideMenu, in: self, animated: true)
         default:
             break
         }
@@ -193,6 +212,39 @@ extension KinescopePlayerView: PlayerControlOutput {
 
     func onTimelinePositionChanged(to position: CGFloat) {
         delegate?.didSeek(to: Double(position))
+    }
+
+}
+
+// MARK: - SideMenuDelegate
+
+extension KinescopePlayerView: SideMenuDelegate {
+
+    func sideMenuWillBeDismissed(_ sideMenu: SideMenu, withRoot: Bool) {
+
+        if withRoot {
+            let sideMenus = subviews.compactMap { $0 as? SideMenu }
+            sideMenus.forEach { [weak self] sideMenu in
+                guard let parentView = self else {
+                    return
+                }
+                self?.sideMenuCoordinator.dismiss(view: sideMenu, from: parentView, animated: true)
+            }
+        } else {
+            sideMenuCoordinator.dismiss(view: sideMenu, from: self, animated: true)
+        }
+    }
+
+    func sideMenuDidSelect(item: SideMenu.Item) {
+        switch item {
+        case .disclosure(let title, _):
+            let model = SideMenu.Model(title: title,
+                                       isRoot: false,
+                                       items: [])
+            let sideMenu = SideMenu(config: config.sideMenu, model: model)
+            sideMenu.delegate = self
+            sideMenuCoordinator.present(view: sideMenu, in: self, animated: true)
+        }
     }
 
 }
