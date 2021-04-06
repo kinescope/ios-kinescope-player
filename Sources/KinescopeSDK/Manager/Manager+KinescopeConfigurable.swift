@@ -11,7 +11,7 @@ extension Manager: KinescopeConfigurable {
 
     func setConfig(_ config: KinescopeConfig) {
         self.config = config
-        self.downloader = VideoDownloader(apiKey: config.apiKey)
+        self.downloader = VideoDownloader(apiKey: config.apiKey, videoPathsStorage: VideoPathsUDStorage())
         self.inspector = Inspector(videosService: VideosNetworkService(transport: Transport(),
                                                                        config: config))
     }

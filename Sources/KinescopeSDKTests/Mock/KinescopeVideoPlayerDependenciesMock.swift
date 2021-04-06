@@ -12,6 +12,7 @@ struct KinescopeVideoPlayerDependenciesMock: KinescopePlayerDependencies {
     // MARK: - Mock Properties
 
     let inspectorMock: KinescopeInspectableMock
+    var downloader: KinescopeDownloadableMock
     let strategyMock: PlayingStrategyMock
 
     // MARK: - Mock Implementation

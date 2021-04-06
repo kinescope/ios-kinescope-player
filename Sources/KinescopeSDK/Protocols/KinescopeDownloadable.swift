@@ -13,6 +13,15 @@ public protocol KinescopeDownloadable: class {
     /// - parameter assetId: Asset id of concrete video quality
     func isDownloaded(assetId: String) -> Bool
 
+    /// Returns list of downloaded assets Id's
+    func downlaodedAssetsList() -> [String]
+
+    /// Deletes downloaded asset from disk
+    ///
+    /// - parameter assetId: Asset id of concrete video quality
+    @discardableResult
+    func delete(assetId: String) -> Bool
+
     /// Request downloadable link for asset and start downloading
     ///
     /// - parameter assetId: Asset id of concrete video quality
@@ -32,5 +41,13 @@ public protocol KinescopeDownloadable: class {
     ///
     /// - parameter delegate: Instance of delegate 
     func remove(delegate: KinescopeDownloadableDelegate)
+
+}
+
+public extension KinescopeDownloadable {
+
+    func isDownloaded(assetId: String) -> Bool {
+        return downlaodedAssetsList().contains(assetId)
+    }
 
 }
