@@ -12,8 +12,9 @@ final class CheckmarkCell: UITableViewCell {
 
     // MARK: - Properties
 
-    private weak var titleLabel: UILabel!
-    private weak var iconView: UIImageView!
+    private weak var titleLabel: UILabel?
+    private weak var iconView: UIImageView?
+    private var model: Model?
 
     // MARK: - Lifecycle
 
@@ -26,12 +27,29 @@ final class CheckmarkCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        super.setHighlighted(highlighted, animated: animated)
+        guard
+            let highlightedColor = model?.config.highlightedColor
+        else {
+            return
+        }
+
+        let color = highlighted ? highlightedColor : .clear
+
+        UIView.animate(withDuration: 0.3) {
+            self.backgroundColor = color
+        }
+    }
+
     // MARK: - Public Methods
 
     func configure(with model: Model) {
-        iconView.isHidden = !model.selected
+        self.model = model
 
-        titleLabel.attributedText = model.title.string
+        iconView?.isHidden = !model.selected
+
+        titleLabel?.attributedText = model.title.string
             .attributedStringWithAssetIconIfNeeded(attributes: [
                 .font: model.config.titleFont,
                 .foregroundColor: model.config.titleColor
@@ -43,6 +61,7 @@ final class CheckmarkCell: UITableViewCell {
 
 private extension CheckmarkCell {
     func setupInitialState() {
+        selectionStyle = .none
         backgroundColor = .clear
         setupLayout()
     }
@@ -56,7 +75,7 @@ private extension CheckmarkCell {
 
         addSubview(titleLabel)
         addSubview(iconView)
-        
+
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8.0),
             titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8.0),
