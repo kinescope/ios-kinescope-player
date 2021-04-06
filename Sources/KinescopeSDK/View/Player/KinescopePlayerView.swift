@@ -29,6 +29,9 @@ public class KinescopePlayerView: UIView {
     weak var delegate: KinescopePlayerViewDelegate?
     public private(set) var previewView: UIImageView = UIImageView()
 
+    // FIXME: Add localization
+    private var selectedQuality = NSAttributedString(string: "Auto")
+
     // MARK: - Public Properties
 
     // MARK: - Lifecycle
@@ -164,6 +167,49 @@ private extension KinescopePlayerView {
         self.overlay = overlay
     }
 
+    func handleDisclosureActions(for title: String) {
+        let model: SideMenu.Model
+        // FIXME: Add configs for subtitle and playback speed
+        switch SideMenu.Settings(rawValue: title) {
+        case .playbackSpeed:
+            model = .init(title: title, isRoot: false, items: [])
+        case .subtitles:
+            model = .init(title: title, isRoot: false, items: [])
+        case .quality:
+            model = qualitySideMenuModel(with: title)
+        case .none:
+            model = .init(title: title, isRoot: false, items: [])
+        }
+
+        let sideMenu = SideMenu(config: config.sideMenu, model: model)
+        sideMenu.delegate = self
+        sideMenuCoordinator.present(view: sideMenu, in: self, animated: true)
+    }
+
+    func qualitySideMenuModel(with title: String) -> SideMenu.Model {
+        let qualities = delegate?.didShowQuality() ?? []
+        var items = qualities.compactMap { quality -> SideMenu.Item in
+            let selected = self.selectedQuality.string == quality
+            return .checkmark(title: .init(string: quality), selected: selected)
+        }
+
+        // FIXME: Add localization
+        let autoTitle = NSAttributedString(string: "Auto")
+        let selected = selectedQuality == autoTitle
+        items.insert(.checkmark(title: autoTitle, selected: selected), at: 0)
+        return .init(title: title, isRoot: false, items: items)
+    }
+
+    func handleCheckmarkActions(for title: NSAttributedString, sideMenu: SideMenu) {
+        // FIXME: Add configs for another logic
+        handleQualityCheckmarkAction(for: title, sideMenu: sideMenu)
+    }
+
+    func handleQualityCheckmarkAction(for title: NSAttributedString, sideMenu: SideMenu) {
+        delegate?.didSelect(quality: title.string)
+        sideMenuWillBeDismissed(sideMenu, withRoot: true)
+        selectedQuality = title
+    }
 }
 
 // MARK: - PlayerOverlayViewDelegate
@@ -194,13 +240,16 @@ extension KinescopePlayerView: PlayerControlOutput {
         case .fullscreen:
             delegate?.didPresentFullscreen(from: self)
         case .settings:
-            // Add localisation?
-            let model = SideMenu.Model(title: "Settings",
+            // FIXME: Add localization
+            let model = SideMenu.Model(title: SideMenu.Settings.title,
                                        isRoot: true,
                                        items: [
-                                         .disclosure(title: "Playback speed", value: nil),
-                                         .disclosure(title: "Subtitles", value: nil),
-                                         .disclosure(title: "Quality", value: .init(string: "Auto"))
+                                        .disclosure(title: SideMenu.Settings.playbackSpeed.rawValue,
+                                                    value: nil),
+                                        .disclosure(title: SideMenu.Settings.subtitles.rawValue,
+                                                    value: nil),
+                                        .disclosure(title: SideMenu.Settings.quality.rawValue,
+                                                    value: selectedQuality)
                                        ])
             let sideMenu = SideMenu(config: config.sideMenu, model: model)
             sideMenu.delegate = self
@@ -235,15 +284,12 @@ extension KinescopePlayerView: SideMenuDelegate {
         }
     }
 
-    func sideMenuDidSelect(item: SideMenu.Item) {
+    func sideMenuDidSelect(item: SideMenu.Item, sideMenu: SideMenu) {
         switch item {
         case .disclosure(let title, _):
-            let model = SideMenu.Model(title: title,
-                                       isRoot: false,
-                                       items: [])
-            let sideMenu = SideMenu(config: config.sideMenu, model: model)
-            sideMenu.delegate = self
-            sideMenuCoordinator.present(view: sideMenu, in: self, animated: true)
+            handleDisclosureActions(for: title)
+        case .checkmark(let title, _):
+            handleCheckmarkActions(for: title, sideMenu: sideMenu)
         }
     }
 

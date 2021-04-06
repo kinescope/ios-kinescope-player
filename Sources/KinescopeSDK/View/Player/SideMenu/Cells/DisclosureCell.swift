@@ -21,6 +21,7 @@ final class DisclosureCell: UITableViewCell {
     private weak var titleLabel: UILabel!
     private weak var valueLabel: UILabel!
     private weak var iconView: UIImageView!
+    private var model: Model?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -31,10 +32,25 @@ final class DisclosureCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        super.setHighlighted(highlighted, animated: animated)
+        guard
+            let highlightedColor = model?.config.highlightedColor
+        else {
+            return
+        }
+
+        let color = highlighted ? highlightedColor : .clear
+
+        UIView.animate(withDuration: 0.3) {
+            self.backgroundColor = color
+        }
+    }
+
     // MARK: - Methods
 
     func configure(with model: Model) {
-
+        self.model = model
         setupAppearance(with: model.config)
 
         titleLabel.text = model.title
@@ -48,7 +64,7 @@ final class DisclosureCell: UITableViewCell {
 private extension DisclosureCell {
 
     func setupInitialState() {
-
+        selectionStyle = .none
         backgroundColor = .clear
 
         setupLayout()
