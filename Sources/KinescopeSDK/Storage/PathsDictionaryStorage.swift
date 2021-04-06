@@ -38,7 +38,7 @@ class PathsUDStorage {
 
     func fetchIds() -> [String] {
         guard let dict = getDict() else { return [] }
-        return Array(dict.values)
+        return Array(dict.keys)
     }
 
     func deleteUrl(by id: String) -> String? {

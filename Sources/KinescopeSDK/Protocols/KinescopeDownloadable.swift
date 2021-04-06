@@ -22,6 +22,9 @@ public protocol KinescopeDownloadable: class {
     @discardableResult
     func delete(assetId: String) -> Bool
 
+    /// Deletes all downloaded assets from disk
+    func clear()
+
     /// Request downloadable link for asset and start downloading
     ///
     /// - parameter assetId: Asset id of concrete video quality

@@ -47,6 +47,12 @@ class VideoDownloader: KinescopeDownloadable {
         }
     }
 
+    func clear() {
+        for assetId in downlaodedAssetsList() {
+            delete(assetId: assetId)
+        }
+    }
+
     func enqeueDownload(assetId: String) {
         preconditionFailure("Implement")
     }
