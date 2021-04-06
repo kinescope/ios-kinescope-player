@@ -6,5 +6,6 @@ protocol KinescopePlayerViewDelegate: class {
     func didFastBackward()
     func didPresentFullscreen(from view: KinescopePlayerView)
     func didShowQuality() -> [String]
+    func didShowAttachments() -> [SideMenu.Item]
     func didSelect(quality: String)
 }

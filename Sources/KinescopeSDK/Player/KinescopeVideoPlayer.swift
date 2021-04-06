@@ -235,6 +235,10 @@ private extension KinescopeVideoPlayer {
 // MARK: - PlayerOverlayViewDelegate
 
 extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
+    func didShowAttachments() -> [SideMenu.Item] {
+        []
+    }
+
     func didPlay(videoEnded: Bool) {
         if videoEnded {
             self.strategy.player.seek(to: .zero)

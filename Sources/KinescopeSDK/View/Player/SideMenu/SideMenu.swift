@@ -27,6 +27,7 @@ final class SideMenu: UIView {
     enum Item {
         case disclosure(title: String, value: NSAttributedString?)
         case checkmark(title: NSAttributedString, selected: Bool = false)
+        case description(title: String, value: NSAttributedString?)
     }
 
     struct Model {
@@ -83,6 +84,13 @@ extension SideMenu: UITableViewDataSource {
             (cell as? CheckmarkCell)?.configure(with: .init(title: title,
                                                             selected: selected,
                                                             config: config.item))
+            return cell
+        case .description(let title, let value):
+            let cell = tableView.dequeueReusableCell(withIdentifier: CheckmarkCell.description(),
+                                                     for: indexPath)
+//            (cell as? CheckmarkCell)?.configure(with: .init(title: "",
+//                                                            selected: true, // TODO
+//                                                            config: config.item))
             return cell
         }
     }
