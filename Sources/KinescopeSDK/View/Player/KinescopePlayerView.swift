@@ -83,6 +83,11 @@ public class KinescopePlayerView: UIView {
             break
         }
     }
+
+    func add(options: [KinescopePlayerOption]) {
+        controlPanel?.add(options: options)
+    }
+
 }
 
 // MARK: - Public
@@ -210,6 +215,13 @@ private extension KinescopePlayerView {
         sideMenuWillBeDismissed(sideMenu, withRoot: true)
         selectedQuality = title
     }
+
+    func presentSideMenu(model: SideMenu.Model) {
+        let sideMenu = SideMenu(config: config.sideMenu, model: model)
+        sideMenu.delegate = self
+        sideMenuCoordinator.present(view: sideMenu, in: self, animated: true)
+    }
+
 }
 
 // MARK: - PlayerOverlayViewDelegate
@@ -251,9 +263,12 @@ extension KinescopePlayerView: PlayerControlOutput {
                                         .disclosure(title: SideMenu.Settings.quality.rawValue,
                                                     value: selectedQuality)
                                        ])
-            let sideMenu = SideMenu(config: config.sideMenu, model: model)
-            sideMenu.delegate = self
-            sideMenuCoordinator.present(view: sideMenu, in: self, animated: true)
+            presentSideMenu(model: model)
+        case .attachments:
+            let model = SideMenu.Model(title: "Attachments",
+                                       isRoot: true,
+                                       items: [])
+            presentSideMenu(model: model)
         default:
             break
         }

@@ -13,6 +13,11 @@ protocol PlayerControlOptionsInput {
     ///
     /// - parameter options: Set of option
     func set(options: [KinescopePlayerOption])
+
+    /// Add new options to existing ones
+    ///
+    /// - parameter options: Set of option
+    func add(options: [KinescopePlayerOption])
 }
 
 protocol PlayerControlOptionsOutput: class {
@@ -64,7 +69,11 @@ extension PlayerControlOptionsView: PlayerControlOptionsInput {
         self.isExpanded = false
 
         fillStack(with: options, expanded: isExpanded)
+    }
 
+    func add(options: [KinescopePlayerOption]) {
+        self.options.insert(contentsOf: options, at: 0)
+        fillStack(with: self.options, expanded: self.isExpanded)
     }
 
 }

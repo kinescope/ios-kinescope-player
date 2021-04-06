@@ -107,6 +107,7 @@ private extension KinescopeVideoPlayer {
                 self?.video = video
                 self?.select(quality: .auto(hlsLink: video.hlsLink))
                 self?.view?.overlay?.set(title: video.title, subtitle: video.description)
+                self?.view?.add(options: self?.makePlayerOptions(from: video) ?? [])
                 self?.play()
             },
             onError: { [weak self] error in
@@ -114,6 +115,16 @@ private extension KinescopeVideoPlayer {
                 Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.network)
             }
         )
+    }
+
+    func makePlayerOptions(from video: KinescopeVideo) -> [KinescopePlayerOption] {
+        var options: [KinescopePlayerOption] = []
+
+        if !video.additionalMaterials.isEmpty {
+            options.append(.attachments)
+        }
+
+        return options
     }
 
     func observePlaybackTime() {
