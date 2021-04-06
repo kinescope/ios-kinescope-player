@@ -21,6 +21,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
     private var video: KinescopeVideo?
     private let config: KinescopePlayerConfig
+    private var options = [KinescopePlayerOption]()
 
     // MARK: - Lifecycle
 
@@ -64,6 +65,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         view.delegate = self
 
         self.view = view
+        view.set(options: options)
 
         observePlaybackTime()
         addPlayerStatusObserver()
@@ -107,7 +109,7 @@ private extension KinescopeVideoPlayer {
                 self?.video = video
                 self?.select(quality: .auto(hlsLink: video.hlsLink))
                 self?.view?.overlay?.set(title: video.title, subtitle: video.description)
-                self?.view?.add(options: self?.makePlayerOptions(from: video) ?? [])
+                self?.view?.set(options: self?.makePlayerOptions(from: video) ?? [])
                 self?.play()
             },
             onError: { [weak self] error in
@@ -118,12 +120,13 @@ private extension KinescopeVideoPlayer {
     }
 
     func makePlayerOptions(from video: KinescopeVideo) -> [KinescopePlayerOption] {
-        var options: [KinescopePlayerOption] = []
+        var options: [KinescopePlayerOption] = [.settings, .fullscreen, .more]
 
         if !video.additionalMaterials.isEmpty {
-            options.append(.attachments)
+            options.insert(.attachments, at: 0)
         }
 
+        self.options = options
         return options
     }
 

@@ -65,10 +65,6 @@ extension PlayerControlView: PlayerControlInput {
         optionsMenu.set(options: options)
     }
 
-    func add(options: [KinescopePlayerOption]) {
-        optionsMenu.add(options: options)
-    }
-
 }
 
 // MARK: - PlayerControlOptionsOutput

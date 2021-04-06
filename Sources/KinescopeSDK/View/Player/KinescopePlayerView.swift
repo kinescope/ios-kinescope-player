@@ -84,8 +84,8 @@ public class KinescopePlayerView: UIView {
         }
     }
 
-    func add(options: [KinescopePlayerOption]) {
-        controlPanel?.add(options: options)
+    func set(options: [KinescopePlayerOption]) {
+        controlPanel?.set(options: options)
     }
 
 }
@@ -156,8 +156,6 @@ private extension KinescopePlayerView {
         let controlPanel = PlayerControlView(config: config)
         addSubview(controlPanel)
         bottomChild(view: controlPanel)
-
-        controlPanel.set(options: [.settings, .fullscreen, .more])
 
         self.controlPanel = controlPanel
         controlPanel.output = self
