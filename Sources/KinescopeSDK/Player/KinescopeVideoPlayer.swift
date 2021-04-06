@@ -120,7 +120,7 @@ private extension KinescopeVideoPlayer {
     }
 
     func makePlayerOptions(from video: KinescopeVideo) -> [KinescopePlayerOption] {
-        var options: [KinescopePlayerOption] = [.settings, .fullscreen, .more]
+        var options: [KinescopePlayerOption] = [.download, .settings, .fullscreen, .more]
 
         if !video.additionalMaterials.isEmpty {
             options.insert(.attachments, at: 0)

@@ -16,5 +16,7 @@ public enum KinescopePlayerOption: String {
     case settings
     /// Option to open attachments list in side menu
     case attachments
+    /// Option to open download options list in side menu
+    case download
 
 }

@@ -262,6 +262,11 @@ extension KinescopePlayerView: PlayerControlOutput {
                                                     value: selectedQuality)
                                        ])
             presentSideMenu(model: model)
+        case .download:
+            let model = SideMenu.Model(title: "Download",
+                                       isRoot: true,
+                                       items: [])
+            presentSideMenu(model: model)
         case .attachments:
             let model = SideMenu.Model(title: "Attachments",
                                        isRoot: true,
