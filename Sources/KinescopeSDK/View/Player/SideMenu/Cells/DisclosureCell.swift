@@ -34,7 +34,11 @@ final class DisclosureCell: UITableViewCell {
 
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
-        guard let highlightedColor = model?.config.highlightedColor else { return }
+        guard
+            let highlightedColor = model?.config.highlightedColor
+        else {
+            return
+        }
 
         let color = highlighted ? highlightedColor : .clear
 
