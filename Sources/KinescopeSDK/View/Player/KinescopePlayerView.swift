@@ -83,6 +83,13 @@ public class KinescopePlayerView: UIView {
             break
         }
     }
+
+    func change(quality: String) {
+        let color = config.sideMenu.item.valueColor
+        let font = config.sideMenu.item.valueFont
+        let attributes: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: color]
+        selectedQuality = quality.attributedStringWithAssetIconIfNeeded(attributes: attributes)
+    }
 }
 
 // MARK: - Public
@@ -273,7 +280,7 @@ extension KinescopePlayerView: SideMenuDelegate {
         case .checkmark(let title, _):
             delegate?.didSelect(quality: title.string)
             sideMenuWillBeDismissed(sideMenu, withRoot: true)
-            selectedQuality = title
+            change(quality: title.string)
         }
     }
 
