@@ -15,7 +15,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private var timeObserver: Any?
     private var statusObserver: NSKeyValueObservation?
     private var timeControlStatusObserver: NSKeyValueObservation?
-    private var presentationSizeObserver: NSKeyValueObservation?
+    private var tracksObserver: NSKeyValueObservation?
 
     private var isSeeking = false
     private weak var miniView: KinescopePlayerView?
@@ -34,7 +34,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         self.removePlaybackTimeObserver()
         self.removePlayerStatusObserver()
         self.removePlayerTimeControlStatusObserver()
-        self.removePresentationSizeObserver()
+        self.removeTracksObserver()
     }
 
     // MARK: - KinescopePlayer
@@ -58,7 +58,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     public func stop() {
         self.strategy.pause()
         self.strategy.unbind()
-        self.removePresentationSizeObserver()
+        self.removeTracksObserver()
     }
 
     public func attach(view: KinescopePlayerView) {
@@ -92,7 +92,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         // Restore here sek position
 
         strategy.bind(item: item)
-        addPresentationSizeObserver()
+        addTracksObserver()
     }
 
 }
@@ -212,8 +212,8 @@ private extension KinescopeVideoPlayer {
         self.timeControlStatusObserver = nil
     }
 
-    func addPresentationSizeObserver() {
-        self.presentationSizeObserver = self.strategy.player.currentItem?.observe(
+    func addTracksObserver() {
+        self.tracksObserver = self.strategy.player.currentItem?.observe(
             \.tracks,
             options: [.new, .old],
             changeHandler: { [weak self] item, _ in
@@ -251,9 +251,9 @@ private extension KinescopeVideoPlayer {
         )
     }
 
-    func removePresentationSizeObserver() {
-        self.presentationSizeObserver?.invalidate()
-        self.presentationSizeObserver = nil
+    func removeTracksObserver() {
+        self.tracksObserver?.invalidate()
+        self.tracksObserver = nil
     }
 
     func seek(to seconds: TimeInterval) {
