@@ -18,15 +18,17 @@ final class KinescopeVideoPlayerTests: XCTestCase {
 
     var player: KinescopeVideoPlayer?
     var inspector: KinescopeInspectableMock?
+    var downloader: KinescopeDownloadableMock?
     var strategy: PlayingStrategyMock?
 
     override func setUp() {
         super.setUp()
 
         let inspector = KinescopeInspectableMock()
+        let downloader = KinescopeDownloadableMock()
         let strategy = PlayingStrategyMock()
 
-        let dependencies = KinescopeVideoPlayerDependenciesMock(inspectorMock: inspector,
+        let dependencies = KinescopeVideoPlayerDependenciesMock(inspectorMock: inspector,    downloaderMock: downloader,
                                                                 strategyMock: strategy)
 
         self.player = KinescopeVideoPlayer(config: .init(videoId: Constants.videoId),

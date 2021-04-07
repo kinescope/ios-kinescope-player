@@ -12,13 +12,17 @@ struct KinescopeVideoPlayerDependenciesMock: KinescopePlayerDependencies {
     // MARK: - Mock Properties
 
     let inspectorMock: KinescopeInspectableMock
-    var downloader: KinescopeDownloadableMock
+    let downloaderMock: KinescopeDownloadableMock
     let strategyMock: PlayingStrategyMock
 
     // MARK: - Mock Implementation
 
     var inspector: KinescopeInspectable {
         inspectorMock
+    }
+
+    var downloader: KinescopeDownloadable {
+        downloaderMock
     }
 
     func provide(for config: KinescopePlayerConfig) -> PlayingStrategy {

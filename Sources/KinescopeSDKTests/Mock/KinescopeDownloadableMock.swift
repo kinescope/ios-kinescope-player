@@ -8,6 +8,18 @@
 @testable import KinescopeSDK
 
 final class KinescopeDownloadableMock: KinescopeDownloadable {
+
+    func downlaodedAssetsList() -> [String] {
+        return []
+    }
+
+    func delete(assetId: String) -> Bool {
+        return false
+    }
+
+    func clear() {
+    }
+
     func isDownloaded(assetId: String) -> Bool {
         return true
     }
