@@ -9,24 +9,17 @@ import AVFoundation
 
 protocol AssetServiceDelegate {
     func downloadProgress(assetId: String, progress: Double)
-    func downloadError(assetId: String, error: Error)
+    func downloadError(assetId: String, error: KinescopeDownloadError)
     func downloadComplete(assetId: String, path: String)
 }
 
 protocol AssetService {
-
     var delegate: AssetServiceDelegate? { get set }
-
     func enqeueDownload(assetId: String)
-
     func pauseDownload(assetId: String)
-
     func resumeDownload(assetId: String)
-
     func deqeueDownload(assetId: String)
-
     func restore()
-
 }
 
 class AssetNetworkService: NSObject, AssetService {
@@ -41,6 +34,7 @@ class AssetNetworkService: NSObject, AssetService {
 
     var delegate: AssetServiceDelegate?
     private let idsStorage = IDsUDStorage()
+    private let assetsService: AssetsService
     private lazy var session: AVAssetDownloadURLSession = {
         let configuration = URLSessionConfiguration.background(withIdentifier: Constants.downloadIdentifier)
 
@@ -52,6 +46,12 @@ class AssetNetworkService: NSObject, AssetService {
         return downloadSession
     }()
 
+    // MARK: - Lyfecycle
+
+    init(assetsService: AssetsService) {
+        self.assetsService = assetsService
+    }
+
 }
 
 // MARK: - AssetService
@@ -59,34 +59,50 @@ class AssetNetworkService: NSObject, AssetService {
 extension AssetNetworkService {
 
     func enqeueDownload(assetId: String) {
+        assetsService.getAssetLink(by: assetId) { [weak self] in
+            switch $0 {
+            case .success(let link):
+                self?.idsStorage.save(id: assetId, by: link.link)
+                self?.startTask(url: link.link)
+            case .failure(_):
+                self?.delegate?.downloadError(assetId: assetId, error: .notFound)
+            }
+        }
     }
 
     func pauseDownload(assetId: String) {
-        findTask(by: assetId) { task, _ in
+        findTask(by: assetId) { task in
             task.suspend()
+        } notFoundCompletion: { [weak self] in
+            self?.delegate?.downloadError(assetId: assetId, error: .notFound)
         }
     }
 
     func resumeDownload(assetId: String) {
-        findTask(by: assetId) { task, _ in
+        findTask(by: assetId) { task in
             task.resume()
+        } notFoundCompletion: { [weak self] in
+            self?.delegate?.downloadError(assetId: assetId, error: .notFound)
         }
     }
 
     func deqeueDownload(assetId: String) {
-        findTask(by: assetId) { [weak self] task, url in
+        findTask(by: assetId) { [weak self] task in
             task.cancel()
-            self?.idsStorage.deleteID(by: url)
+            self?.idsStorage.deleteID(by: task.urlAsset.url.absoluteString)
+        } notFoundCompletion: { [weak self] in
+            self?.delegate?.downloadError(assetId: assetId, error: .notFound)
         }
     }
 
     func restore() {
-        session.getAllTasks { tasksArray in
+        session.getAllTasks { [weak self] tasksArray in
             // For each task, restore the state in the app
             for task in tasksArray {
                 guard let downloadTask = task as? AVAssetDownloadTask else { break }
-                // Restore asset, progress indicators, state, etc...
-                let asset = downloadTask.urlAsset
+                if self?.idsStorage.contains(url: downloadTask.urlAsset.url.absoluteString) ?? false {
+                    downloadTask.resume()
+                }
             }
         }
     }
@@ -105,7 +121,7 @@ extension AssetNetworkService: AVAssetDownloadDelegate {
         else {
             return
         }
-        delegate?.downloadError(assetId: id, error: error)
+        delegate?.downloadError(assetId: id, error: .unknown(error))
     }
 
     func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, didFinishDownloadingTo location: URL) {
@@ -137,7 +153,7 @@ private extension AssetNetworkService {
         return idsStorage.readID(by: task.urlAsset.url.absoluteString)
     }
 
-    func findTask(by assetId: String, completion: @escaping (URLSessionTask, String) -> ()) {
+    func findTask(by assetId: String, completion: @escaping (AVAssetDownloadTask) -> (), notFoundCompletion: @escaping () -> ()) {
         session.getAllTasks { [weak self] tasksArray in
             for task in tasksArray {
                 guard let downloadTask = task as? AVAssetDownloadTask else { break }
@@ -145,11 +161,12 @@ private extension AssetNetworkService {
                     let id = self?.idsStorage.readID(by: downloadTask.urlAsset.url.absoluteString),
                     id == assetId
                 {
-                    completion(task, downloadTask.urlAsset.url.absoluteString)
+                    completion(downloadTask)
+                    return
                 }
             }
+            notFoundCompletion()
         }
-
     }
 
     func startTask(url urlString: String) {

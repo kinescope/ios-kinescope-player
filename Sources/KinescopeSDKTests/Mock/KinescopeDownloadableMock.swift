@@ -10,6 +10,15 @@ import Foundation
 
 final class KinescopeDownloadableMock: KinescopeDownloadable {
 
+    func pauseDownload(assetId: String) {
+    }
+
+    func resumeDownload(assetId: String) {
+    }
+
+    func restore() {
+    }
+
     func downlaodedAssetsList() -> [String] {
         return []
     }

@@ -27,6 +27,10 @@ class IDsUDStorage {
         UserDefaults.standard.set(dict, forKey: Keys.dictKey)
     }
 
+    func contains(url: String) -> Bool {
+        return getDict()?.keys.contains(url) ?? false
+    }
+
     func readID(by url: String) -> String? {
         guard let dict = getDict() else { return nil }
         return dict[url]
