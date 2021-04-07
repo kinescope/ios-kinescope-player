@@ -5,6 +5,8 @@
 //  Created by Никита Коробейников on 23.03.2021.
 //
 
+import Foundation
+
 /// Control protocol managing downloading of assets
 public protocol KinescopeDownloadable: class {
 
@@ -24,6 +26,11 @@ public protocol KinescopeDownloadable: class {
 
     /// Deletes all downloaded assets from disk
     func clear()
+
+    /// Returns downloaded asset from disk
+    ///
+    /// - parameter assetId: Asset id of concrete video quality
+    func getPath(by assetId: String) -> URL?
 
     /// Request downloadable link for asset and start downloading
     ///

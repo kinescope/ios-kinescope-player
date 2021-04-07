@@ -53,6 +53,10 @@ class VideoDownloader: KinescopeDownloadable {
         }
     }
 
+    func getPath(by assetId: String) -> URL? {
+        return videoPathsStorage.readVideoUrl(by: assetId)
+    }
+
     func enqeueDownload(assetId: String) {
         preconditionFailure("Implement")
     }

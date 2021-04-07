@@ -5,6 +5,7 @@
 //  Created by Artemii Shabanov on 06.04.2021.
 //
 
+import Foundation
 @testable import KinescopeSDK
 
 final class KinescopeDownloadableMock: KinescopeDownloadable {
@@ -18,6 +19,10 @@ final class KinescopeDownloadableMock: KinescopeDownloadable {
     }
 
     func clear() {
+    }
+
+    func getPath(by assetId: String) -> URL? {
+        return nil
     }
 
     func isDownloaded(assetId: String) -> Bool {
