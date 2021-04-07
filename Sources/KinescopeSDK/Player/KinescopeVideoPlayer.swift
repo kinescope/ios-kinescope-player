@@ -15,6 +15,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private var timeObserver: Any?
     private var statusObserver: NSKeyValueObservation?
     private var timeControlStatusObserver: NSKeyValueObservation?
+    private var tracksObserver: NSKeyValueObservation?
 
     private var isSeeking = false
     private weak var miniView: KinescopePlayerView?
@@ -33,6 +34,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         self.removePlaybackTimeObserver()
         self.removePlayerStatusObserver()
         self.removePlayerTimeControlStatusObserver()
+        self.removeTracksObserver()
     }
 
     // MARK: - KinescopePlayer
@@ -56,6 +58,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     public func stop() {
         self.strategy.pause()
         self.strategy.unbind()
+        self.removeTracksObserver()
     }
 
     public func attach(view: KinescopePlayerView) {
@@ -86,9 +89,10 @@ public class KinescopeVideoPlayer: KinescopePlayer {
             return
         }
 
-        // Restore here sek position
+        // Restore here seek position
 
         strategy.bind(item: item)
+        addTracksObserver()
     }
 
 }
@@ -206,6 +210,54 @@ private extension KinescopeVideoPlayer {
     func removePlayerTimeControlStatusObserver() {
         self.timeControlStatusObserver?.invalidate()
         self.timeControlStatusObserver = nil
+    }
+
+    func addTracksObserver() {
+        self.tracksObserver = self.strategy.player.currentItem?.observe(
+            \.tracks,
+            options: [.new, .old],
+            changeHandler: { [weak self] item, _ in
+                guard
+                    let self = self,
+                    let video = self.video,
+                    let size = item.tracks.first?.assetTrack?.naturalSize,
+                    let frameRate = item.tracks.first?.assetTrack?.nominalFrameRate
+                else {
+                    return
+                }
+
+                let height = String(format: "%.0f", size.height)
+
+                let qualities = video.assets
+                    .compactMap { $0.quality }
+                    .filter { $0.hasPrefix(height) }
+
+                let expectedQuality: String?
+                if frameRate > 30.0 {
+                    expectedQuality = qualities.first { $0.hasSuffix("60") }
+                } else {
+                    expectedQuality = qualities.first { $0.hasPrefix(height) }
+                }
+
+                guard
+                    let quality = expectedQuality
+                else {
+                    return
+                }
+
+                self.view?.change(quality: quality)
+
+                Kinescope.shared.logger?.log(
+                    message: "AVPlayerItem.presentationSize – \(item.presentationSize)",
+                    level: KinescopeLoggerLevel.player
+                )
+            }
+        )
+    }
+
+    func removeTracksObserver() {
+        self.tracksObserver?.invalidate()
+        self.tracksObserver = nil
     }
 
     func seek(to seconds: TimeInterval) {

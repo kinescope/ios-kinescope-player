@@ -83,6 +83,11 @@ public class KinescopePlayerView: UIView {
             break
         }
     }
+
+    func change(quality: String) {
+        // FIXME: Add localization
+        set(quality: "Auto " + quality)
+    }
 }
 
 // MARK: - Public
@@ -195,7 +200,7 @@ private extension KinescopePlayerView {
 
         // FIXME: Add localization
         let autoTitle = NSAttributedString(string: "Auto")
-        let selected = selectedQuality == autoTitle
+        let selected = selectedQuality.string.hasPrefix(autoTitle.string)
         items.insert(.checkmark(title: autoTitle, selected: selected), at: 0)
         return .init(title: title, isRoot: false, items: items)
     }
@@ -208,7 +213,14 @@ private extension KinescopePlayerView {
     func handleQualityCheckmarkAction(for title: NSAttributedString, sideMenu: SideMenu) {
         delegate?.didSelect(quality: title.string)
         sideMenuWillBeDismissed(sideMenu, withRoot: true)
-        selectedQuality = title
+        set(quality: title.string)
+    }
+
+    func set(quality: String) {
+        let color = config.sideMenu.item.valueColor
+        let font = config.sideMenu.item.valueFont
+        let attributes: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: color]
+        selectedQuality = quality.attributedStringWithAssetIconIfNeeded(attributes: attributes)
     }
 }
 
