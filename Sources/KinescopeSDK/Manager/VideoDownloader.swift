@@ -61,6 +61,14 @@ class VideoDownloader: KinescopeDownloadable {
         preconditionFailure("Implement")
     }
 
+    func pauseDownload(assetId: String) {
+        preconditionFailure("Implement")
+    }
+
+    func resumeDownload(assetId: String) {
+        preconditionFailure("Implement")
+    }
+
     func deqeueDownload(assetId: String) {
         preconditionFailure("Implement")
     }
@@ -73,6 +81,10 @@ class VideoDownloader: KinescopeDownloadable {
         if let index = delegates.firstIndex(where: { delegate === $0 }) {
             delegates.remove(at: index)
         }
+    }
+
+    func restore() {
+        preconditionFailure("Implement")
     }
 
 }

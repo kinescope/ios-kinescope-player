@@ -37,6 +37,16 @@ public protocol KinescopeDownloadable: class {
     /// - parameter assetId: Asset id of concrete video quality
     func enqeueDownload(assetId: String)
 
+    /// Pause asset download
+    ///
+    /// - parameter assetId: Asset id of concrete video quality
+    func pauseDownload(assetId: String)
+
+    /// Resume asset download
+    ///
+    /// - parameter assetId: Asset id of concrete video quality
+    func resumeDownload(assetId: String)
+
     /// Stop downloading of asset
     ///
     /// - parameter assetId: Asset id of concrete video quality
@@ -51,6 +61,9 @@ public protocol KinescopeDownloadable: class {
     ///
     /// - parameter delegate: Instance of delegate 
     func remove(delegate: KinescopeDownloadableDelegate)
+
+    /// Restore downloads
+    func restore()
 
 }
 
