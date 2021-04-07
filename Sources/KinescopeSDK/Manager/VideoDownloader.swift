@@ -17,13 +17,16 @@ class VideoDownloader: KinescopeDownloadable {
 
     private let apiKey: String
     private let videoPathsStorage: KinescopeVideoPathsStorage
+    private let assetService: AssetService
 
     // MARK: - Initialisation
 
     init(apiKey: String,
-         videoPathsStorage: KinescopeVideoPathsStorage) {
+         videoPathsStorage: KinescopeVideoPathsStorage,
+         assetService: AssetService) {
         self.apiKey = apiKey
         self.videoPathsStorage = videoPathsStorage
+        self.assetService = assetService
     }
 
     // MARK: - Methods
@@ -58,19 +61,19 @@ class VideoDownloader: KinescopeDownloadable {
     }
 
     func enqeueDownload(assetId: String) {
-        preconditionFailure("Implement")
+        assetService.enqeueDownload(assetId: assetId)
     }
 
     func pauseDownload(assetId: String) {
-        preconditionFailure("Implement")
+        assetService.pauseDownload(assetId: assetId)
     }
 
     func resumeDownload(assetId: String) {
-        preconditionFailure("Implement")
+        assetService.resumeDownload(assetId: assetId)
     }
 
     func deqeueDownload(assetId: String) {
-        preconditionFailure("Implement")
+        assetService.deqeueDownload(assetId: assetId)
     }
 
     func add(delegate: KinescopeDownloadableDelegate) {
@@ -85,6 +88,29 @@ class VideoDownloader: KinescopeDownloadable {
 
     func restore() {
         preconditionFailure("Implement")
+    }
+
+}
+
+extension VideoDownloader: AssetServiceDelegate {
+
+    func downloadProgress(assetId: String, progress: Double) {
+        delegates.forEach {
+            $0.kinescopeDownloadProgress(assetId: assetId, progress: progress)
+        }
+    }
+
+    func downloadError(assetId: String, error: Error) {
+        delegates.forEach {
+            $0.kinescopeDownloadError(assetId: assetId, error: .unknown(error))
+        }
+    }
+
+    func downloadComplete(assetId: String, path: String) {
+        videoPathsStorage.saveVideo(relativeUrl: path, id: assetId)
+        delegates.forEach {
+            $0.kinescopeDownloadComplete(assetId: assetId)
+        }
     }
 
 }

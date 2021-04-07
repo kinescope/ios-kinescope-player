@@ -9,7 +9,7 @@ import AVFoundation
 
 protocol AssetServiceDelegate {
     func downloadProgress(assetId: String, progress: Double)
-    func downloadError(assetId: String, error: KinescopeDownloadError)
+    func downloadError(assetId: String, error: Error)
     func downloadComplete(assetId: String, path: String)
 }
 
@@ -105,7 +105,7 @@ extension AssetNetworkService: AVAssetDownloadDelegate {
         else {
             return
         }
-        delegate?.downloadError(assetId: id, error: .unknown(error))
+        delegate?.downloadError(assetId: id, error: error)
     }
 
     func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, didFinishDownloadingTo location: URL) {

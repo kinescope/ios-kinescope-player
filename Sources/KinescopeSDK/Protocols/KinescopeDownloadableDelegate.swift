@@ -14,7 +14,7 @@ public protocol KinescopeDownloadableDelegate: class {
     ///
     /// - parameter assetId: Asset id of concrete video quality
     /// - parameter progress: Progress of process
-    func kinescopeDownloadProgress(assetId: String, progress: Progress)
+    func kinescopeDownloadProgress(assetId: String, progress: Double)
 
     /// Notify about error state of downloading task
     ///
