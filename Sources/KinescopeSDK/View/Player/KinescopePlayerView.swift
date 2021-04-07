@@ -58,7 +58,7 @@ public class KinescopePlayerView: UIView {
         previewView.isHidden = true
     }
 
-    func change(status: AVPlayer.Status) {
+    func change(status: AVPlayerItem.Status) {
         switch status {
         case .readyToPlay:
             overlay?.isHidden = false
@@ -84,9 +84,13 @@ public class KinescopePlayerView: UIView {
         }
     }
 
-    func change(quality: String) {
+    func change(quality: String, manualQuality: Bool) {
         // FIXME: Add localization
-        set(quality: "Auto " + quality)
+        if manualQuality {
+            set(quality: quality)
+        } else {
+            set(quality: "Auto " + quality)
+        }
     }
 }
 
