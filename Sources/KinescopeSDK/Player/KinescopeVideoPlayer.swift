@@ -89,7 +89,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
             return
         }
 
-        // Restore here sek position
+        // Restore here seek position
 
         strategy.bind(item: item)
         addTracksObserver()
