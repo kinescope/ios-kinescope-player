@@ -239,7 +239,11 @@ private extension KinescopeVideoPlayer {
                     expectedQuality = qualities.first { $0.hasPrefix(height) }
                 }
 
-                guard let quality = expectedQuality else { return }
+                guard
+                    let quality = expectedQuality
+                else {
+                    return
+                }
 
                 self.view?.change(quality: quality)
 
