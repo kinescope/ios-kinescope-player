@@ -11,7 +11,7 @@ final class VideoPathsUDStorage: KinescopeVideoPathsStorage {
 
     // MARK: - Properties
 
-    private let udStroage = PathsUDStorage(prefix: "videos")
+    private let udStroage = PathsUDStorage(suffix: "videos")
 
     // MARK: - KinescopeVideoPathsStorage
 

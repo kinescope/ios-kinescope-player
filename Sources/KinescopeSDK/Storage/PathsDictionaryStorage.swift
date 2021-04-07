@@ -15,8 +15,8 @@ class PathsUDStorage {
 
     // MARK: - Lifecycle
 
-    init(prefix: String) {
-        self.dictKey = "kinescope_" + prefix
+    init(suffix: String) {
+        self.dictKey = "io.kinescope.dict" + suffix
     }
 
     // MARK: - API

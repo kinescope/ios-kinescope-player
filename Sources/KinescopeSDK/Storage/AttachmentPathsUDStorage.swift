@@ -11,7 +11,7 @@ final class AttachmentPathsUDStorage: KinescopeAttachmentPathsStorage {
 
     // MARK: - Properties
 
-    private let udStroage = PathsUDStorage(prefix: "attachments")
+    private let udStroage = PathsUDStorage(suffix: "attachments")
 
     // MARK: - KinescopeAttachmentPathsStorage
 

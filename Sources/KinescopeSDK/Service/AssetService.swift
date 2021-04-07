@@ -15,10 +15,10 @@ protocol AssetServiceDelegate: class {
 
 protocol AssetService {
     var delegate: AssetServiceDelegate? { get set }
-    func enqeueDownload(assetId: String)
+    func enqueueDownload(assetId: String)
     func pauseDownload(assetId: String)
     func resumeDownload(assetId: String)
-    func deqeueDownload(assetId: String)
+    func dequeueDownload(assetId: String)
     func restore()
 }
 
@@ -60,7 +60,7 @@ class AssetNetworkService: NSObject, AssetService {
 
 extension AssetNetworkService {
 
-    func enqeueDownload(assetId: String) {
+    func enqueueDownload(assetId: String) {
         findTask(by: assetId) { task in
             task.resume()
         } notFoundCompletion: { [weak self] in
@@ -92,7 +92,7 @@ extension AssetNetworkService {
         }
     }
 
-    func deqeueDownload(assetId: String) {
+    func dequeueDownload(assetId: String) {
         findTask(by: assetId) { [weak self] task in
             task.cancel()
             self?.idsStorage.deleteID(by: task.urlAsset.url.absoluteString)
@@ -181,7 +181,7 @@ private extension AssetNetworkService {
 
         // Create new AVAssetDownloadTask for the desired asset
         let downloadTask = session.makeAssetDownloadTask(asset: asset,
-                                                         assetTitle: "kinescope_\(urlString)",
+                                                         assetTitle: "io.kinescope.\(urlString)",
                                                          assetArtworkData: nil,
                                                          options: nil)
         // Start task and begin download

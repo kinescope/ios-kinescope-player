@@ -58,8 +58,8 @@ class VideoDownloader: KinescopeDownloadable {
         return videoPathsStorage.readVideoUrl(by: assetId)
     }
 
-    func enqeueDownload(assetId: String) {
-        assetService.enqeueDownload(assetId: assetId)
+    func enqueueDownload(assetId: String) {
+        assetService.enqueueDownload(assetId: assetId)
     }
 
     func pauseDownload(assetId: String) {
@@ -70,8 +70,8 @@ class VideoDownloader: KinescopeDownloadable {
         assetService.resumeDownload(assetId: assetId)
     }
 
-    func deqeueDownload(assetId: String) {
-        assetService.deqeueDownload(assetId: assetId)
+    func dequeueDownload(assetId: String) {
+        assetService.dequeueDownload(assetId: assetId)
     }
 
     func add(delegate: KinescopeDownloadableDelegate) {

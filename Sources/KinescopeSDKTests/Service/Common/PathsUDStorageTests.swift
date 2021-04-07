@@ -4,15 +4,13 @@ import XCTest
 //swiftlint:disable all
 final class PathsUDStorageTests: XCTestCase {
 
-    // MARK: - Nested
-
     // MARK: - Tests
 
     func testWriteRead() {
 
         // given
 
-        let storage = PathsUDStorage(prefix: "mock")
+        let storage = PathsUDStorage(suffix: "mock")
         let urls = ["id1": "url1", "id2": "url2", "id3": "url3"]
         for url in urls {
             storage.save(relativeUrl: url.value, id: url.key)
@@ -33,7 +31,7 @@ final class PathsUDStorageTests: XCTestCase {
 
         // given
 
-        let storage = PathsUDStorage(prefix: "mock")
+        let storage = PathsUDStorage(suffix: "mock")
         let urls = ["id1": "url1", "id2": "url2", "id3": "url3"]
         for url in urls {
             storage.save(relativeUrl: url.value, id: url.key)

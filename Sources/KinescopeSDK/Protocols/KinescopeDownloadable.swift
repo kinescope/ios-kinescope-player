@@ -35,7 +35,7 @@ public protocol KinescopeDownloadable: class {
     /// Request downloadable link for asset and start downloading
     ///
     /// - parameter assetId: Asset id of concrete video quality
-    func enqeueDownload(assetId: String)
+    func enqueueDownload(assetId: String)
 
     /// Pause downloading of asset
     ///
@@ -50,7 +50,7 @@ public protocol KinescopeDownloadable: class {
     /// Stop downloading of asset
     ///
     /// - parameter assetId: Asset id of concrete video quality
-    func deqeueDownload(assetId: String)
+    func dequeueDownload(assetId: String)
 
     /// Add delegate to notify about download process
     ///

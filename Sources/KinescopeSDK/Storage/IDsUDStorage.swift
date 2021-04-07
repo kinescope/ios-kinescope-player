@@ -12,7 +12,7 @@ class IDsUDStorage {
     // MARK: - Nested Types
 
     private enum Keys {
-        static let dictKey = "kinescope_ids"
+        static let dictKey = "io.kinescope.ids"
     }
 
     // MARK: - API

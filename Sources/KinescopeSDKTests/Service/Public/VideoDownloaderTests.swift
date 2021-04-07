@@ -71,7 +71,7 @@ final class VideoDownloaderTests: XCTestCase {
         // when
 
         for assetId in (assetService?.assetStates ?? [:]).keys {
-            downloader?.enqeueDownload(assetId: assetId)
+            downloader?.enqueueDownload(assetId: assetId)
         }
 
         // then
@@ -91,7 +91,7 @@ final class VideoDownloaderTests: XCTestCase {
 
         // when
 
-        downloader?.enqeueDownload(assetId: "id1")
+        downloader?.enqueueDownload(assetId: "id1")
 
         let baseURL = URL(fileURLWithPath: NSHomeDirectory())
         let assetURL = baseURL.appendingPathComponent("id1")
@@ -115,7 +115,7 @@ final class VideoDownloaderTests: XCTestCase {
         // when
 
         for assetId in (assetService?.assetStates ?? [:]).keys {
-            downloader?.enqeueDownload(assetId: assetId)
+            downloader?.enqueueDownload(assetId: assetId)
         }
         downloader?.clear()
 
@@ -138,7 +138,7 @@ final class VideoDownloaderTests: XCTestCase {
         // when
 
         for assetId in (assetService?.assetStates ?? [:]).keys {
-            downloader?.enqeueDownload(assetId: assetId)
+            downloader?.enqueueDownload(assetId: assetId)
         }
 
         // then
@@ -170,7 +170,7 @@ final class VideoDownloaderTests: XCTestCase {
         // when
 
         for assetId in (assetService?.assetStates ?? [:]).keys {
-            downloader?.enqeueDownload(assetId: assetId)
+            downloader?.enqueueDownload(assetId: assetId)
         }
 
         // then

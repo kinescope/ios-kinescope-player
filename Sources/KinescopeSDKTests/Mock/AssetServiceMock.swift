@@ -25,7 +25,7 @@ final class AssetServiceMock: AssetService {
 
     // MARK: - Methods
 
-    func enqeueDownload(assetId: String) {
+    func enqueueDownload(assetId: String) {
         switch assetStates[assetId] {
         case .completed(let value):
             let baseURL = URL(fileURLWithPath: NSHomeDirectory())
@@ -37,7 +37,7 @@ final class AssetServiceMock: AssetService {
             }
             delegate?.downloadComplete(assetId: assetId, path: value)
         case .none:
-            fatalError("Cannot find mock for enqeueDownload by assetId)")
+            fatalError("Cannot find mock for enqueueDownload by assetId)")
         case .progress(let value):
             delegate?.downloadProgress(assetId: assetId, progress: value)
         case .error(let error):
@@ -51,7 +51,7 @@ final class AssetServiceMock: AssetService {
     func resumeDownload(assetId: String) {
     }
 
-    func deqeueDownload(assetId: String) {
+    func dequeueDownload(assetId: String) {
     }
 
     func restore() {

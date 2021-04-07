@@ -28,7 +28,8 @@ final class KinescopeVideoPlayerTests: XCTestCase {
         let downloader = KinescopeDownloadableMock()
         let strategy = PlayingStrategyMock()
 
-        let dependencies = KinescopeVideoPlayerDependenciesMock(inspectorMock: inspector,    downloaderMock: downloader,
+        let dependencies = KinescopeVideoPlayerDependenciesMock(inspectorMock: inspector,
+                                                                downloaderMock: downloader,
                                                                 strategyMock: strategy)
 
         self.player = KinescopeVideoPlayer(config: .init(videoId: Constants.videoId),

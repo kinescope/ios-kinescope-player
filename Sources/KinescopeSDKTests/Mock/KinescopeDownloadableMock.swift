@@ -38,10 +38,10 @@ final class KinescopeDownloadableMock: KinescopeDownloadable {
         return true
     }
 
-    func enqeueDownload(assetId: String) {
+    func enqueueDownload(assetId: String) {
     }
 
-    func deqeueDownload(assetId: String) {
+    func dequeueDownload(assetId: String) {
     }
 
     func add(delegate: KinescopeDownloadableDelegate) {
