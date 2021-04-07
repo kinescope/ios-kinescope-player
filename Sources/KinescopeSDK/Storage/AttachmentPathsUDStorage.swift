@@ -34,7 +34,9 @@ final class AttachmentPathsUDStorage: KinescopeAttachmentPathsStorage {
     // MARK: - Private
 
     private func constructUrl(relativeUrl: String?) -> URL? {
-        guard let relativeUrl = relativeUrl else { return nil}
+        guard let relativeUrl = relativeUrl else {
+            return nil
+        }
         let baseURL = URL(fileURLWithPath: NSHomeDirectory())
         let assetURL = baseURL.appendingPathComponent(relativeUrl)
         return assetURL

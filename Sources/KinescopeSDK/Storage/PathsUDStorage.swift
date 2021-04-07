@@ -32,17 +32,23 @@ class PathsUDStorage {
     }
 
     func readUrl(by id: String) -> String? {
-        guard let dict = getDict() else { return nil }
+        guard let dict = getDict() else {
+            return nil
+        }
         return dict[id]
     }
 
     func fetchIds() -> [String] {
-        guard let dict = getDict() else { return [] }
+        guard let dict = getDict() else {
+            return []
+        }
         return Array(dict.keys)
     }
 
     func deleteUrl(by id: String) -> String? {
-        guard var dict = getDict() else { return nil }
+        guard var dict = getDict() else {
+            return nil
+        }
         if dict.keys.contains(id) {
             let value = dict[id]
             dict.removeValue(forKey: id)

@@ -8,7 +8,7 @@
 import Foundation
 @testable import KinescopeSDK
 
-final class KinescopeDownloadableMock: KinescopeAssetDownloadable {
+final class KinescopeAssetDownloadableMock: KinescopeAssetDownloadable {
 
     func pauseDownload(assetId: String) {
     }
@@ -49,7 +49,5 @@ final class KinescopeDownloadableMock: KinescopeAssetDownloadable {
 
     func remove(delegate: KinescopeAssetDownloadableDelegate) {
     }
-
-    // TODO: add logic
 
 }

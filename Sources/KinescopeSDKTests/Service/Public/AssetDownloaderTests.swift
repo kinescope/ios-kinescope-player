@@ -40,8 +40,9 @@ final class AssetDownloaderTests: XCTestCase {
         let mockAssetService = AssetServiceMock()
         self.downloader = AssetDownloader(assetPathsStorage: AssetPathsUDStorage(), assetService: mockAssetService)
         self.assetService = mockAssetService
-        self.delegate = MockDelegate()
-        self.downloader?.add(delegate: delegate!)
+        let delegate = MockDelegate()
+        self.delegate = delegate
+        self.downloader?.add(delegate: delegate)
     }
 
     override func tearDown() {

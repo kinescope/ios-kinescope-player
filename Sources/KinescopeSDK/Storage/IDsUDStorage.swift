@@ -32,13 +32,17 @@ class IDsUDStorage {
     }
 
     func readID(by url: String) -> String? {
-        guard let dict = getDict() else { return nil }
+        guard let dict = getDict() else {
+            return nil
+        }
         return dict[url]
     }
 
     @discardableResult
     func deleteID(by url: String) -> String? {
-        guard var dict = getDict() else { return nil }
+        guard var dict = getDict() else {
+            return nil
+        }
         if dict.keys.contains(url) {
             let value = dict[url]
             dict.removeValue(forKey: url)

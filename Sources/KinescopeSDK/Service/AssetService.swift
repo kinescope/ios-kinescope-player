@@ -34,7 +34,7 @@ class AssetNetworkService: NSObject, AssetService {
 
     weak var delegate: AssetServiceDelegate?
     private let idsStorage: IDsUDStorage
-    private let assetsService: AssetLinksService
+    private let assetLinksService: AssetLinksService
     private lazy var session: AVAssetDownloadURLSession = {
         let configuration = URLSessionConfiguration.background(withIdentifier: Constants.downloadIdentifier)
 
@@ -48,9 +48,9 @@ class AssetNetworkService: NSObject, AssetService {
 
     // MARK: - Lyfecycle
 
-    init(assetsService: AssetLinksService,
+    init(assetLinksService: AssetLinksService,
          idsStorage: IDsUDStorage = IDsUDStorage()) {
-        self.assetsService = assetsService
+        self.assetLinksService = assetLinksService
         self.idsStorage = idsStorage
     }
 
@@ -64,7 +64,7 @@ extension AssetNetworkService {
         findTask(by: assetId) { task in
             task.resume()
         } notFoundCompletion: { [weak self] in
-            self?.assetsService.getAssetLink(by: assetId) { [weak self] in
+            self?.assetLinksService.getAssetLink(by: assetId) { [weak self] in
                 switch $0 {
                 case .success(let link):
                     self?.idsStorage.save(id: assetId, by: link.link)
@@ -131,12 +131,20 @@ extension AssetNetworkService: AVAssetDownloadDelegate {
     }
 
     func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, didFinishDownloadingTo location: URL) {
-        guard let id = idsStorage.deleteID(by: assetDownloadTask.urlAsset.url.absoluteString) else { return }
+        guard let id = idsStorage.deleteID(by: assetDownloadTask.urlAsset.url.absoluteString) else {
+            return
+        }
         delegate?.downloadComplete(assetId: id, path: location.relativePath)
     }
 
-    func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, didLoad timeRange: CMTimeRange, totalTimeRangesLoaded loadedTimeRanges: [NSValue], timeRangeExpectedToLoad: CMTimeRange) {
-        guard let id = getId(for: assetDownloadTask) else { return }
+    func urlSession(_ session: URLSession,
+                    assetDownloadTask: AVAssetDownloadTask,
+                    didLoad timeRange: CMTimeRange,
+                    totalTimeRangesLoaded loadedTimeRanges: [NSValue],
+                    timeRangeExpectedToLoad: CMTimeRange) {
+        guard let id = getId(for: assetDownloadTask) else {
+            return
+        }
         var percentComplete = 0.0
         // Iterate through the loaded time ranges
         for value in loadedTimeRanges {
@@ -159,7 +167,7 @@ private extension AssetNetworkService {
         return idsStorage.readID(by: task.urlAsset.url.absoluteString)
     }
 
-    func findTask(by assetId: String, completion: @escaping (AVAssetDownloadTask) -> (), notFoundCompletion: @escaping () -> ()) {
+    func findTask(by assetId: String, completion: @escaping (AVAssetDownloadTask) -> Void, notFoundCompletion: @escaping () -> Void) {
         session.getAllTasks { [weak self] tasksArray in
             for task in tasksArray {
                 guard let downloadTask = task as? AVAssetDownloadTask else { break }
@@ -176,7 +184,9 @@ private extension AssetNetworkService {
     }
 
     func startTask(url urlString: String) {
-        guard let url = URL(string: urlString) else { return }
+        guard let url = URL(string: urlString) else {
+            return
+        }
         let asset = AVURLAsset(url: url)
 
         // Create new AVAssetDownloadTask for the desired asset

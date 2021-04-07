@@ -26,7 +26,7 @@ final class AssetPathsUDStorage: KinescopeAssetPathsStorage {
     func fetchAssetIds() -> [String] {
         return udStroage.fetchIds()
     }
-    
+
     @discardableResult
     func deleteVideoUrl(by assetId: String) -> URL? {
         return constructUrl(relativeUrl: udStroage.deleteUrl(by: assetId))
@@ -35,7 +35,9 @@ final class AssetPathsUDStorage: KinescopeAssetPathsStorage {
     // MARK: - Private
 
     private func constructUrl(relativeUrl: String?) -> URL? {
-        guard let relativeUrl = relativeUrl else { return nil}
+        guard let relativeUrl = relativeUrl else {
+            return nil
+        }
         let baseURL = URL(fileURLWithPath: NSHomeDirectory())
         let assetURL = baseURL.appendingPathComponent(relativeUrl)
         return assetURL
