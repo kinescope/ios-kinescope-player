@@ -1,5 +1,5 @@
 //
-//  PathsDictionaryStorage.swift
+//  PathsUDStorage.swift
 //  KinescopeSDK
 //
 //  Created by Artemii Shabanov on 06.04.2021.
