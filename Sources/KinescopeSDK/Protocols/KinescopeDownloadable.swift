@@ -10,7 +10,7 @@ import Foundation
 /// Control protocol managing downloading of assets
 public protocol KinescopeDownloadable: class {
 
-    /// Checks that asset were downloaded
+    /// Checks that asset was downloaded
     ///
     /// - parameter assetId: Asset id of concrete video quality
     func isDownloaded(assetId: String) -> Bool
@@ -27,7 +27,7 @@ public protocol KinescopeDownloadable: class {
     /// Deletes all downloaded assets from disk
     func clear()
 
-    /// Returns downloaded asset from disk
+    /// Returns downloaded asset path from disk
     ///
     /// - parameter assetId: Asset id of concrete video quality
     func getPath(by assetId: String) -> URL?
@@ -37,12 +37,12 @@ public protocol KinescopeDownloadable: class {
     /// - parameter assetId: Asset id of concrete video quality
     func enqeueDownload(assetId: String)
 
-    /// Pause asset download
+    /// Pause downloading of asset
     ///
     /// - parameter assetId: Asset id of concrete video quality
     func pauseDownload(assetId: String)
 
-    /// Resume asset download
+    /// Resume downloading of asset
     ///
     /// - parameter assetId: Asset id of concrete video quality
     func resumeDownload(assetId: String)
@@ -62,7 +62,7 @@ public protocol KinescopeDownloadable: class {
     /// - parameter delegate: Instance of delegate 
     func remove(delegate: KinescopeDownloadableDelegate)
 
-    /// Restore downloads
+    /// Restore downloads which were interrupted by app close
     func restore()
 
 }

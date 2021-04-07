@@ -15,21 +15,19 @@ class VideoDownloader: KinescopeDownloadable {
 
     private var delegates: [KinescopeDownloadableDelegate] = []
 
-    private let apiKey: String
     private let videoPathsStorage: KinescopeVideoPathsStorage
-    private let assetService: AssetService
+    private var assetService: AssetService
 
     // MARK: - Initialisation
 
-    init(apiKey: String,
-         videoPathsStorage: KinescopeVideoPathsStorage,
+    init(videoPathsStorage: KinescopeVideoPathsStorage,
          assetService: AssetService) {
-        self.apiKey = apiKey
         self.videoPathsStorage = videoPathsStorage
         self.assetService = assetService
+        self.assetService.delegate = self
     }
 
-    // MARK: - Methods
+    // MARK: - KinescopeDownloadable
 
     func downlaodedAssetsList() -> [String] {
         return videoPathsStorage.fetchVideoIds()
@@ -87,10 +85,12 @@ class VideoDownloader: KinescopeDownloadable {
     }
 
     func restore() {
-        preconditionFailure("Implement")
+        assetService.restore()
     }
 
 }
+
+// MARK: - AssetServiceDelegate
 
 extension VideoDownloader: AssetServiceDelegate {
 

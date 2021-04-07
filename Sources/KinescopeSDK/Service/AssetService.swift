@@ -7,7 +7,7 @@
 
 import AVFoundation
 
-protocol AssetServiceDelegate {
+protocol AssetServiceDelegate: class {
     func downloadProgress(assetId: String, progress: Double)
     func downloadError(assetId: String, error: KinescopeDownloadError)
     func downloadComplete(assetId: String, path: String)
@@ -27,13 +27,13 @@ class AssetNetworkService: NSObject, AssetService {
     // MARK: - Constants
 
     private enum Constants {
-        static let downloadIdentifier = "kinescope_download_session"
+        static let downloadIdentifier = "io.kinescope.download_session"
     }
 
     // MARK: - Properties
 
-    var delegate: AssetServiceDelegate?
-    private let idsStorage = IDsUDStorage()
+    weak var delegate: AssetServiceDelegate?
+    private let idsStorage: IDsUDStorage
     private let assetsService: AssetsService
     private lazy var session: AVAssetDownloadURLSession = {
         let configuration = URLSessionConfiguration.background(withIdentifier: Constants.downloadIdentifier)
@@ -48,8 +48,10 @@ class AssetNetworkService: NSObject, AssetService {
 
     // MARK: - Lyfecycle
 
-    init(assetsService: AssetsService) {
+    init(assetsService: AssetsService,
+         idsStorage: IDsUDStorage = IDsUDStorage()) {
         self.assetsService = assetsService
+        self.idsStorage = idsStorage
     }
 
 }
@@ -59,13 +61,17 @@ class AssetNetworkService: NSObject, AssetService {
 extension AssetNetworkService {
 
     func enqeueDownload(assetId: String) {
-        assetsService.getAssetLink(by: assetId) { [weak self] in
-            switch $0 {
-            case .success(let link):
-                self?.idsStorage.save(id: assetId, by: link.link)
-                self?.startTask(url: link.link)
-            case .failure(_):
-                self?.delegate?.downloadError(assetId: assetId, error: .notFound)
+        findTask(by: assetId) { task in
+            task.resume()
+        } notFoundCompletion: { [weak self] in
+            self?.assetsService.getAssetLink(by: assetId) { [weak self] in
+                switch $0 {
+                case .success(let link):
+                    self?.idsStorage.save(id: assetId, by: link.link)
+                    self?.startTask(url: link.link)
+                case .failure(_):
+                    self?.delegate?.downloadError(assetId: assetId, error: .notFound)
+                }
             }
         }
     }
