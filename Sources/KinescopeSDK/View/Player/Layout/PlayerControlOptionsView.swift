@@ -13,11 +13,6 @@ protocol PlayerControlOptionsInput {
     ///
     /// - parameter options: Set of option
     func set(options: [KinescopePlayerOption])
-
-    /// Add new options to existing ones
-    ///
-    /// - parameter options: Set of option
-    func add(options: [KinescopePlayerOption])
 }
 
 protocol PlayerControlOptionsOutput: class {
@@ -65,15 +60,11 @@ class PlayerControlOptionsView: UIControl {
 extension PlayerControlOptionsView: PlayerControlOptionsInput {
 
     func set(options: [KinescopePlayerOption]) {
+        guard !options.isEmpty else { return }
         self.options = options
         self.isExpanded = false
 
         fillStack(with: options, expanded: isExpanded)
-    }
-
-    func add(options: [KinescopePlayerOption]) {
-        self.options.insert(contentsOf: options, at: 0)
-        fillStack(with: self.options, expanded: self.isExpanded)
     }
 
 }
