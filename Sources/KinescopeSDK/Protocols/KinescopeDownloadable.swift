@@ -8,7 +8,7 @@
 import Foundation
 
 /// Control protocol managing downloading of assets
-public protocol KinescopeDownloadable: class {
+public protocol KinescopeAssetDownloadable: class {
 
     /// Checks that asset was downloaded
     ///
@@ -55,19 +55,19 @@ public protocol KinescopeDownloadable: class {
     /// Add delegate to notify about download process
     ///
     /// - parameter delegate: Instance of delegate
-    func add(delegate: KinescopeDownloadableDelegate)
+    func add(delegate: KinescopeAssetDownloadableDelegate)
 
     /// Remove delegate
     ///
     /// - parameter delegate: Instance of delegate 
-    func remove(delegate: KinescopeDownloadableDelegate)
+    func remove(delegate: KinescopeAssetDownloadableDelegate)
 
     /// Restore downloads which were interrupted by app close
     func restore()
 
 }
 
-public extension KinescopeDownloadable {
+public extension KinescopeAssetDownloadable {
 
     func isDownloaded(assetId: String) -> Bool {
         return downlaodedAssetsList().contains(assetId)

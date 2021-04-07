@@ -1,5 +1,5 @@
 //
-//  KinescopeDownloadableDelegate.swift
+//  KinescopeAssetDownloadableDelegate.swift
 //  KinescopeSDK
 //
 //  Created by Никита Коробейников on 23.03.2021.
@@ -8,7 +8,7 @@
 import Foundation
 
 /// Delegate protocol to listen download process events
-public protocol KinescopeDownloadableDelegate: class {
+public protocol KinescopeAssetDownloadableDelegate: class {
 
     /// Notify about progress state of downloading task
     ///

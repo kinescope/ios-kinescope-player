@@ -7,7 +7,7 @@
 
 @testable import KinescopeSDK
 
-final class AssetsServiceMock: AssetsService {
+final class AssetLinksServiceMock: AssetLinksService {
 
     // MARK: - Properties
 

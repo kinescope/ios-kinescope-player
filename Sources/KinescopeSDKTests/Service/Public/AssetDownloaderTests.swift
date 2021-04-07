@@ -1,5 +1,5 @@
 //
-//  VideoDownloaderTests.swift
+//  AssetDownloaderTests.swift
 //  KinescopeSDKTests
 //
 //  Created by Artemii Shabanov on 07.04.2021.
@@ -8,11 +8,11 @@
 import XCTest
 @testable import KinescopeSDK
 
-final class VideoDownloaderTests: XCTestCase {
+final class AssetDownloaderTests: XCTestCase {
 
     // MARK: - Nested Types
 
-    class MockDelegate: KinescopeDownloadableDelegate {
+    class MockDelegate: KinescopeAssetDownloadableDelegate {
         var assets: [String: (progress: Double, completed: Bool, error: KinescopeDownloadError?)] = [:]
 
         func kinescopeDownloadProgress(assetId: String, progress: Double) {
@@ -31,14 +31,14 @@ final class VideoDownloaderTests: XCTestCase {
     // MARK: - Setup
 
     var assetService: AssetServiceMock?
-    var downloader: KinescopeDownloadable?
+    var downloader: KinescopeAssetDownloadable?
     var delegate: MockDelegate?
 
     override func setUp() {
         super.setUp()
 
         let mockAssetService = AssetServiceMock()
-        self.downloader = VideoDownloader(videoPathsStorage: VideoPathsUDStorage(), assetService: mockAssetService)
+        self.downloader = AssetDownloader(assetPathsStorage: AssetPathsUDStorage(), assetService: mockAssetService)
         self.assetService = mockAssetService
         self.delegate = MockDelegate()
         self.downloader?.add(delegate: delegate!)

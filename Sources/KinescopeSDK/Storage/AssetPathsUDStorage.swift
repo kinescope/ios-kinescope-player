@@ -1,5 +1,5 @@
 //
-//  VideoPathsUDStorage.swift
+//  AssetPathsUDStorage.swift
 //  KinescopeSDK
 //
 //  Created by Artemii Shabanov on 06.04.2021.
@@ -7,29 +7,29 @@
 
 import Foundation
 
-final class VideoPathsUDStorage: KinescopeVideoPathsStorage {
+final class AssetPathsUDStorage: KinescopeAssetPathsStorage {
 
     // MARK: - Properties
 
     private let udStroage = PathsUDStorage(suffix: "videos")
 
-    // MARK: - KinescopeVideoPathsStorage
+    // MARK: - KinescopeAssetPathsStorage
 
-    func saveVideo(relativeUrl: String, id videoId: String) {
-        udStroage.save(relativeUrl: relativeUrl, id: videoId)
+    func saveAsset(relativeUrl: String, id assetId: String) {
+        udStroage.save(relativeUrl: relativeUrl, id: assetId)
     }
 
-    func readVideoUrl(by videoId: String) -> URL? {
-        return constructUrl(relativeUrl: udStroage.readUrl(by: videoId))
+    func readVideoUrl(by assetId: String) -> URL? {
+        return constructUrl(relativeUrl: udStroage.readUrl(by: assetId))
     }
 
-    func fetchVideoIds() -> [String] {
+    func fetchAssetIds() -> [String] {
         return udStroage.fetchIds()
     }
     
     @discardableResult
-    func deleteVideoUrl(by videoId: String) -> URL? {
-        return constructUrl(relativeUrl: udStroage.deleteUrl(by: videoId))
+    func deleteVideoUrl(by assetId: String) -> URL? {
+        return constructUrl(relativeUrl: udStroage.deleteUrl(by: assetId))
     }
 
     // MARK: - Private

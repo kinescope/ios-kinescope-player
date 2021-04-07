@@ -21,7 +21,7 @@ struct KinescopeVideoPlayerDependenciesMock: KinescopePlayerDependencies {
         inspectorMock
     }
 
-    var downloader: KinescopeDownloadable {
+    var downloader: KinescopeAssetDownloadable {
         downloaderMock
     }
 

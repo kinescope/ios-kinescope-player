@@ -1,10 +1,10 @@
 <!-- TODO describe player and player view customisation -->
 
-# KinescopeDownloadable and VideoDownloader
+# KinescopeAssetDownloadable and AssetDownloader
 
-KinescopeServicesProvider includes KinescopeDownloadable which has out-of-box implementation - VideoDownloader. It is used to download video assets, to track downloading progression and to get acces to downloaded files.
+KinescopeServicesProvider includes KinescopeAssetDownloadable which has out-of-box implementation - AssetDownloader. It is used to download video assets, to track downloading progression and to get acces to downloaded files.
 
-KinescopeDownloadable API looks like this:
+KinescopeAssetDownloadable API looks like this:
 ```swift
 
 /// Checks that asset was downloaded
@@ -52,23 +52,23 @@ func deqeueDownload(assetId: String)
 /// Add delegate to notify about download process
 ///
 /// - parameter delegate: Instance of delegate
-func add(delegate: KinescopeDownloadableDelegate)
+func add(delegate: KinescopeAssetDownloadableDelegate)
 
 /// Remove delegate
 ///
 /// - parameter delegate: Instance of delegate 
-func remove(delegate: KinescopeDownloadableDelegate)
+func remove(delegate: KinescopeAssetDownloadableDelegate)
 
 /// Restore downloads which were interrupted by app close
 func restore()
 
 ```
 
-KinescopeDownloadableDelegate is used to handle KinescopeDownloadable events: 
+KinescopeAssetDownloadableDelegate is used to handle KinescopeAssetDownloadable events: 
 
 ```swift
 /// Delegate protocol to listen download process events
-public protocol KinescopeDownloadableDelegate: class {
+public protocol KinescopeAssetDownloadableDelegate: class {
 
     /// Notify about progress state of downloading task
     ///
@@ -90,4 +90,4 @@ public protocol KinescopeDownloadableDelegate: class {
 }
 ```
 
-VideoDownloader(out-of-box implementation of KinescopeDownloadable) is based on AVAssetDownloadURLSession for downloading and UserDefaults for storing paths to downloaded assets. 
+AssetDownloader(out-of-box implementation of KinescopeAssetDownloadable) is based on AVAssetDownloadURLSession for downloading and UserDefaults for storing paths to downloaded assets. 

@@ -8,7 +8,7 @@
 import Foundation
 @testable import KinescopeSDK
 
-final class KinescopeDownloadableMock: KinescopeDownloadable {
+final class KinescopeDownloadableMock: KinescopeAssetDownloadable {
 
     func pauseDownload(assetId: String) {
     }
@@ -44,10 +44,10 @@ final class KinescopeDownloadableMock: KinescopeDownloadable {
     func dequeueDownload(assetId: String) {
     }
 
-    func add(delegate: KinescopeDownloadableDelegate) {
+    func add(delegate: KinescopeAssetDownloadableDelegate) {
     }
 
-    func remove(delegate: KinescopeDownloadableDelegate) {
+    func remove(delegate: KinescopeAssetDownloadableDelegate) {
     }
 
     // TODO: add logic
