@@ -13,7 +13,8 @@ final class DescriptionCell: UITableViewCell {
 
     struct Model {
         let title: String
-        let value: NSAttributedString
+        let value: String
+        let id: String
         let config: KinescopeSideMenuItemConfiguration
     }
 
@@ -49,17 +50,14 @@ final class DescriptionCell: UITableViewCell {
         }
     }
 
-    // MARK: - Public Methods
+    // MARK: - Internal Methods
 
     func configure(with model: Model) {
         self.model = model
-        titleLabel?.text = model.title
-        valueLabel?.attributedText = model.value.string
-            .attributedStringWithAssetIconIfNeeded(attributes: [
-                .font: model.config.titleFont,
-                .foregroundColor: model.config.titleColor
-            ])
+        configureTitleLabel(with: model)
+        configureValueLabel(with: model)
     }
+
 }
 
 // MARK: - Private
@@ -85,14 +83,26 @@ private extension DescriptionCell {
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8.0),
             titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8.0),
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24.0),
-//            titleLabel.trailingAnchor.constraint(equalTo: iconView.leadingAnchor, constant: -4.0),
-//
-//            iconView.centerYAnchor.constraint(equalTo: centerYAnchor),
-//            iconView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16.0)
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16.0),
+            titleLabel.trailingAnchor.constraint(equalTo: valueLabel.leadingAnchor, constant: -4.0),
+            valueLabel.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            valueLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16.0)
         ])
 
         self.titleLabel = titleLabel
+        self.valueLabel = valueLabel
+    }
+
+    func configureTitleLabel(with model: Model) {
+        titleLabel?.text = model.title
+        titleLabel?.font = model.config.titleFont
+        titleLabel?.textColor = model.config.titleColor
+    }
+
+    func configureValueLabel(with model: Model) {
+        valueLabel?.text = model.value
+        valueLabel?.font = model.config.valueFont
+        valueLabel?.textColor = model.config.valueColor
     }
 
 }

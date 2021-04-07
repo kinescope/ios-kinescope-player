@@ -42,7 +42,7 @@ final class CheckmarkCell: UITableViewCell {
         }
     }
 
-    // MARK: - Public Methods
+    // MARK: - Internal Methods
 
     func configure(with model: Model) {
         self.model = model
@@ -55,11 +55,13 @@ final class CheckmarkCell: UITableViewCell {
                 .foregroundColor: model.config.titleColor
             ])
     }
+
 }
 
 // MARK: - Private
 
 private extension CheckmarkCell {
+
     func setupInitialState() {
         selectionStyle = .none
         backgroundColor = .clear
@@ -88,6 +90,6 @@ private extension CheckmarkCell {
 
         self.titleLabel = titleLabel
         self.iconView = iconView
-
     }
+    
 }

@@ -238,9 +238,6 @@ private extension KinescopeVideoPlayer {
 // MARK: - PlayerOverlayViewDelegate
 
 extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
-    func didShowAttachments() -> [SideMenu.Item] {
-        []
-    }
 
     func didPlay(videoEnded: Bool) {
         if videoEnded {
@@ -338,9 +335,37 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             .filter { $0 != "original" } ?? []
     }
 
+    func didShowAttachments() -> [SideMenu.Item] {
+        guard let materials = video?.additionalMaterials else { return [] }
+
+        var items: [SideMenu.Item] = []
+        let bcf = ByteCountFormatter()
+        bcf.allowedUnits = [.useAll]
+        bcf.countStyle = .file
+
+        // FIXME: Add localization
+        for (index, material) in materials.enumerated() {
+            let title = String(index + 1) + ". " + material.title
+            let value = bcf.string(fromByteCount: Int64(material.size))
+            items.append(.description(title: title, value: value, id: material.id))
+        }
+
+        return items
+    }
+
     func didSelect(quality: String) {
         // FIXME: Add logic
         Kinescope.shared.logger?.log(message: "Select quality: \(quality)",
                                      level: KinescopeLoggerLevel.player)
     }
+
+    func didSelectAttachment(id: String) {
+        Kinescope.shared.logger?.log(message: "Start download attachment with id: \(id)",
+                                     level: KinescopeLoggerLevel.player)
+    }
+
+    func didSelectDownloadAll(for title: String) {
+        // FIXME: add logic
+    }
+
 }

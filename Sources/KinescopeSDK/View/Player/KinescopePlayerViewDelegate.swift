@@ -8,4 +8,6 @@ protocol KinescopePlayerViewDelegate: class {
     func didShowQuality() -> [String]
     func didShowAttachments() -> [SideMenu.Item]
     func didSelect(quality: String)
+    func didSelectAttachment(id: String)
+    func didSelectDownloadAll(for title: String)
 }
