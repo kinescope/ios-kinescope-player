@@ -102,7 +102,7 @@ extension VideoDownloader: AssetServiceDelegate {
 
     func downloadError(assetId: String, error: KinescopeDownloadError) {
         delegates.forEach {
-            $0.kinescopeDownloadError(assetId: assetId, error: .unknown(error))
+            $0.kinescopeDownloadError(assetId: assetId, error: error)
         }
     }
 

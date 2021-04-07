@@ -69,6 +69,9 @@
 		A4A4DD9F261D7D4700D9F28F /* PathsUDStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A4DD9E261D7D4700D9F28F /* PathsUDStorageTests.swift */; };
 		A4A4DDA6261D9BB900D9F28F /* IDsUDStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A4DDA5261D9BB900D9F28F /* IDsUDStorage.swift */; };
 		A4A4DDA9261D9D7500D9F28F /* AssetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A4DDA8261D9D7500D9F28F /* AssetService.swift */; };
+		A4A4DDAE261DCAE600D9F28F /* AssetsServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A4DDAD261DCAE600D9F28F /* AssetsServiceMock.swift */; };
+		A4A4DDB2261DCDA800D9F28F /* VideoDownloaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A4DDB1261DCDA800D9F28F /* VideoDownloaderTests.swift */; };
+		A4A4DDB5261DD16300D9F28F /* AssetServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A4DDB4261DD16300D9F28F /* AssetServiceMock.swift */; };
 		A4C4A9F8261CBA2700E4F09D /* KinescopeVideoPathsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C4A9F7261CBA2700E4F09D /* KinescopeVideoPathsStorage.swift */; };
 		A4C4A9FD261CC58800E4F09D /* KinescopeDownloadableMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C4A9FC261CC58800E4F09D /* KinescopeDownloadableMock.swift */; };
 		A4C4AA03261CD43400E4F09D /* KinescopeAttachmentPathsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C4AA02261CD43400E4F09D /* KinescopeAttachmentPathsStorage.swift */; };
@@ -210,6 +213,9 @@
 		A4A4DD9E261D7D4700D9F28F /* PathsUDStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathsUDStorageTests.swift; sourceTree = "<group>"; };
 		A4A4DDA5261D9BB900D9F28F /* IDsUDStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDsUDStorage.swift; sourceTree = "<group>"; };
 		A4A4DDA8261D9D7500D9F28F /* AssetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetService.swift; sourceTree = "<group>"; };
+		A4A4DDAD261DCAE600D9F28F /* AssetsServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsServiceMock.swift; sourceTree = "<group>"; };
+		A4A4DDB1261DCDA800D9F28F /* VideoDownloaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDownloaderTests.swift; sourceTree = "<group>"; };
+		A4A4DDB4261DD16300D9F28F /* AssetServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetServiceMock.swift; sourceTree = "<group>"; };
 		A4C4A9F7261CBA2700E4F09D /* KinescopeVideoPathsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeVideoPathsStorage.swift; sourceTree = "<group>"; };
 		A4C4A9FC261CC58800E4F09D /* KinescopeDownloadableMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeDownloadableMock.swift; sourceTree = "<group>"; };
 		A4C4AA02261CD43400E4F09D /* KinescopeAttachmentPathsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeAttachmentPathsStorage.swift; sourceTree = "<group>"; };
@@ -471,6 +477,8 @@
 				6C007F9A266C3B4D1AB06A32 /* LoggerMock.swift */,
 				24CEFEA5F1F077524ACE806E /* PlayingStrategyMock.swift */,
 				34760388A98AB16D860AC056 /* VideoServiceMock.swift */,
+				A4A4DDAD261DCAE600D9F28F /* AssetsServiceMock.swift */,
+				A4A4DDB4261DD16300D9F28F /* AssetServiceMock.swift */,
 				BB42CD54ED5190E8C0EDA094 /* Stub */,
 			);
 			path = Mock;
@@ -480,6 +488,7 @@
 			isa = PBXGroup;
 			children = (
 				75BCA647AC2B57BC5C662086 /* InspectorTests.swift */,
+				A4A4DDB1261DCDA800D9F28F /* VideoDownloaderTests.swift */,
 			);
 			path = Public;
 			sourceTree = "<group>";
@@ -760,6 +769,7 @@
 				0083D58514DAEE8447E5E27C /* KinescopeVideoPlayerDependenciesMock.swift in Sources */,
 				A2698DC22C1DF19CA0E223D5 /* KinescopeVideoPlayerTests.swift in Sources */,
 				A4C4A9FD261CC58800E4F09D /* KinescopeDownloadableMock.swift in Sources */,
+				A4A4DDB5261DD16300D9F28F /* AssetServiceMock.swift in Sources */,
 				A4A4DD9F261D7D4700D9F28F /* PathsUDStorageTests.swift in Sources */,
 				0521714D339BAB09F6E5BD6C /* LoggerMock.swift in Sources */,
 				8EB165D38D1F89B52DD0053F /* LoggerTests.swift in Sources */,
@@ -767,6 +777,8 @@
 				67407834D21BA4E2566C04B2 /* RequestBuilderTests.swift in Sources */,
 				FC3D1CD4CA1A73C56239163F /* TransportTests.swift in Sources */,
 				31D77F721DFBE1858D5E6B1D /* VideoServiceMock.swift in Sources */,
+				A4A4DDB2261DCDA800D9F28F /* VideoDownloaderTests.swift in Sources */,
+				A4A4DDAE261DCAE600D9F28F /* AssetsServiceMock.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
