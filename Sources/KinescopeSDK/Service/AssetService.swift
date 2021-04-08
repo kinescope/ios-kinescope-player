@@ -170,7 +170,9 @@ private extension AssetNetworkService {
     func findTask(by assetId: String, completion: @escaping (AVAssetDownloadTask) -> Void, notFoundCompletion: @escaping () -> Void) {
         session.getAllTasks { [weak self] tasksArray in
             for task in tasksArray {
-                guard let downloadTask = task as? AVAssetDownloadTask else { break }
+                guard let downloadTask = task as? AVAssetDownloadTask else {
+                    continue
+                }
                 if
                     let id = self?.idsStorage.readID(by: downloadTask.urlAsset.url.absoluteString),
                     id == assetId

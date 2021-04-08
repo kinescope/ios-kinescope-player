@@ -4,7 +4,6 @@
 //
 //  Created by Artemii Shabanov on 07.04.2021.
 //
-// swiftlint:disable large_tuple
 
 import XCTest
 @testable import KinescopeSDK
