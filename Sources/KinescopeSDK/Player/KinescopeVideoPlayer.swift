@@ -20,6 +20,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
     private var isSeeking = false
     private var isManualQuality = false
+    private var currentQuality = ""
     private var currentTime: CMTime = .zero
     private weak var miniView: KinescopePlayerView?
 
@@ -398,11 +399,16 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             detach(view: view)
 
             rootVC?.dismiss(animated: true, completion: { [weak self] in
-                guard let miniView = self?.miniView else {
+                guard
+                    let self = self,
+                    let miniView = self.miniView
+                else {
                     return
                 }
-                self?.attach(view: miniView)
-                self?.play()
+
+                self.attach(view: miniView)
+                self.view?.change(quality: self.currentQuality, manualQuality: self.isManualQuality)
+                self.play()
             })
         } else {
             miniView = view
@@ -414,8 +420,15 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                                                              config: .preferred(for: video))
             playerVC.modalPresentationStyle = .overFullScreen
             rootVC?.present(playerVC, animated: true, completion: { [weak self] in
-                self?.play()
-                self?.view?.change(status: .readyToPlay)
+                guard
+                    let self = self
+                else {
+                    return
+                }
+
+                self.play()
+                self.view?.change(status: .readyToPlay)
+                self.view?.change(quality: self.currentQuality, manualQuality: self.isManualQuality)
             })
         }
     }
@@ -441,6 +454,8 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         } else {
             videoQuality = .auto(hlsLink: video.hlsLink)
         }
+
+        currentQuality = quality
 
         select(quality: videoQuality)
 
