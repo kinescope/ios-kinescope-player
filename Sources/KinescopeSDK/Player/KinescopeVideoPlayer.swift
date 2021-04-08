@@ -170,11 +170,15 @@ private extension KinescopeVideoPlayer {
 
             Kinescope.shared.logger?.log(message: "playback position changed to \(time) seconds", level: KinescopeLoggerLevel.player)
 
-            controlPanel.setIndicator(to: time)
+            if !time.isNaN {
+                controlPanel.setIndicator(to: time)
+            }
 
             let duration = currentItem.duration.seconds
 
-            controlPanel.setTimeline(to: CGFloat(time / duration))
+            if !time.isNaN && !duration.isNaN {
+                controlPanel.setTimeline(to: CGFloat(time / duration))
+            }
 
             // MARK: - Preload observation
 
@@ -182,7 +186,9 @@ private extension KinescopeVideoPlayer {
 
             Kinescope.shared.logger?.log(message: "playback buffered \(buferredTime) seconds", level: KinescopeLoggerLevel.player)
 
-            controlPanel.setBufferred(progress: CGFloat(buferredTime / duration))
+            if !buferredTime.isNaN && !duration.isNaN {
+                controlPanel.setBufferred(progress: CGFloat(buferredTime / duration))
+            }
         }
 
     }
