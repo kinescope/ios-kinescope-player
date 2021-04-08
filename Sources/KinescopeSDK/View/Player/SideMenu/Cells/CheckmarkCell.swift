@@ -93,5 +93,5 @@ private extension CheckmarkCell {
         self.titleLabel = titleLabel
         self.iconView = iconView
     }
-    
+
 }

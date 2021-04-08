@@ -41,7 +41,7 @@ public struct KinescopeSideMenuBarConfiguration {
         self.iconSize = iconSize
         self.preferedHeight = preferedHeight
     }
-    
+
 }
 
 // MARK: - Defaults
