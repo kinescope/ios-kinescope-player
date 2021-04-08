@@ -198,7 +198,7 @@ private extension KinescopePlayerView {
     func qualitySideMenuModel(with title: String) -> SideMenu.Model {
         let qualities = delegate?.didShowQuality() ?? []
         var items = qualities.compactMap { quality -> SideMenu.Item in
-            let selected = self.selectedQuality.string == quality
+            let selected = self.selectedQuality.string.trimmingCharacters(in: .symbols) == quality
             return .checkmark(title: .init(string: quality), selected: selected)
         }
 

@@ -290,7 +290,7 @@ private extension KinescopeVideoPlayer {
                 if frameRate > 30.0 {
                     expectedQuality = qualities.first { $0.hasSuffix("60") }
                 } else {
-                    expectedQuality = qualities.first { $0.hasPrefix(height) }
+                    expectedQuality = qualities.first { $0.hasPrefix(height) && !$0.hasSuffix("60") }
                 }
 
                 guard let quality = expectedQuality else { return }
