@@ -8,5 +8,4 @@
 /// Facade for dependencies
 protocol KinescopePlayerDependencies: PlayingStrategyProvider {
     var inspector: KinescopeInspectable { get }
-    var downloader: KinescopeAssetDownloadable { get }
 }

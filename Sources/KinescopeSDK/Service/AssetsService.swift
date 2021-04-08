@@ -1,10 +1,6 @@
 import Foundation
 
-protocol AssetLinksService {
-    func getAssetLink(by id: String, completion: @escaping (Result<KinescopeVideoAssetLink, Error>) -> Void)
-}
-
-final class AssetLinksNetworkService: AssetLinksService {
+final class AssetsService {
 
     // MARK: - Private Properties
 

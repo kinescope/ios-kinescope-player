@@ -13,7 +13,7 @@ class Manager: KinescopeServicesProvider {
 
     var config: KinescopeConfig?
 
-    var downloader: KinescopeAssetDownloadable!
+    var downloader: KinescopeDownloadable!
 
     var inspector: KinescopeInspectable!
 
