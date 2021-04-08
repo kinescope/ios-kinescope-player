@@ -31,6 +31,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     init(config: KinescopePlayerConfig, dependencies: KinescopePlayerDependencies) {
         self.dependencies = dependencies
         self.config = config
+        self.dependencies.downloader.add(delegate: self)
     }
 
     deinit {
@@ -94,7 +95,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         switch quality {
         case .auto:
             isManualQuality = false
-        case .exact:
+        case .exact, .downloaded:
             isManualQuality = true
         }
 
@@ -437,7 +438,11 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
         let videoQuality: KinescopeVideoQuality
         if let asset = video.assets.first(where: { $0.quality == quality }) {
-            videoQuality = .exact(asset: asset)
+            if let path = dependencies.downloader.getPath(by: asset.id) {
+                videoQuality = .downloaded(url: path)
+            } else {
+                videoQuality = .exact(asset: asset)
+            }
         } else {
             videoQuality = .auto(hlsLink: video.hlsLink)
         }
@@ -453,7 +458,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             return
         }
 
-        Kinescope.shared.logger?.log(message: "Start download attachment: \(attachment.title)",
+        Kinescope.shared.logger?.log(message: "Start downloading attachment: \(attachment.title)",
                                      level: KinescopeLoggerLevel.player)
     }
 
@@ -462,12 +467,41 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             return
         }
 
-        Kinescope.shared.logger?.log(message: "Start download asset: \(asset.quality)",
+        dependencies.downloader.enqueueDownload(assetId: asset.id)
+        Kinescope.shared.logger?.log(message: "Start downloading asset: \(asset.quality) - \(asset.id)",
                                      level: KinescopeLoggerLevel.player)
     }
 
     func didSelectDownloadAll(for title: String) {
-        // FIXME: add logic
+        switch title {
+        case SideMenu.DescriptionTitle.download.rawValue:
+            video?.assets.forEach {
+                dependencies.downloader.enqueueDownload(assetId: $0.id)
+                Kinescope.shared.logger?.log(message: "Start downloading asset: \($0.quality) - \($0.id)",
+                                             level: KinescopeLoggerLevel.player)
+            }
+        default:
+            break
+        }
+    }
+
+}
+
+// MARK: - KinescopeAssetDownloadableDelegate
+
+extension KinescopeVideoPlayer: KinescopeAssetDownloadableDelegate {
+
+    public func kinescopeDownloadProgress(assetId: String, progress: Double) {
+    }
+
+    public func kinescopeDownloadError(assetId: String, error: KinescopeDownloadError) {
+        Kinescope.shared.logger?.log(message: "Failed asset download: \(assetId) with error: \(error)",
+                                     level: KinescopeLoggerLevel.player)
+    }
+
+    public func kinescopeDownloadComplete(assetId: String) {
+        Kinescope.shared.logger?.log(message: "Succeeded asset download: \(assetId)",
+                                     level: KinescopeLoggerLevel.player)
     }
 
 }

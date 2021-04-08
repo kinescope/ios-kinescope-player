@@ -194,6 +194,7 @@ private extension AssetNetworkService {
                                                          assetTitle: "io.kinescope.\(urlString)",
                                                          assetArtworkData: nil,
                                                          options: nil)
+
         // Start task and begin download
         downloadTask?.resume()
     }

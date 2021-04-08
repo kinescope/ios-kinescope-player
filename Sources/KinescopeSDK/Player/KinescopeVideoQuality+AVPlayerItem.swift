@@ -15,6 +15,8 @@ extension KinescopeVideoQuality {
             return makeAutoItem(from: hlsLink)
         case .exact(let asset):
             return makeExactItem(from: asset)
+        case .downloaded(let url):
+            return makeDownloadedItem(from: url)
         }
     }
 
@@ -39,6 +41,11 @@ fileprivate extension KinescopeVideoQuality {
         }
 
         return AVPlayerItem(url: url)
+    }
+
+    func makeDownloadedItem(from url: URL) -> AVPlayerItem? {
+        let asset = AVAsset(url: url)
+        return AVPlayerItem(asset: asset)
     }
 
 }
