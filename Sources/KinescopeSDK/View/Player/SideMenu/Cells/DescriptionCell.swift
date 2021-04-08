@@ -1,19 +1,26 @@
+//
+//  DescriptionCell.swift
+//  KinescopeSDK
+//
+//  Created by Никита Гагаринов on 06.04.2021.
+//
+
 import UIKit
 
-final class CheckmarkCell: UITableViewCell {
+final class DescriptionCell: UITableViewCell {
 
     // MARK: - Nested
 
     struct Model {
-        let title: NSAttributedString
-        let selected: Bool
+        let title: String
+        let value: String
         let config: KinescopeSideMenuItemConfiguration
     }
 
     // MARK: - Properties
 
     private weak var titleLabel: UILabel?
-    private weak var iconView: UIImageView?
+    private weak var valueLabel: UILabel?
     private var model: Model?
 
     // MARK: - Initialization
@@ -48,21 +55,15 @@ final class CheckmarkCell: UITableViewCell {
 
     func configure(with model: Model) {
         self.model = model
-
-        iconView?.isHidden = !model.selected
-
-        titleLabel?.attributedText = model.title.string
-            .attributedStringWithAssetIconIfNeeded(attributes: [
-                .font: model.config.titleFont,
-                .foregroundColor: model.config.titleColor
-            ])
+        configureTitleLabel(with: model)
+        configureValueLabel(with: model)
     }
 
 }
 
 // MARK: - Private
 
-private extension CheckmarkCell {
+private extension DescriptionCell {
 
     func setupInitialState() {
         selectionStyle = .none
@@ -72,26 +73,37 @@ private extension CheckmarkCell {
 
     func setupLayout() {
         let titleLabel = UILabel()
-        let iconView = UIImageView(image: .image(named: "checkmark"))
+        let valueLabel = UILabel()
 
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        iconView.translatesAutoresizingMaskIntoConstraints = false
+        valueLabel.translatesAutoresizingMaskIntoConstraints = false
 
         addSubview(titleLabel)
-        addSubview(iconView)
+        addSubview(valueLabel)
 
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8.0),
             titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8.0),
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24.0),
-            titleLabel.trailingAnchor.constraint(equalTo: iconView.leadingAnchor, constant: -4.0),
-
-            iconView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            iconView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16.0)
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16.0),
+            titleLabel.trailingAnchor.constraint(equalTo: valueLabel.leadingAnchor, constant: -4.0),
+            valueLabel.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            valueLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16.0)
         ])
 
         self.titleLabel = titleLabel
-        self.iconView = iconView
+        self.valueLabel = valueLabel
+    }
+
+    func configureTitleLabel(with model: Model) {
+        titleLabel?.text = model.title
+        titleLabel?.font = model.config.titleFont
+        titleLabel?.textColor = model.config.titleColor
+    }
+
+    func configureValueLabel(with model: Model) {
+        valueLabel?.text = model.value
+        valueLabel?.font = model.config.valueFont
+        valueLabel?.textColor = model.config.valueColor
     }
 
 }

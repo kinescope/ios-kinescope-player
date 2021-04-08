@@ -175,21 +175,32 @@ private extension KinescopePlayerView {
         // FIXME: Add configs for subtitle and playback speed
         switch SideMenu.Settings(rawValue: title) {
         case .playbackSpeed:
-            model = .init(title: title, isRoot: false, items: [])
+            model = .init(title: title, isRoot: false, isDownloadable: false, items: [])
         case .subtitles:
-            model = .init(title: title, isRoot: false, items: [])
+            model = .init(title: title, isRoot: false, isDownloadable: false, items: [])
         case .quality:
-            model = qualitySideMenuModel(with: title)
+            model = makeQualitySideMenuModel(with: title)
         case .none:
-            model = .init(title: title, isRoot: false, items: [])
+            model = .init(title: title, isRoot: false, isDownloadable: false, items: [])
         }
 
-        let sideMenu = SideMenu(config: config.sideMenu, model: model)
-        sideMenu.delegate = self
-        sideMenuCoordinator.present(view: sideMenu, in: self, animated: true)
+        presentSideMenu(model: model)
     }
 
-    func qualitySideMenuModel(with title: String) -> SideMenu.Model {
+    func handleDescriptionActions(for sideMenu: SideMenu, index: Int) {
+        switch SideMenu.DescriptionTitle(rawValue: sideMenu.title) {
+        case .attachments:
+            delegate?.didSelectAttachment(with: index)
+            sideMenuWillBeDismissed(sideMenu, withRoot: true)
+        case .download:
+            return
+        case .none:
+            return
+        }
+
+    }
+
+    func makeQualitySideMenuModel(with title: String) -> SideMenu.Model {
         let qualities = delegate?.didShowQuality() ?? []
         var items = qualities.compactMap { quality -> SideMenu.Item in
             let selected = self.selectedQuality.string == quality
@@ -200,7 +211,27 @@ private extension KinescopePlayerView {
         let autoTitle = NSAttributedString(string: "Auto")
         let selected = selectedQuality == autoTitle
         items.insert(.checkmark(title: autoTitle, selected: selected), at: 0)
-        return .init(title: title, isRoot: false, items: items)
+        return .init(title: title, isRoot: false, isDownloadable: false, items: items)
+    }
+
+    func makeAttachmentSideMenuItems() -> [SideMenu.Item] {
+        guard let materials = delegate?.didShowAttachments() else {
+            return []
+        }
+
+        var items: [SideMenu.Item] = []
+        let bcf = ByteCountFormatter()
+        bcf.allowedUnits = [.useAll]
+        bcf.countStyle = .file
+
+        // FIXME: Add localization
+        for (index, material) in materials.enumerated() {
+            let title = String(index + 1) + ". " + material.title
+            let value = bcf.string(fromByteCount: Int64(material.size))
+            items.append(.description(title: title, value: value))
+        }
+
+        return items
     }
 
     func handleCheckmarkActions(for title: NSAttributedString, sideMenu: SideMenu) {
@@ -253,6 +284,7 @@ extension KinescopePlayerView: PlayerControlOutput {
             // FIXME: Add localization
             let model = SideMenu.Model(title: SideMenu.Settings.title,
                                        isRoot: true,
+                                       isDownloadable: false,
                                        items: [
                                         .disclosure(title: SideMenu.Settings.playbackSpeed.rawValue,
                                                     value: nil),
@@ -263,14 +295,17 @@ extension KinescopePlayerView: PlayerControlOutput {
                                        ])
             presentSideMenu(model: model)
         case .download:
-            let model = SideMenu.Model(title: "Download",
+            let model = SideMenu.Model(title: SideMenu.DescriptionTitle.download.rawValue,
                                        isRoot: true,
+                                       isDownloadable: true,
                                        items: [])
             presentSideMenu(model: model)
         case .attachments:
-            let model = SideMenu.Model(title: "Attachments",
+            let items = makeAttachmentSideMenuItems()
+            let model = SideMenu.Model(title: SideMenu.DescriptionTitle.attachments.rawValue,
                                        isRoot: true,
-                                       items: [])
+                                       isDownloadable: true,
+                                       items: items)
             presentSideMenu(model: model)
         default:
             break
@@ -302,13 +337,19 @@ extension KinescopePlayerView: SideMenuDelegate {
         }
     }
 
-    func sideMenuDidSelect(item: SideMenu.Item, sideMenu: SideMenu) {
+    func sideMenuDidSelect(item: SideMenu.Item, rowIndex: Int, sideMenu: SideMenu) {
         switch item {
         case .disclosure(let title, _):
             handleDisclosureActions(for: title)
         case .checkmark(let title, _):
             handleCheckmarkActions(for: title, sideMenu: sideMenu)
+        case .description:
+            handleDescriptionActions(for: sideMenu, index: rowIndex)
         }
+    }
+
+    func downloadAllTapped(for title: String) {
+        delegate?.didSelectDownloadAll(for: title)
     }
 
 }

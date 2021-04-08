@@ -238,6 +238,7 @@ private extension KinescopeVideoPlayer {
 // MARK: - PlayerOverlayViewDelegate
 
 extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
+
     func didPlay(videoEnded: Bool) {
         if videoEnded {
             self.strategy.player.seek(to: .zero)
@@ -334,9 +335,27 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             .filter { $0 != "original" } ?? []
     }
 
+    func didShowAttachments() -> [KinescopeVideoAdditionalMaterial]? {
+        return video?.additionalMaterials
+    }
+
     func didSelect(quality: String) {
         // FIXME: Add logic
         Kinescope.shared.logger?.log(message: "Select quality: \(quality)",
                                      level: KinescopeLoggerLevel.player)
     }
+
+    func didSelectAttachment(with index: Int) {
+        guard let attachment = video?.additionalMaterials[safe: index] else {
+            return
+        }
+
+        Kinescope.shared.logger?.log(message: "Start download attachment: \(attachment.title)",
+                                     level: KinescopeLoggerLevel.player)
+    }
+
+    func didSelectDownloadAll(for title: String) {
+        // FIXME: add logic
+    }
+
 }
