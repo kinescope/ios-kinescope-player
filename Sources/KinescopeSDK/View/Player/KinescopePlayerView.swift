@@ -193,7 +193,8 @@ private extension KinescopePlayerView {
             delegate?.didSelectAttachment(with: index)
             sideMenuWillBeDismissed(sideMenu, withRoot: true)
         case .download:
-            return
+            delegate?.didSelectAsset(with: index)
+            sideMenuWillBeDismissed(sideMenu, withRoot: true)
         case .none:
             return
         }
@@ -228,6 +229,26 @@ private extension KinescopePlayerView {
         for (index, material) in materials.enumerated() {
             let title = String(index + 1) + ". " + material.title
             let value = bcf.string(fromByteCount: Int64(material.size))
+            items.append(.description(title: title, value: value))
+        }
+
+        return items
+    }
+
+    func makeAssetsSideMenuItems() -> [SideMenu.Item] {
+        guard let materials = delegate?.didShowAssets() else {
+            return []
+        }
+
+        var items: [SideMenu.Item] = []
+        let bcf = ByteCountFormatter()
+        bcf.allowedUnits = [.useAll]
+        bcf.countStyle = .file
+
+        // FIXME: Add localization
+        for material in materials {
+            var title = material.quality
+            let value = bcf.string(fromByteCount: Int64(material.fileSize))
             items.append(.description(title: title, value: value))
         }
 
@@ -295,10 +316,11 @@ extension KinescopePlayerView: PlayerControlOutput {
                                        ])
             presentSideMenu(model: model)
         case .download:
+            let items = makeAssetsSideMenuItems()
             let model = SideMenu.Model(title: SideMenu.DescriptionTitle.download.rawValue,
                                        isRoot: true,
                                        isDownloadable: true,
-                                       items: [])
+                                       items: items)
             presentSideMenu(model: model)
         case .attachments:
             let items = makeAttachmentSideMenuItems()
