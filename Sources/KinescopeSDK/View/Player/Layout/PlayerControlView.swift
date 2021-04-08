@@ -48,6 +48,7 @@ class PlayerControlView: UIControl {
 // MARK: - PlayerControlInput
 
 extension PlayerControlView: PlayerControlInput {
+
     func setTimeline(to position: CGFloat) {
         timeline.setTimeline(to: position)
     }
@@ -63,6 +64,7 @@ extension PlayerControlView: PlayerControlInput {
     func set(options: [KinescopePlayerOption]) {
         optionsMenu.set(options: options)
     }
+
 }
 
 // MARK: - PlayerControlOptionsOutput
