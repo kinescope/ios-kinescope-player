@@ -58,7 +58,7 @@ public class KinescopePlayerView: UIView {
         previewView.isHidden = true
     }
 
-    func change(status: AVPlayerItem.Status) {
+    func change(status: AVPlayer.Status) {
         switch status {
         case .readyToPlay:
             overlay?.isHidden = false
@@ -213,7 +213,7 @@ private extension KinescopePlayerView {
     func makeQualitySideMenuModel(with title: String) -> SideMenu.Model {
         let qualities = delegate?.didShowQuality() ?? []
         var items = qualities.compactMap { quality -> SideMenu.Item in
-            let selected = self.selectedQuality.string == quality
+            let selected = self.selectedQuality.string.trimmingCharacters(in: .symbols) == quality
             return .checkmark(title: .init(string: quality), selected: selected)
         }
 

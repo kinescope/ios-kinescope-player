@@ -13,12 +13,14 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private weak var view: KinescopePlayerView?
 
     private var timeObserver: Any?
+    private var playerStatusObserver: NSKeyValueObservation?
     private var itemStatusObserver: NSKeyValueObservation?
     private var timeControlStatusObserver: NSKeyValueObservation?
     private var tracksObserver: NSKeyValueObservation?
 
     private var isSeeking = false
     private var isManualQuality = false
+    private var currentQuality = ""
     private var currentTime: CMTime = .zero
     private weak var miniView: KinescopePlayerView?
 
@@ -38,6 +40,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         self.removePlaybackTimeObserver()
         self.removePlayerItemStatusObserver()
         self.removePlayerTimeControlStatusObserver()
+        self.removePlayerStatusObserver()
         self.removeTracksObserver()
     }
 
@@ -75,6 +78,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
         observePlaybackTime()
         addPlayerTimeControlStatusObserver()
+        addPlayerStatusObserver()
     }
 
     public func detach(view: KinescopePlayerView) {
@@ -84,6 +88,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
         removePlaybackTimeObserver()
         removePlayerTimeControlStatusObserver()
+        removePlayerStatusObserver()
     }
 
     public func select(quality: KinescopeVideoQuality) {
@@ -107,11 +112,10 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
         strategy.unbind()
         strategy.bind(item: item)
-        
-        observePlaybackTime()
 
-        addTracksObserver()
         addPlayerItemStatusObserver()
+        observePlaybackTime()
+        addTracksObserver()
     }
 
 }
@@ -181,11 +185,15 @@ private extension KinescopeVideoPlayer {
 
             Kinescope.shared.logger?.log(message: "playback position changed to \(time) seconds", level: KinescopeLoggerLevel.player)
 
-            controlPanel.setIndicator(to: time)
+            if !time.isNaN {
+                controlPanel.setIndicator(to: time)
+            }
 
             let duration = currentItem.duration.seconds
 
-            controlPanel.setTimeline(to: CGFloat(time / duration))
+            if !time.isNaN && !duration.isNaN {
+                controlPanel.setTimeline(to: CGFloat(time / duration))
+            }
 
             // MARK: - Preload observation
 
@@ -193,7 +201,9 @@ private extension KinescopeVideoPlayer {
 
             Kinescope.shared.logger?.log(message: "playback buffered \(buferredTime) seconds", level: KinescopeLoggerLevel.player)
 
-            controlPanel.setBufferred(progress: CGFloat(buferredTime / duration))
+            if !buferredTime.isNaN && !duration.isNaN {
+                controlPanel.setBufferred(progress: CGFloat(buferredTime / duration))
+            }
         }
 
     }
@@ -203,6 +213,24 @@ private extension KinescopeVideoPlayer {
             strategy.player.removeTimeObserver(timeObserver)
             self.timeObserver = nil
         }
+    }
+
+    func addPlayerStatusObserver() {
+        self.playerStatusObserver = self.strategy.player.observe(
+            \.status,
+            options: [.new, .old],
+            changeHandler: { [weak self] item, _ in
+                self?.view?.change(status: item.status)
+
+                Kinescope.shared.logger?.log(message: "AVPlayer.Status – \(item.status)",
+                                             level: KinescopeLoggerLevel.player)
+            }
+        )
+    }
+
+    func removePlayerStatusObserver() {
+        self.playerStatusObserver?.invalidate()
+        self.playerStatusObserver = nil
     }
 
     func addPlayerItemStatusObserver() {
@@ -228,8 +256,6 @@ private extension KinescopeVideoPlayer {
                 default:
                     break
                 }
-
-                self.view?.change(status: item.status)
 
                 Kinescope.shared.logger?.log(message: "AVPlayerItem.Status – \(item.status)",
                                              level: KinescopeLoggerLevel.player)
@@ -286,10 +312,14 @@ private extension KinescopeVideoPlayer {
                 if frameRate > 30.0 {
                     expectedQuality = qualities.first { $0.hasSuffix("60") }
                 } else {
-                    expectedQuality = qualities.first { $0.hasPrefix(height) }
+                    expectedQuality = qualities.first { $0.hasPrefix(height) && !$0.hasSuffix("60") }
                 }
 
-                guard let quality = expectedQuality else { return }
+                guard
+                    let quality = expectedQuality
+                else {
+                    return
+                }
 
                 self.view?.change(quality: quality, manualQuality: self.isManualQuality)
 
@@ -391,11 +421,16 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             detach(view: view)
 
             rootVC?.dismiss(animated: true, completion: { [weak self] in
-                guard let miniView = self?.miniView else {
+                guard
+                    let self = self,
+                    let miniView = self.miniView
+                else {
                     return
                 }
-                self?.attach(view: miniView)
-                self?.play()
+
+                self.attach(view: miniView)
+                self.view?.change(quality: self.currentQuality, manualQuality: self.isManualQuality)
+                self.play()
             })
         } else {
             miniView = view
@@ -407,8 +442,15 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                                                              config: .preferred(for: video))
             playerVC.modalPresentationStyle = .overFullScreen
             rootVC?.present(playerVC, animated: true, completion: { [weak self] in
-                self?.play()
-                self?.view?.change(status: .readyToPlay)
+                guard
+                    let self = self
+                else {
+                    return
+                }
+
+                self.play()
+                self.view?.change(status: .readyToPlay)
+                self.view?.change(quality: self.currentQuality, manualQuality: self.isManualQuality)
             })
         }
     }
@@ -446,6 +488,8 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         } else {
             videoQuality = .auto(hlsLink: video.hlsLink)
         }
+
+        currentQuality = quality
 
         select(quality: videoQuality)
 
