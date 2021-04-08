@@ -14,7 +14,6 @@ final class DescriptionCell: UITableViewCell {
     struct Model {
         let title: String
         let value: String
-        let id: String
         let config: KinescopeSideMenuItemConfiguration
     }
 
@@ -24,7 +23,7 @@ final class DescriptionCell: UITableViewCell {
     private weak var valueLabel: UILabel?
     private var model: Model?
 
-    // MARK: - Lifecycle
+    // MARK: - Initialization
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -34,6 +33,8 @@ final class DescriptionCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    // MARK: - UITableViewCell
 
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)

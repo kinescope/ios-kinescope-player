@@ -23,6 +23,8 @@ final class DisclosureCell: UITableViewCell {
     private weak var iconView: UIImageView!
     private var model: Model?
 
+    // MARK: - Initialization
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.setupInitialState()
@@ -31,6 +33,8 @@ final class DisclosureCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    // MARK: - UITableViewCell
 
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)

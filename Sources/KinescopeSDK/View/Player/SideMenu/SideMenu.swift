@@ -10,7 +10,7 @@ import UIKit
 
 protocol SideMenuDelegate: class {
     func sideMenuWillBeDismissed(_ sideMenu: SideMenu, withRoot: Bool)
-    func sideMenuDidSelect(item: SideMenu.Item, sideMenu: SideMenu)
+    func sideMenuDidSelect(item: SideMenu.Item, rowIndex: Int, sideMenu: SideMenu)
     func downloadAllTapped(for title: String)
 }
 
@@ -27,10 +27,15 @@ final class SideMenu: UIView {
         static var title = "Settings"
     }
 
+    enum DescriptionTitle: String {
+        case attachments = "Attachments"
+        case download = "Download"
+    }
+
     enum Item {
         case disclosure(title: String, value: NSAttributedString?)
         case checkmark(title: NSAttributedString, selected: Bool = false)
-        case description(title: String, value: String, id: String)
+        case description(title: String, value: String)
     }
 
     struct Model {
@@ -47,10 +52,15 @@ final class SideMenu: UIView {
 
     // MARK: - Properties
 
+    var title: String {
+        model.title
+    }
+    weak var delegate: SideMenuDelegate?
+
+    // MARK: - Private Properties
+
     private let config: KinescopeSideMenuConfiguration
     private let model: Model
-
-    weak var delegate: SideMenuDelegate?
 
     // MARK: - Init
 
@@ -89,12 +99,11 @@ extension SideMenu: UITableViewDataSource {
                                                             selected: selected,
                                                             config: config.item))
             return cell
-        case .description(let title, let value, let id):
+        case .description(let title, let value):
             let cell = tableView.dequeueReusableCell(withIdentifier: DescriptionCell.description(),
                                                      for: indexPath)
             (cell as? DescriptionCell)?.configure(with: .init(title: title,
                                                               value: value,
-                                                              id: id,
                                                               config: config.item))
             return cell
         }
@@ -122,7 +131,7 @@ extension SideMenu: UITableViewDelegate {
 
         let item = model.items[indexPath.row]
 
-        delegate?.sideMenuDidSelect(item: item, sideMenu: self)
+        delegate?.sideMenuDidSelect(item: item, rowIndex: indexPath.row, sideMenu: self)
 
         tableView.deselectRow(at: indexPath, animated: true)
 

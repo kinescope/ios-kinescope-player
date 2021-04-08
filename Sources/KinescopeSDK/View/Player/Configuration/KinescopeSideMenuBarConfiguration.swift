@@ -23,6 +23,7 @@ public struct KinescopeSideMenuBarConfiguration {
     ///   - titleColor: Color of title and buttons
     ///   - downloadAllFont: Font for Download all button
     ///   - downloadAllColor: Color of Download all button
+    ///   - downloadAllHighlightedColor: Press state color of Download all button
     ///   - iconSize: Height of square button icons
     ///   - preferedHeight: Height of sidemenu navigation bar in points
     public init(titleFont: UIFont,
