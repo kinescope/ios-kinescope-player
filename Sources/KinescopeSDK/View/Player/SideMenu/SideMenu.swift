@@ -10,10 +10,13 @@ import UIKit
 
 protocol SideMenuDelegate: class {
     func sideMenuWillBeDismissed(_ sideMenu: SideMenu, withRoot: Bool)
-    func sideMenuDidSelect(item: SideMenu.Item, sideMenu: SideMenu)
+    func sideMenuDidSelect(item: SideMenu.Item, rowIndex: Int, sideMenu: SideMenu)
+    func downloadAllTapped(for title: String)
 }
 
 final class SideMenu: UIView {
+
+    // MARK: - Nested Types
 
     // FIXME: Add localization
     enum Settings: String {
@@ -24,14 +27,21 @@ final class SideMenu: UIView {
         static var title = "Settings"
     }
 
+    enum DescriptionTitle: String {
+        case attachments = "Attachments"
+        case download = "Download"
+    }
+
     enum Item {
         case disclosure(title: String, value: NSAttributedString?)
         case checkmark(title: NSAttributedString, selected: Bool = false)
+        case description(title: String, value: String)
     }
 
     struct Model {
         let title: String
         let isRoot: Bool
+        let isDownloadable: Bool
         let items: [Item]
     }
 
@@ -42,10 +52,15 @@ final class SideMenu: UIView {
 
     // MARK: - Properties
 
+    var title: String {
+        model.title
+    }
+    weak var delegate: SideMenuDelegate?
+
+    // MARK: - Private Properties
+
     private let config: KinescopeSideMenuConfiguration
     private let model: Model
-
-    weak var delegate: SideMenuDelegate?
 
     // MARK: - Init
 
@@ -84,6 +99,13 @@ extension SideMenu: UITableViewDataSource {
                                                             selected: selected,
                                                             config: config.item))
             return cell
+        case .description(let title, let value):
+            let cell = tableView.dequeueReusableCell(withIdentifier: DescriptionCell.description(),
+                                                     for: indexPath)
+            (cell as? DescriptionCell)?.configure(with: .init(title: title,
+                                                              value: value,
+                                                              config: config.item))
+            return cell
         }
     }
 
@@ -109,7 +131,7 @@ extension SideMenu: UITableViewDelegate {
 
         let item = model.items[indexPath.row]
 
-        delegate?.sideMenuDidSelect(item: item, sideMenu: self)
+        delegate?.sideMenuDidSelect(item: item, rowIndex: indexPath.row, sideMenu: self)
 
         tableView.deselectRow(at: indexPath, animated: true)
 
@@ -127,6 +149,11 @@ extension SideMenu: SideMenuBarDelegate {
 
     func backTapped() {
         delegate?.sideMenuWillBeDismissed(self, withRoot: false)
+    }
+
+    func downloadAllTapped(for title: String) {
+        delegate?.downloadAllTapped(for: title)
+        delegate?.sideMenuWillBeDismissed(self, withRoot: true)
     }
 
 }
@@ -159,13 +186,14 @@ private extension SideMenu {
 
         tableView.register(DisclosureCell.self, forCellReuseIdentifier: DisclosureCell.description())
         tableView.register(CheckmarkCell.self, forCellReuseIdentifier: CheckmarkCell.description())
+        tableView.register(DescriptionCell.self, forCellReuseIdentifier: DescriptionCell.description())
 
         self.tableView = tableView
     }
 
     func configureBar() {
         let bar = SideMenuBar(config: config.bar,
-                              model: .init(title: model.title, isRoot: model.isRoot))
+                              model: .init(title: model.title, isRoot: model.isRoot, isDownloadable: model.isDownloadable))
 
         addSubview(bar)
         topChild(view: bar, padding: 0)
