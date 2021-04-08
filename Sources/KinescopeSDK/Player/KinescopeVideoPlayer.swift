@@ -348,7 +348,7 @@ private extension KinescopeVideoPlayer {
     }
 }
 
-// MARK: - PlayerOverlayViewDelegate
+// MARK: - KinescopePlayerViewDelegate
 
 extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
@@ -464,6 +464,10 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         return video?.additionalMaterials
     }
 
+    func didShowAssets() -> [KinescopeVideoAsset]? {
+        return video?.assets
+    }
+
     func didSelect(quality: String) {
         guard
             let video = video
@@ -494,6 +498,15 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         }
 
         Kinescope.shared.logger?.log(message: "Start download attachment: \(attachment.title)",
+                                     level: KinescopeLoggerLevel.player)
+    }
+
+    func didSelectAsset(with index: Int) {
+        guard let asset = video?.assets[safe: index] else {
+            return
+        }
+
+        Kinescope.shared.logger?.log(message: "Start download asset: \(asset.quality)",
                                      level: KinescopeLoggerLevel.player)
     }
 
