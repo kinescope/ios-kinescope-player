@@ -7,7 +7,7 @@
 
 import Foundation
 
-class IDsUDStorage {
+final class IDsUDStorage: IDsStorage {
 
     // MARK: - Nested Types
 

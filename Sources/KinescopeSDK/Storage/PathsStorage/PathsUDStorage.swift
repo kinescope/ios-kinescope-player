@@ -7,7 +7,7 @@
 
 import Foundation
 
-class PathsUDStorage {
+final class PathsUDStorage: PathsStorage {
 
     // MARK: - Private Properties
 
@@ -45,6 +45,7 @@ class PathsUDStorage {
         return Array(dict.keys)
     }
 
+    @discardableResult
     func deleteUrl(by id: String) -> String? {
         guard var dict = getDict() else {
             return nil

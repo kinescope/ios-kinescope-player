@@ -43,7 +43,7 @@ class AssetDownloader: KinescopeAssetDownloadable {
             assetPathsStorage.deleteVideoUrl(by: assetId)
             return true
         } catch {
-            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.network)
+            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.storage)
             return false
         }
     }
