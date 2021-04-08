@@ -33,7 +33,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     init(config: KinescopePlayerConfig, dependencies: KinescopePlayerDependencies) {
         self.dependencies = dependencies
         self.config = config
-        self.dependencies.downloader.add(delegate: self)
+        self.dependencies.assetDownloader.add(delegate: self)
     }
 
     deinit {
@@ -480,7 +480,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
         let videoQuality: KinescopeVideoQuality
         if let asset = video.assets.first(where: { $0.quality == quality }) {
-            if let path = dependencies.downloader.getPath(by: asset.id) {
+            if let path = dependencies.assetDownloader.getPath(by: asset.id) {
                 videoQuality = .downloaded(url: path)
             } else {
                 videoQuality = .exact(asset: asset)
@@ -511,7 +511,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             return
         }
 
-        dependencies.downloader.enqueueDownload(assetId: asset.id)
+        dependencies.assetDownloader.enqueueDownload(assetId: asset.id)
         Kinescope.shared.logger?.log(message: "Start downloading asset: \(asset.quality) - \(asset.id)",
                                      level: KinescopeLoggerLevel.player)
     }
@@ -520,7 +520,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         switch title {
         case SideMenu.DescriptionTitle.download.rawValue:
             video?.assets.forEach {
-                dependencies.downloader.enqueueDownload(assetId: $0.id)
+                dependencies.assetDownloader.enqueueDownload(assetId: $0.id)
                 Kinescope.shared.logger?.log(message: "Start downloading asset: \($0.quality) - \($0.id)",
                                              level: KinescopeLoggerLevel.player)
             }
