@@ -58,7 +58,7 @@ public class KinescopePlayerView: UIView {
         previewView.isHidden = true
     }
 
-    func change(status: AVPlayer.Status) {
+    func change(status: AVPlayerItem.Status) {
         switch status {
         case .readyToPlay:
             overlay?.isHidden = false
@@ -86,6 +86,15 @@ public class KinescopePlayerView: UIView {
 
     func set(options: [KinescopePlayerOption]) {
         controlPanel?.set(options: options)
+    }
+
+    func change(quality: String, manualQuality: Bool) {
+        // FIXME: Add localization
+        if manualQuality {
+            set(quality: quality)
+        } else {
+            set(quality: "Auto " + quality)
+        }
     }
 
 }
@@ -210,7 +219,7 @@ private extension KinescopePlayerView {
 
         // FIXME: Add localization
         let autoTitle = NSAttributedString(string: "Auto")
-        let selected = selectedQuality == autoTitle
+        let selected = selectedQuality.string.hasPrefix(autoTitle.string)
         items.insert(.checkmark(title: autoTitle, selected: selected), at: 0)
         return .init(title: title, isRoot: false, isDownloadable: false, items: items)
     }
@@ -263,7 +272,14 @@ private extension KinescopePlayerView {
     func handleQualityCheckmarkAction(for title: NSAttributedString, sideMenu: SideMenu) {
         delegate?.didSelect(quality: title.string)
         sideMenuWillBeDismissed(sideMenu, withRoot: true)
-        selectedQuality = title
+        set(quality: title.string)
+    }
+
+    func set(quality: String) {
+        let color = config.sideMenu.item.valueColor
+        let font = config.sideMenu.item.valueFont
+        let attributes: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: color]
+        selectedQuality = quality.attributedStringWithAssetIconIfNeeded(attributes: attributes)
     }
 
     func presentSideMenu(model: SideMenu.Model) {
