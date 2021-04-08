@@ -58,7 +58,7 @@ public class KinescopePlayerView: UIView {
         previewView.isHidden = true
     }
 
-    func change(status: AVPlayerItem.Status) {
+    func change(status: AVPlayer.Status) {
         switch status {
         case .readyToPlay:
             overlay?.isHidden = false

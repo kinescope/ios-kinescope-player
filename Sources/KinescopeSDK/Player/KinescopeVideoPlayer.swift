@@ -13,6 +13,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private weak var view: KinescopePlayerView?
 
     private var timeObserver: Any?
+    private var playerStatusObserver: NSKeyValueObservation?
     private var itemStatusObserver: NSKeyValueObservation?
     private var timeControlStatusObserver: NSKeyValueObservation?
     private var tracksObserver: NSKeyValueObservation?
@@ -36,6 +37,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         self.removePlaybackTimeObserver()
         self.removePlayerItemStatusObserver()
         self.removePlayerTimeControlStatusObserver()
+        self.removePlayerStatusObserver()
         self.removeTracksObserver()
     }
 
@@ -72,6 +74,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
         observePlaybackTime()
         addPlayerTimeControlStatusObserver()
+        addPlayerStatusObserver()
     }
 
     public func detach(view: KinescopePlayerView) {
@@ -81,6 +84,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
         removePlaybackTimeObserver()
         removePlayerTimeControlStatusObserver()
+        removePlayerStatusObserver()
     }
 
     public func select(quality: KinescopeVideoQuality) {
@@ -104,11 +108,10 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
         strategy.unbind()
         strategy.bind(item: item)
-        
-        observePlaybackTime()
 
-        addTracksObserver()
         addPlayerItemStatusObserver()
+        observePlaybackTime()
+        addTracksObserver()
     }
 
 }
@@ -190,6 +193,24 @@ private extension KinescopeVideoPlayer {
         }
     }
 
+    func addPlayerStatusObserver() {
+        self.playerStatusObserver = self.strategy.player.observe(
+            \.status,
+            options: [.new, .old],
+            changeHandler: { [weak self] item, _ in
+                self?.view?.change(status: item.status)
+
+                Kinescope.shared.logger?.log(message: "AVPlayer.Status – \(item.status)",
+                                             level: KinescopeLoggerLevel.player)
+            }
+        )
+    }
+
+    func removePlayerStatusObserver() {
+        self.playerStatusObserver?.invalidate()
+        self.playerStatusObserver = nil
+    }
+
     func addPlayerItemStatusObserver() {
         self.itemStatusObserver = self.strategy.player.currentItem?.observe(
             \.status,
@@ -213,8 +234,6 @@ private extension KinescopeVideoPlayer {
                 default:
                     break
                 }
-
-                self.view?.change(status: item.status)
 
                 Kinescope.shared.logger?.log(message: "AVPlayerItem.Status – \(item.status)",
                                              level: KinescopeLoggerLevel.player)
