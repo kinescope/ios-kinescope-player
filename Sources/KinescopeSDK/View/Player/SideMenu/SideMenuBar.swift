@@ -11,6 +11,7 @@ import UIKit
 protocol SideMenuBarDelegate: class {
     func closeTapped()
     func backTapped()
+    func downloadAllTapped(for title: String)
 }
 
 final class SideMenuBar: UIView {
@@ -18,6 +19,7 @@ final class SideMenuBar: UIView {
     struct Model {
         let title: String
         let isRoot: Bool
+        let isDownloadable: Bool
     }
 
     // MARK: - Views
@@ -25,6 +27,7 @@ final class SideMenuBar: UIView {
     private weak var backButton: UIButton!
     private weak var titleView: UILabel!
     private weak var closeButton: UIButton!
+    private weak var downloadAllButton: UIButton!
 
     // MARK: - Properties
 
@@ -66,6 +69,11 @@ private extension SideMenuBar {
         delegate?.backTapped()
     }
 
+    @objc
+    func onDownloadAllTapped() {
+        delegate?.downloadAllTapped(for: model.title)
+    }
+
 }
 
 // MARK: - Private
@@ -100,6 +108,16 @@ private extension SideMenuBar {
                 closeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
             ])
         }
+
+        if model.isDownloadable {
+            configureDownloadButton()
+
+            NSLayoutConstraint.activate([
+                downloadAllButton.centerYAnchor.constraint(equalTo: closeButton.centerYAnchor),
+                downloadAllButton.trailingAnchor.constraint(equalTo: closeButton.leadingAnchor, constant: -4)
+            ])
+        }
+
     }
 
     func configureTitle() {
@@ -135,6 +153,22 @@ private extension SideMenuBar {
         button.addTarget(nil, action: #selector(onBackTapped), for: .touchUpInside)
 
         self.backButton = button
+    }
+
+    func configureDownloadButton() {
+        let button = UIButton()
+        // FIXME: Add localization
+        button.setTitle("Download all", for: .normal)
+        button.titleLabel?.font = config.downloadAllFont
+        button.setTitleColor(config.downloadAllColor, for: .normal)
+        button.setTitleColor(config.downloadAllHighlightedColor, for: .highlighted)
+        button.translatesAutoresizingMaskIntoConstraints = false
+
+        addSubview(button)
+        button.sizeToFit()
+        button.addTarget(nil, action: #selector(onDownloadAllTapped), for: .touchUpInside)
+
+        self.downloadAllButton = button
     }
 
 }

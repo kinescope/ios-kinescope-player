@@ -60,7 +60,9 @@ class PlayerControlOptionsView: UIControl {
 extension PlayerControlOptionsView: PlayerControlOptionsInput {
 
     func set(options: [KinescopePlayerOption]) {
-        guard !options.isEmpty else { return }
+        guard !options.isEmpty else {
+            return
+        }
         self.options = options
         self.isExpanded = false
 

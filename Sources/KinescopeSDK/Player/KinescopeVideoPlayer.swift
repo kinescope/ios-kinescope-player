@@ -13,10 +13,15 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private weak var view: KinescopePlayerView?
 
     private var timeObserver: Any?
-    private var statusObserver: NSKeyValueObservation?
+    private var playerStatusObserver: NSKeyValueObservation?
+    private var itemStatusObserver: NSKeyValueObservation?
     private var timeControlStatusObserver: NSKeyValueObservation?
+    private var tracksObserver: NSKeyValueObservation?
 
     private var isSeeking = false
+    private var isManualQuality = false
+    private var currentQuality = ""
+    private var currentTime: CMTime = .zero
     private weak var miniView: KinescopePlayerView?
 
     private var video: KinescopeVideo?
@@ -32,8 +37,10 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
     deinit {
         self.removePlaybackTimeObserver()
-        self.removePlayerStatusObserver()
+        self.removePlayerItemStatusObserver()
         self.removePlayerTimeControlStatusObserver()
+        self.removePlayerStatusObserver()
+        self.removeTracksObserver()
     }
 
     // MARK: - KinescopePlayer
@@ -57,6 +64,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     public func stop() {
         self.strategy.pause()
         self.strategy.unbind()
+        self.removeTracksObserver()
     }
 
     public func attach(view: KinescopePlayerView) {
@@ -68,8 +76,8 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         view.set(options: options)
 
         observePlaybackTime()
-        addPlayerStatusObserver()
         addPlayerTimeControlStatusObserver()
+        addPlayerStatusObserver()
     }
 
     public func detach(view: KinescopePlayerView) {
@@ -78,8 +86,8 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         view.delegate = nil
 
         removePlaybackTimeObserver()
-        removePlayerStatusObserver()
         removePlayerTimeControlStatusObserver()
+        removePlayerStatusObserver()
     }
 
     public func select(quality: KinescopeVideoQuality) {
@@ -88,9 +96,25 @@ public class KinescopeVideoPlayer: KinescopePlayer {
             return
         }
 
-        // Restore here sek position
+        switch quality {
+        case .auto:
+            isManualQuality = false
+        case .exact:
+            isManualQuality = true
+        }
 
+        currentTime = strategy.player.currentTime()
+
+        removeTracksObserver()
+        removePlayerItemStatusObserver()
+        removePlaybackTimeObserver()
+
+        strategy.unbind()
         strategy.bind(item: item)
+
+        addPlayerItemStatusObserver()
+        observePlaybackTime()
+        addTracksObserver()
     }
 
 }
@@ -160,11 +184,15 @@ private extension KinescopeVideoPlayer {
 
             Kinescope.shared.logger?.log(message: "playback position changed to \(time) seconds", level: KinescopeLoggerLevel.player)
 
-            controlPanel.setIndicator(to: time)
+            if !time.isNaN {
+                controlPanel.setIndicator(to: time)
+            }
 
             let duration = currentItem.duration.seconds
 
-            controlPanel.setTimeline(to: CGFloat(time / duration))
+            if !time.isNaN && !duration.isNaN {
+                controlPanel.setTimeline(to: CGFloat(time / duration))
+            }
 
             // MARK: - Preload observation
 
@@ -172,7 +200,9 @@ private extension KinescopeVideoPlayer {
 
             Kinescope.shared.logger?.log(message: "playback buffered \(buferredTime) seconds", level: KinescopeLoggerLevel.player)
 
-            controlPanel.setBufferred(progress: CGFloat(buferredTime / duration))
+            if !buferredTime.isNaN && !duration.isNaN {
+                controlPanel.setBufferred(progress: CGFloat(buferredTime / duration))
+            }
         }
 
     }
@@ -185,7 +215,7 @@ private extension KinescopeVideoPlayer {
     }
 
     func addPlayerStatusObserver() {
-        self.statusObserver = self.strategy.player.observe(
+        self.playerStatusObserver = self.strategy.player.observe(
             \.status,
             options: [.new, .old],
             changeHandler: { [weak self] item, _ in
@@ -198,8 +228,43 @@ private extension KinescopeVideoPlayer {
     }
 
     func removePlayerStatusObserver() {
-        self.statusObserver?.invalidate()
-        self.statusObserver = nil
+        self.playerStatusObserver?.invalidate()
+        self.playerStatusObserver = nil
+    }
+
+    func addPlayerItemStatusObserver() {
+        self.itemStatusObserver = self.strategy.player.currentItem?.observe(
+            \.status,
+            options: [.new, .old],
+            changeHandler: { [weak self] item, _ in
+                guard
+                    let self = self
+                else {
+                    return
+                }
+
+                switch item.status {
+                case .readyToPlay:
+                    if self.currentTime.seconds > .zero {
+                        self.seek(to: self.currentTime.seconds)
+                        self.currentTime = .zero
+                    }
+                case .failed, .unknown:
+                    Kinescope.shared.logger?.log(message: "AVPlayerItem.error – \(String(describing: item.error))",
+                                                 level: KinescopeLoggerLevel.player)
+                default:
+                    break
+                }
+
+                Kinescope.shared.logger?.log(message: "AVPlayerItem.Status – \(item.status)",
+                                             level: KinescopeLoggerLevel.player)
+            }
+        )
+    }
+
+    func removePlayerItemStatusObserver() {
+        self.itemStatusObserver?.invalidate()
+        self.itemStatusObserver = nil
     }
 
     func addPlayerTimeControlStatusObserver() {
@@ -210,7 +275,7 @@ private extension KinescopeVideoPlayer {
                 self?.view?.change(timeControlStatus: item.timeControlStatus)
 
                 Kinescope.shared.logger?.log(
-                    message: "AVPlayer.TimeControlStatus – \(item.timeControlStatus)",
+                    message: "AVPlayer.TimeControlStatus – \(item.timeControlStatus.rawValue)",
                     level: KinescopeLoggerLevel.player
                 )
             }
@@ -220,6 +285,54 @@ private extension KinescopeVideoPlayer {
     func removePlayerTimeControlStatusObserver() {
         self.timeControlStatusObserver?.invalidate()
         self.timeControlStatusObserver = nil
+    }
+
+    func addTracksObserver() {
+        self.tracksObserver = self.strategy.player.currentItem?.observe(
+            \.tracks,
+            options: [.new, .old],
+            changeHandler: { [weak self] item, _ in
+                guard
+                    let self = self,
+                    let video = self.video,
+                    let size = item.tracks.first?.assetTrack?.naturalSize,
+                    let frameRate = item.tracks.first?.assetTrack?.nominalFrameRate
+                else {
+                    return
+                }
+
+                let height = String(format: "%.0f", size.height)
+
+                let qualities = video.assets
+                    .compactMap { $0.quality }
+                    .filter { $0.hasPrefix(height) }
+
+                let expectedQuality: String?
+                if frameRate > 30.0 {
+                    expectedQuality = qualities.first { $0.hasSuffix("60") }
+                } else {
+                    expectedQuality = qualities.first { $0.hasPrefix(height) && !$0.hasSuffix("60") }
+                }
+
+                guard
+                    let quality = expectedQuality
+                else {
+                    return
+                }
+
+                self.view?.change(quality: quality, manualQuality: self.isManualQuality)
+
+                Kinescope.shared.logger?.log(
+                    message: "AVPlayerItem.presentationSize – \(item.presentationSize)",
+                    level: KinescopeLoggerLevel.player
+                )
+            }
+        )
+    }
+
+    func removeTracksObserver() {
+        self.tracksObserver?.invalidate()
+        self.tracksObserver = nil
     }
 
     func seek(to seconds: TimeInterval) {
@@ -235,9 +348,10 @@ private extension KinescopeVideoPlayer {
     }
 }
 
-// MARK: - PlayerOverlayViewDelegate
+// MARK: - KinescopePlayerViewDelegate
 
 extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
+
     func didPlay(videoEnded: Bool) {
         if videoEnded {
             self.strategy.player.seek(to: .zero)
@@ -306,11 +420,16 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             detach(view: view)
 
             rootVC?.dismiss(animated: true, completion: { [weak self] in
-                guard let miniView = self?.miniView else {
+                guard
+                    let self = self,
+                    let miniView = self.miniView
+                else {
                     return
                 }
-                self?.attach(view: miniView)
-                self?.play()
+
+                self.attach(view: miniView)
+                self.view?.change(quality: self.currentQuality, manualQuality: self.isManualQuality)
+                self.play()
             })
         } else {
             miniView = view
@@ -322,8 +441,15 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                                                              config: .preferred(for: video))
             playerVC.modalPresentationStyle = .overFullScreen
             rootVC?.present(playerVC, animated: true, completion: { [weak self] in
-                self?.play()
-                self?.view?.change(status: .readyToPlay)
+                guard
+                    let self = self
+                else {
+                    return
+                }
+
+                self.play()
+                self.view?.change(status: .readyToPlay)
+                self.view?.change(quality: self.currentQuality, manualQuality: self.isManualQuality)
             })
         }
     }
@@ -334,9 +460,58 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             .filter { $0 != "original" } ?? []
     }
 
+    func didShowAttachments() -> [KinescopeVideoAdditionalMaterial]? {
+        return video?.additionalMaterials
+    }
+
+    func didShowAssets() -> [KinescopeVideoAsset]? {
+        return video?.assets
+    }
+
     func didSelect(quality: String) {
-        // FIXME: Add logic
+        guard
+            let video = video
+        else {
+            Kinescope.shared.logger?.log(message: "Can't find video",
+                                         level: KinescopeLoggerLevel.player)
+            return
+        }
+
+        let videoQuality: KinescopeVideoQuality
+        if let asset = video.assets.first(where: { $0.quality == quality }) {
+            videoQuality = .exact(asset: asset)
+        } else {
+            videoQuality = .auto(hlsLink: video.hlsLink)
+        }
+
+        currentQuality = quality
+
+        select(quality: videoQuality)
+
         Kinescope.shared.logger?.log(message: "Select quality: \(quality)",
                                      level: KinescopeLoggerLevel.player)
     }
+
+    func didSelectAttachment(with index: Int) {
+        guard let attachment = video?.additionalMaterials[safe: index] else {
+            return
+        }
+
+        Kinescope.shared.logger?.log(message: "Start download attachment: \(attachment.title)",
+                                     level: KinescopeLoggerLevel.player)
+    }
+
+    func didSelectAsset(with index: Int) {
+        guard let asset = video?.assets[safe: index] else {
+            return
+        }
+
+        Kinescope.shared.logger?.log(message: "Start download asset: \(asset.quality)",
+                                     level: KinescopeLoggerLevel.player)
+    }
+
+    func didSelectDownloadAll(for title: String) {
+        // FIXME: add logic
+    }
+
 }

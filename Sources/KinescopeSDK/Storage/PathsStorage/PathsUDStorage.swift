@@ -1,5 +1,5 @@
 //
-//  PathsDictionaryStorage.swift
+//  PathsUDStorage.swift
 //  KinescopeSDK
 //
 //  Created by Artemii Shabanov on 06.04.2021.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-class PathsUDStorage {
+final class PathsUDStorage: PathsStorage {
 
     // MARK: - Private Properties
 
@@ -15,8 +15,8 @@ class PathsUDStorage {
 
     // MARK: - Lifecycle
 
-    init(prefix: String) {
-        self.dictKey = "kinescope_" + prefix
+    init(suffix: String) {
+        self.dictKey = "io.kinescope.dict" + suffix
     }
 
     // MARK: - API
@@ -32,17 +32,24 @@ class PathsUDStorage {
     }
 
     func readUrl(by id: String) -> String? {
-        guard let dict = getDict() else { return nil }
+        guard let dict = getDict() else {
+            return nil
+        }
         return dict[id]
     }
 
     func fetchIds() -> [String] {
-        guard let dict = getDict() else { return [] }
+        guard let dict = getDict() else {
+            return []
+        }
         return Array(dict.keys)
     }
 
+    @discardableResult
     func deleteUrl(by id: String) -> String? {
-        guard var dict = getDict() else { return nil }
+        guard var dict = getDict() else {
+            return nil
+        }
         if dict.keys.contains(id) {
             let value = dict[id]
             dict.removeValue(forKey: id)

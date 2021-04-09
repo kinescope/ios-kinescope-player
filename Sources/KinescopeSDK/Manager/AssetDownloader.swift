@@ -1,5 +1,5 @@
 //
-//  VideoDownloader.swift
+//  AssetDownloader.swift
 //  KinescopeSDK
 //
 //  Created by Никита Коробейников on 23.03.2021.
@@ -7,45 +7,43 @@
 
 import Foundation
 
-// MARK: - KinescopeDownloadable
+// MARK: - KinescopeAssetDownloadable
 
-class VideoDownloader: KinescopeDownloadable {
+class AssetDownloader: KinescopeAssetDownloadable {
 
     // MARK: - Properties
 
-    private var delegates: [KinescopeDownloadableDelegate] = []
+    private var delegates: [KinescopeAssetDownloadableDelegate] = []
 
-    private let apiKey: String
-    private let videoPathsStorage: KinescopeVideoPathsStorage
-    private let assetService: AssetService
+    private let assetPathsStorage: KinescopeAssetPathsStorage
+    private var assetService: AssetService
 
     // MARK: - Initialisation
 
-    init(apiKey: String,
-         videoPathsStorage: KinescopeVideoPathsStorage,
+    init(assetPathsStorage: KinescopeAssetPathsStorage,
          assetService: AssetService) {
-        self.apiKey = apiKey
-        self.videoPathsStorage = videoPathsStorage
+        self.assetPathsStorage = assetPathsStorage
         self.assetService = assetService
+        self.assetService.delegate = self
     }
 
-    // MARK: - Methods
+    // MARK: - KinescopeDownloadable
 
     func downlaodedAssetsList() -> [String] {
-        return videoPathsStorage.fetchVideoIds()
+        return assetPathsStorage.fetchAssetIds()
     }
 
     @discardableResult
     func delete(assetId: String) -> Bool {
-        guard let assetUrl = videoPathsStorage.readVideoUrl(by: assetId) else {
+        guard let assetUrl = assetPathsStorage.readVideoUrl(by: assetId) else {
             return false
         }
         do {
             try FileManager.default.removeItem(at: assetUrl)
-            videoPathsStorage.deleteVideoUrl(by: assetId)
+            assetPathsStorage.deleteVideoUrl(by: assetId)
             return true
         } catch {
-            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.network)
+            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.storage)
             return false
         }
     }
@@ -57,11 +55,11 @@ class VideoDownloader: KinescopeDownloadable {
     }
 
     func getPath(by assetId: String) -> URL? {
-        return videoPathsStorage.readVideoUrl(by: assetId)
+        return assetPathsStorage.readVideoUrl(by: assetId)
     }
 
-    func enqeueDownload(assetId: String) {
-        assetService.enqeueDownload(assetId: assetId)
+    func enqueueDownload(assetId: String) {
+        assetService.enqueueDownload(assetId: assetId)
     }
 
     func pauseDownload(assetId: String) {
@@ -72,27 +70,29 @@ class VideoDownloader: KinescopeDownloadable {
         assetService.resumeDownload(assetId: assetId)
     }
 
-    func deqeueDownload(assetId: String) {
-        assetService.deqeueDownload(assetId: assetId)
+    func dequeueDownload(assetId: String) {
+        assetService.dequeueDownload(assetId: assetId)
     }
 
-    func add(delegate: KinescopeDownloadableDelegate) {
+    func add(delegate: KinescopeAssetDownloadableDelegate) {
         delegates.append(delegate)
     }
 
-    func remove(delegate: KinescopeDownloadableDelegate) {
+    func remove(delegate: KinescopeAssetDownloadableDelegate) {
         if let index = delegates.firstIndex(where: { delegate === $0 }) {
             delegates.remove(at: index)
         }
     }
 
     func restore() {
-        preconditionFailure("Implement")
+        assetService.restore()
     }
 
 }
 
-extension VideoDownloader: AssetServiceDelegate {
+// MARK: - AssetServiceDelegate
+
+extension AssetDownloader: AssetServiceDelegate {
 
     func downloadProgress(assetId: String, progress: Double) {
         delegates.forEach {
@@ -102,12 +102,12 @@ extension VideoDownloader: AssetServiceDelegate {
 
     func downloadError(assetId: String, error: KinescopeDownloadError) {
         delegates.forEach {
-            $0.kinescopeDownloadError(assetId: assetId, error: .unknown(error))
+            $0.kinescopeDownloadError(assetId: assetId, error: error)
         }
     }
 
     func downloadComplete(assetId: String, path: String) {
-        videoPathsStorage.saveVideo(relativeUrl: path, id: assetId)
+        assetPathsStorage.saveAsset(relativeUrl: path, id: assetId)
         delegates.forEach {
             $0.kinescopeDownloadComplete(assetId: assetId)
         }

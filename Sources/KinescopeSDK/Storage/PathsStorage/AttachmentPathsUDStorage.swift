@@ -11,7 +11,7 @@ final class AttachmentPathsUDStorage: KinescopeAttachmentPathsStorage {
 
     // MARK: - Properties
 
-    private let udStroage = PathsUDStorage(prefix: "attachments")
+    private let udStroage = PathsUDStorage(suffix: "attachments")
 
     // MARK: - KinescopeAttachmentPathsStorage
 
@@ -34,7 +34,9 @@ final class AttachmentPathsUDStorage: KinescopeAttachmentPathsStorage {
     // MARK: - Private
 
     private func constructUrl(relativeUrl: String?) -> URL? {
-        guard let relativeUrl = relativeUrl else { return nil}
+        guard let relativeUrl = relativeUrl else {
+            return nil
+        }
         let baseURL = URL(fileURLWithPath: NSHomeDirectory())
         let assetURL = baseURL.appendingPathComponent(relativeUrl)
         return assetURL
