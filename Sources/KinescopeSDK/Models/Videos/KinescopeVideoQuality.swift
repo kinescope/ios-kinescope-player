@@ -5,6 +5,8 @@
 //  Created by Никита Коробейников on 29.03.2021.
 //
 
+import Foundation
+
 /// Quality of video to play
 public enum KinescopeVideoQuality {
 

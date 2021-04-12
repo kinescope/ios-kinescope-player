@@ -4,36 +4,17 @@
 //
 //  Created by Artemii Shabanov on 07.04.2021.
 //
-// swiftlint:disable large_tuple
 
 import XCTest
 @testable import KinescopeSDK
 
 final class AssetDownloaderTests: XCTestCase {
 
-    // MARK: - Nested Types
-
-    class MockDelegate: KinescopeAssetDownloadableDelegate {
-        var assets: [String: (progress: Double, completed: Bool, error: KinescopeDownloadError?)] = [:]
-
-        func kinescopeDownloadProgress(assetId: String, progress: Double) {
-            assets[assetId]?.progress = progress
-        }
-
-        func kinescopeDownloadError(assetId: String, error: KinescopeDownloadError) {
-            assets[assetId]?.error = error
-        }
-
-        func kinescopeDownloadComplete(assetId: String) {
-            assets[assetId]?.completed = true
-        }
-    }
-
     // MARK: - Setup
 
     var assetService: AssetServiceMock?
     var downloader: KinescopeAssetDownloadable?
-    var delegate: MockDelegate?
+    var delegate: KinescopeAssetDownloadableDelegateMock?
 
     override func setUp() {
         super.setUp()
@@ -41,7 +22,7 @@ final class AssetDownloaderTests: XCTestCase {
         let mockAssetService = AssetServiceMock()
         self.downloader = AssetDownloader(assetPathsStorage: AssetPathsUDStorage(), assetService: mockAssetService)
         self.assetService = mockAssetService
-        let delegate = MockDelegate()
+        let delegate = KinescopeAssetDownloadableDelegateMock()
         self.delegate = delegate
         self.downloader?.add(delegate: delegate)
     }
@@ -50,6 +31,7 @@ final class AssetDownloaderTests: XCTestCase {
         super.tearDown()
 
         downloader?.clear()
+        assetService?.assetStates = [:]
         downloader = nil
     }
 

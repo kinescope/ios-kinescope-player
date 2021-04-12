@@ -33,7 +33,7 @@ class AssetNetworkService: NSObject, AssetService {
     // MARK: - Properties
 
     weak var delegate: AssetServiceDelegate?
-    private let idsStorage: IDsUDStorage
+    private let idsStorage: IDsStorage
     private let assetLinksService: AssetLinksService
     private lazy var session: AVAssetDownloadURLSession = {
         let configuration = URLSessionConfiguration.background(withIdentifier: Constants.downloadIdentifier)
@@ -49,7 +49,7 @@ class AssetNetworkService: NSObject, AssetService {
     // MARK: - Lyfecycle
 
     init(assetLinksService: AssetLinksService,
-         idsStorage: IDsUDStorage = IDsUDStorage()) {
+         idsStorage: IDsStorage = IDsUDStorage()) {
         self.assetLinksService = assetLinksService
         self.idsStorage = idsStorage
     }
@@ -170,7 +170,9 @@ private extension AssetNetworkService {
     func findTask(by assetId: String, completion: @escaping (AVAssetDownloadTask) -> Void, notFoundCompletion: @escaping () -> Void) {
         session.getAllTasks { [weak self] tasksArray in
             for task in tasksArray {
-                guard let downloadTask = task as? AVAssetDownloadTask else { break }
+                guard let downloadTask = task as? AVAssetDownloadTask else {
+                    continue
+                }
                 if
                     let id = self?.idsStorage.readID(by: downloadTask.urlAsset.url.absoluteString),
                     id == assetId
