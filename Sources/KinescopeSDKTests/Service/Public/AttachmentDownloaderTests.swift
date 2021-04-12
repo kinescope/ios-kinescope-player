@@ -39,7 +39,6 @@ final class AttachmentDownloaderTests: XCTestCase {
     func testDelegateConsistency() {
 
         // given
-
         fileService?.attachmentStates = [
             "1": .progress(0.5),
             "2": .error(KinescopeDownloadError.notFound),
@@ -47,13 +46,11 @@ final class AttachmentDownloaderTests: XCTestCase {
         ]
 
         // when
-
         for attachmentId in (fileService?.attachmentStates ?? [:]).keys {
             downloader?.enqueueDownload(attachmentId: attachmentId, url: URL(string: "https://example.com/\(attachmentId)")!)
         }
 
         // then
-
         XCTAssertEqual(delegate?.attachments["1"]?.progress, 0.5)
         XCTAssertEqual(delegate?.attachments["2"]?.error, KinescopeDownloadError.notFound)
         XCTAssertNotNil(delegate?.attachments["3"]!.url)
@@ -74,6 +71,31 @@ final class AttachmentDownloaderTests: XCTestCase {
         //then
         XCTAssertTrue(isDownloaded)
         XCTAssertNotNil(urlFromDelegate)
+    }
+
+    func testGettingAllAttachemntsFromCache() {
+
+        //given
+        let attachmentsIds = ["1", "2", "3"]
+        attachmentsIds.forEach {
+            fileService?.attachmentStates[$0] = .completed
+        }
+
+        //when
+        attachmentsIds.forEach {
+            downloader?.enqueueDownload(attachmentId: $0, url: URL(string: "https://example.com/\($0)")!)
+        }
+
+        //then
+        var filePaths: [URL] = []
+        let attachemntsList = downloader!.downloadedAttachmentsList()
+
+        attachmentsIds.forEach {
+            filePaths.append(downloader!.getPath(of: $0)!)
+        }
+        let isContainsAll = attachemntsList.allSatisfy(filePaths.contains)
+
+        XCTAssertTrue(isContainsAll)
     }
 
     func testSuccessDeleteFromCache() {

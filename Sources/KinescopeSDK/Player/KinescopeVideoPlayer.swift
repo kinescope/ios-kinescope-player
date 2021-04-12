@@ -500,11 +500,6 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             return
         }
         Kinescope.shared.attachmentDownloader.enqueueDownload(attachmentId: attachment.id, url: url)
-//        let list = Kinescope.shared.attachmentDownloader.downloadedAttachmentsList()
-
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//            Kinescope.shared.fileDownloader.dequeueDownload(url: url)
-//        }
 
         Kinescope.shared.logger?.log(message: "Start download attachment: \(attachment.title)",
                                      level: KinescopeLoggerLevel.network)

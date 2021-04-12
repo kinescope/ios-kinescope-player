@@ -40,7 +40,6 @@ final class FileNetworkService: NSObject, FileService {
         return urlSession
     }()
     
-
     // MARK: - Initialization
 
     init(idsStorage: IDsStorage = IDsUDStorage()) {
