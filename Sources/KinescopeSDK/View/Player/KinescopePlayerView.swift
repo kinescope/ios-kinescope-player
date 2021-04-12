@@ -158,6 +158,7 @@ private extension KinescopePlayerView {
 
     func configureControlPanel(with config: KinescopeControlPanelConfiguration) {
         let controlPanel = PlayerControlView(config: config)
+        controlPanel.alpha = .zero
         addSubview(controlPanel)
         bottomChild(view: controlPanel)
 
@@ -231,6 +232,18 @@ private extension KinescopePlayerView {
 // MARK: - PlayerOverlayViewDelegate
 
 extension KinescopePlayerView: PlayerOverlayViewDelegate {
+    func didShow() {
+        UIView.animate(withDuration: 0.3) {
+            self.controlPanel?.alpha = 1.0
+        }
+    }
+
+    func didHide() {
+        UIView.animate(withDuration: 0.3) {
+            self.controlPanel?.alpha = .zero
+        }
+    }
+
     func didPlay(videoEnded: Bool) {
         delegate?.didPlay(videoEnded: videoEnded)
     }
