@@ -54,6 +54,12 @@ class AssetNetworkService: NSObject, AssetService {
         self.idsStorage = idsStorage
     }
 
+    // MARK: - Internal Methods
+
+    func setSession(_ session: AVAssetDownloadURLSession) {
+        self.session = session
+    }
+
 }
 
 // MARK: - AssetService

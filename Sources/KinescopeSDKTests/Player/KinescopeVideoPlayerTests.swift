@@ -31,7 +31,7 @@ final class KinescopeVideoPlayerTests: XCTestCase {
         let attachmentDownloader = KinescopeAttachmentDownloaderMock()
 
         let dependencies = KinescopeVideoPlayerDependenciesMock(inspectorMock: inspector,
-                                                                downloaderMock: downloader,
+                                                                assetDownloaderMock: downloader,
                                                                 strategyMock: strategy,
                                                                 attachmentDownloaderMock: attachmentDownloader)
 

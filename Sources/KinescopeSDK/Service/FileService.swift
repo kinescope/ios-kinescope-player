@@ -39,7 +39,7 @@ final class FileNetworkService: NSObject, FileService {
         let urlSession = URLSession(configuration: config, delegate: self, delegateQueue: nil)
         return urlSession
     }()
-    
+
     // MARK: - Initialization
 
     init(idsStorage: IDsStorage = IDsUDStorage()) {
