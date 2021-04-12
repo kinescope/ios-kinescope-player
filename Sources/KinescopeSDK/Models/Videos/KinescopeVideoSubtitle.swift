@@ -4,3 +4,9 @@ public struct KinescopeVideoSubtitle: Codable {
     public let language: String
     public let url: String
 }
+
+extension KinescopeVideoSubtitle {
+    var title: String {
+        return Locale(identifier: language).localizedString(forIdentifier: language) ?? language
+    }
+}
