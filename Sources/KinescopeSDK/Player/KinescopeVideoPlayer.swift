@@ -498,10 +498,13 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didSelectAttachment(with index: Int) {
-        guard let attachment = video?.additionalMaterials[safe: index] else {
+        guard
+            let attachment = video?.additionalMaterials[safe: index],
+            let url = URL(string: attachment.url)
+        else {
             return
         }
-
+        Kinescope.shared.attachmentDownloader.enqueueDownload(attachmentId: attachment.id, url: url)
         Kinescope.shared.logger?.log(message: "Start downloading attachment: \(attachment.title)",
                                      level: KinescopeLoggerLevel.player)
     }
@@ -510,7 +513,6 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         guard let asset = video?.assets[safe: index] else {
             return
         }
-
         dependencies.assetDownloader.enqueueDownload(assetId: asset.id)
         Kinescope.shared.logger?.log(message: "Start downloading asset: \(asset.quality) - \(asset.id)",
                                      level: KinescopeLoggerLevel.player)
@@ -535,15 +537,15 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
 extension KinescopeVideoPlayer: KinescopeAssetDownloadableDelegate {
 
-    public func kinescopeDownloadProgress(assetId: String, progress: Double) {
+    public func assetDownloadProgress(assetId: String, progress: Double) {
     }
 
-    public func kinescopeDownloadError(assetId: String, error: KinescopeDownloadError) {
+    public func assetDownloadError(assetId: String, error: KinescopeDownloadError) {
         Kinescope.shared.logger?.log(message: "Failed asset download: \(assetId) with error: \(error)",
                                      level: KinescopeLoggerLevel.player)
     }
 
-    public func kinescopeDownloadComplete(assetId: String) {
+    public func assetDownloadComplete(assetId: String) {
         Kinescope.shared.logger?.log(message: "Succeeded asset download: \(assetId)",
                                      level: KinescopeLoggerLevel.player)
     }

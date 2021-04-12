@@ -9,4 +9,5 @@
 protocol KinescopePlayerDependencies: PlayingStrategyProvider {
     var inspector: KinescopeInspectable { get }
     var assetDownloader: KinescopeAssetDownloadable { get }
+    var attachmentDownloader: KinescopeAttachmentDownloadable { get }
 }
