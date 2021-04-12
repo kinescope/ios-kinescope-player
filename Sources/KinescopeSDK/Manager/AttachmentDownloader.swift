@@ -30,7 +30,9 @@ class AttachmentDownloader: KinescopeAttachmentDownloadable {
     // MARK: - KinescopeAttachmentDownloadable
 
     func downloadedAttachmentsList() -> [URL] {
-        let attachmentsUrl = getAttachmentsFolderUrl()
+        guard let attachmentsUrl = getAttachmentsFolderUrl() else {
+            return []
+        }
         let files = try? FileManager.default.contentsOfDirectory(at: attachmentsUrl, includingPropertiesForKeys: nil)
         return files ?? []
     }
@@ -57,7 +59,9 @@ class AttachmentDownloader: KinescopeAttachmentDownloadable {
     @discardableResult
     func delete(attachmentId: String) -> Bool {
         do {
-            let fileUrl = getAttachmentUrl(of: attachmentId)
+            guard let fileUrl = getAttachmentUrl(of: attachmentId) else {
+                return false
+            }
             try FileManager.default.removeItem(atPath: fileUrl.path)
             return true
         } catch {
@@ -74,7 +78,9 @@ class AttachmentDownloader: KinescopeAttachmentDownloadable {
     }
 
     func isDownloaded(attachmentId: String) -> Bool {
-        let fileUrl = getAttachmentUrl(of: attachmentId)
+        guard let fileUrl = getAttachmentUrl(of: attachmentId) else {
+            return false
+        }
         return FileManager.default.fileExists(atPath: fileUrl.path)
     }
 
@@ -93,8 +99,14 @@ class AttachmentDownloader: KinescopeAttachmentDownloadable {
     }
 
     func clear() {
-        let attachmentsUrl = getAttachmentsFolderUrl()
-        try? FileManager.default.removeItem(atPath: attachmentsUrl.path)
+        guard let attachmentsUrl = getAttachmentsFolderUrl() else {
+            return
+        }
+        do {
+            try FileManager.default.removeItem(atPath: attachmentsUrl.path)
+        } catch {
+            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.storage)
+        }
     }
 
 }
@@ -118,7 +130,7 @@ extension AttachmentDownloader: FileServiceDelegate {
     func downloadComplete(fileId: String, path: URL) {
         let savedFileUrl: URL?
         do {
-            let fileUrl = getAttachmentUrl(of: fileId)
+            let fileUrl = getAttachmentUrl(of: fileId) ?? .init(fileURLWithPath: "")
             try FileManager.default.copyItem(at: path, to: fileUrl)
             savedFileUrl = fileUrl
         } catch {
@@ -136,26 +148,31 @@ extension AttachmentDownloader: FileServiceDelegate {
 
 private extension AttachmentDownloader {
 
-    func getAttachmentUrl(of attachmentId: String) -> URL {
+    func getAttachmentUrl(of attachmentId: String) -> URL? {
         let attachmentsUrl = getAttachmentsFolderUrl()
-        let destinationUrl = attachmentsUrl.appendingPathComponent(attachmentId)
+        let destinationUrl = attachmentsUrl?.appendingPathComponent(attachmentId)
 
         return destinationUrl
     }
 
-    func getAttachmentsFolderUrl() -> URL {
+    func getAttachmentsFolderUrl() -> URL? {
         guard let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             Kinescope.shared.logger?.log(error: KinescopeInspectError.denied, level: KinescopeLoggerLevel.storage)
-            return URL(fileURLWithPath: "")
+            return nil
         }
         let attachmentsUrl = documentsUrl.appendingPathComponent(Constants.attachmentsDirectory)
 
         // Create attachment folder if it doesn't exist
-        var isDir : ObjCBool = true
+        var isDir: ObjCBool = true
         if !FileManager.default.fileExists(atPath: attachmentsUrl.path, isDirectory: &isDir) {
-            try? FileManager.default.createDirectory(at: attachmentsUrl, withIntermediateDirectories: false, attributes: nil)
+            do {
+                try FileManager.default.createDirectory(at: attachmentsUrl, withIntermediateDirectories: false, attributes: nil)
+            } catch {
+                Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.storage)
+                return nil
+            }
         }
-        
+
         return attachmentsUrl
     }
 

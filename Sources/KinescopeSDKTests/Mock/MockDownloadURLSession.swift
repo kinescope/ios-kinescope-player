@@ -76,7 +76,9 @@ final class MockDownloadURLSession: URLSession {
                 case .success:
                     self.tasks[task] = true
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                        guard self.tasks[task] ?? false else { return }
+                        guard self.tasks[task] ?? false else {
+                            return
+                        }
                         (self.delegate as? URLSessionDownloadDelegate)?.urlSession(self,
                                                                                    downloadTask: task,
                                                                                    didFinishDownloadingTo: url)

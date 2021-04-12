@@ -19,7 +19,7 @@ final class FileServiceMock: FileService {
     }
 
     // MARK: - Properties
-    
+
     weak var delegate: FileServiceDelegate?
     var attachmentStates: [String: AttachmenState] = [:]
 

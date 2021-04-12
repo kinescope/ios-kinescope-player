@@ -39,7 +39,7 @@ final class FileNetworkService: NSObject, FileService {
         let urlSession = URLSession(configuration: config, delegate: self, delegateQueue: nil)
         return urlSession
     }()
-    
+
     // MARK: - Initialization
 
     init(idsStorage: IDsStorage = IDsUDStorage()) {
@@ -51,9 +51,9 @@ final class FileNetworkService: NSObject, FileService {
     func setSession(_ session: URLSession) {
         self.session = session
     }
-    
+
     // MARK: - FileService
-    
+
     func enqueueDownload(fileId: String, url: URL) {
         findTask(of: fileId) { task in
             task.resume()
@@ -143,7 +143,7 @@ extension FileNetworkService: URLSessionDownloadDelegate {
             let id = idsStorage.deleteID(by: taskUrl),
             let error = error
         else {
-            return 
+            return
         }
         delegate?.downloadError(fileId: id, error: .unknown(error))
     }
