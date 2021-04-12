@@ -15,6 +15,8 @@ class Manager: KinescopeServicesProvider {
 
     var downloader: KinescopeAssetDownloadable!
 
+    var attachmentDownloader: KinescopeAttachmentDownloadable!
+
     var inspector: KinescopeInspectable!
 
     var logger: KinescopeLogging?

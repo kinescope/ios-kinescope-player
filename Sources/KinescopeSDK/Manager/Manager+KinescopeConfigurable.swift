@@ -6,6 +6,7 @@
 //
 
 // MARK: - KinescopeConfigurable
+import Foundation
 
 extension Manager: KinescopeConfigurable {
 
@@ -14,6 +15,7 @@ extension Manager: KinescopeConfigurable {
         self.downloader = AssetDownloader(assetPathsStorage: AssetPathsUDStorage(),
                                           assetService: AssetNetworkService(
                                             assetLinksService: AssetLinksNetworkService(transport: Transport(), config: config)))
+        self.attachmentDownloader = AttachmentDownloader(fileService: FileNetworkService())
         self.inspector = Inspector(videosService: VideosNetworkService(transport: Transport(),
                                                                        config: config))
     }
