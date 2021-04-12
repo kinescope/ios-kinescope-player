@@ -150,6 +150,7 @@ final class AttachmentDownloaderTests: XCTestCase {
 
         //given
         let attachmentId = "1"
+        let mockFileData = "mockData"
         fileService?.attachmentStates[attachmentId] = .completed
 
         //when
@@ -163,7 +164,8 @@ final class AttachmentDownloaderTests: XCTestCase {
         let attachmentLocation = downloader?.getLocation(of: attachmentId)
 
         //then
-        XCTAssertNotNil(attachmentLocation)
+        let fileData = try? String(contentsOf: attachmentLocation!, encoding: .utf8)
+        XCTAssertEqual(fileData, mockFileData)
 
         //when
         let isDeleted = downloader?.delete(attachmentId: attachmentId) ?? false
