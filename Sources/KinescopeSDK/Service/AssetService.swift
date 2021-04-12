@@ -41,7 +41,7 @@ class AssetNetworkService: NSObject, AssetService {
         // Create a new AVAssetDownloadURLSession
         let downloadSession = AVAssetDownloadURLSession(configuration: configuration,
                                                         assetDownloadDelegate: self,
-                                                        delegateQueue: OperationQueue.main)
+                                                        delegateQueue: nil)
 
         return downloadSession
     }()
