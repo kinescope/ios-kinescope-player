@@ -100,7 +100,7 @@ final class FileServiceTests: XCTestCase {
         fileService?.setSession(session)
         fileService?.dequeueDownload(fileId: fileId)
 
-        // Fullfill after 3.5 second and check that completion handler didn't work
+        // Fullfill after 1.5 second and check that completion handler didn't work
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             exp.fulfill()
         }
@@ -132,7 +132,7 @@ final class FileServiceTests: XCTestCase {
         fileService?.setSession(session)
         fileService?.pauseDownload(fileId: fileId)
 
-        // Fullfill pauseExp after 3.5 second and check that task didn't finished
+        // Fullfill pauseExp after 1.5 second and check that task didn't finished
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             pauseExp.fulfill()
             session.state = .resume(.success)
@@ -176,7 +176,7 @@ final class FileServiceTests: XCTestCase {
             fileService?.pauseDownload(fileId: $0.key)
         }
 
-        // Fullfill pauseExp after 3.5 second and check that tasks didn't finished
+        // Fullfill pauseExp after 2.5 second and check that tasks didn't finished
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
             pauseExp.fulfill()
             session.state = .resume(.success)
@@ -189,7 +189,7 @@ final class FileServiceTests: XCTestCase {
         // then
         wait(for: [pauseExp], timeout: 3.0)
         XCTAssertFalse(isAllTasksFinished)
-        wait(for: [resumeExp], timeout: 4.5)
+        wait(for: [resumeExp], timeout: 5.0)
         XCTAssertTrue(isAllTasksFinished)
     }
 
