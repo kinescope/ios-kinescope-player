@@ -502,7 +502,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         Kinescope.shared.attachmentDownloader.enqueueDownload(attachmentId: attachment.id, url: url)
 
         Kinescope.shared.logger?.log(message: "Start download attachment: \(attachment.title)",
-                                     level: KinescopeLoggerLevel.network)
+                                     level: KinescopeLoggerLevel.player)
     }
 
     func didSelectAsset(with index: Int) {
@@ -511,7 +511,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         }
 
         Kinescope.shared.logger?.log(message: "Start download asset: \(asset.quality)",
-                                     level: KinescopeLoggerLevel.network)
+                                     level: KinescopeLoggerLevel.player)
     }
 
     func didSelectDownloadAll(for title: String) {

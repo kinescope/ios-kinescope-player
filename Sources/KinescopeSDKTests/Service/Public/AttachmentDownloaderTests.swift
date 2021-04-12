@@ -91,7 +91,7 @@ final class AttachmentDownloaderTests: XCTestCase {
         let attachemntsList = downloader!.downloadedAttachmentsList()
 
         attachmentsIds.forEach {
-            filePaths.append(downloader!.getPath(of: $0)!)
+            filePaths.append(downloader!.getLocation(of: $0)!)
         }
         let isContainsAll = attachemntsList.allSatisfy(filePaths.contains)
 
@@ -145,5 +145,35 @@ final class AttachmentDownloaderTests: XCTestCase {
 
         XCTAssertEqual(urls, [])
     }
+
+    func testCacheConsistency() {
+
+        //given
+        let attachmentId = "1"
+        fileService?.attachmentStates[attachmentId] = .completed
+
+        //when
+        downloader?.enqueueDownload(attachmentId: attachmentId, url: URL(string: "https://example.com/")!)
+        let isDownloaded = downloader?.isDownloaded(attachmentId: attachmentId) ?? false
+
+        //then
+        XCTAssertTrue(isDownloaded)
+
+        //when
+        let attachmentLocation = downloader?.getLocation(of: attachmentId)
+
+        //then
+        XCTAssertNotNil(attachmentLocation)
+
+        //when
+        let isDeleted = downloader?.delete(attachmentId: attachmentId) ?? false
+        let deletedAttachmentLocation = downloader?.getLocation(of: attachmentId)
+
+        //then
+        XCTAssertTrue(isDeleted)
+        XCTAssertNil(deletedAttachmentLocation)
+    }
+
+
 
 }

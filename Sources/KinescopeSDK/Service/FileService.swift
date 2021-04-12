@@ -10,7 +10,7 @@ import Foundation
 protocol FileServiceDelegate: class {
     func downloadProgress(fileId: String, progress: Double)
     func downloadError(fileId: String, error: KinescopeDownloadError)
-    func downloadComplete(fileId: String, path: URL)
+    func downloadComplete(fileId: String, location: URL)
 }
 
 protocol FileService {
@@ -119,7 +119,7 @@ extension FileNetworkService: URLSessionDownloadDelegate {
         else {
             return
         }
-        delegate?.downloadComplete(fileId: fileId, path: location)
+        delegate?.downloadComplete(fileId: fileId, location: location)
     }
 
     func urlSession(_ session: URLSession,

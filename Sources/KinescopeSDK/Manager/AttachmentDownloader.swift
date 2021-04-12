@@ -33,8 +33,14 @@ class AttachmentDownloader: KinescopeAttachmentDownloadable {
         guard let attachmentsUrl = getAttachmentsFolderUrl() else {
             return []
         }
-        let files = try? FileManager.default.contentsOfDirectory(at: attachmentsUrl, includingPropertiesForKeys: nil)
-        return files ?? []
+
+        do {
+            let files = try FileManager.default.contentsOfDirectory(at: attachmentsUrl, includingPropertiesForKeys: nil)
+            return files
+        } catch {
+            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.storage)
+            return []
+        }
     }
 
     func enqueueDownload(attachmentId: String, url: URL) {
@@ -70,7 +76,7 @@ class AttachmentDownloader: KinescopeAttachmentDownloadable {
         }
     }
 
-    func getPath(of attachmentId: String) -> URL? {
+    func getLocation(of attachmentId: String) -> URL? {
         guard isDownloaded(attachmentId: attachmentId) else {
             return nil
         }
@@ -127,11 +133,11 @@ extension AttachmentDownloader: FileServiceDelegate {
         }
     }
 
-    func downloadComplete(fileId: String, path: URL) {
+    func downloadComplete(fileId: String, location: URL) {
         let savedFileUrl: URL?
         do {
             let fileUrl = getAttachmentUrl(of: fileId) ?? .init(fileURLWithPath: "")
-            try FileManager.default.copyItem(at: path, to: fileUrl)
+            try FileManager.default.copyItem(at: location, to: fileUrl)
             savedFileUrl = fileUrl
         } catch {
             savedFileUrl = nil

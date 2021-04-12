@@ -20,8 +20,8 @@ final class FileServiceDelegateMock: FileServiceDelegate {
         completionHandler?(fileId, nil, error)
     }
 
-    func downloadComplete(fileId: String, path: URL) {
-        completionHandler?(fileId, path, nil)
+    func downloadComplete(fileId: String, location: URL) {
+        completionHandler?(fileId, location, nil)
     }
 
 }

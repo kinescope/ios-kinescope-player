@@ -181,9 +181,7 @@ final class FileServiceTests: XCTestCase {
             pauseExp.fulfill()
             session.state = .resume(.success)
             self.fileService?.setSession(session)
-            fileIds.forEach {
-                self.fileService?.resumeDownload(fileId: $0.key)
-            }
+            self.fileService?.restore()
         }
 
         // then

@@ -31,7 +31,7 @@ final class FileServiceMock: FileService {
             let directory = FileManager.default.temporaryDirectory
             let fileUrl = directory.appendingPathComponent(fileId)
             try? "mockData".write(to: fileUrl, atomically: true, encoding: .utf8)
-            delegate?.downloadComplete(fileId: fileId, path: fileUrl)
+            delegate?.downloadComplete(fileId: fileId, location: fileUrl)
         case .none:
             fatalError("Cannot find mock for enqueueDownload by assetId)")
         case .progress(let value):
