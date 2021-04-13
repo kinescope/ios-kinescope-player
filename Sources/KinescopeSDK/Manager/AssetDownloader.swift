@@ -36,10 +36,13 @@ class AssetDownloader: KinescopeAssetDownloadable {
 
     func enqueueDownload(assetId: String) {
         assetLinksService.getAssetLink(by: assetId) { [weak self] in
+            guard let self = self else {
+                return
+            }
             switch $0 {
             case .success(let link):
                 if let url = URL(string: link.link) {
-                    self?.fileService.enqueueDownload(fileId: assetId, url: url)
+                    self.fileService.enqueueDownload(fileId: self.fileName(for: assetId), url: url)
                 }
             case .failure(let error):
                 Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.network)
@@ -48,19 +51,19 @@ class AssetDownloader: KinescopeAssetDownloadable {
     }
 
     func pauseDownload(assetId: String) {
-        fileService.pauseDownload(fileId: assetId)
+        fileService.pauseDownload(fileId: fileName(for: assetId))
     }
 
     func resumeDownload(assetId: String) {
-        fileService.resumeDownload(fileId: assetId)
+        fileService.resumeDownload(fileId: fileName(for: assetId))
     }
 
     func dequeueDownload(assetId: String) {
-        fileService.dequeueDownload(fileId: assetId)
+        fileService.dequeueDownload(fileId: fileName(for: assetId))
     }
 
     func isDownloaded(assetId: String) -> Bool {
-        guard let fileUrl = getAssetUrl(of: assetId) else {
+        guard let fileUrl = getAssetUrl(of: fileName(for: assetId)) else {
             return false
         }
         return FileManager.default.fileExists(atPath: fileUrl.path)
@@ -84,7 +87,7 @@ class AssetDownloader: KinescopeAssetDownloadable {
         guard isDownloaded(assetId: assetId) else {
             return nil
         }
-        return getAssetUrl(of: assetId)
+        return getAssetUrl(of: fileName(for: assetId))
     }
 
     @discardableResult
@@ -93,7 +96,7 @@ class AssetDownloader: KinescopeAssetDownloadable {
             return false
         }
         do {
-            guard let fileUrl = getAssetUrl(of: assetId) else {
+            guard let fileUrl = getAssetUrl(of: fileName(for: assetId)) else {
                 return false
             }
             try FileManager.default.removeItem(atPath: fileUrl.path)
@@ -194,6 +197,10 @@ private extension AssetDownloader {
         }
 
         return assetsUrl
+    }
+
+    func fileName(for id: String) -> String {
+        return id + ".mp4"
     }
 
 }

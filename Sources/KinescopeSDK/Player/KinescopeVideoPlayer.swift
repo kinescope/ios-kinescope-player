@@ -33,8 +33,6 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     init(config: KinescopePlayerConfig, dependencies: KinescopePlayerDependencies) {
         self.dependencies = dependencies
         self.config = config
-        self.dependencies.assetDownloader.add(delegate: self)
-        self.dependencies.attachmentDownloader.add(delegate: self)
     }
 
     deinit {
@@ -514,7 +512,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         guard let asset = video?.assets[safe: index] else {
             return
         }
-        dependencies.assetDownloader.enqueueDownload(assetId: asset.id + asset.originalName)
+        dependencies.assetDownloader.enqueueDownload(assetId: asset.id)
         Kinescope.shared.logger?.log(message: "Start downloading asset: \(asset.id + asset.originalName)",
                                      level: KinescopeLoggerLevel.player)
     }
@@ -533,44 +531,3 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
 }
-
-// MARK: - KinescopeAssetDownloadableDelegate
-
-extension KinescopeVideoPlayer: KinescopeAssetDownloadableDelegate {
-
-    public func assetDownloadProgress(assetId: String, progress: Double) {
-    }
-
-    public func assetDownloadError(assetId: String, error: KinescopeDownloadError) {
-        Kinescope.shared.logger?.log(message: "Failed asset download: \(assetId) with error: \(error)",
-                                     level: KinescopeLoggerLevel.player)
-    }
-
-    public func assetDownloadComplete(assetId: String, url: URL?) {
-        Kinescope.shared.logger?.log(message: "Succeeded asset download: \(assetId)",
-                                     level: KinescopeLoggerLevel.player)
-    }
-
-}
-
-// MARK: - KinescopeAssetDownloadableDelegate
-
-extension KinescopeVideoPlayer: KinescopeAttachmentDownloadableDelegate {
-
-    public func attachmentDownloadProgress(attachmentId: String, progress: Double) {
-        Kinescope.shared.logger?.log(message: "Progress download: \(attachmentId): \(progress)",
-                                     level: KinescopeLoggerLevel.player)
-    }
-
-    public func attachmentDownloadError(attachmentId: String, error: KinescopeDownloadError) {
-        Kinescope.shared.logger?.log(message: "Failed asset download: \(attachmentId) with error: \(error)",
-                                     level: KinescopeLoggerLevel.player)
-    }
-
-    public func attachmentDownloadComplete(attachmentId: String, url: URL?) {
-        Kinescope.shared.logger?.log(message: "Succeeded asset download: \(attachmentId)",
-                                     level: KinescopeLoggerLevel.player)
-    }
-
-}
-

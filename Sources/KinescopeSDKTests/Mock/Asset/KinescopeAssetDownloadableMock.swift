@@ -10,6 +10,12 @@ import Foundation
 
 final class KinescopeAssetDownloadableMock: KinescopeAssetDownloadable {
 
+    func enqueueDownload(assetId: String) {
+    }
+
+    func dequeueDownload(assetId: String) {
+    }
+
     func pauseDownload(assetId: String) {
     }
 
@@ -36,12 +42,6 @@ final class KinescopeAssetDownloadableMock: KinescopeAssetDownloadable {
 
     func isDownloaded(assetId: String) -> Bool {
         return true
-    }
-
-    func enqueueDownload(assetId: String) {
-    }
-
-    func dequeueDownload(assetId: String) {
     }
 
     func add(delegate: KinescopeAssetDownloadableDelegate) {
