@@ -37,7 +37,7 @@ final class KinescopeAttachmentDownloaderMock: KinescopeAttachmentDownloadable {
     func clear() {
     }
 
-    func getLocation(of attachmentId: String) -> URL? {
+    func getPath(of attachmentId: String) -> URL? {
         return nil
     }
 

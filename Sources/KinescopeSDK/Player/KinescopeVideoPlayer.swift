@@ -515,6 +515,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             return
         }
         dependencies.assetDownloader.enqueueDownload(assetId: asset.id)
+        Kinescope.shared.logger?.log(message: "Start downloading asset: \(asset.quality) - \(asset.id)",
                                      level: KinescopeLoggerLevel.player)
     }
 

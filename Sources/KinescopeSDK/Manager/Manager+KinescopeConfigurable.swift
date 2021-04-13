@@ -5,9 +5,8 @@
 //  Created by Никита Коробейников on 23.03.2021.
 //
 
-import Foundation
-
 // MARK: - KinescopeConfigurable
+import Foundation
 
 extension Manager: KinescopeConfigurable {
 
