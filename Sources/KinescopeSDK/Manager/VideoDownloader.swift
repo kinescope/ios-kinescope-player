@@ -7,7 +7,7 @@
 
 import Foundation
 
-// MARK: - KinescopeAssetDownloadable
+// MARK: - KinescopeVideoDownloadable
 
 class VideoDownloader: KinescopeVideoDownloadable {
 

@@ -8,7 +8,6 @@
 import Foundation
 
 /// Control protocol managing downloading of assets and videos
-/// We understand video as auto stream and asset as mp4 file of concrete quality
 public protocol KinescopeVideoDownloadable: class {
 
     /// Request downloadable link for video and start downloading
