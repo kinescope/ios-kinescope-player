@@ -44,12 +44,7 @@ fileprivate extension KinescopeVideoQuality {
     }
 
     func makeDownloadedItem(from url: URL) -> AVPlayerItem? {
-        let asset = AVURLAsset(url: url)
-        if let cache = asset.assetCache, cache.isPlayableOffline {
-            return AVPlayerItem(asset: asset)
-        } else {
-            return nil
-        }
+        return AVPlayerItem(url: url)
     }
 
 }

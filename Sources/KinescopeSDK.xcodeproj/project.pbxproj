@@ -519,7 +519,7 @@
 			isa = PBXGroup;
 			children = (
 				A4FB21DC2624430C00C001E0 /* Attachment */,
-				A4FB21DB262442FE00C001E0 /* Asset */,
+				A4FB21DB262442FE00C001E0 /* Video */,
 				6BFD52908C9E5048707F3CD2 /* ErrorMock.swift */,
 				78E479B1687B06842CC63ECB /* KinescopeInspectableMock.swift */,
 				4BD617E8874535AFE6347320 /* KinescopeVideoPlayerDependenciesMock.swift */,
@@ -641,7 +641,7 @@
 			path = KinescopeSDK;
 			sourceTree = "<group>";
 		};
-		A4FB21DB262442FE00C001E0 /* Asset */ = {
+		A4FB21DB262442FE00C001E0 /* Video */ = {
 			isa = PBXGroup;
 			children = (
 				E148F76C67A9E18D8550E1CC /* KinescopeAssetDownloadableDelegateMock.swift */,
@@ -651,7 +651,7 @@
 				A4FB21DD262443F400C001E0 /* AssetServiceDelegateMock.swift */,
 				A4FB21E22624703600C001E0 /* MockAssetDownloadURLSession.swift */,
 			);
-			path = Asset;
+			path = Video;
 			sourceTree = "<group>";
 		};
 		A4FB21DC2624430C00C001E0 /* Attachment */ = {

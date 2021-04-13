@@ -56,6 +56,9 @@ class AttachmentDownloader: KinescopeAttachmentDownloadable {
 
     @discardableResult
     func delete(attachmentId: String) -> Bool {
+        guard isDownloaded(attachmentId: attachmentId) else {
+            return false
+        }
         do {
             let fileUrl = getAttachmentUrl(of: attachmentId)
             try FileManager.default.removeItem(atPath: fileUrl.path)

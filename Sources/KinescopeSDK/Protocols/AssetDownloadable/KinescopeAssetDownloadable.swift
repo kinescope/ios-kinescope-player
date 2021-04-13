@@ -7,16 +7,16 @@
 
 import Foundation
 
-/// Control protocol managing downloading of assets
+/// Control protocol managing downloading of assets(concrete quality)
 public protocol KinescopeAssetDownloadable: class {
 
-    /// Checks that asset was downloaded
+    /// Checks that asset of concrete quality was downloaded
     ///
     /// - parameter assetId: Asset id of concrete video quality
     func isDownloaded(assetId: String) -> Bool
 
     /// Returns list of downloaded assets Id's
-    func downlaodedAssetsList() -> [String]
+    func downlaodedList() -> [URL]
 
     /// Deletes downloaded asset from disk
     ///
@@ -70,7 +70,7 @@ public protocol KinescopeAssetDownloadable: class {
 public extension KinescopeAssetDownloadable {
 
     func isDownloaded(assetId: String) -> Bool {
-        return downlaodedAssetsList().contains(assetId)
+        return downlaodedList().contains(assetId)
     }
 
 }

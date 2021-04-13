@@ -34,6 +34,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         self.dependencies = dependencies
         self.config = config
         self.dependencies.assetDownloader.add(delegate: self)
+        self.dependencies.attachmentDownloader.add(delegate: self)
     }
 
     deinit {
@@ -551,3 +552,25 @@ extension KinescopeVideoPlayer: KinescopeAssetDownloadableDelegate {
     }
 
 }
+
+// MARK: - KinescopeAssetDownloadableDelegate
+
+extension KinescopeVideoPlayer: KinescopeAttachmentDownloadableDelegate {
+
+    public func attachmentDownloadProgress(attachmentId: String, progress: Double) {
+        Kinescope.shared.logger?.log(message: "Progress download: \(attachmentId): \(progress)",
+                                     level: KinescopeLoggerLevel.player)
+    }
+
+    public func attachmentDownloadError(attachmentId: String, error: KinescopeDownloadError) {
+        Kinescope.shared.logger?.log(message: "Failed asset download: \(attachmentId) with error: \(error)",
+                                     level: KinescopeLoggerLevel.player)
+    }
+
+    public func attachmentDownloadComplete(attachmentId: String, url: URL?) {
+        Kinescope.shared.logger?.log(message: "Succeeded asset download: \(attachmentId)",
+                                     level: KinescopeLoggerLevel.player)
+    }
+
+}
+
