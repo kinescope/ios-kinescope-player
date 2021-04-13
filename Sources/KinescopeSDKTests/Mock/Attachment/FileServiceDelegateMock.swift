@@ -10,7 +10,7 @@ import Foundation
 
 final class FileServiceDelegateMock: FileServiceDelegate {
 
-    var completionHandler: ((String, URL?, KinescopeDownloadError?) -> Void)? = nil
+    var completionHandler: ((String, URL?, KinescopeDownloadError?) -> Void)?
 
     func downloadProgress(fileId: String, progress: Double) {
         completionHandler?(fileId, nil, nil)
@@ -20,8 +20,8 @@ final class FileServiceDelegateMock: FileServiceDelegate {
         completionHandler?(fileId, nil, error)
     }
 
-    func downloadComplete(fileId: String, path: URL) {
-        completionHandler?(fileId, path, nil)
+    func downloadComplete(fileId: String, location: URL) {
+        completionHandler?(fileId, location, nil)
     }
 
 }
