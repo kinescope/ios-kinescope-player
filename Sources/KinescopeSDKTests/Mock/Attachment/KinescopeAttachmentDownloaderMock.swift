@@ -26,7 +26,7 @@ final class KinescopeAttachmentDownloaderMock: KinescopeAttachmentDownloadable {
         return true
     }
 
-    func downloadedAttachmentsList() -> [URL] {
+    func downloadedList() -> [URL] {
         return []
     }
 

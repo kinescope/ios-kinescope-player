@@ -10,28 +10,6 @@ import Foundation
 /// Control protocol managing downloading of assets(concrete quality)
 public protocol KinescopeAssetDownloadable: class {
 
-    /// Checks that asset of concrete quality was downloaded
-    ///
-    /// - parameter assetId: Asset id of concrete video quality
-    func isDownloaded(assetId: String) -> Bool
-
-    /// Returns list of downloaded assets Id's
-    func downlaodedList() -> [URL]
-
-    /// Deletes downloaded asset from disk
-    ///
-    /// - parameter assetId: Asset id of concrete video quality
-    @discardableResult
-    func delete(assetId: String) -> Bool
-
-    /// Deletes all downloaded assets from disk
-    func clear()
-
-    /// Returns downloaded asset path from disk
-    ///
-    /// - parameter assetId: Asset id of concrete video quality
-    func getPath(by assetId: String) -> URL?
-
     /// Request downloadable link for asset and start downloading
     ///
     /// - parameter assetId: Asset id of concrete video quality
@@ -52,6 +30,28 @@ public protocol KinescopeAssetDownloadable: class {
     /// - parameter assetId: Asset id of concrete video quality
     func dequeueDownload(assetId: String)
 
+    /// Checks that asset of concrete quality was downloaded
+    ///
+    /// - parameter assetId: Asset id of concrete video quality
+    func isDownloaded(assetId: String) -> Bool
+
+    /// Returns list of downloaded assets Id's
+    func downloadedList() -> [URL]
+
+    /// Returns downloaded asset path from disk
+    ///
+    /// - parameter assetId: Asset id of concrete video quality
+    func getLocation(by assetId: String) -> URL?
+
+    /// Deletes downloaded asset from disk
+    ///
+    /// - parameter assetId: Asset id of concrete video quality
+    @discardableResult
+    func delete(assetId: String) -> Bool
+
+    /// Deletes all downloaded assets from disk
+    func clear()
+
     /// Add delegate to notify about download process
     ///
     /// - parameter delegate: Instance of delegate
@@ -64,13 +64,5 @@ public protocol KinescopeAssetDownloadable: class {
 
     /// Restore downloads which were interrupted by app close
     func restore()
-
-}
-
-public extension KinescopeAssetDownloadable {
-
-    func isDownloaded(assetId: String) -> Bool {
-        return downlaodedList().contains(assetId)
-    }
 
 }

@@ -14,17 +14,17 @@ public protocol KinescopeVideoDownloadableDelegate: class {
     ///
     /// - parameter videoId: Video id
     /// - parameter progress: Progress of process
-    func assetDownloadProgress(videoId: String, progress: Double)
+    func videoDownloadProgress(videoId: String, progress: Double)
 
     /// Notify about error state of downloading task
     ///
     /// - parameter videoId: Video id
     /// - parameter error: Reason of failure
-    func assetDownloadError(videoId: String, error: KinescopeDownloadError)
+    func videoDownloadError(videoId: String, error: KinescopeDownloadError)
 
     /// Notify about successfully completed downloading task
     ///
     /// - parameter videoId: Video id
-    func assetDownloadComplete(videoId: String)
+    func videoDownloadComplete(videoId: String)
 
 }

@@ -29,20 +29,6 @@ class AttachmentDownloader: KinescopeAttachmentDownloadable {
 
     // MARK: - KinescopeAttachmentDownloadable
 
-    func downloadedAttachmentsList() -> [URL] {
-        guard let attachmentsUrl = getAttachmentsFolderUrl() else {
-            return []
-        }
-
-        do {
-            let files = try FileManager.default.contentsOfDirectory(at: attachmentsUrl, includingPropertiesForKeys: nil)
-            return files
-        } catch {
-            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.storage)
-            return []
-        }
-    }
-
     func enqueueDownload(attachmentId: String, url: URL) {
         guard !isDownloaded(attachmentId: attachmentId) else {
             return
@@ -62,6 +48,34 @@ class AttachmentDownloader: KinescopeAttachmentDownloadable {
         fileService.resumeDownload(fileId: attachmentId)
     }
 
+    func isDownloaded(attachmentId: String) -> Bool {
+        guard let fileUrl = getAttachmentUrl(of: attachmentId) else {
+            return false
+        }
+        return FileManager.default.fileExists(atPath: fileUrl.path)
+    }
+
+    func downloadedList() -> [URL] {
+        guard let attachmentsUrl = getAttachmentsFolderUrl() else {
+            return []
+        }
+
+        do {
+            let files = try FileManager.default.contentsOfDirectory(at: attachmentsUrl, includingPropertiesForKeys: nil)
+            return files
+        } catch {
+            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.storage)
+            return []
+        }
+    }
+
+    func getLocation(of attachmentId: String) -> URL? {
+        guard isDownloaded(attachmentId: attachmentId) else {
+            return nil
+        }
+        return getAttachmentUrl(of: attachmentId)
+    }
+
     @discardableResult
     func delete(attachmentId: String) -> Bool {
         guard isDownloaded(attachmentId: attachmentId) else {
@@ -79,18 +93,15 @@ class AttachmentDownloader: KinescopeAttachmentDownloadable {
         }
     }
 
-    func getLocation(of attachmentId: String) -> URL? {
-        guard isDownloaded(attachmentId: attachmentId) else {
-            return nil
+    func clear() {
+        guard let attachmentsUrl = getAttachmentsFolderUrl() else {
+            return
         }
-        return getAttachmentUrl(of: attachmentId)
-    }
-
-    func isDownloaded(attachmentId: String) -> Bool {
-        guard let fileUrl = getAttachmentUrl(of: attachmentId) else {
-            return false
+        do {
+            try FileManager.default.removeItem(atPath: attachmentsUrl.path)
+        } catch {
+            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.storage)
         }
-        return FileManager.default.fileExists(atPath: fileUrl.path)
     }
 
     func add(delegate: KinescopeAttachmentDownloadableDelegate) {
@@ -105,17 +116,6 @@ class AttachmentDownloader: KinescopeAttachmentDownloadable {
 
     func restore() {
         fileService.restore()
-    }
-
-    func clear() {
-        guard let attachmentsUrl = getAttachmentsFolderUrl() else {
-            return
-        }
-        do {
-            try FileManager.default.removeItem(atPath: attachmentsUrl.path)
-        } catch {
-            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.storage)
-        }
     }
 
 }

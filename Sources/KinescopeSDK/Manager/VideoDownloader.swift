@@ -29,8 +29,28 @@ class VideoDownloader: KinescopeVideoDownloadable {
 
     // MARK: - KinescopeDownloadable
 
-    func downlaodedList() -> [String] {
+    func enqueueDownload(videoId: String, url: URL) {
+        assetService.enqueueDownload(assetId: videoId, url: url)
+    }
+
+    func resumeDownload(videoId: String) {
+        assetService.resumeDownload(assetId: videoId)
+    }
+
+    func pauseDownload(videoId: String) {
+        assetService.pauseDownload(assetId: videoId)
+    }
+
+    func dequeueDownload(videoId: String) {
+        assetService.dequeueDownload(assetId: videoId)
+    }
+
+    func downloadedList() -> [String] {
         return videoPathsStorage.fetchVideoIds()
+    }
+
+    func getLocation(by videoId: String) -> URL? {
+        return videoPathsStorage.readVideoUrl(by: videoId)
     }
 
     @discardableResult
@@ -49,29 +69,9 @@ class VideoDownloader: KinescopeVideoDownloadable {
     }
 
     func clear() {
-        for videoId in downlaodedList() {
+        for videoId in downloadedList() {
             delete(videoId: videoId)
         }
-    }
-
-    func getPath(by videoId: String) -> URL? {
-        return videoPathsStorage.readVideoUrl(by: videoId)
-    }
-
-    func enqueueDownload(videoId: String, url: URL) {
-        assetService.enqueueDownload(assetId: videoId, url: url)
-    }
-
-    func resumeDownload(videoId: String) {
-        assetService.resumeDownload(assetId: videoId)
-    }
-
-    func pauseDownload(videoId: String) {
-        assetService.pauseDownload(assetId: videoId)
-    }
-
-    func dequeueDownload(videoId: String) {
-        assetService.dequeueDownload(assetId: videoId)
     }
 
     func add(delegate: KinescopeVideoDownloadableDelegate) {
@@ -96,20 +96,20 @@ extension VideoDownloader: AssetServiceDelegate {
 
     func downloadProgress(assetId: String, progress: Double) {
         delegates.forEach {
-            $0.assetDownloadProgress(videoId: assetId, progress: progress)
+            $0.videoDownloadProgress(videoId: assetId, progress: progress)
         }
     }
 
     func downloadError(assetId: String, error: KinescopeDownloadError) {
         delegates.forEach {
-            $0.assetDownloadError(videoId: assetId, error: error)
+            $0.videoDownloadError(videoId: assetId, error: error)
         }
     }
 
     func downloadComplete(assetId: String, path: String) {
         videoPathsStorage.saveVideo(relativeUrl: path, id: assetId)
         delegates.forEach {
-            $0.assetDownloadComplete(videoId: assetId)
+            $0.videoDownloadComplete(videoId: assetId)
         }
     }
 

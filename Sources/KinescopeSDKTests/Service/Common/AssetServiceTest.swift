@@ -17,11 +17,14 @@ final class AssetServiceTests: XCTestCase {
     var assetServiceDelegate: AssetServiceDelegateMock?
     var assetLinksServiceMock: AssetLinksServiceMock?
 
+    let mockUrlString = "https://example.com"
+    let mockUrl = URL(string: "https://example.com")!
+
     override func setUp() {
         super.setUp()
         let assetLinksServiceMock = AssetLinksServiceMock()
         self.assetLinksServiceMock = assetLinksServiceMock
-        self.assetService = AssetNetworkService(assetLinksService: assetLinksServiceMock)
+        self.assetService = AssetNetworkService()
         self.assetServiceDelegate = AssetServiceDelegateMock()
         self.assetService?.delegate = assetServiceDelegate
     }
@@ -49,8 +52,8 @@ final class AssetServiceTests: XCTestCase {
         assetService?.setSession(MocAVAssetDownloadURLSession(delegate: assetService))
 
         // when
-        assetLinksServiceMock?.linkMock = ["1": .success(.init(link: "https://example.com"))]
-        assetService?.enqueueDownload(assetId: assetId)
+        assetLinksServiceMock?.linkMock = ["1": .success(.init(link: mockUrlString))]
+        assetService?.enqueueDownload(assetId: assetId, url: mockUrl)
 
         // then
         wait(for: [exp], timeout: 2.5)
@@ -74,8 +77,8 @@ final class AssetServiceTests: XCTestCase {
         assetService?.setSession(session)
 
         // when
-        assetLinksServiceMock?.linkMock = ["1": .success(.init(link: "https://example.com"))]
-        assetService?.enqueueDownload(assetId: assetId)
+        assetLinksServiceMock?.linkMock = ["1": .success(.init(link: mockUrlString))]
+        assetService?.enqueueDownload(assetId: assetId, url: mockUrl)
 
         // then
         wait(for: [exp], timeout: 2.5)
@@ -97,8 +100,8 @@ final class AssetServiceTests: XCTestCase {
         assetService?.setSession(session)
 
         // when
-        assetLinksServiceMock?.linkMock = ["1": .success(.init(link: "https://example.com"))]
-        assetService?.enqueueDownload(assetId: assetId)
+        assetLinksServiceMock?.linkMock = ["1": .success(.init(link: mockUrlString))]
+        assetService?.enqueueDownload(assetId: assetId, url: mockUrl)
         assetService?.dequeueDownload(assetId: assetId)
 
         // Fullfill after 3.5 second and check that completion handler didn't work
@@ -128,8 +131,8 @@ final class AssetServiceTests: XCTestCase {
         assetService?.setSession(session)
 
         // when
-        assetLinksServiceMock?.linkMock = ["1": .success(.init(link: "https://example.com"))]
-        assetService?.enqueueDownload(assetId: assetId)
+        assetLinksServiceMock?.linkMock = ["1": .success(.init(link: mockUrlString))]
+        assetService?.enqueueDownload(assetId: assetId, url: mockUrl)
         assetService?.pauseDownload(assetId: assetId)
 
         // Fullfill pauseExp after 3.5 second and check that task didn't finished
@@ -165,11 +168,11 @@ final class AssetServiceTests: XCTestCase {
         assetService?.setSession(session)
 
         // when
-        assetLinksServiceMock?.linkMock = ["1": .success(.init(link: "https://example.com/1")),
-                                           "2": .success(.init(link: "https://example.com/2")),
-                                           "3": .success(.init(link: "https://example.com/3"))]
+        assetLinksServiceMock?.linkMock = ["1": .success(.init(link: mockUrlString + "1")),
+                                           "2": .success(.init(link: mockUrlString + "2")),
+                                           "3": .success(.init(link: mockUrlString + "3"))]
         assetIds.forEach {
-            assetService?.enqueueDownload(assetId: $0.key)
+            assetService?.enqueueDownload(assetId: $0.key, url: URL(string: mockUrlString + $0.key)!)
         }
         assetIds.forEach {
             assetService?.pauseDownload(assetId: $0.key)

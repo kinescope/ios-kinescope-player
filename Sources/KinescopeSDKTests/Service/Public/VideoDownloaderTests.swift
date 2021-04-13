@@ -1,5 +1,5 @@
 //
-//  AssetDownloaderTests.swift
+//  VideoDownloaderTests.swift
 //  KinescopeSDKTests
 //
 //  Created by Artemii Shabanov on 07.04.2021.
@@ -13,16 +13,18 @@ final class AssetDownloaderTests: XCTestCase {
     // MARK: - Setup
 
     var assetService: AssetServiceMock?
-    var downloader: KinescopeAssetDownloadable?
-    var delegate: KinescopeAssetDownloadableDelegateMock?
+    var downloader: KinescopeVideoDownloadable?
+    var delegate: KinescopeVideoDownloadableDelegateMock?
+
+    let mockUrl = URL(string: "https://example.com")!
 
     override func setUp() {
         super.setUp()
 
         let mockAssetService = AssetServiceMock()
-        self.downloader = AssetDownloader(assetPathsStorage: AssetPathsUDStorage(), assetService: mockAssetService)
+        self.downloader = VideoDownloader(videoPathsStorage: VideoPathsUDStorage(), assetService: mockAssetService)
         self.assetService = mockAssetService
-        let delegate = KinescopeAssetDownloadableDelegateMock()
+        let delegate = KinescopeVideoDownloadableDelegateMock()
         self.delegate = delegate
         self.downloader?.add(delegate: delegate)
     }
@@ -41,7 +43,7 @@ final class AssetDownloaderTests: XCTestCase {
 
         // given
 
-        delegate?.assets = [
+        delegate?.videos = [
             "id1": (progress: 0, completed: false, error: nil),
             "id2": (progress: 0, completed: false, error: nil),
             "id3": (progress: 0, completed: false, error: nil)
@@ -55,14 +57,14 @@ final class AssetDownloaderTests: XCTestCase {
         // when
 
         for assetId in (assetService?.assetStates ?? [:]).keys {
-            downloader?.enqueueDownload(assetId: assetId)
+            downloader?.enqueueDownload(videoId: assetId, url: mockUrl)
         }
 
         // then
 
-        XCTAssertEqual(delegate?.assets["id1"]?.progress, 0.5)
-        XCTAssertEqual(delegate?.assets["id2"]?.error, KinescopeDownloadError.notFound)
-        XCTAssertEqual(delegate?.assets["id3"]?.completed, true)
+        XCTAssertEqual(delegate?.videos["id1"]?.progress, 0.5)
+        XCTAssertEqual(delegate?.videos["id2"]?.error, KinescopeDownloadError.notFound)
+        XCTAssertEqual(delegate?.videos["id3"]?.completed, true)
     }
 
     func testPathConsistency() {
@@ -75,11 +77,11 @@ final class AssetDownloaderTests: XCTestCase {
 
         // when
 
-        downloader?.enqueueDownload(assetId: "id1")
+        downloader?.enqueueDownload(videoId: "id1", url: mockUrl)
 
         let baseURL = URL(fileURLWithPath: NSHomeDirectory())
         let assetURL = baseURL.appendingPathComponent("id1")
-        let path = downloader?.getPath(by: "id1")
+        let path = downloader?.getLocation(by: "id1")
 
         // then
 
@@ -99,20 +101,20 @@ final class AssetDownloaderTests: XCTestCase {
         // when
 
         for assetId in (assetService?.assetStates ?? [:]).keys {
-            downloader?.enqueueDownload(assetId: assetId)
+            downloader?.enqueueDownload(videoId: assetId, url: mockUrl)
         }
         downloader?.clear()
 
         // then
 
-        XCTAssertEqual(downloader?.downlaodedAssetsList(), [])
+        XCTAssertEqual(downloader?.downloadedList(), [])
     }
 
     func testDeleteConsistency() {
 
         // given
 
-        delegate?.assets = [
+        delegate?.videos = [
             "id1": (progress: 0, completed: false, error: nil)
         ]
         assetService?.assetStates = [
@@ -122,20 +124,20 @@ final class AssetDownloaderTests: XCTestCase {
         // when
 
         for assetId in (assetService?.assetStates ?? [:]).keys {
-            downloader?.enqueueDownload(assetId: assetId)
+            downloader?.enqueueDownload(videoId: assetId, url: mockUrl)
         }
 
         // then
 
-        XCTAssertEqual(delegate?.assets["id1"]?.completed, true)
+        XCTAssertEqual(delegate?.videos["id1"]?.completed, true)
 
         // when
 
-        downloader?.delete(assetId: "id1")
+        downloader?.delete(videoId: "id1")
 
         // then
 
-        XCTAssertEqual(downloader?.getPath(by: "id1"), nil)
+        XCTAssertEqual(downloader?.getLocation(by: "id1"), nil)
     }
 
     func testListConsistency() {
@@ -154,12 +156,12 @@ final class AssetDownloaderTests: XCTestCase {
         // when
 
         for assetId in (assetService?.assetStates ?? [:]).keys {
-            downloader?.enqueueDownload(assetId: assetId)
+            downloader?.enqueueDownload(videoId: assetId, url: mockUrl)
         }
 
         // then
 
-        XCTAssertEqual(Set(downloader?.downlaodedAssetsList() ?? []), Set(["id1", "id2", "id4"]))
+        XCTAssertEqual(Set(downloader?.downloadedList() ?? []), Set(["id1", "id2", "id4"]))
     }
 
 }

@@ -481,7 +481,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
         let videoQuality: KinescopeVideoQuality
         if let asset = video.assets.first(where: { $0.quality == quality }) {
-            if let path = dependencies.assetDownloader.getPath(by: asset.id) {
+            if let path = dependencies.assetDownloader.getLocation(by: asset.id) {
                 videoQuality = .downloaded(url: path)
             } else {
                 videoQuality = .exact(asset: asset)
@@ -514,7 +514,8 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         guard let asset = video?.assets[safe: index] else {
             return
         }
-        dependencies.assetDownloader.enqueueDownload(assetId: asset.id)
+        dependencies.assetDownloader.enqueueDownload(assetId: asset.id + asset.originalName)
+        Kinescope.shared.logger?.log(message: "Start downloading asset: \(asset.id + asset.originalName)",
                                      level: KinescopeLoggerLevel.player)
     }
 
@@ -545,7 +546,7 @@ extension KinescopeVideoPlayer: KinescopeAssetDownloadableDelegate {
                                      level: KinescopeLoggerLevel.player)
     }
 
-    public func assetDownloadComplete(assetId: String) {
+    public func assetDownloadComplete(assetId: String, url: URL?) {
         Kinescope.shared.logger?.log(message: "Succeeded asset download: \(assetId)",
                                      level: KinescopeLoggerLevel.player)
     }

@@ -19,7 +19,7 @@ final class KinescopeAssetDownloadableMock: KinescopeAssetDownloadable {
     func restore() {
     }
 
-    func downlaodedAssetsList() -> [String] {
+    func downloadedList() -> [URL] {
         return []
     }
 
@@ -30,7 +30,7 @@ final class KinescopeAssetDownloadableMock: KinescopeAssetDownloadable {
     func clear() {
     }
 
-    func getPath(by assetId: String) -> URL? {
+    func getLocation(by assetId: String) -> URL? {
         return nil
     }
 

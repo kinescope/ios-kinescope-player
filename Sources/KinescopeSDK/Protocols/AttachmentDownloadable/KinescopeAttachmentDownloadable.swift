@@ -38,7 +38,12 @@ public protocol KinescopeAttachmentDownloadable: class {
     func isDownloaded(attachmentId: String) -> Bool
 
     /// Returns list of downloaded attachments url's that stored on disk
-    func downloadedAttachmentsList() -> [URL]
+    func downloadedList() -> [URL]
+
+    /// Returns location of downloaded attachment in cache if the file exist, returns nil otherwise
+    ///
+    /// - parameter attachmentId: id of attachment's file
+    func getLocation(of attachmentId: String) -> URL?
 
     /// Deletes downloaded attachment from disk and returns result of deleting
     ///
@@ -48,11 +53,6 @@ public protocol KinescopeAttachmentDownloadable: class {
 
     /// Deletes all downloaded attachments from disk
     func clear()
-
-    /// Returns location of downloaded attachment in cache if the file exist, returns nil otherwise
-    ///
-    /// - parameter attachmentId: id of attachment's file
-    func getLocation(of attachmentId: String) -> URL?
 
     /// Add delegate to notify about download process
     ///

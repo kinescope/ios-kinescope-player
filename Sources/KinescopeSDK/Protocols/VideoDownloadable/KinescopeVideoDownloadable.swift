@@ -11,28 +11,6 @@ import Foundation
 /// We understand video as auto stream and asset as mp4 file of concrete quality
 public protocol KinescopeVideoDownloadable: class {
 
-    /// Checks that video was downloaded
-    ///
-    /// - parameter videoId: Video id
-    func isDownloaded(videoId: String) -> Bool
-
-    /// Returns list of downloaded video Id's
-    func downlaodedList() -> [String]
-
-    /// Deletes downloaded asset from disk
-    ///
-    /// - parameter videoId: Video id
-    @discardableResult
-    func delete(videoId: String) -> Bool
-
-    /// Deletes all downloaded videos from disk
-    func clear()
-
-    /// Returns downloaded video path from disk
-    ///
-    /// - parameter videoId: Video id
-    func getPath(by videoId: String) -> URL?
-
     /// Request downloadable link for video and start downloading
     ///
     /// - parameter videoId: Video id
@@ -54,6 +32,28 @@ public protocol KinescopeVideoDownloadable: class {
     /// - parameter videoId: Video id
     func dequeueDownload(videoId: String)
 
+    /// Checks that video was downloaded
+    ///
+    /// - parameter videoId: Video id
+    func isDownloaded(videoId: String) -> Bool
+
+    /// Returns list of downloaded video Id's
+    func downloadedList() -> [String]
+
+    /// Returns downloaded video path from disk
+    ///
+    /// - parameter videoId: Video id
+    func getLocation(by videoId: String) -> URL?
+
+    /// Deletes downloaded asset from disk
+    ///
+    /// - parameter videoId: Video id
+    @discardableResult
+    func delete(videoId: String) -> Bool
+
+    /// Deletes all downloaded videos from disk
+    func clear()
+
     /// Add delegate to notify about download process
     ///
     /// - parameter delegate: Instance of delegate
@@ -72,7 +72,7 @@ public protocol KinescopeVideoDownloadable: class {
 public extension KinescopeVideoDownloadable {
 
     func isDownloaded(videoId: String) -> Bool {
-        return downlaodedList().contains(videoId)
+        return downloadedList().contains(videoId)
     }
 
 }

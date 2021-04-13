@@ -88,7 +88,7 @@ final class AttachmentDownloaderTests: XCTestCase {
 
         //then
         var filePaths: [URL] = []
-        let attachemntsList = downloader!.downloadedAttachmentsList()
+        let attachemntsList = downloader!.downloadedList()
 
         attachmentsIds.forEach {
             filePaths.append(downloader!.getLocation(of: $0)!)
@@ -141,7 +141,7 @@ final class AttachmentDownloaderTests: XCTestCase {
         downloader?.clear()
 
         // then
-        let urls = downloader?.downloadedAttachmentsList()
+        let urls = downloader?.downloadedList()
 
         XCTAssertEqual(urls, [])
     }
