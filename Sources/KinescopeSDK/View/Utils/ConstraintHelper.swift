@@ -52,6 +52,22 @@ extension UIView {
         ])
     }
 
+    func bottomChildWithSafeArea(view: UIView) {
+        let bottomAnchor: NSLayoutYAxisAnchor
+        if #available(iOS 11.0, *) {
+             bottomAnchor = safeAreaLayoutGuide.bottomAnchor
+        } else {
+            bottomAnchor = self.bottomAnchor
+        }
+
+        view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            view.leadingAnchor.constraint(equalTo: leadingAnchor),
+            view.trailingAnchor.constraint(equalTo: trailingAnchor),
+            view.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+    }
+
     func topChild(view: UIView, padding: CGFloat = 16.0) {
         view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
