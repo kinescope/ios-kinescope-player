@@ -427,7 +427,8 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             playerVC.modalPresentationStyle = .overFullScreen
             rootVC?.present(playerVC, animated: true, completion: { [weak self] in
                 guard
-                    let self = self
+                    let self = self,
+                    let video = self.video
                 else {
                     return
                 }
@@ -435,6 +436,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                 self.play()
                 self.view?.change(status: .readyToPlay)
                 self.view?.change(quality: self.currentQuality, manualQuality: self.isManualQuality)
+                self.view?.overlay?.set(title: video.title, subtitle: video.description)
             })
         }
     }
