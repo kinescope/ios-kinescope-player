@@ -49,10 +49,10 @@ public protocol KinescopeAttachmentDownloadable: class {
     /// Deletes all downloaded attachments from disk
     func clear()
 
-    /// Returns downloaded asset path from disk if it exist, returns nil otherwise
+    /// Returns location of downloaded attachment in cache if the file exist, returns nil otherwise
     ///
     /// - parameter attachmentId: id of attachment's file
-    func getPath(of attachmentId: String) -> URL?
+    func getLocation(of attachmentId: String) -> URL?
 
     /// Add delegate to notify about download process
     ///

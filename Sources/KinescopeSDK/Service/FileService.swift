@@ -10,7 +10,7 @@ import Foundation
 protocol FileServiceDelegate: class {
     func downloadProgress(fileId: String, progress: Double)
     func downloadError(fileId: String, error: KinescopeDownloadError)
-    func downloadComplete(fileId: String, path: URL)
+    func downloadComplete(fileId: String, location: URL)
 }
 
 protocol FileService {
@@ -51,9 +51,9 @@ final class FileNetworkService: NSObject, FileService {
     func setSession(_ session: URLSession) {
         self.session = session
     }
-    
+
     // MARK: - FileService
-    
+
     func enqueueDownload(fileId: String, url: URL) {
         findTask(of: fileId) { task in
             task.resume()
@@ -119,7 +119,7 @@ extension FileNetworkService: URLSessionDownloadDelegate {
         else {
             return
         }
-        delegate?.downloadComplete(fileId: fileId, path: location)
+        delegate?.downloadComplete(fileId: fileId, location: location)
     }
 
     func urlSession(_ session: URLSession,
@@ -143,7 +143,7 @@ extension FileNetworkService: URLSessionDownloadDelegate {
             let id = idsStorage.deleteID(by: taskUrl),
             let error = error
         else {
-            return 
+            return
         }
         delegate?.downloadError(fileId: id, error: .unknown(error))
     }
