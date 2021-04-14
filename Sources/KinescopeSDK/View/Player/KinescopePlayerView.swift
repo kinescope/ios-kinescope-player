@@ -31,6 +31,7 @@ public class KinescopePlayerView: UIView {
 
     // FIXME: Add localization
     private var selectedQuality = NSAttributedString(string: "Auto")
+    private var selectedSubtitles = NSAttributedString(string: "Off")
 
     // MARK: - Public Properties
 
@@ -185,7 +186,7 @@ private extension KinescopePlayerView {
         case .playbackSpeed:
             model = .init(title: title, isRoot: false, isDownloadable: false, items: [])
         case .subtitles:
-            model = .init(title: title, isRoot: false, isDownloadable: false, items: [])
+            model = makeSubtitlesSideMenuModel(with: title, root: false)
         case .quality:
             model = makeQualitySideMenuModel(with: title)
         case .none:
@@ -221,6 +222,20 @@ private extension KinescopePlayerView {
         let selected = selectedQuality.string.hasPrefix(autoTitle.string)
         items.insert(.checkmark(title: autoTitle, selected: selected), at: 0)
         return .init(title: title, isRoot: false, isDownloadable: false, items: items)
+    }
+
+    func makeSubtitlesSideMenuModel(with title: String, root: Bool) -> SideMenu.Model {
+        let subtitles = delegate?.didShowSubtitles() ?? []
+        var items = subtitles.compactMap { subtitle -> SideMenu.Item in
+            let selected = self.selectedSubtitles.string.trimmingCharacters(in: .symbols) == subtitle
+            return .checkmark(title: .init(string: subtitle), selected: selected)
+        }
+
+        // FIXME: Add localization
+        let offTitle = NSAttributedString(string: "Off")
+        let selected = selectedSubtitles.string == offTitle.string
+        items.insert(.checkmark(title: offTitle, selected: selected), at: 0)
+        return .init(title: title, isRoot: root, isDownloadable: false, items: items)
     }
 
     func makeAttachmentSideMenuItems() -> [SideMenu.Item] {
@@ -265,7 +280,14 @@ private extension KinescopePlayerView {
 
     func handleCheckmarkActions(for title: NSAttributedString, sideMenu: SideMenu) {
         // FIXME: Add configs for another logic
-        handleQualityCheckmarkAction(for: title, sideMenu: sideMenu)
+        switch SideMenu.Settings(rawValue: sideMenu.title) {
+        case .quality:
+            handleQualityCheckmarkAction(for: title, sideMenu: sideMenu)
+        case .subtitles:
+            handleSubtitlesCheckmarkAction(for: title, sideMenu: sideMenu)
+        case .playbackSpeed, .none:
+            break
+        }
     }
 
     func handleQualityCheckmarkAction(for title: NSAttributedString, sideMenu: SideMenu) {
@@ -274,11 +296,24 @@ private extension KinescopePlayerView {
         set(quality: title.string)
     }
 
+    func handleSubtitlesCheckmarkAction(for title: NSAttributedString, sideMenu: SideMenu) {
+        delegate?.didSelect(subtitles: title.string)
+        sideMenuWillBeDismissed(sideMenu, withRoot: true)
+        set(subtitles: title.string)
+    }
+
     func set(quality: String) {
         let color = config.sideMenu.item.valueColor
         let font = config.sideMenu.item.valueFont
         let attributes: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: color]
         selectedQuality = quality.attributedStringWithAssetIconIfNeeded(attributes: attributes)
+    }
+
+    func set(subtitles: String) {
+        let color = config.sideMenu.item.valueColor
+        let font = config.sideMenu.item.valueFont
+        let attributes: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: color]
+        selectedSubtitles = NSAttributedString(string: subtitles, attributes: attributes)
     }
 
     func presentSideMenu(model: SideMenu.Model) {
@@ -325,7 +360,7 @@ extension KinescopePlayerView: PlayerControlOutput {
                                         .disclosure(title: SideMenu.Settings.playbackSpeed.rawValue,
                                                     value: nil),
                                         .disclosure(title: SideMenu.Settings.subtitles.rawValue,
-                                                    value: nil),
+                                                    value: selectedSubtitles),
                                         .disclosure(title: SideMenu.Settings.quality.rawValue,
                                                     value: selectedQuality)
                                        ])
@@ -343,6 +378,10 @@ extension KinescopePlayerView: PlayerControlOutput {
                                        isRoot: true,
                                        isDownloadable: true,
                                        items: items)
+            presentSideMenu(model: model)
+        case .subtitles:
+            let model = makeSubtitlesSideMenuModel(with: SideMenu.Settings.subtitles.rawValue,
+                                                   root: true)
             presentSideMenu(model: model)
         default:
             break

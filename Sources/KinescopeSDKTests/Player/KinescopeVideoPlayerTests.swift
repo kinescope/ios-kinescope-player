@@ -62,7 +62,7 @@ final class KinescopeVideoPlayerTests: XCTestCase {
         XCTAssertEqual(strategy?.bindItems.count, 1)
         XCTAssertEqual(strategy?.playCalledCount, 1)
         XCTAssertEqual(strategy?.pauseCalledCount, 0)
-        XCTAssertEqual(strategy?.unbindCalledCount, 0)
+        XCTAssertEqual(strategy?.unbindCalledCount, 1)
 
     }
 
@@ -109,6 +109,6 @@ final class KinescopeVideoPlayerTests: XCTestCase {
         XCTAssertEqual(strategy?.bindItems.count, 1)
         XCTAssertEqual(strategy?.playCalledCount, 0)
         XCTAssertEqual(strategy?.pauseCalledCount, 0)
-        XCTAssertEqual(strategy?.unbindCalledCount, 0)
+        XCTAssertEqual(strategy?.unbindCalledCount, 1)
     }
 }

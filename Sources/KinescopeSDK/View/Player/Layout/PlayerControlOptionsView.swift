@@ -13,6 +13,7 @@ protocol PlayerControlOptionsInput {
     ///
     /// - parameter options: Set of option
     func set(options: [KinescopePlayerOption])
+    func set(subtitleOn: Bool)
 }
 
 protocol PlayerControlOptionsOutput: class {
@@ -69,6 +70,13 @@ extension PlayerControlOptionsView: PlayerControlOptionsInput {
         fillStack(with: options, expanded: isExpanded)
     }
 
+    func set(subtitleOn: Bool) {
+        let button = stackView.arrangedSubviews
+            .compactMap { $0 as? OptionButton }
+            .first { $0.option == .subtitles }
+
+        button?.isSelected = subtitleOn
+    }
 }
 
 // MARK: - Private

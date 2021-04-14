@@ -150,6 +150,10 @@ private extension KinescopeVideoPlayer {
             options.insert(.attachments, at: 0)
         }
 
+        if !video.subtitles.isEmpty {
+            options.insert(.subtitles, at: 0)
+        }
+
         self.options = options
         return options
     }
@@ -514,4 +518,15 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         // FIXME: add logic
     }
 
+    func didShowSubtitles() -> [String] {
+        return video?.subtitles.compactMap { $0.title } ?? []
+    }
+
+    func didSelect(subtitles: String) {
+        // FIXME: add logic
+        let isOn = video?.subtitles.contains { $0.title == subtitles } ?? false
+        view?.controlPanel?.set(subtitleOn: isOn)
+        Kinescope.shared.logger?.log(message: "Select subtitles: \(subtitles)",
+                                     level: KinescopeLoggerLevel.player)
+    }
 }
