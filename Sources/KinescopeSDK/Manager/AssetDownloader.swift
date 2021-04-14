@@ -22,27 +22,31 @@ class AssetDownloader: KinescopeAssetDownloadable {
     private var delegates: [KinescopeAssetDownloadableDelegate] = []
     private var fileService: FileService
     private let assetLinksService: AssetLinksService
+    private var fileNamesStorage: KinescopeFileNamesStorage
 
     // MARK: - Initialisation
 
     init(fileService: FileService,
-         assetLinksService: AssetLinksService) {
+         assetLinksService: AssetLinksService,
+         fileNamesStorage: KinescopeFileNamesStorage = FileNamesUDStorage(suffix: "assetNames")) {
         self.fileService = fileService
         self.assetLinksService = assetLinksService
+        self.fileNamesStorage = fileNamesStorage
         self.fileService.delegate = self
     }
 
     // MARK: - KinescopeDownloadable
 
-    func enqueueDownload(assetId: String) {
-        assetLinksService.getAssetLink(by: assetId) { [weak self] in
+    func enqueueDownload(asset: KinescopeVideoAsset) {
+        assetLinksService.getAssetLink(by: asset.id) { [weak self] in
             guard let self = self else {
                 return
             }
             switch $0 {
             case .success(let link):
                 if let url = URL(string: link.link) {
-                    self.fileService.enqueueDownload(fileId: self.fileName(for: assetId), url: url)
+                    self.fileService.enqueueDownload(fileId: asset.id, url: url)
+                    self.fileNamesStorage.saveFile(name: asset.originalName, id: asset.id)
                 }
             case .failure(let error):
                 Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.network)
@@ -51,19 +55,20 @@ class AssetDownloader: KinescopeAssetDownloadable {
     }
 
     func pauseDownload(assetId: String) {
-        fileService.pauseDownload(fileId: fileName(for: assetId))
+        fileService.pauseDownload(fileId: assetId)
     }
 
     func resumeDownload(assetId: String) {
-        fileService.resumeDownload(fileId: fileName(for: assetId))
+        fileService.resumeDownload(fileId: assetId)
     }
 
     func dequeueDownload(assetId: String) {
-        fileService.dequeueDownload(fileId: fileName(for: assetId))
+        fileNamesStorage.deleteFileName(by: assetId)
+        fileService.dequeueDownload(fileId: assetId)
     }
 
     func isDownloaded(assetId: String) -> Bool {
-        guard let fileUrl = getAssetUrl(of: fileName(for: assetId)) else {
+        guard let fileUrl = getAssetUrl(of: assetId) else {
             return false
         }
         return FileManager.default.fileExists(atPath: fileUrl.path)
@@ -87,7 +92,7 @@ class AssetDownloader: KinescopeAssetDownloadable {
         guard isDownloaded(assetId: assetId) else {
             return nil
         }
-        return getAssetUrl(of: fileName(for: assetId))
+        return getAssetUrl(of: assetId)
     }
 
     @discardableResult
@@ -96,10 +101,11 @@ class AssetDownloader: KinescopeAssetDownloadable {
             return false
         }
         do {
-            guard let fileUrl = getAssetUrl(of: fileName(for: assetId)) else {
+            guard let fileUrl = getAssetUrl(of: assetId) else {
                 return false
             }
             try FileManager.default.removeItem(atPath: fileUrl.path)
+            fileNamesStorage.deleteFileName(by: assetId)
             return true
         } catch {
             Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.storage)
@@ -113,6 +119,9 @@ class AssetDownloader: KinescopeAssetDownloadable {
         }
         do {
             try FileManager.default.removeItem(atPath: assetsUrl.path)
+            fileNamesStorage.fetchFileNames().forEach {
+                fileNamesStorage.deleteFileName(by: $0)
+            }
         } catch {
             Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.storage)
         }
@@ -139,12 +148,15 @@ class AssetDownloader: KinescopeAssetDownloadable {
 extension AssetDownloader: FileServiceDelegate {
 
     func downloadProgress(fileId: String, progress: Double) {
+        Kinescope.shared.logger?.log(message: "Asset \(fileId) download progress: \(progress)", level: KinescopeLoggerLevel.storage)
         delegates.forEach {
             $0.assetDownloadProgress(assetId: fileId, progress: progress)
         }
     }
 
     func downloadError(fileId: String, error: KinescopeDownloadError) {
+        Kinescope.shared.logger?.log(message: "Asset \(fileId) download failed with \(error)", level: KinescopeLoggerLevel.storage)
+        fileNamesStorage.deleteFileName(by: fileId)
         delegates.forEach {
             $0.assetDownloadError(assetId: fileId, error: error)
         }
@@ -152,13 +164,14 @@ extension AssetDownloader: FileServiceDelegate {
 
     func downloadComplete(fileId: String, location: URL) {
         let savedFileUrl: URL?
+        let fileUrl = getAssetUrl(of: fileId) ?? .init(fileURLWithPath: "")
+        Kinescope.shared.logger?.log(message: "Asset \(fileId) download completed as \(fileUrl)", level: KinescopeLoggerLevel.storage)
         do {
-            let fileUrl = getAssetUrl(of: fileId) ?? .init(fileURLWithPath: "")
             try FileManager.default.copyItem(at: location, to: fileUrl)
             savedFileUrl = fileUrl
         } catch {
             savedFileUrl = nil
-            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.storage)
+            Kinescope.shared.logger?.log(message: "Asset \(fileId) saving failed with \(error)", level: KinescopeLoggerLevel.storage)
         }
         delegates.forEach {
             $0.assetDownloadComplete(assetId: fileId, url: savedFileUrl)
@@ -172,8 +185,11 @@ extension AssetDownloader: FileServiceDelegate {
 private extension AssetDownloader {
 
     func getAssetUrl(of assetId: String) -> URL? {
+        guard let name = fileNamesStorage.readFileName(by: assetId) else {
+            return nil
+        }
         let assetsUrl = getAssetsFolderUrl()
-        let destinationUrl = assetsUrl?.appendingPathComponent(assetId)
+        let destinationUrl = assetsUrl?.appendingPathComponent(assetId + "_" + name)
 
         return destinationUrl
     }
@@ -186,7 +202,7 @@ private extension AssetDownloader {
         let assetsUrl = documentsUrl.appendingPathComponent(Constants.assetsDirectory)
 
         // Create asset folder if it doesn't exist
-        var isDir : ObjCBool = true
+        var isDir: ObjCBool = true
         if !FileManager.default.fileExists(atPath: assetsUrl.path, isDirectory: &isDir) {
             do {
                 try FileManager.default.createDirectory(at: assetsUrl, withIntermediateDirectories: false, attributes: nil)
@@ -199,9 +215,4 @@ private extension AssetDownloader {
         return assetsUrl
     }
 
-    func fileName(for id: String) -> String {
-        return id + ".mp4"
-    }
-
 }
-

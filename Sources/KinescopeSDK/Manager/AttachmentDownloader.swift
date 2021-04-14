@@ -19,24 +19,28 @@ class AttachmentDownloader: KinescopeAttachmentDownloadable {
 
     private var fileService: FileService
     private var delegates: [KinescopeAttachmentDownloadableDelegate] = []
+    private var fileNamesStorage: KinescopeFileNamesStorage
 
     // MARK: - Initialisation
 
-    init(fileService: FileService) {
+    init(fileService: FileService, fileNamesStorage: KinescopeFileNamesStorage = FileNamesUDStorage(suffix: "attachmentNames")) {
         self.fileService = fileService
+        self.fileNamesStorage = fileNamesStorage
         self.fileService.delegate = self
     }
 
     // MARK: - KinescopeAttachmentDownloadable
 
-    func enqueueDownload(attachmentId: String, url: URL) {
-        guard !isDownloaded(attachmentId: attachmentId) else {
+    func enqueueDownload(attachment: KinescopeVideoAdditionalMaterial, url: URL) {
+        guard !isDownloaded(attachmentId: attachment.id) else {
             return
         }
-        fileService.enqueueDownload(fileId: attachmentId, url: url)
+        fileNamesStorage.saveFile(name: attachment.filename, id: attachment.id)
+        fileService.enqueueDownload(fileId: attachment.id, url: url)
     }
 
     func dequeueDownload(attachmentId: String) {
+        fileNamesStorage.deleteFileName(by: attachmentId)
         fileService.dequeueDownload(fileId: attachmentId)
     }
 
@@ -86,6 +90,7 @@ class AttachmentDownloader: KinescopeAttachmentDownloadable {
                 return false
             }
             try FileManager.default.removeItem(atPath: fileUrl.path)
+            fileNamesStorage.deleteFileName(by: attachmentId)
             return true
         } catch {
             Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.storage)
@@ -99,6 +104,9 @@ class AttachmentDownloader: KinescopeAttachmentDownloadable {
         }
         do {
             try FileManager.default.removeItem(atPath: attachmentsUrl.path)
+            fileNamesStorage.fetchFileNames().forEach {
+                fileNamesStorage.deleteFileName(by: $0)
+            }
         } catch {
             Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.storage)
         }
@@ -125,12 +133,15 @@ class AttachmentDownloader: KinescopeAttachmentDownloadable {
 extension AttachmentDownloader: FileServiceDelegate {
 
     func downloadProgress(fileId: String, progress: Double) {
+        Kinescope.shared.logger?.log(message: "Attachment \(fileId) download progress: \(progress)", level: KinescopeLoggerLevel.storage)
         delegates.forEach {
             $0.attachmentDownloadProgress(attachmentId: fileId, progress: progress)
         }
     }
 
     func downloadError(fileId: String, error: KinescopeDownloadError) {
+        Kinescope.shared.logger?.log(message: "Attachment \(fileId) download failed with \(error)", level: KinescopeLoggerLevel.storage)
+        fileNamesStorage.deleteFileName(by: fileId)
         delegates.forEach {
             $0.attachmentDownloadError(attachmentId: fileId, error: error)
         }
@@ -138,13 +149,14 @@ extension AttachmentDownloader: FileServiceDelegate {
 
     func downloadComplete(fileId: String, location: URL) {
         let savedFileUrl: URL?
+        let fileUrl = getAttachmentUrl(of: fileId) ?? .init(fileURLWithPath: "")
+        Kinescope.shared.logger?.log(message: "Attachment \(fileId) download completed as \(fileUrl)", level: KinescopeLoggerLevel.storage)
         do {
-            let fileUrl = getAttachmentUrl(of: fileId) ?? .init(fileURLWithPath: "")
             try FileManager.default.copyItem(at: location, to: fileUrl)
             savedFileUrl = fileUrl
         } catch {
             savedFileUrl = nil
-            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.storage)
+            Kinescope.shared.logger?.log(message: "Attachment \(fileId) saving failed with \(error)", level: KinescopeLoggerLevel.storage)
         }
         delegates.forEach {
             $0.attachmentDownloadComplete(attachmentId: fileId, url: savedFileUrl)
@@ -158,8 +170,11 @@ extension AttachmentDownloader: FileServiceDelegate {
 private extension AttachmentDownloader {
 
     func getAttachmentUrl(of attachmentId: String) -> URL? {
+        guard let name = fileNamesStorage.readFileName(by: attachmentId) else {
+            return nil
+        }
         let attachmentsUrl = getAttachmentsFolderUrl()
-        let destinationUrl = attachmentsUrl?.appendingPathComponent(attachmentId)
+        let destinationUrl = attachmentsUrl?.appendingPathComponent(attachmentId + "_" + name)
 
         return destinationUrl
     }

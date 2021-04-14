@@ -10,7 +10,7 @@ import Foundation
 
 final class KinescopeAttachmentDownloaderMock: KinescopeAttachmentDownloadable {
 
-    func enqueueDownload(attachmentId: String, url: URL) {
+    func enqueueDownload(attachment: KinescopeVideoAdditionalMaterial, url: URL) {
     }
 
     func pauseDownload(attachmentId: String) {

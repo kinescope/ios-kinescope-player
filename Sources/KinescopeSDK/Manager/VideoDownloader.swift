@@ -95,18 +95,21 @@ class VideoDownloader: KinescopeVideoDownloadable {
 extension VideoDownloader: AssetServiceDelegate {
 
     func downloadProgress(assetId: String, progress: Double) {
+        Kinescope.shared.logger?.log(message: "Video \(assetId) download progress: \(progress)", level: KinescopeLoggerLevel.storage)
         delegates.forEach {
             $0.videoDownloadProgress(videoId: assetId, progress: progress)
         }
     }
 
     func downloadError(assetId: String, error: KinescopeDownloadError) {
+        Kinescope.shared.logger?.log(message: "Video \(assetId) download failed with \(error)", level: KinescopeLoggerLevel.storage)
         delegates.forEach {
             $0.videoDownloadError(videoId: assetId, error: error)
         }
     }
 
     func downloadComplete(assetId: String, path: String) {
+        Kinescope.shared.logger?.log(message: "Video \(assetId) download completed", level: KinescopeLoggerLevel.storage)
         videoPathsStorage.saveVideo(relativeUrl: path, id: assetId)
         delegates.forEach {
             $0.videoDownloadComplete(videoId: assetId)

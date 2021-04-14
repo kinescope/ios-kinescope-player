@@ -13,9 +13,9 @@ public protocol KinescopeAttachmentDownloadable: class {
     /// Start downloading attachment
     /// Downloading won't start if the attachment already stored on disk
     ///
-    /// - parameter attachmentId: id of attachment's file
+    /// - parameter attachment: Attachment's model
     /// - parameter url: web URL of attachment
-    func enqueueDownload(attachmentId: String, url: URL)
+    func enqueueDownload(attachment: KinescopeVideoAdditionalMaterial, url: URL)
 
     /// Pause downloading of attachment
     ///
