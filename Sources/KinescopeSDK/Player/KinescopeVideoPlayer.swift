@@ -465,8 +465,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didShowAssets() -> [KinescopeVideoAsset]? {
-        return video?.assets.filter { $0.originalName.lowercased() != "original" }
-        // TODO maybe add hls downloading in "original" case
+        return video?.assets.filter { $0.quality.lowercased() != "original" }
     }
 
     func didSelect(quality: String) {
@@ -521,7 +520,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     func didSelectDownloadAll(for title: String) {
         switch title {
         case SideMenu.DescriptionTitle.download.rawValue:
-            video?.assets.forEach {
+            video?.assets.filter { $0.quality.lowercased() != "original" }.forEach {
                 dependencies.assetDownloader.enqueueDownload(asset: $0)
                 Kinescope.shared.logger?.log(message: "Start downloading asset: \($0.quality) - \($0.id)",
                                              level: KinescopeLoggerLevel.player)
