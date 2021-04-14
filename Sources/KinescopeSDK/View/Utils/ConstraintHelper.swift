@@ -55,7 +55,7 @@ extension UIView {
     func bottomChildWithSafeArea(view: UIView) {
         let bottomAnchor: NSLayoutYAxisAnchor
         if #available(iOS 11.0, *) {
-             bottomAnchor = safeAreaLayoutGuide.bottomAnchor
+            bottomAnchor = safeAreaLayoutGuide.bottomAnchor
         } else {
             bottomAnchor = self.bottomAnchor
         }
