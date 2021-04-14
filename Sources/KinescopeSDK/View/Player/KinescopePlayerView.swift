@@ -29,6 +29,10 @@ public class KinescopePlayerView: UIView {
     weak var delegate: KinescopePlayerViewDelegate?
     public private(set) var previewView: UIImageView = UIImageView()
 
+    var canBeFullScreen: Bool {
+        return controlPanel?.optionsMenu.options.contains(.fullscreen) ?? false
+    }
+
     // FIXME: Add localization
     private var selectedQuality = NSAttributedString(string: "Auto")
 
