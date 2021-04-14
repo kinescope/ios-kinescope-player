@@ -19,6 +19,7 @@
 		9F1820D56B96774A31DFEBED /* AuthSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72FC26817E3EC28FCC3B21E /* AuthSelectorController.swift */; };
 		A9DC9A690B125B8124A8EBDF /* CurrentCellFocusPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA0B2A73C59AD113CB5976A /* CurrentCellFocusPlugin.swift */; };
 		B1E9AE507740662091763DC9 /* VideoListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246B7F2D473017AA57153302 /* VideoListController.swift */; };
+		B3DC9C383E061EA4C796F7DB /* Pods_KinescopeExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6C87701DB1DD34016720400 /* Pods_KinescopeExample.framework */; };
 		C37AD95F62ABC930BE625443 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD747CF272A25BB0F30BB85A /* User.swift */; };
 		CCCAFC2092F5E99F1DCEC001 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406FFA096A7AD6CD8255B8AC /* UserCell.swift */; };
 		DBD96A231FB2F7CDED8CEDDD /* VideoListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8DA6E3DD8840BCD239516A03 /* VideoListCell.xib */; };
@@ -38,8 +39,10 @@
 		3299E0B8F9C5E0E62196C129 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		406FFA096A7AD6CD8255B8AC /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
 		4A366BFC33AA765D5889FCA5 /* VideoListFocusableCellGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListFocusableCellGenerator.swift; sourceTree = "<group>"; };
+		4B5C8F01B8CF00896569FEFB /* Pods-KinescopeExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KinescopeExample.release.xcconfig"; path = "Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample.release.xcconfig"; sourceTree = "<group>"; };
 		508C4602E3E4B5D5D5BA8FD8 /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
 		51123599CB6E5F785E81071F /* UserCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserCell.xib; sourceTree = "<group>"; };
+		771D0DC65F5B71B605DEEC4B /* Pods-KinescopeExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KinescopeExample.debug.xcconfig"; path = "Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample.debug.xcconfig"; sourceTree = "<group>"; };
 		78C442C19E61EBCB16A746A3 /* KinescopeConfig.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = KinescopeConfig.plist; sourceTree = "<group>"; };
 		7B71D3741FB772726928CC02 /* ConfigStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigStorage.swift; sourceTree = "<group>"; };
 		8DA6E3DD8840BCD239516A03 /* VideoListCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VideoListCell.xib; sourceTree = "<group>"; };
@@ -95,6 +98,16 @@
 				96FB4A4491B8B00FA3019B09 /* KinescopeExample.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		332BA8C097B747ABE5388618 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				771D0DC65F5B71B605DEEC4B /* Pods-KinescopeExample.debug.xcconfig */,
+				4B5C8F01B8CF00896569FEFB /* Pods-KinescopeExample.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
 			sourceTree = "<group>";
 		};
 		7450ED92051EFFF412035B45 /* KinescopeExample */ = {
