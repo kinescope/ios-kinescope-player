@@ -160,7 +160,7 @@ private extension KinescopePlayerView {
         let controlPanel = PlayerControlView(config: config)
         controlPanel.alpha = .zero
         addSubview(controlPanel)
-        bottomChild(view: controlPanel)
+        bottomChildWithSafeArea(view: controlPanel)
 
         controlPanel.set(options: [.settings, .fullscreen, .more])
 
