@@ -83,7 +83,7 @@ class AssetDownloader: KinescopeAssetDownloadable {
             let files = try FileManager.default.contentsOfDirectory(at: assetsUrl, includingPropertiesForKeys: nil)
             return files
         } catch {
-            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.storage)
+            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.network)
             return []
         }
     }
@@ -108,7 +108,7 @@ class AssetDownloader: KinescopeAssetDownloadable {
             fileNamesStorage.deleteFileName(by: assetId)
             return true
         } catch {
-            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.storage)
+            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.network)
             return false
         }
     }
@@ -123,7 +123,7 @@ class AssetDownloader: KinescopeAssetDownloadable {
                 fileNamesStorage.deleteFileName(by: $0)
             }
         } catch {
-            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.storage)
+            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.network)
         }
     }
 
@@ -148,14 +148,14 @@ class AssetDownloader: KinescopeAssetDownloadable {
 extension AssetDownloader: FileServiceDelegate {
 
     func downloadProgress(fileId: String, progress: Double) {
-        Kinescope.shared.logger?.log(message: "Asset \(fileId) download progress: \(progress)", level: KinescopeLoggerLevel.storage)
+        Kinescope.shared.logger?.log(message: "Asset \(fileId) download progress: \(progress)", level: KinescopeLoggerLevel.network)
         delegates.forEach {
             $0.assetDownloadProgress(assetId: fileId, progress: progress)
         }
     }
 
     func downloadError(fileId: String, error: KinescopeDownloadError) {
-        Kinescope.shared.logger?.log(message: "Asset \(fileId) download failed with \(error)", level: KinescopeLoggerLevel.storage)
+        Kinescope.shared.logger?.log(message: "Asset \(fileId) download failed with \(error)", level: KinescopeLoggerLevel.network)
         fileNamesStorage.deleteFileName(by: fileId)
         delegates.forEach {
             $0.assetDownloadError(assetId: fileId, error: error)
@@ -165,13 +165,14 @@ extension AssetDownloader: FileServiceDelegate {
     func downloadComplete(fileId: String, location: URL) {
         let savedFileUrl: URL?
         let fileUrl = getAssetUrl(of: fileId) ?? .init(fileURLWithPath: "")
-        Kinescope.shared.logger?.log(message: "Asset \(fileId) download completed as \(fileUrl)", level: KinescopeLoggerLevel.storage)
+        Kinescope.shared.logger?.log(message: "Asset \(fileId) download completed as \(fileUrl)", level: KinescopeLoggerLevel.network)
         do {
             try FileManager.default.copyItem(at: location, to: fileUrl)
             savedFileUrl = fileUrl
         } catch {
             savedFileUrl = nil
-            Kinescope.shared.logger?.log(message: "Asset \(fileId) saving failed with \(error)", level: KinescopeLoggerLevel.storage)
+            fileNamesStorage.deleteFileName(by: fileId)
+            Kinescope.shared.logger?.log(message: "Asset \(fileId) saving failed with \(error)", level: KinescopeLoggerLevel.network)
         }
         delegates.forEach {
             $0.assetDownloadComplete(assetId: fileId, url: savedFileUrl)
@@ -196,7 +197,7 @@ private extension AssetDownloader {
 
     func getAssetsFolderUrl() -> URL? {
         guard let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            Kinescope.shared.logger?.log(error: KinescopeInspectError.denied, level: KinescopeLoggerLevel.storage)
+            Kinescope.shared.logger?.log(error: KinescopeInspectError.denied, level: KinescopeLoggerLevel.network)
             return nil
         }
         let assetsUrl = documentsUrl.appendingPathComponent(Constants.assetsDirectory)
@@ -207,7 +208,7 @@ private extension AssetDownloader {
             do {
                 try FileManager.default.createDirectory(at: assetsUrl, withIntermediateDirectories: false, attributes: nil)
             } catch {
-                Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.storage)
+                Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.network)
                 return nil
             }
         }

@@ -465,7 +465,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didShowAssets() -> [KinescopeVideoAsset]? {
-        return video?.assets.filter { $0.quality.lowercased() != "original" }
+        return video?.downloadableAssets
     }
 
     func didSelect(quality: String) {
@@ -498,12 +498,11 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
     func didSelectAttachment(with index: Int) {
         guard
-            let attachment = video?.additionalMaterials[safe: index],
-            let url = URL(string: attachment.url)
+            let attachment = video?.additionalMaterials[safe: index]
         else {
             return
         }
-        dependencies.attachmentDownloader.enqueueDownload(attachment: attachment, url: url)
+        dependencies.attachmentDownloader.enqueueDownload(attachment: attachment)
         Kinescope.shared.logger?.log(message: "Start downloading attachment: \(attachment.title)",
                                      level: KinescopeLoggerLevel.player)
     }
@@ -520,17 +519,14 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     func didSelectDownloadAll(for title: String) {
         switch title {
         case SideMenu.DescriptionTitle.download.rawValue:
-            video?.assets.filter { $0.quality.lowercased() != "original" }.forEach {
+            video?.downloadableAssets.forEach {
                 dependencies.assetDownloader.enqueueDownload(asset: $0)
                 Kinescope.shared.logger?.log(message: "Start downloading asset: \($0.quality) - \($0.id)",
                                              level: KinescopeLoggerLevel.player)
             }
         case SideMenu.DescriptionTitle.attachments.rawValue:
             video?.additionalMaterials.forEach {
-                guard let url = URL(string: $0.url) else {
-                    return
-                }
-                dependencies.attachmentDownloader.enqueueDownload(attachment: $0, url: url)
+                dependencies.attachmentDownloader.enqueueDownload(attachment: $0)
                 Kinescope.shared.logger?.log(message: "Start downloading attachment: \($0.title)",
                                              level: KinescopeLoggerLevel.player)
             }

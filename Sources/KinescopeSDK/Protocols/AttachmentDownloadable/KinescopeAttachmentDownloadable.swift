@@ -15,7 +15,7 @@ public protocol KinescopeAttachmentDownloadable: class {
     ///
     /// - parameter attachment: Attachment's model
     /// - parameter url: web URL of attachment
-    func enqueueDownload(attachment: KinescopeVideoAdditionalMaterial, url: URL)
+    func enqueueDownload(attachment: KinescopeVideoAdditionalMaterial)
 
     /// Pause downloading of attachment
     ///

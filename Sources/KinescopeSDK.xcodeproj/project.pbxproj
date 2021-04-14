@@ -92,6 +92,7 @@
 		A415896D2626FDAB00B44103 /* FileNamesUDStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41589682626FDAB00B44103 /* FileNamesUDStorage.swift */; };
 		A415896E2626FDAB00B44103 /* KinescopeVideoPathsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A415896A2626FDAB00B44103 /* KinescopeVideoPathsStorage.swift */; };
 		A415896F2626FDAB00B44103 /* VideoPathsUDStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A415896B2626FDAB00B44103 /* VideoPathsUDStorage.swift */; };
+		A41589752627115F00B44103 /* KinescopeVideo+downloadableAssets.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41589742627115F00B44103 /* KinescopeVideo+downloadableAssets.swift */; };
 		A9F68DFF9E674497ED683217 /* String+AssetIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ADA59F2C8CCC165EC2016CE /* String+AssetIcon.swift */; };
 		AAB98EC0F67C269DA2E6EC31 /* KinescopeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20D4D486064D5C046AA39415 /* KinescopeSDK.framework */; };
 		ABD8067BA77BF40F13E05F81 /* DisclosureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE8E65CFDF9074DD17D40B5 /* DisclosureCell.swift */; };
@@ -258,6 +259,7 @@
 		A41589682626FDAB00B44103 /* FileNamesUDStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileNamesUDStorage.swift; sourceTree = "<group>"; };
 		A415896A2626FDAB00B44103 /* KinescopeVideoPathsStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KinescopeVideoPathsStorage.swift; sourceTree = "<group>"; };
 		A415896B2626FDAB00B44103 /* VideoPathsUDStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPathsUDStorage.swift; sourceTree = "<group>"; };
+		A41589742627115F00B44103 /* KinescopeVideo+downloadableAssets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KinescopeVideo+downloadableAssets.swift"; sourceTree = "<group>"; };
 		A41FCECB94B1BC0CB88D2544 /* KinescopeVideoDownloadableDelegateMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeVideoDownloadableDelegateMock.swift; sourceTree = "<group>"; };
 		A429BF92F67FB71A84E55D17 /* PlayerControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerControlView.swift; sourceTree = "<group>"; };
 		A497C7D65BD0F8F6E2868A83 /* AttachmentDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentDownloader.swift; sourceTree = "<group>"; };
@@ -705,6 +707,14 @@
 			path = Video;
 			sourceTree = "<group>";
 		};
+		A41589732627114800B44103 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				A41589742627115F00B44103 /* KinescopeVideo+downloadableAssets.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		AC451620FC545704EDBBD284 /* Player */ = {
 			isa = PBXGroup;
 			children = (
@@ -712,6 +722,7 @@
 				E9B5DB3A355631852957F20D /* KinescopeVideoQuality+AVPlayerItem.swift */,
 				58E7B24B9F1861247460023B /* Dependencies */,
 				BA2A2F529A5878292DEA84C8 /* Strategy */,
+				A41589732627114800B44103 /* Extensions */,
 			);
 			path = Player;
 			sourceTree = "<group>";
@@ -1015,6 +1026,7 @@
 				DC2B8255BD6251CAEFCC30DC /* KinescopeSideMenuBarConfiguration.swift in Sources */,
 				ACAAA9593453A9AB7170BB11 /* KinescopeSideMenuConfiguration.swift in Sources */,
 				888F8E4B59845119977F9F96 /* KinescopeSideMenuItemConfiguration.swift in Sources */,
+				A41589752627115F00B44103 /* KinescopeVideo+downloadableAssets.swift in Sources */,
 				01C772F62FB45A601F8B5872 /* KinescopeVideo.swift in Sources */,
 				99F46F2B326DFF75C2BC9CF4 /* KinescopeVideoAdditionalMaterial.swift in Sources */,
 				86E179C9CDF3A1C6C4E3C4CF /* KinescopeVideoAsset.swift in Sources */,

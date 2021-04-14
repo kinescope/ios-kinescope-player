@@ -63,7 +63,7 @@ class VideoDownloader: KinescopeVideoDownloadable {
             videoPathsStorage.deleteVideoUrl(by: videoId)
             return true
         } catch {
-            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.storage)
+            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.network)
             return false
         }
     }
@@ -95,21 +95,21 @@ class VideoDownloader: KinescopeVideoDownloadable {
 extension VideoDownloader: AssetServiceDelegate {
 
     func downloadProgress(assetId: String, progress: Double) {
-        Kinescope.shared.logger?.log(message: "Video \(assetId) download progress: \(progress)", level: KinescopeLoggerLevel.storage)
+        Kinescope.shared.logger?.log(message: "Video \(assetId) download progress: \(progress)", level: KinescopeLoggerLevel.network)
         delegates.forEach {
             $0.videoDownloadProgress(videoId: assetId, progress: progress)
         }
     }
 
     func downloadError(assetId: String, error: KinescopeDownloadError) {
-        Kinescope.shared.logger?.log(message: "Video \(assetId) download failed with \(error)", level: KinescopeLoggerLevel.storage)
+        Kinescope.shared.logger?.log(message: "Video \(assetId) download failed with \(error)", level: KinescopeLoggerLevel.network)
         delegates.forEach {
             $0.videoDownloadError(videoId: assetId, error: error)
         }
     }
 
     func downloadComplete(assetId: String, path: String) {
-        Kinescope.shared.logger?.log(message: "Video \(assetId) download completed", level: KinescopeLoggerLevel.storage)
+        Kinescope.shared.logger?.log(message: "Video \(assetId) download completed", level: KinescopeLoggerLevel.network)
         videoPathsStorage.saveVideo(relativeUrl: path, id: assetId)
         delegates.forEach {
             $0.videoDownloadComplete(videoId: assetId)

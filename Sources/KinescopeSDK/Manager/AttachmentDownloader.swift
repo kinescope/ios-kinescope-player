@@ -31,8 +31,11 @@ class AttachmentDownloader: KinescopeAttachmentDownloadable {
 
     // MARK: - KinescopeAttachmentDownloadable
 
-    func enqueueDownload(attachment: KinescopeVideoAdditionalMaterial, url: URL) {
-        guard !isDownloaded(attachmentId: attachment.id) else {
+    func enqueueDownload(attachment: KinescopeVideoAdditionalMaterial) {
+        guard
+            let url = URL(string: attachment.url),
+            !isDownloaded(attachmentId: attachment.id)
+        else {
             return
         }
         fileNamesStorage.saveFile(name: attachment.filename, id: attachment.id)
@@ -68,7 +71,7 @@ class AttachmentDownloader: KinescopeAttachmentDownloadable {
             let files = try FileManager.default.contentsOfDirectory(at: attachmentsUrl, includingPropertiesForKeys: nil)
             return files
         } catch {
-            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.storage)
+            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.network)
             return []
         }
     }
@@ -93,7 +96,7 @@ class AttachmentDownloader: KinescopeAttachmentDownloadable {
             fileNamesStorage.deleteFileName(by: attachmentId)
             return true
         } catch {
-            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.storage)
+            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.network)
             return false
         }
     }
@@ -108,7 +111,7 @@ class AttachmentDownloader: KinescopeAttachmentDownloadable {
                 fileNamesStorage.deleteFileName(by: $0)
             }
         } catch {
-            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.storage)
+            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.network)
         }
     }
 
@@ -133,14 +136,14 @@ class AttachmentDownloader: KinescopeAttachmentDownloadable {
 extension AttachmentDownloader: FileServiceDelegate {
 
     func downloadProgress(fileId: String, progress: Double) {
-        Kinescope.shared.logger?.log(message: "Attachment \(fileId) download progress: \(progress)", level: KinescopeLoggerLevel.storage)
+        Kinescope.shared.logger?.log(message: "Attachment \(fileId) download progress: \(progress)", level: KinescopeLoggerLevel.network)
         delegates.forEach {
             $0.attachmentDownloadProgress(attachmentId: fileId, progress: progress)
         }
     }
 
     func downloadError(fileId: String, error: KinescopeDownloadError) {
-        Kinescope.shared.logger?.log(message: "Attachment \(fileId) download failed with \(error)", level: KinescopeLoggerLevel.storage)
+        Kinescope.shared.logger?.log(message: "Attachment \(fileId) download failed with \(error)", level: KinescopeLoggerLevel.network)
         fileNamesStorage.deleteFileName(by: fileId)
         delegates.forEach {
             $0.attachmentDownloadError(attachmentId: fileId, error: error)
@@ -150,13 +153,14 @@ extension AttachmentDownloader: FileServiceDelegate {
     func downloadComplete(fileId: String, location: URL) {
         let savedFileUrl: URL?
         let fileUrl = getAttachmentUrl(of: fileId) ?? .init(fileURLWithPath: "")
-        Kinescope.shared.logger?.log(message: "Attachment \(fileId) download completed as \(fileUrl)", level: KinescopeLoggerLevel.storage)
+        Kinescope.shared.logger?.log(message: "Attachment \(fileId) download completed as \(fileUrl)", level: KinescopeLoggerLevel.network)
         do {
             try FileManager.default.copyItem(at: location, to: fileUrl)
             savedFileUrl = fileUrl
         } catch {
             savedFileUrl = nil
-            Kinescope.shared.logger?.log(message: "Attachment \(fileId) saving failed with \(error)", level: KinescopeLoggerLevel.storage)
+            fileNamesStorage.deleteFileName(by: fileId)
+            Kinescope.shared.logger?.log(message: "Attachment \(fileId) saving failed with \(error)", level: KinescopeLoggerLevel.network)
         }
         delegates.forEach {
             $0.attachmentDownloadComplete(attachmentId: fileId, url: savedFileUrl)
@@ -181,7 +185,7 @@ private extension AttachmentDownloader {
 
     func getAttachmentsFolderUrl() -> URL? {
         guard let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            Kinescope.shared.logger?.log(error: KinescopeInspectError.denied, level: KinescopeLoggerLevel.storage)
+            Kinescope.shared.logger?.log(error: KinescopeInspectError.denied, level: KinescopeLoggerLevel.network)
             return nil
         }
         let attachmentsUrl = documentsUrl.appendingPathComponent(Constants.attachmentsDirectory)
@@ -192,7 +196,7 @@ private extension AttachmentDownloader {
             do {
                 try FileManager.default.createDirectory(at: attachmentsUrl, withIntermediateDirectories: false, attributes: nil)
             } catch {
-                Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.storage)
+                Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.network)
                 return nil
             }
         }
