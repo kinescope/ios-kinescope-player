@@ -344,6 +344,8 @@ extension KinescopePlayerView: PlayerControlOutput {
                                        isDownloadable: true,
                                        items: items)
             presentSideMenu(model: model)
+        case .airPlay:
+            break
         default:
             break
         }
