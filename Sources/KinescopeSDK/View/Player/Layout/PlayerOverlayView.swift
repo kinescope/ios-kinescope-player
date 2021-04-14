@@ -68,7 +68,6 @@ extension PlayerOverlayView: PlayerOverlayInput {
     func set(playing: Bool) {
         if !isRewind {
             delegate?.didShow()
-            isRewind = false
         }
 
         self.isPlaying = playing
@@ -189,6 +188,7 @@ private extension PlayerOverlayView {
         if isSelected && playPauseImageView.frame.contains(location) {
             playPauseAction()
         } else {
+            isRewind = false
             isSelected.toggle()
         }
     }
