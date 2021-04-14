@@ -503,7 +503,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         else {
             return
         }
-        Kinescope.shared.attachmentDownloader.enqueueDownload(attachmentId: attachment.id, url: url)
+        dependencies.attachmentDownloader.enqueueDownload(attachmentId: attachment.id, url: url)
         Kinescope.shared.logger?.log(message: "Start downloading attachment: \(attachment.title)",
                                      level: KinescopeLoggerLevel.player)
     }
@@ -523,6 +523,15 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             video?.assets.forEach {
                 dependencies.assetDownloader.enqueueDownload(assetId: $0.id)
                 Kinescope.shared.logger?.log(message: "Start downloading asset: \($0.quality) - \($0.id)",
+                                             level: KinescopeLoggerLevel.player)
+            }
+        case SideMenu.DescriptionTitle.attachments.rawValue:
+            video?.additionalMaterials.forEach {
+                guard let url = URL(string: $0.url) else {
+                    return
+                }
+                dependencies.attachmentDownloader.enqueueDownload(attachmentId: $0.id, url: url)
+                Kinescope.shared.logger?.log(message: "Start downloading attachment: \($0.title)",
                                              level: KinescopeLoggerLevel.player)
             }
         default:

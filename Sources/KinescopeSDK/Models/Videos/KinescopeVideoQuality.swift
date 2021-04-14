@@ -20,7 +20,7 @@ public enum KinescopeVideoQuality {
     /// - parameter asset: Asset with info about quality and link to concrete resource
     case exact(asset: KinescopeVideoAsset)
 
-    /// Dowloaded asset
+    /// Downloaded asset
     ///
     /// - parameter url: URL to asset file in device storage
     case downloaded(url: URL)

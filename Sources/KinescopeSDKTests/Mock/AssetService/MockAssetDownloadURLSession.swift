@@ -43,8 +43,8 @@ final class MockAVAssetDownloadTask: AVAssetDownloadTask {
 
 final class MocAVAssetDownloadURLSession: AVAssetDownloadURLSession {
 
-    // task : isActive
     var nextResult: MockResult = .success
+    // task : isActive
     private var tasks: [URLSessionTask: Bool] = [:]
     private var newDelegate: URLSessionDelegate?
 

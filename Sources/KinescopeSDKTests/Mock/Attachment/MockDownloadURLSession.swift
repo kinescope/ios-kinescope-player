@@ -42,8 +42,8 @@ final class MockURLSessionDownloadTask: URLSessionDownloadTask {
 
 final class MockDownloadURLSession: URLSession {
 
-    // task : isActive
     var nextResult: MockResult = .success
+    // task : isActive
     private var tasks: [URLSessionTask: Bool] = [:]
     private var newDelegate: URLSessionDelegate?
 

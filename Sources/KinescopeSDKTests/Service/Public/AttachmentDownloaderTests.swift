@@ -176,6 +176,4 @@ final class AttachmentDownloaderTests: XCTestCase {
         XCTAssertNil(deletedAttachmentLocation)
     }
 
-
-
 }

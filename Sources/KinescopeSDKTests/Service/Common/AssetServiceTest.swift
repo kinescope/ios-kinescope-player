@@ -104,7 +104,7 @@ final class AssetServiceTests: XCTestCase {
         assetService?.enqueueDownload(assetId: assetId, url: mockUrl)
         assetService?.dequeueDownload(assetId: assetId)
 
-        // Fullfill after 3.5 second and check that completion handler didn't work
+        // Fullfill after 1.5 second and check that completion handler didn't work
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             exp.fulfill()
         }
@@ -135,7 +135,7 @@ final class AssetServiceTests: XCTestCase {
         assetService?.enqueueDownload(assetId: assetId, url: mockUrl)
         assetService?.pauseDownload(assetId: assetId)
 
-        // Fullfill pauseExp after 3.5 second and check that task didn't finished
+        // Fullfill pauseExp after 1.5 second and check that task didn't finished
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             pauseExp.fulfill()
             self.assetService?.resumeDownload(assetId: assetId)
@@ -178,7 +178,7 @@ final class AssetServiceTests: XCTestCase {
             assetService?.pauseDownload(assetId: $0.key)
         }
 
-        // Fullfill pauseExp after 3.5 second and check that tasks didn't finished
+        // Fullfill pauseExp after 2.5 second and check that tasks didn't finished
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
             pauseExp.fulfill()
             self.assetService?.restore()
