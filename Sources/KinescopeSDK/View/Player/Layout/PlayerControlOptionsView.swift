@@ -35,7 +35,7 @@ class PlayerControlOptionsView: UIControl {
     private let stackView = UIStackView()
 
     private let config: KinescopePlayerOptionsConfiguration
-    private var options: [KinescopePlayerOption] = []
+    private(set) var options: [KinescopePlayerOption] = []
     private var isExpanded: Bool = false
 
     weak var output: PlayerControlOptionsOutput?

@@ -29,6 +29,10 @@ public class KinescopePlayerView: UIView {
     weak var delegate: KinescopePlayerViewDelegate?
     public private(set) var previewView: UIImageView = UIImageView()
 
+    var canBeFullScreen: Bool {
+        return controlPanel?.optionsMenu.options.contains(.fullscreen) ?? false
+    }
+
     // FIXME: Add localization
     private var selectedQuality = NSAttributedString(string: "Auto")
     private var selectedSubtitles = NSAttributedString(string: "Off")
@@ -163,8 +167,9 @@ private extension KinescopePlayerView {
 
     func configureControlPanel(with config: KinescopeControlPanelConfiguration) {
         let controlPanel = PlayerControlView(config: config)
+        controlPanel.alpha = .zero
         addSubview(controlPanel)
-        bottomChild(view: controlPanel)
+        bottomChildWithSafeArea(view: controlPanel)
 
         self.controlPanel = controlPanel
         controlPanel.output = self
@@ -327,6 +332,18 @@ private extension KinescopePlayerView {
 // MARK: - PlayerOverlayViewDelegate
 
 extension KinescopePlayerView: PlayerOverlayViewDelegate {
+    func didShow() {
+        UIView.animate(withDuration: 0.3) {
+            self.controlPanel?.alpha = 1.0
+        }
+    }
+
+    func didHide() {
+        UIView.animate(withDuration: 0.3) {
+            self.controlPanel?.alpha = .zero
+        }
+    }
+
     func didPlay(videoEnded: Bool) {
         delegate?.didPlay(videoEnded: videoEnded)
     }
