@@ -32,7 +32,7 @@ final class VideoViewController: UIViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        player?.stop()
+        player?.pause()
     }
 }
 
