@@ -32,6 +32,11 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     init(config: KinescopePlayerConfig, dependencies: KinescopePlayerDependencies) {
         self.dependencies = dependencies
         self.config = config
+
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(changeOrientation),
+                                               name: UIDevice.orientationDidChangeNotification,
+                                               object: nil)
     }
 
     deinit {
@@ -40,6 +45,8 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         self.removePlayerTimeControlStatusObserver()
         self.removePlayerStatusObserver()
         self.removeTracksObserver()
+
+        NotificationCenter.default.removeObserver(self)
     }
 
     // MARK: - KinescopePlayer
@@ -105,13 +112,10 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
         removeTracksObserver()
         removePlayerItemStatusObserver()
-        removePlaybackTimeObserver()
 
-        strategy.unbind()
         strategy.bind(item: item)
 
         addPlayerItemStatusObserver()
-        observePlaybackTime()
         addTracksObserver()
     }
 
@@ -176,8 +180,9 @@ private extension KinescopeVideoPlayer {
 
             let duration = currentItem.duration.seconds
 
-            if !time.isNaN && !duration.isNaN {
-                controlPanel.setTimeline(to: CGFloat(time / duration))
+            let position = CGFloat(time / duration)
+            if !position.isNaN {
+                controlPanel.setTimeline(to: position)
             }
 
             // MARK: - Preload observation
@@ -186,8 +191,9 @@ private extension KinescopeVideoPlayer {
 
             Kinescope.shared.logger?.log(message: "playback buffered \(buferredTime) seconds", level: KinescopeLoggerLevel.player)
 
-            if !buferredTime.isNaN && !duration.isNaN {
-                controlPanel.setBufferred(progress: CGFloat(buferredTime / duration))
+            let progress = CGFloat(buferredTime / duration)
+            if !progress.isNaN {
+                controlPanel.setBufferred(progress: progress)
             }
         }
 
@@ -332,6 +338,24 @@ private extension KinescopeVideoPlayer {
             self?.isSeeking = false
         }
     }
+
+    @objc
+    func changeOrientation() {
+        guard
+            let view = view,
+            view.canBeFullScreen
+        else {
+            return
+        }
+
+        let isFullScreen = UIApplication.shared.keyWindow?.rootViewController?.presentedViewController is KinescopeFullscreenViewController
+
+        if UIDevice.current.orientation.isLandscape && !isFullScreen {
+            didPresentFullscreen(from: view)
+        } else if !UIDevice.current.orientation.isLandscape && isFullScreen {
+            didPresentFullscreen(from: view)
+        }
+    }
 }
 
 // MARK: - PlayerOverlayViewDelegate
@@ -425,6 +449,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             let playerVC = KinescopeFullscreenViewController(player: self,
                                                              config: .preferred(for: video))
             playerVC.modalPresentationStyle = .overFullScreen
+            playerVC.modalTransitionStyle = .crossDissolve
             rootVC?.present(playerVC, animated: true, completion: { [weak self] in
                 guard
                     let self = self,
