@@ -58,7 +58,6 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     }
 
     public func play() {
-        isPlaying = true
         if video != nil {
             self.strategy.play()
         } else {
@@ -67,12 +66,10 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     }
 
     public func pause() {
-        isPlaying = false
         self.strategy.pause()
     }
 
     public func stop() {
-        isPlaying = false
         self.strategy.pause()
         self.strategy.unbind()
         self.removeTracksObserver()
@@ -267,6 +264,7 @@ private extension KinescopeVideoPlayer {
             \.timeControlStatus,
             options: [.new, .old],
             changeHandler: { [weak self] item, _ in
+                self?.isPlaying = item.timeControlStatus == .playing
                 self?.view?.change(timeControlStatus: item.timeControlStatus)
 
                 Kinescope.shared.logger?.log(
