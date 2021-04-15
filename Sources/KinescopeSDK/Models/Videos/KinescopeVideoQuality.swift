@@ -13,12 +13,12 @@ public enum KinescopeVideoQuality {
     /// - parameter hlsLink: HSL-link to m3u8 file with assets
     case auto(hlsLink: String)
 
-    /// Exatcly selected quality
+    /// Exactly selected quality
     ///
     /// - parameter asset: Asset with info about quality and link to concrete resource
     case exact(asset: KinescopeVideoAsset)
 
-    /// Exatcly selected quality
+    /// Exactly selected quality with subtitles
     ///
     /// - parameter asset: Asset with info about quality and link to concrete resource
     /// - parameter subtitle: Asset for subtitle
