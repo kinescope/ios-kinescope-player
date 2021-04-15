@@ -563,30 +563,25 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didShowSubtitles() -> [String] {
-        // FIXME: Remove this check after add implementation for hls stream
-        if !isManualQuality {
-            return []
-        }
-
         return video?.subtitles.compactMap { $0.title } ?? []
     }
 
     func didSelect(subtitles: String) {
         guard
-            let video = video,
-            let asset = video.assets.first(where: { $0.quality == currentQuality })
+            let video = video
         else {
             Kinescope.shared.logger?.log(message: "Can't find video",
                                          level: KinescopeLoggerLevel.player)
             return
         }
 
-        let isOn = video.subtitles.contains { $0.title == subtitles } ?? false
-        view?.controlPanel?.set(subtitleOn: isOn)
-        Kinescope.shared.logger?.log(message: "Select subtitles: \(subtitles)",
-                                     level: KinescopeLoggerLevel.player)
-
         if isManualQuality {
+            guard
+                let asset = video.assets.first(where: { $0.quality == currentQuality })
+            else {
+                return
+            }
+
             let videoQuality: KinescopeVideoQuality
             if let selectedSubtitles = video.subtitles.first(where: { $0.title == subtitles }) {
                 videoQuality = .exactWithSubtitles(asset: asset, subtitle: selectedSubtitles)
@@ -595,9 +590,30 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             }
 
             select(quality: videoQuality)
-            self.strategy.player.currentItem?.textStyleRules = textStyleRules
         } else {
-            // FIXME: Add logic for hls stream
+            guard
+                let item = self.strategy.player.currentItem,
+                let group = item.asset.mediaSelectionGroup(forMediaCharacteristic: .legible)
+            else {
+                return
+            }
+            
+
+            if let selectedSubtitles = video.subtitles.first(where: { $0.title == subtitles }) {
+                let locale = Locale(identifier: selectedSubtitles.language)
+                let options = AVMediaSelectionGroup.mediaSelectionOptions(from: group.options,
+                                                                          with: locale)
+                self.strategy.player.currentItem?.select(options.first, in: group)
+            } else {
+                self.strategy.player.currentItem?.select(nil, in: group)
+            }
         }
+
+        self.strategy.player.currentItem?.textStyleRules = textStyleRules
+
+        let isOn = video.subtitles.contains { $0.title == subtitles } ?? false
+        view?.controlPanel?.set(subtitleOn: isOn)
+        Kinescope.shared.logger?.log(message: "Select subtitles: \(subtitles)",
+                                     level: KinescopeLoggerLevel.player)
     }
 }
