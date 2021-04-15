@@ -1,6 +1,7 @@
 import AVFoundation
 import UIKit
 
+// swiftlint:disable file_length
 public class KinescopeVideoPlayer: KinescopePlayer {
 
     // MARK: - Private Properties
@@ -597,7 +598,6 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             else {
                 return
             }
-            
 
             if let selectedSubtitles = video.subtitles.first(where: { $0.title == subtitles }) {
                 let locale = Locale(identifier: selectedSubtitles.language)
@@ -617,3 +617,4 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                                      level: KinescopeLoggerLevel.player)
     }
 }
+// swiftlint:enable file_length
