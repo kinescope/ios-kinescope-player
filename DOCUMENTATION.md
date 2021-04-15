@@ -17,3 +17,21 @@ To add your delegate use add(delegate: KinescopeAssetDownloadableDelegate) metho
 KinescopeAssetDownloadable uses concrete asset id of some video for downloading and future access.  
 
 AssetDownloader(out-of-box implementation of KinescopeAssetDownloadable) is based on AVAssetDownloadURLSession for downloading and UserDefaults for storing paths to downloaded assets. 
+
+# KinescopeAttachmentDownloadable and AttachmentDownloader
+
+KinescopeServicesProvider includes KinescopeAttachmentDownloadable which has out-of-box implementation - AttachmentDownloader. 
+KinescopeAttachmentDownloadable provides an API to
+1) download attachment
+2) control dowloading process via pause/resume/cancel(dequeue)
+3) delete downloaded attachment
+4) get downloaded attachments list and their paths to cache
+5) handle downloading events(progress, completion, error) via KinescopeAttachmentDownloadableDelegate
+6) clear all attachments from cache
+
+You can get access to downloader with Kinescope.shared.attachmentDownloader and call methods from it.
+To add your delegate use add(delegate: KinescopeAttachmentDownloadableDelegate) method.
+
+KinescopeAttachmentDownloadable uses concrete attachment id of some file for downloading and future access.  
+
+AttachmentDownloader(out-of-box implementation of KinescopeAssetDownloadable) is based on URLSession for downloading files and used documents directory on disk  for storing downloaded files, all attachments are kept in own directory "KinescopeAttachments".

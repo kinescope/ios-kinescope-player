@@ -14,17 +14,17 @@ public protocol KinescopeAssetDownloadableDelegate: class {
     ///
     /// - parameter assetId: Asset id of concrete video quality
     /// - parameter progress: Progress of process
-    func kinescopeDownloadProgress(assetId: String, progress: Double)
+    func assetDownloadProgress(assetId: String, progress: Double)
 
     /// Notify about error state of downloading task
     ///
     /// - parameter assetId: Asset id of concrete video quality
     /// - parameter error: Reason of failure
-    func kinescopeDownloadError(assetId: String, error: KinescopeDownloadError)
+    func assetDownloadError(assetId: String, error: KinescopeDownloadError)
 
     /// Notify about successfully completed downloading task
     ///
     /// - parameter assetId: Asset id of concrete video quality
-    func kinescopeDownloadComplete(assetId: String)
+    func assetDownloadComplete(assetId: String)
 
 }

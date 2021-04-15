@@ -275,7 +275,7 @@ private extension KinescopePlayerView {
 
         // FIXME: Add localization
         for material in materials {
-            var title = material.quality
+            let title = material.quality
             let value = bcf.string(fromByteCount: Int64(material.fileSize))
             items.append(.description(title: title, value: value))
         }

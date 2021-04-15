@@ -12,6 +12,9 @@ public protocol KinescopeServicesProvider {
     /// Service managing downloading of assets
     var downloader: KinescopeAssetDownloadable! { get }
 
+    /// Service managing downloading of attachments
+    var attachmentDownloader: KinescopeAttachmentDownloadable! { get }
+
     /// Service managing inspectations of dashboard content like videos, projects etc
     var inspector: KinescopeInspectable! { get }
 
