@@ -91,7 +91,6 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     }
 
     public func attach(view: KinescopePlayerView) {
-
         view.playerView.player = self.strategy.player
         view.delegate = self
 
@@ -136,7 +135,6 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         addPlayerItemStatusObserver()
         addTracksObserver()
     }
-
 }
 
 // MARK: - Private
@@ -179,7 +177,6 @@ private extension KinescopeVideoPlayer {
     }
 
     func observePlaybackTime() {
-
         guard view?.controlPanel != nil else {
             return
         }
@@ -231,7 +228,6 @@ private extension KinescopeVideoPlayer {
                 controlPanel.setBufferred(progress: bufferProgress)
             }
         }
-
     }
 
     func removePlaybackTimeObserver() {

@@ -106,7 +106,6 @@ fileprivate extension KinescopeVideoQuality {
             }
         }
 
-
         return AVPlayerItem(asset: composition)
     }
 
