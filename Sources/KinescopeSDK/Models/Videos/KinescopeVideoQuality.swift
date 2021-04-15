@@ -17,4 +17,10 @@ public enum KinescopeVideoQuality {
     ///
     /// - parameter asset: Asset with info about quality and link to concrete resource
     case exact(asset: KinescopeVideoAsset)
+
+    /// Exatcly selected quality
+    ///
+    /// - parameter asset: Asset with info about quality and link to concrete resource
+    /// - parameter subtitle: Asset for subtitle
+    case exactWithSubtitles(asset: KinescopeVideoAsset, subtitle: KinescopeVideoSubtitle)
 }

@@ -28,6 +28,22 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private let config: KinescopePlayerConfig
     private var options = [KinescopePlayerOption]()
 
+    private var textStyleRules: [AVTextStyleRule]? {
+        let pos = kCMTextMarkupAttribute_OrthogonalLinePositionPercentageRelativeToWritingDirection
+        guard
+            let rule = AVTextStyleRule(
+                textMarkupAttributes: [
+                    pos as String: 75.0,
+                    kCMTextMarkupAttribute_BaseFontSizePercentageRelativeToVideoHeight as String: 10.0
+                ]
+            )
+        else {
+            return nil
+        }
+
+        return [rule]
+    }
+
     // MARK: - Lifecycle
 
     init(config: KinescopePlayerConfig, dependencies: KinescopePlayerDependencies) {
@@ -106,7 +122,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         switch quality {
         case .auto:
             isManualQuality = false
-        case .exact:
+        case .exact, .exactWithSubtitles:
             isManualQuality = true
         }
 
@@ -209,9 +225,10 @@ private extension KinescopeVideoPlayer {
 
             Kinescope.shared.logger?.log(message: "playback buffered \(buferredTime) seconds", level: KinescopeLoggerLevel.player)
 
-            let progress = CGFloat(buferredTime / duration)
-            if !progress.isNaN {
-                controlPanel.setBufferred(progress: progress)
+            let bufferProgress = CGFloat(buferredTime / duration)
+
+            if !bufferProgress.isNaN {
+                controlPanel.setBufferred(progress: bufferProgress)
             }
         }
 
@@ -546,14 +563,41 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didShowSubtitles() -> [String] {
+        // FIXME: Remove this check after add implementation for hls stream
+        if !isManualQuality {
+            return []
+        }
+
         return video?.subtitles.compactMap { $0.title } ?? []
     }
 
     func didSelect(subtitles: String) {
-        // FIXME: add logic
-        let isOn = video?.subtitles.contains { $0.title == subtitles } ?? false
+        guard
+            let video = video,
+            let asset = video.assets.first(where: { $0.quality == currentQuality })
+        else {
+            Kinescope.shared.logger?.log(message: "Can't find video",
+                                         level: KinescopeLoggerLevel.player)
+            return
+        }
+
+        let isOn = video.subtitles.contains { $0.title == subtitles } ?? false
         view?.controlPanel?.set(subtitleOn: isOn)
         Kinescope.shared.logger?.log(message: "Select subtitles: \(subtitles)",
                                      level: KinescopeLoggerLevel.player)
+
+        if isManualQuality {
+            let videoQuality: KinescopeVideoQuality
+            if let selectedSubtitles = video.subtitles.first(where: { $0.title == subtitles }) {
+                videoQuality = .exactWithSubtitles(asset: asset, subtitle: selectedSubtitles)
+            } else {
+                videoQuality = .exact(asset: asset)
+            }
+
+            select(quality: videoQuality)
+            self.strategy.player.currentItem?.textStyleRules = textStyleRules
+        } else {
+            // FIXME: Add logic for hls stream
+        }
     }
 }
