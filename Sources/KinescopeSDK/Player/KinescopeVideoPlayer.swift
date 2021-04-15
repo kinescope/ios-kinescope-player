@@ -537,9 +537,13 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didSelectAttachment(with index: Int) {
-        guard let attachment = video?.additionalMaterials[safe: index] else {
+        guard
+            let attachment = video?.additionalMaterials[safe: index],
+            let url = URL(string: attachment.url)
+        else {
             return
         }
+        Kinescope.shared.attachmentDownloader.enqueueDownload(attachmentId: attachment.id, url: url)
 
         Kinescope.shared.logger?.log(message: "Start download attachment: \(attachment.title)",
                                      level: KinescopeLoggerLevel.player)

@@ -5,6 +5,8 @@
 //  Created by Никита Коробейников on 23.03.2021.
 //
 
+import Foundation
+
 // MARK: - KinescopeConfigurable
 
 extension Manager: KinescopeConfigurable {
@@ -14,6 +16,7 @@ extension Manager: KinescopeConfigurable {
         self.downloader = AssetDownloader(assetPathsStorage: AssetPathsUDStorage(),
                                           assetService: AssetNetworkService(
                                             assetLinksService: AssetLinksNetworkService(transport: Transport(), config: config)))
+        self.attachmentDownloader = AttachmentDownloader(fileService: FileNetworkService())
         self.inspector = Inspector(videosService: VideosNetworkService(transport: Transport(),
                                                                        config: config))
     }
