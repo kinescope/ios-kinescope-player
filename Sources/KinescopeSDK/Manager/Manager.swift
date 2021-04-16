@@ -13,7 +13,9 @@ class Manager: KinescopeServicesProvider {
 
     var config: KinescopeConfig?
 
-    var downloader: KinescopeAssetDownloadable!
+    var assetDownloader: KinescopeAssetDownloadable!
+
+    var videoDownloader: KinescopeVideoDownloadable!
 
     var attachmentDownloader: KinescopeAttachmentDownloadable!
 

@@ -8,12 +8,12 @@
 import Foundation
 
 /// It should provide consistency of saved and read urls
-protocol KinescopeAssetPathsStorage {
-    func saveAsset(relativeUrl: String, id assetId: String)
+protocol KinescopeVideoPathsStorage {
+    func saveVideo(relativeUrl: String, id videoId: String)
     /// Returns full url
-    func readVideoUrl(by assetId: String) -> URL?
-    func fetchAssetIds() -> [String]
+    func readVideoUrl(by videoId: String) -> URL?
+    func fetchVideoIds() -> [String]
     /// Returns full url
     @discardableResult
-    func deleteVideoUrl(by assetId: String) -> URL?
+    func deleteVideoUrl(by videoId: String) -> URL?
 }

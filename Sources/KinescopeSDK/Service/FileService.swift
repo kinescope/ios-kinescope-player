@@ -27,22 +27,25 @@ final class FileNetworkService: NSObject, FileService {
     // MARK: - Constants
 
     private enum Constants {
-        static let downloadIdentifier = "io.kinescope.file_download_session"
+        static let downloadIdentifierPrefix = "io.kinescope.file_download_session."
     }
 
     // MARK: - Properties
 
     weak var delegate: FileServiceDelegate?
     private let idsStorage: IDsStorage
+    private let downloadIdentifier: String
     private lazy var session: URLSession = {
-        let config = URLSessionConfiguration.background(withIdentifier: Constants.downloadIdentifier)
+        let config = URLSessionConfiguration.background(withIdentifier: Constants.downloadIdentifierPrefix + downloadIdentifier)
         let urlSession = URLSession(configuration: config, delegate: self, delegateQueue: nil)
         return urlSession
     }()
 
     // MARK: - Initialization
 
-    init(idsStorage: IDsStorage = IDsUDStorage()) {
+    /// downloadIdentifier should be unique and consistent across app launches
+    init(downloadIdentifier: String, idsStorage: IDsStorage = IDsUDStorage()) {
+        self.downloadIdentifier = downloadIdentifier
         self.idsStorage = idsStorage
     }
 

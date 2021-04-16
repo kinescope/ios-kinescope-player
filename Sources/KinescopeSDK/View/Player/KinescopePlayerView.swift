@@ -101,6 +101,7 @@ public class KinescopePlayerView: UIView {
             set(quality: "Auto " + quality)
         }
     }
+
 }
 
 // MARK: - Public

@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Delegate protocol to listen download process events
+/// Delegate protocol to listen assets download process events
 public protocol KinescopeAssetDownloadableDelegate: class {
 
     /// Notify about progress state of downloading task
@@ -25,6 +25,7 @@ public protocol KinescopeAssetDownloadableDelegate: class {
     /// Notify about successfully completed downloading task
     ///
     /// - parameter assetId: Asset id of concrete video quality
-    func assetDownloadComplete(assetId: String)
+    /// - parameter url: URL path to cache of saved asset file, nil if attachment didn't saved
+    func assetDownloadComplete(assetId: String, url: URL?)
 
 }

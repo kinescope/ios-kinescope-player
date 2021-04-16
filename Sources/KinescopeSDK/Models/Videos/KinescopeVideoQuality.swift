@@ -5,6 +5,8 @@
 //  Created by Никита Коробейников on 29.03.2021.
 //
 
+import Foundation
+
 /// Quality of video to play
 public enum KinescopeVideoQuality {
 
@@ -23,4 +25,10 @@ public enum KinescopeVideoQuality {
     /// - parameter asset: Asset with info about quality and link to concrete resource
     /// - parameter subtitle: Asset for subtitle
     case exactWithSubtitles(asset: KinescopeVideoAsset, subtitle: KinescopeVideoSubtitle)
+
+    /// Downloaded asset
+    ///
+    /// - parameter url: URL to asset file in device storage
+    case downloaded(url: URL)
+
 }

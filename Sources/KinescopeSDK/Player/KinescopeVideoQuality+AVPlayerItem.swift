@@ -17,6 +17,8 @@ extension KinescopeVideoQuality {
             return makeExactItem(from: asset)
         case .exactWithSubtitles(let asset, let subtitles):
             return makeExactItem(from: asset, subtitles: subtitles)
+        case .downloaded(let url):
+            return makeDownloadedItem(from: url)
         }
     }
 
@@ -107,6 +109,10 @@ fileprivate extension KinescopeVideoQuality {
         }
 
         return AVPlayerItem(asset: composition)
+    }
+
+    func makeDownloadedItem(from url: URL) -> AVPlayerItem? {
+        return AVPlayerItem(url: url)
     }
 
 }

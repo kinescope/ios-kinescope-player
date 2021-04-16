@@ -122,7 +122,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         switch quality {
         case .auto:
             isManualQuality = false
-        case .exact, .exactWithSubtitles:
+        case .exact, .exactWithSubtitles, .downloaded:
             isManualQuality = true
         }
 
@@ -510,7 +510,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didShowAssets() -> [KinescopeVideoAsset]? {
-        return video?.assets
+        return video?.downloadableAssets
     }
 
     func didSelect(quality: String) {
@@ -524,7 +524,11 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
         let videoQuality: KinescopeVideoQuality
         if let asset = video.assets.first(where: { $0.quality == quality }) {
-            videoQuality = .exact(asset: asset)
+            if let path = dependencies.assetDownloader.getLocation(by: asset.id) {
+                videoQuality = .downloaded(url: path)
+            } else {
+                videoQuality = .exact(asset: asset)
+            }
         } else {
             videoQuality = .auto(hlsLink: video.hlsLink)
         }
@@ -539,14 +543,12 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
     func didSelectAttachment(with index: Int) {
         guard
-            let attachment = video?.additionalMaterials[safe: index],
-            let url = URL(string: attachment.url)
+            let attachment = video?.additionalMaterials[safe: index]
         else {
             return
         }
-        Kinescope.shared.attachmentDownloader.enqueueDownload(attachmentId: attachment.id, url: url)
-
-        Kinescope.shared.logger?.log(message: "Start download attachment: \(attachment.title)",
+        dependencies.attachmentDownloader.enqueueDownload(attachment: attachment)
+        Kinescope.shared.logger?.log(message: "Start downloading attachment: \(attachment.title)",
                                      level: KinescopeLoggerLevel.player)
     }
 
@@ -554,13 +556,28 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         guard let asset = video?.assets[safe: index] else {
             return
         }
-
-        Kinescope.shared.logger?.log(message: "Start download asset: \(asset.quality)",
+        dependencies.assetDownloader.enqueueDownload(asset: asset)
+        Kinescope.shared.logger?.log(message: "Start downloading asset: \(asset.id + asset.originalName)",
                                      level: KinescopeLoggerLevel.player)
     }
 
     func didSelectDownloadAll(for title: String) {
-        // FIXME: add logic
+        switch title {
+        case SideMenu.DescriptionTitle.download.rawValue:
+            video?.downloadableAssets.forEach {
+                dependencies.assetDownloader.enqueueDownload(asset: $0)
+                Kinescope.shared.logger?.log(message: "Start downloading asset: \($0.quality) - \($0.id)",
+                                             level: KinescopeLoggerLevel.player)
+            }
+        case SideMenu.DescriptionTitle.attachments.rawValue:
+            video?.additionalMaterials.forEach {
+                dependencies.attachmentDownloader.enqueueDownload(attachment: $0)
+                Kinescope.shared.logger?.log(message: "Start downloading attachment: \($0.title)",
+                                             level: KinescopeLoggerLevel.player)
+            }
+        default:
+            break
+        }
     }
 
     func didShowSubtitles() -> [String] {
@@ -611,7 +628,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
         self.strategy.player.currentItem?.textStyleRules = textStyleRules
 
-        let isOn = video.subtitles.contains { $0.title == subtitles } ?? false
+        let isOn = video.subtitles.contains { $0.title == subtitles }
         view?.controlPanel?.set(subtitleOn: isOn)
         Kinescope.shared.logger?.log(message: "Select subtitles: \(subtitles)",
                                      level: KinescopeLoggerLevel.player)

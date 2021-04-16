@@ -44,10 +44,11 @@ final class AttachmentDownloaderTests: XCTestCase {
             "2": .error(KinescopeDownloadError.notFound),
             "3": .completed
         ]
+        let attachments = (fileService?.attachmentStates ?? [:]).keys.map { buildAttachment(by: $0) }
 
         // when
-        for attachmentId in (fileService?.attachmentStates ?? [:]).keys {
-            downloader?.enqueueDownload(attachmentId: attachmentId, url: URL(string: "https://example.com/\(attachmentId)")!)
+        for attachment in attachments {
+            downloader?.enqueueDownload(attachment: attachment)
         }
 
         // then
@@ -59,10 +60,11 @@ final class AttachmentDownloaderTests: XCTestCase {
     func testSuccessSavingFileInCache() {
 
         // given
-        let attachmentId =  "1"
+        let attachmentId = "1"
+        let attachment = buildAttachment(by: attachmentId)
         fileService?.attachmentStates[attachmentId] = .completed
         //when
-        downloader?.enqueueDownload(attachmentId: attachmentId, url: URL(string: "https://example.com")!)
+        downloader?.enqueueDownload(attachment: attachment)
 
         let isDownloaded = downloader?.isDownloaded(attachmentId: attachmentId) ?? false
         // Check that delegate got's attachemnt too
@@ -77,18 +79,19 @@ final class AttachmentDownloaderTests: XCTestCase {
 
         //given
         let attachmentsIds = ["1", "2", "3"]
+        let attachments = attachmentsIds.map { buildAttachment(by: $0) }
         attachmentsIds.forEach {
             fileService?.attachmentStates[$0] = .completed
         }
 
         //when
-        attachmentsIds.forEach {
-            downloader?.enqueueDownload(attachmentId: $0, url: URL(string: "https://example.com/\($0)")!)
+        attachments.forEach {
+            downloader?.enqueueDownload(attachment: $0)
         }
 
         //then
         var filePaths: [URL] = []
-        let attachemntsList = downloader!.downloadedAttachmentsList()
+        let attachemntsList = downloader!.downloadedList()
 
         attachmentsIds.forEach {
             filePaths.append(downloader!.getLocation(of: $0)!)
@@ -102,10 +105,11 @@ final class AttachmentDownloaderTests: XCTestCase {
 
         //given
         let attachmentId = "1"
+        let attachment = buildAttachment(by: attachmentId)
         fileService?.attachmentStates[attachmentId] = .completed
 
         //when
-        downloader?.enqueueDownload(attachmentId: attachmentId, url: URL(string: "https://example.com")!)
+        downloader?.enqueueDownload(attachment: attachment)
         let isDeleted = downloader?.delete(attachmentId: attachmentId) ?? false
 
         //then
@@ -116,10 +120,11 @@ final class AttachmentDownloaderTests: XCTestCase {
 
         //given
         let attachmentId = "1"
+        let attachment = buildAttachment(by: attachmentId)
         fileService?.attachmentStates[attachmentId] = .completed
 
         //when
-        downloader?.enqueueDownload(attachmentId: attachmentId, url: URL(string: "https://example.com")!)
+        downloader?.enqueueDownload(attachment: attachment)
         let isDeleted = downloader?.delete(attachmentId: "2") ?? false
 
         //then
@@ -129,19 +134,20 @@ final class AttachmentDownloaderTests: XCTestCase {
     func testSuccessClearFromCache() {
 
         //given
-        let attachemntsIds = ["1", "2", "3"]
-        attachemntsIds.forEach {
+        let attachmentsIds = ["1", "2", "3"]
+        let attachments = attachmentsIds.map { buildAttachment(by: $0) }
+        attachmentsIds.forEach {
             fileService?.attachmentStates[$0] = .completed
         }
 
         //when
-        attachemntsIds.forEach {
-            downloader?.enqueueDownload(attachmentId: $0, url: URL(string: "https://example.com/\($0)")!)
+        attachments.forEach {
+            downloader?.enqueueDownload(attachment: $0)
         }
         downloader?.clear()
 
         // then
-        let urls = downloader?.downloadedAttachmentsList()
+        let urls = downloader?.downloadedList()
 
         XCTAssertEqual(urls, [])
     }
@@ -150,11 +156,12 @@ final class AttachmentDownloaderTests: XCTestCase {
 
         //given
         let attachmentId = "1"
+        let attachment = buildAttachment(by: attachmentId)
         let mockFileData = "mockData"
         fileService?.attachmentStates[attachmentId] = .completed
 
         //when
-        downloader?.enqueueDownload(attachmentId: attachmentId, url: URL(string: "https://example.com/")!)
+        downloader?.enqueueDownload(attachment: attachment)
         let isDownloaded = downloader?.isDownloaded(attachmentId: attachmentId) ?? false
 
         //then
@@ -176,6 +183,13 @@ final class AttachmentDownloaderTests: XCTestCase {
         XCTAssertNil(deletedAttachmentLocation)
     }
 
-
+    private func buildAttachment(by id: String) -> KinescopeVideoAdditionalMaterial {
+        .init(id: id,
+              title: id,
+              url: "https://example.com/\(id)",
+              filetype: "txt",
+              filename: "\(id).txt",
+              size: 10)
+    }
 
 }
