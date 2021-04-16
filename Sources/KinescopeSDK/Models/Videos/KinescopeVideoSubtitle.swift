@@ -9,6 +9,7 @@ public struct KinescopeVideoSubtitle: Codable {
 
 extension KinescopeVideoSubtitle {
     var title: String {
-        return Locale(identifier: language).localizedString(forIdentifier: language) ?? language
+        let str = Locale(identifier: language).localizedString(forIdentifier: language) ?? language
+        return str.capitalized
     }
 }

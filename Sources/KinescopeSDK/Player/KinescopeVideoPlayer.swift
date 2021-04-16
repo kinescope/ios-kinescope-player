@@ -1,6 +1,7 @@
 import AVFoundation
 import UIKit
 
+// swiftlint:disable file_length
 public class KinescopeVideoPlayer: KinescopePlayer {
 
     // MARK: - Private Properties
@@ -27,6 +28,22 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private var video: KinescopeVideo?
     private let config: KinescopePlayerConfig
     private var options = [KinescopePlayerOption]()
+
+    private var textStyleRules: [AVTextStyleRule]? {
+        let pos = kCMTextMarkupAttribute_OrthogonalLinePositionPercentageRelativeToWritingDirection
+        guard
+            let rule = AVTextStyleRule(
+                textMarkupAttributes: [
+                    pos as String: 75.0,
+                    kCMTextMarkupAttribute_BaseFontSizePercentageRelativeToVideoHeight as String: 10.0
+                ]
+            )
+        else {
+            return nil
+        }
+
+        return [rule]
+    }
 
     // MARK: - Lifecycle
 
@@ -75,7 +92,6 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     }
 
     public func attach(view: KinescopePlayerView) {
-
         view.playerView.player = self.strategy.player
         view.delegate = self
 
@@ -106,7 +122,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         switch quality {
         case .auto:
             isManualQuality = false
-        case .exact, .downloaded:
+        case .exact, .exactWithSubtitles, .downloaded:
             isManualQuality = true
         }
 
@@ -120,7 +136,6 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         addPlayerItemStatusObserver()
         addTracksObserver()
     }
-
 }
 
 // MARK: - Private
@@ -163,7 +178,6 @@ private extension KinescopeVideoPlayer {
     }
 
     func observePlaybackTime() {
-
         guard view?.controlPanel != nil else {
             return
         }
@@ -209,12 +223,12 @@ private extension KinescopeVideoPlayer {
 
             Kinescope.shared.logger?.log(message: "playback buffered \(buferredTime) seconds", level: KinescopeLoggerLevel.player)
 
-            let progress = CGFloat(buferredTime / duration)
-            if !progress.isNaN {
-                controlPanel.setBufferred(progress: progress)
+            let bufferProgress = CGFloat(buferredTime / duration)
+
+            if !bufferProgress.isNaN {
+                controlPanel.setBufferred(progress: bufferProgress)
             }
         }
-
     }
 
     func removePlaybackTimeObserver() {
@@ -571,10 +585,53 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didSelect(subtitles: String) {
-        // FIXME: add logic
-        let isOn = video?.subtitles.contains { $0.title == subtitles } ?? false
+        guard
+            let video = video
+        else {
+            Kinescope.shared.logger?.log(message: "Can't find video",
+                                         level: KinescopeLoggerLevel.player)
+            return
+        }
+
+        if isManualQuality {
+            guard
+                let asset = video.assets.first(where: { $0.quality == currentQuality })
+            else {
+                return
+            }
+
+            let videoQuality: KinescopeVideoQuality
+            if let selectedSubtitles = video.subtitles.first(where: { $0.title == subtitles }) {
+                videoQuality = .exactWithSubtitles(asset: asset, subtitle: selectedSubtitles)
+            } else {
+                videoQuality = .exact(asset: asset)
+            }
+
+            select(quality: videoQuality)
+        } else {
+            guard
+                let item = self.strategy.player.currentItem,
+                let group = item.asset.mediaSelectionGroup(forMediaCharacteristic: .legible)
+            else {
+                return
+            }
+
+            if let selectedSubtitles = video.subtitles.first(where: { $0.title == subtitles }) {
+                let locale = Locale(identifier: selectedSubtitles.language)
+                let options = AVMediaSelectionGroup.mediaSelectionOptions(from: group.options,
+                                                                          with: locale)
+                self.strategy.player.currentItem?.select(options.first, in: group)
+            } else {
+                self.strategy.player.currentItem?.select(nil, in: group)
+            }
+        }
+
+        self.strategy.player.currentItem?.textStyleRules = textStyleRules
+
+        let isOn = video.subtitles.contains { $0.title == subtitles }
         view?.controlPanel?.set(subtitleOn: isOn)
         Kinescope.shared.logger?.log(message: "Select subtitles: \(subtitles)",
                                      level: KinescopeLoggerLevel.player)
     }
 }
+// swiftlint:enable file_length
