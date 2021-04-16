@@ -34,11 +34,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 try audioSession.setCategory(
                     AVAudioSession.Category.playback,
                     mode: AVAudioSession.Mode.default,
-                    policy: AVAudioSession.RouteSharingPolicy.longForm,
-                    options: AVAudioSession.CategoryOptions([])
-                )
+                    policy: AVAudioSession.RouteSharingPolicy.longForm)
             } else {
-                try audioSession.setCategory(.playback, options: AVAudioSession.CategoryOptions([]))
+                try audioSession.setCategory(.playback)
             }
         } catch {
             Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.player)
