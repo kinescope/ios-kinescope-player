@@ -37,6 +37,7 @@ class PlayerControlOptionsView: UIControl {
     private let config: KinescopePlayerOptionsConfiguration
     private(set) var options: [KinescopePlayerOption] = []
     private var isExpanded: Bool = false
+    private var isSubtitleOn = false
 
     weak var output: PlayerControlOptionsOutput?
 
@@ -71,6 +72,8 @@ extension PlayerControlOptionsView: PlayerControlOptionsInput {
     }
 
     func set(subtitleOn: Bool) {
+        self.isSubtitleOn = subtitleOn
+
         let button = stackView.arrangedSubviews
             .compactMap { $0 as? OptionButton }
             .first { $0.option == .subtitles }
@@ -129,6 +132,7 @@ private extension PlayerControlOptionsView {
                 self?.stackView.addArrangedSubview(button)
             }
 
+        set(subtitleOn: isSubtitleOn)
     }
 
     func clearStack() {

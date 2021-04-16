@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Delegate protocol to listen download file process events
+/// Delegate protocol to listen attachments download file process events
 public protocol KinescopeAttachmentDownloadableDelegate: class {
 
     /// Notify about progress state of downloading task

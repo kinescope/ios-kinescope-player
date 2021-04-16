@@ -1,6 +1,7 @@
 import AVFoundation
 import UIKit
 
+// swiftlint:disable file_length
 public class KinescopeVideoPlayer: KinescopePlayer {
 
     // MARK: - Private Properties
@@ -22,11 +23,29 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private var isManualQuality = false
     private var currentQuality = ""
     private var currentTime: CMTime = .zero
+    private var isPlaying = false
+    private var isOverlayed = false
     private weak var miniView: KinescopePlayerView?
 
     private var video: KinescopeVideo?
     private let config: KinescopePlayerConfig
     private var options = [KinescopePlayerOption]()
+
+    private var textStyleRules: [AVTextStyleRule]? {
+        let pos = kCMTextMarkupAttribute_OrthogonalLinePositionPercentageRelativeToWritingDirection
+        guard
+            let rule = AVTextStyleRule(
+                textMarkupAttributes: [
+                    pos as String: 75.0,
+                    kCMTextMarkupAttribute_BaseFontSizePercentageRelativeToVideoHeight as String: 10.0
+                ]
+            )
+        else {
+            return nil
+        }
+
+        return [rule]
+    }
 
     // MARK: - Lifecycle
 
@@ -75,10 +94,8 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     }
 
     public func attach(view: KinescopePlayerView) {
-
         view.playerView.player = self.strategy.player
         view.delegate = self
-
         self.view = view
         view.set(options: options)
 
@@ -106,7 +123,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         switch quality {
         case .auto:
             isManualQuality = false
-        case .exact:
+        case .exact, .exactWithSubtitles, .downloaded:
             isManualQuality = true
         }
 
@@ -120,7 +137,6 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         addPlayerItemStatusObserver()
         addTracksObserver()
     }
-
 }
 
 // MARK: - Private
@@ -163,7 +179,6 @@ private extension KinescopeVideoPlayer {
     }
 
     func observePlaybackTime() {
-
         guard view?.controlPanel != nil else {
             return
         }
@@ -209,12 +224,12 @@ private extension KinescopeVideoPlayer {
 
             Kinescope.shared.logger?.log(message: "playback buffered \(buferredTime) seconds", level: KinescopeLoggerLevel.player)
 
-            let progress = CGFloat(buferredTime / duration)
-            if !progress.isNaN {
-                controlPanel.setBufferred(progress: progress)
+            let bufferProgress = CGFloat(buferredTime / duration)
+
+            if !bufferProgress.isNaN {
+                controlPanel.setBufferred(progress: bufferProgress)
             }
         }
-
     }
 
     func removePlaybackTimeObserver() {
@@ -282,6 +297,7 @@ private extension KinescopeVideoPlayer {
             \.timeControlStatus,
             options: [.new, .old],
             changeHandler: { [weak self] item, _ in
+                self?.isPlaying = item.timeControlStatus == .playing
                 self?.view?.change(timeControlStatus: item.timeControlStatus)
 
                 Kinescope.shared.logger?.log(
@@ -374,6 +390,12 @@ private extension KinescopeVideoPlayer {
             didPresentFullscreen(from: view)
         }
     }
+
+    func restoreView() {
+        view?.showOverlay(isOverlayed)
+        isPlaying ? play() : pause()
+    }
+
 }
 
 // MARK: - KinescopePlayerViewDelegate
@@ -444,7 +466,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         let rootVC = UIApplication.shared.keyWindow?.rootViewController
 
         if rootVC?.presentedViewController is KinescopeFullscreenViewController {
-            pause()
+            isOverlayed = view.overlay?.isSelected ?? false
             detach(view: view)
 
             rootVC?.dismiss(animated: true, completion: { [weak self] in
@@ -457,12 +479,12 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
                 self.attach(view: miniView)
                 self.view?.change(quality: self.currentQuality, manualQuality: self.isManualQuality)
-                self.play()
+                self.restoreView()
             })
         } else {
             miniView = view
+            isOverlayed = view.overlay?.isSelected ?? false
 
-            pause()
             detach(view: view)
 
             let playerVC = KinescopeFullscreenViewController(player: self,
@@ -477,10 +499,10 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                     return
                 }
 
-                self.play()
                 self.view?.change(status: .readyToPlay)
                 self.view?.change(quality: self.currentQuality, manualQuality: self.isManualQuality)
                 self.view?.overlay?.set(title: video.title, subtitle: video.description)
+                self.restoreView()
             })
         }
     }
@@ -496,7 +518,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didShowAssets() -> [KinescopeVideoAsset]? {
-        return video?.assets
+        return video?.downloadableAssets
     }
 
     func didSelect(quality: String) {
@@ -510,7 +532,11 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
         let videoQuality: KinescopeVideoQuality
         if let asset = video.assets.first(where: { $0.quality == quality }) {
-            videoQuality = .exact(asset: asset)
+            if let path = dependencies.assetDownloader.getLocation(by: asset.id) {
+                videoQuality = .downloaded(url: path)
+            } else {
+                videoQuality = .exact(asset: asset)
+            }
         } else {
             videoQuality = .auto(hlsLink: video.hlsLink)
         }
@@ -525,14 +551,12 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
     func didSelectAttachment(with index: Int) {
         guard
-            let attachment = video?.additionalMaterials[safe: index],
-            let url = URL(string: attachment.url)
+            let attachment = video?.additionalMaterials[safe: index]
         else {
             return
         }
-        Kinescope.shared.attachmentDownloader.enqueueDownload(attachmentId: attachment.id, url: url)
-
-        Kinescope.shared.logger?.log(message: "Start download attachment: \(attachment.title)",
+        dependencies.attachmentDownloader.enqueueDownload(attachment: attachment)
+        Kinescope.shared.logger?.log(message: "Start downloading attachment: \(attachment.title)",
                                      level: KinescopeLoggerLevel.player)
     }
 
@@ -540,13 +564,28 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         guard let asset = video?.assets[safe: index] else {
             return
         }
-
-        Kinescope.shared.logger?.log(message: "Start download asset: \(asset.quality)",
+        dependencies.assetDownloader.enqueueDownload(asset: asset)
+        Kinescope.shared.logger?.log(message: "Start downloading asset: \(asset.id + asset.originalName)",
                                      level: KinescopeLoggerLevel.player)
     }
 
     func didSelectDownloadAll(for title: String) {
-        // FIXME: add logic
+        switch title {
+        case SideMenu.DescriptionTitle.download.rawValue:
+            video?.downloadableAssets.forEach {
+                dependencies.assetDownloader.enqueueDownload(asset: $0)
+                Kinescope.shared.logger?.log(message: "Start downloading asset: \($0.quality) - \($0.id)",
+                                             level: KinescopeLoggerLevel.player)
+            }
+        case SideMenu.DescriptionTitle.attachments.rawValue:
+            video?.additionalMaterials.forEach {
+                dependencies.attachmentDownloader.enqueueDownload(attachment: $0)
+                Kinescope.shared.logger?.log(message: "Start downloading attachment: \($0.title)",
+                                             level: KinescopeLoggerLevel.player)
+            }
+        default:
+            break
+        }
     }
 
     func didShowSubtitles() -> [String] {
@@ -554,10 +593,54 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didSelect(subtitles: String) {
-        // FIXME: add logic
-        let isOn = video?.subtitles.contains { $0.title == subtitles } ?? false
+        guard
+            let video = video
+        else {
+            Kinescope.shared.logger?.log(message: "Can't find video",
+                                         level: KinescopeLoggerLevel.player)
+            return
+        }
+
+        if isManualQuality {
+            guard
+                let asset = video.assets.first(where: { $0.quality == currentQuality })
+            else {
+                return
+            }
+
+            let videoQuality: KinescopeVideoQuality
+            if let selectedSubtitles = video.subtitles.first(where: { $0.title == subtitles }) {
+                videoQuality = .exactWithSubtitles(asset: asset, subtitle: selectedSubtitles)
+            } else {
+                videoQuality = .exact(asset: asset)
+            }
+
+            select(quality: videoQuality)
+        } else {
+            guard
+                let item = self.strategy.player.currentItem,
+                let group = item.asset.mediaSelectionGroup(forMediaCharacteristic: .legible)
+            else {
+                return
+            }
+
+            if let selectedSubtitles = video.subtitles.first(where: { $0.title == subtitles }) {
+                let locale = Locale(identifier: selectedSubtitles.language)
+                let options = AVMediaSelectionGroup.mediaSelectionOptions(from: group.options,
+                                                                          with: locale)
+                self.strategy.player.currentItem?.select(options.first, in: group)
+            } else {
+                self.strategy.player.currentItem?.select(nil, in: group)
+            }
+        }
+
+        self.strategy.player.currentItem?.textStyleRules = textStyleRules
+
+        let isOn = video.subtitles.contains { $0.title == subtitles }
         view?.controlPanel?.set(subtitleOn: isOn)
         Kinescope.shared.logger?.log(message: "Select subtitles: \(subtitles)",
                                      level: KinescopeLoggerLevel.player)
     }
+
 }
+// swiftlint:enable file_length

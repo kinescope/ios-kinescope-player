@@ -18,7 +18,7 @@ final class FileServiceTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        fileService = FileNetworkService()
+        fileService = FileNetworkService(downloadIdentifier: "attachments")
         fileServiceDelegate = FileServiceDelegateMock()
         fileService?.delegate = fileServiceDelegate
     }
@@ -44,7 +44,7 @@ final class FileServiceTests: XCTestCase {
             err = error
             exp.fulfill()
         }
-        fileService?.setSession(MockDownloadURLSession(taskState: .resume(.success), delegate: fileService))
+        fileService?.setSession(MockDownloadURLSession(delegate: fileService))
 
         // when
         fileService?.enqueueDownload(fileId: fileId, url: URL(string: "https://example.com")!)
@@ -69,7 +69,9 @@ final class FileServiceTests: XCTestCase {
             err = error
             exp.fulfill()
         }
-        fileService?.setSession(MockDownloadURLSession(taskState: .resume(.error), delegate: fileService))
+        let session = MockDownloadURLSession(delegate: fileService)
+        session.nextResult = .error
+        fileService?.setSession(session)
 
         // when
         fileService?.enqueueDownload(fileId: fileId, url: URL(string: "https://example.com")!)
@@ -87,7 +89,7 @@ final class FileServiceTests: XCTestCase {
         let exp = expectation(description: "testDequeueDownload")
         let fileId = "1"
         var isTaskFinished = false
-        let session = MockDownloadURLSession(taskState: .resume(.success), delegate: fileService)
+        let session = MockDownloadURLSession(delegate: fileService)
 
         fileServiceDelegate?.completionHandler = { _, _, _ in
             isTaskFinished = true
@@ -96,8 +98,6 @@ final class FileServiceTests: XCTestCase {
 
         // when
         fileService?.enqueueDownload(fileId: fileId, url: URL(string: "https://example.com")!)
-        session.state = .cancel
-        fileService?.setSession(session)
         fileService?.dequeueDownload(fileId: fileId)
 
         // Fullfill after 1.5 second and check that completion handler didn't work
@@ -118,7 +118,7 @@ final class FileServiceTests: XCTestCase {
         let resumeExp = expectation(description: "testResumeDownloadAfterPause")
         let fileId = "1"
         var isTaskFinished = false
-        let session = MockDownloadURLSession(taskState: .resume(.success), delegate: fileService)
+        let session = MockDownloadURLSession(delegate: fileService)
 
         fileServiceDelegate?.completionHandler = { _, _, _ in
             isTaskFinished = true
@@ -128,15 +128,11 @@ final class FileServiceTests: XCTestCase {
 
         // when
         fileService?.enqueueDownload(fileId: fileId, url: URL(string: "https://example.com")!)
-        session.state = .suspend
-        fileService?.setSession(session)
         fileService?.pauseDownload(fileId: fileId)
 
         // Fullfill pauseExp after 1.5 second and check that task didn't finished
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             pauseExp.fulfill()
-            session.state = .resume(.success)
-            self.fileService?.setSession(session)
             self.fileService?.resumeDownload(fileId: fileId)
         }
 
@@ -155,7 +151,7 @@ final class FileServiceTests: XCTestCase {
         //fileId : isFinished
         var fileIds = ["1" : false, "2" : false, "3": false]
         var isAllTasksFinished = false
-        let session = MockDownloadURLSession(taskState: .resume(.success), delegate: fileService)
+        let session = MockDownloadURLSession(delegate: fileService)
 
         fileServiceDelegate?.completionHandler = { fileId, _, _ in
             fileIds[fileId] = true
@@ -170,8 +166,6 @@ final class FileServiceTests: XCTestCase {
         fileIds.forEach {
             fileService?.enqueueDownload(fileId: $0.key, url: URL(string: "https://example.com/\($0.key)")!)
         }
-        session.state = .suspend
-        fileService?.setSession(session)
         fileIds.forEach {
             fileService?.pauseDownload(fileId: $0.key)
         }
@@ -179,8 +173,6 @@ final class FileServiceTests: XCTestCase {
         // Fullfill pauseExp after 2.5 second and check that tasks didn't finished
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
             pauseExp.fulfill()
-            session.state = .resume(.success)
-            self.fileService?.setSession(session)
             self.fileService?.restore()
         }
 
@@ -192,4 +184,3 @@ final class FileServiceTests: XCTestCase {
     }
 
 }
-//swiftlint:enable all

@@ -10,6 +10,12 @@ import Foundation
 
 final class KinescopeAssetDownloadableMock: KinescopeAssetDownloadable {
 
+    func enqueueDownload(asset: KinescopeVideoAsset) {
+    }
+
+    func dequeueDownload(assetId: String) {
+    }
+
     func pauseDownload(assetId: String) {
     }
 
@@ -19,7 +25,7 @@ final class KinescopeAssetDownloadableMock: KinescopeAssetDownloadable {
     func restore() {
     }
 
-    func downlaodedAssetsList() -> [String] {
+    func downloadedList() -> [URL] {
         return []
     }
 
@@ -30,18 +36,12 @@ final class KinescopeAssetDownloadableMock: KinescopeAssetDownloadable {
     func clear() {
     }
 
-    func getPath(by assetId: String) -> URL? {
+    func getLocation(by assetId: String) -> URL? {
         return nil
     }
 
     func isDownloaded(assetId: String) -> Bool {
         return true
-    }
-
-    func enqueueDownload(assetId: String) {
-    }
-
-    func dequeueDownload(assetId: String) {
     }
 
     func add(delegate: KinescopeAssetDownloadableDelegate) {

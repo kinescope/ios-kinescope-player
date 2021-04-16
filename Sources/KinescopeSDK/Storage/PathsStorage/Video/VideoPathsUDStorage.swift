@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class AssetPathsUDStorage: KinescopeAssetPathsStorage {
+final class VideoPathsUDStorage: KinescopeVideoPathsStorage {
 
     // MARK: - Properties
 
@@ -15,21 +15,21 @@ final class AssetPathsUDStorage: KinescopeAssetPathsStorage {
 
     // MARK: - KinescopeAssetPathsStorage
 
-    func saveAsset(relativeUrl: String, id assetId: String) {
-        udStroage.save(relativeUrl: relativeUrl, id: assetId)
+    func saveVideo(relativeUrl: String, id videoId: String) {
+        udStroage.save(relativeUrl: relativeUrl, id: videoId)
     }
 
-    func readVideoUrl(by assetId: String) -> URL? {
-        return constructUrl(relativeUrl: udStroage.readUrl(by: assetId))
+    func readVideoUrl(by videoId: String) -> URL? {
+        return constructUrl(relativeUrl: udStroage.readUrl(by: videoId))
     }
 
-    func fetchAssetIds() -> [String] {
+    func fetchVideoIds() -> [String] {
         return udStroage.fetchIds()
     }
 
     @discardableResult
-    func deleteVideoUrl(by assetId: String) -> URL? {
-        return constructUrl(relativeUrl: udStroage.deleteUrl(by: assetId))
+    func deleteVideoUrl(by videoId: String) -> URL? {
+        return constructUrl(relativeUrl: udStroage.deleteUrl(by: videoId))
     }
 
     // MARK: - Private

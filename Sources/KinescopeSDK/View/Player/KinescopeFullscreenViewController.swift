@@ -51,7 +51,6 @@ final public class KinescopeFullscreenViewController: UIViewController {
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         player.attach(view: playerView)
-        player.play()
     }
 
     public override func viewWillDisappear(_ animated: Bool) {

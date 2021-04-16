@@ -10,7 +10,7 @@
 public protocol KinescopeServicesProvider {
 
     /// Service managing downloading of assets
-    var downloader: KinescopeAssetDownloadable! { get }
+    var assetDownloader: KinescopeAssetDownloadable! { get }
 
     /// Service managing downloading of attachments
     var attachmentDownloader: KinescopeAttachmentDownloadable! { get }
