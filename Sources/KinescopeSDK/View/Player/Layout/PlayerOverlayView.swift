@@ -24,6 +24,7 @@ class PlayerOverlayView: UIControl {
     private weak var delegate: PlayerOverlayViewDelegate?
     private var isPlaying = false
     private var isEndPlaying = false
+    private var isRewind = false
 
     // MARK: - Lifecycle
 
@@ -65,6 +66,10 @@ extension PlayerOverlayView: PlayerOverlayInput {
     }
 
     func set(playing: Bool) {
+        if !isRewind {
+            delegate?.didShow()
+        }
+
         self.isPlaying = playing
         playPauseImageView.image = playing ? config.pauseImage : config.playImage
     }
@@ -132,6 +137,7 @@ private extension PlayerOverlayView {
     }
 
     func setSelectedState() {
+        delegate?.didShow()
         UIView.animate(withDuration: 0.3) {
             self.contentView.alpha = 1.0
         }
@@ -142,6 +148,8 @@ private extension PlayerOverlayView {
     }
 
     func setDeselectedState() {
+        delegate?.didHide()
+
         UIView.animate(withDuration: 0.3) {
             self.contentView.alpha = .zero
         }
@@ -180,12 +188,15 @@ private extension PlayerOverlayView {
         if isSelected && playPauseImageView.frame.contains(location) {
             playPauseAction()
         } else {
+            isRewind = false
             isSelected.toggle()
         }
     }
 
     @objc
     func doubleTapAction(recognizer: UITapGestureRecognizer) {
+        isRewind = true
+
         let location = recognizer.location(in: self)
         let rightFrame = CGRect(x: contentView.center.x + 24.0,
                                 y: .zero,

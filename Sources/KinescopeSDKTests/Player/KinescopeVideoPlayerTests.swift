@@ -19,6 +19,7 @@ final class KinescopeVideoPlayerTests: XCTestCase {
     var player: KinescopeVideoPlayer?
     var inspector: KinescopeInspectableMock?
     var downloader: KinescopeAssetDownloadableMock?
+    var attachmentDownloader: KinescopeAttachmentDownloaderMock?
     var strategy: PlayingStrategyMock?
 
     override func setUp() {
@@ -27,16 +28,19 @@ final class KinescopeVideoPlayerTests: XCTestCase {
         let inspector = KinescopeInspectableMock()
         let downloader = KinescopeAssetDownloadableMock()
         let strategy = PlayingStrategyMock()
+        let attachmentDownloader = KinescopeAttachmentDownloaderMock()
 
         let dependencies = KinescopeVideoPlayerDependenciesMock(inspectorMock: inspector,
                                                                 downloaderMock: downloader,
-                                                                strategyMock: strategy)
+                                                                strategyMock: strategy,
+                                                                attachmentDownloaderMock: attachmentDownloader)
 
         self.player = KinescopeVideoPlayer(config: .init(videoId: Constants.videoId),
                                            dependencies: dependencies)
 
         self.inspector = inspector
         self.strategy = strategy
+        self.attachmentDownloader = attachmentDownloader
     }
 
     override func tearDown() {
@@ -62,7 +66,7 @@ final class KinescopeVideoPlayerTests: XCTestCase {
         XCTAssertEqual(strategy?.bindItems.count, 1)
         XCTAssertEqual(strategy?.playCalledCount, 1)
         XCTAssertEqual(strategy?.pauseCalledCount, 0)
-        XCTAssertEqual(strategy?.unbindCalledCount, 0)
+        XCTAssertEqual(strategy?.unbindCalledCount, 1)
 
     }
 
@@ -109,6 +113,6 @@ final class KinescopeVideoPlayerTests: XCTestCase {
         XCTAssertEqual(strategy?.bindItems.count, 1)
         XCTAssertEqual(strategy?.playCalledCount, 0)
         XCTAssertEqual(strategy?.pauseCalledCount, 0)
-        XCTAssertEqual(strategy?.unbindCalledCount, 0)
+        XCTAssertEqual(strategy?.unbindCalledCount, 1)
     }
 }

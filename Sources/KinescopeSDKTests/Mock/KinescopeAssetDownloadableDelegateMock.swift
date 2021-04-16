@@ -9,17 +9,18 @@
 @testable import KinescopeSDK
 
 final class KinescopeAssetDownloadableDelegateMock: KinescopeAssetDownloadableDelegate {
+
     var assets: [String: (progress: Double, completed: Bool, error: KinescopeDownloadError?)] = [:]
 
-    func kinescopeDownloadProgress(assetId: String, progress: Double) {
+    func assetDownloadProgress(assetId: String, progress: Double) {
         assets[assetId]?.progress = progress
     }
 
-    func kinescopeDownloadError(assetId: String, error: KinescopeDownloadError) {
+    func assetDownloadError(assetId: String, error: KinescopeDownloadError) {
         assets[assetId]?.error = error
     }
 
-    func kinescopeDownloadComplete(assetId: String) {
+    func assetDownloadComplete(assetId: String) {
         assets[assetId]?.completed = true
     }
 }

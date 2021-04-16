@@ -65,6 +65,9 @@ extension PlayerControlView: PlayerControlInput {
         optionsMenu.set(options: options)
     }
 
+    func set(subtitleOn: Bool) {
+        optionsMenu.set(subtitleOn: subtitleOn)
+    }
 }
 
 // MARK: - PlayerControlOptionsOutput

@@ -33,6 +33,11 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     init(config: KinescopePlayerConfig, dependencies: KinescopePlayerDependencies) {
         self.dependencies = dependencies
         self.config = config
+
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(changeOrientation),
+                                               name: UIDevice.orientationDidChangeNotification,
+                                               object: nil)
     }
 
     deinit {
@@ -41,6 +46,8 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         self.removePlayerTimeControlStatusObserver()
         self.removePlayerStatusObserver()
         self.removeTracksObserver()
+
+        NotificationCenter.default.removeObserver(self)
     }
 
     // MARK: - KinescopePlayer
@@ -107,13 +114,10 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
         removeTracksObserver()
         removePlayerItemStatusObserver()
-        removePlaybackTimeObserver()
 
-        strategy.unbind()
         strategy.bind(item: item)
 
         addPlayerItemStatusObserver()
-        observePlaybackTime()
         addTracksObserver()
     }
 
@@ -148,6 +152,10 @@ private extension KinescopeVideoPlayer {
 
         if !video.additionalMaterials.isEmpty {
             options.insert(.attachments, at: 0)
+        }
+
+        if !video.subtitles.isEmpty {
+            options.insert(.subtitles, at: 0)
         }
 
         self.options = options
@@ -190,8 +198,9 @@ private extension KinescopeVideoPlayer {
 
             let duration = currentItem.duration.seconds
 
-            if !time.isNaN && !duration.isNaN {
-                controlPanel.setTimeline(to: CGFloat(time / duration))
+            let position = CGFloat(time / duration)
+            if !position.isNaN {
+                controlPanel.setTimeline(to: position)
             }
 
             // MARK: - Preload observation
@@ -200,8 +209,9 @@ private extension KinescopeVideoPlayer {
 
             Kinescope.shared.logger?.log(message: "playback buffered \(buferredTime) seconds", level: KinescopeLoggerLevel.player)
 
-            if !buferredTime.isNaN && !duration.isNaN {
-                controlPanel.setBufferred(progress: CGFloat(buferredTime / duration))
+            let progress = CGFloat(buferredTime / duration)
+            if !progress.isNaN {
+                controlPanel.setBufferred(progress: progress)
             }
         }
 
@@ -346,6 +356,24 @@ private extension KinescopeVideoPlayer {
             self?.isSeeking = false
         }
     }
+
+    @objc
+    func changeOrientation() {
+        guard
+            let view = view,
+            view.canBeFullScreen
+        else {
+            return
+        }
+
+        let isFullScreen = UIApplication.shared.keyWindow?.rootViewController?.presentedViewController is KinescopeFullscreenViewController
+
+        if UIDevice.current.orientation.isLandscape && !isFullScreen {
+            didPresentFullscreen(from: view)
+        } else if !UIDevice.current.orientation.isLandscape && isFullScreen {
+            didPresentFullscreen(from: view)
+        }
+    }
 }
 
 // MARK: - KinescopePlayerViewDelegate
@@ -440,9 +468,11 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             let playerVC = KinescopeFullscreenViewController(player: self,
                                                              config: .preferred(for: video))
             playerVC.modalPresentationStyle = .overFullScreen
+            playerVC.modalTransitionStyle = .crossDissolve
             rootVC?.present(playerVC, animated: true, completion: { [weak self] in
                 guard
-                    let self = self
+                    let self = self,
+                    let video = self.video
                 else {
                     return
                 }
@@ -450,6 +480,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                 self.play()
                 self.view?.change(status: .readyToPlay)
                 self.view?.change(quality: self.currentQuality, manualQuality: self.isManualQuality)
+                self.view?.overlay?.set(title: video.title, subtitle: video.description)
             })
         }
     }
@@ -493,9 +524,13 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didSelectAttachment(with index: Int) {
-        guard let attachment = video?.additionalMaterials[safe: index] else {
+        guard
+            let attachment = video?.additionalMaterials[safe: index],
+            let url = URL(string: attachment.url)
+        else {
             return
         }
+        Kinescope.shared.attachmentDownloader.enqueueDownload(attachmentId: attachment.id, url: url)
 
         Kinescope.shared.logger?.log(message: "Start download attachment: \(attachment.title)",
                                      level: KinescopeLoggerLevel.player)
@@ -514,4 +549,15 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         // FIXME: add logic
     }
 
+    func didShowSubtitles() -> [String] {
+        return video?.subtitles.compactMap { $0.title } ?? []
+    }
+
+    func didSelect(subtitles: String) {
+        // FIXME: add logic
+        let isOn = video?.subtitles.contains { $0.title == subtitles } ?? false
+        view?.controlPanel?.set(subtitleOn: isOn)
+        Kinescope.shared.logger?.log(message: "Select subtitles: \(subtitles)",
+                                     level: KinescopeLoggerLevel.player)
+    }
 }

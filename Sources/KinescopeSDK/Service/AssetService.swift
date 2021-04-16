@@ -94,8 +94,8 @@ extension AssetNetworkService {
 
     func dequeueDownload(assetId: String) {
         findTask(by: assetId) { [weak self] task in
-            task.cancel()
             self?.idsStorage.deleteID(by: task.urlAsset.url.absoluteString)
+            task.cancel()
         } notFoundCompletion: { [weak self] in
             self?.delegate?.downloadError(assetId: assetId, error: .notFound)
         }
@@ -105,7 +105,7 @@ extension AssetNetworkService {
         session.getAllTasks { [weak self] tasksArray in
             // For each task, restore the state in the app
             for task in tasksArray {
-                guard let downloadTask = task as? AVAssetDownloadTask else { break }
+                guard let downloadTask = task as? AVAssetDownloadTask else { continue }
                 if self?.idsStorage.contains(url: downloadTask.urlAsset.url.absoluteString) ?? false {
                     downloadTask.resume()
                 }

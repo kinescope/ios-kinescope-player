@@ -96,20 +96,20 @@ extension AssetDownloader: AssetServiceDelegate {
 
     func downloadProgress(assetId: String, progress: Double) {
         delegates.forEach {
-            $0.kinescopeDownloadProgress(assetId: assetId, progress: progress)
+            $0.assetDownloadProgress(assetId: assetId, progress: progress)
         }
     }
 
     func downloadError(assetId: String, error: KinescopeDownloadError) {
         delegates.forEach {
-            $0.kinescopeDownloadError(assetId: assetId, error: error)
+            $0.assetDownloadError(assetId: assetId, error: error)
         }
     }
 
     func downloadComplete(assetId: String, path: String) {
         assetPathsStorage.saveAsset(relativeUrl: path, id: assetId)
         delegates.forEach {
-            $0.kinescopeDownloadComplete(assetId: assetId)
+            $0.assetDownloadComplete(assetId: assetId)
         }
     }
 
