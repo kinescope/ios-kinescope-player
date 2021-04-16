@@ -503,6 +503,4 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                                      level: KinescopeLoggerLevel.player)
     }
 
-
-
 }
