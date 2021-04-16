@@ -18,6 +18,8 @@ public enum KinescopePlayerOption: String {
     case attachments
     /// Option to open download options list in side menu
     case download
+    /// Option to open list of available devices to stream contet from video via AirPlay
+    case airPlay
     /// Option to on/off subtitles and choose subtitle language
     case subtitles
 }

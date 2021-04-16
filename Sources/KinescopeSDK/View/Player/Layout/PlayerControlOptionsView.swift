@@ -103,6 +103,11 @@ private extension PlayerControlOptionsView {
     }
 
     func createButton(from option: KinescopePlayerOption) -> UIButton {
+        if option == .airPlay {
+            let button = AirPlayOptionButton()
+            button.squareSize(with: config.iconSize)
+            return button
+        }
         let button = OptionButton(option: option)
 
         button.tintColor = config.highlightedColor

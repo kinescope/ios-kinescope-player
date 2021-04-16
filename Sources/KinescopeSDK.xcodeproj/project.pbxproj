@@ -136,6 +136,7 @@
 		E81F40B0262C274DE3F10479 /* KinescopeConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F1E62E9DDA7F32CD5E4C8B7 /* KinescopeConfig.swift */; };
 		ECFFEC8D0ADFA3D8823E797E /* KinescopeFileNamesStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 643B7F86C915EB3617CF34DA /* KinescopeFileNamesStorage.swift */; };
 		ED5D82EEDD23A52867EF6744 /* OptionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ECE8E5A44CEF309F6946EC2 /* OptionButton.swift */; };
+		EF5E87A092D929961E0611A4 /* AirPlayOptionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52EAFC1CC7691D92306EF2D4 /* AirPlayOptionButton.swift */; };
 		F01FFB38E8BF8B06913B99BA /* InspectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75BCA647AC2B57BC5C662086 /* InspectorTests.swift */; };
 		F0A9B8F6ACA1DCDA58C08ED8 /* PlayerControlOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D75F4484E565BBABC302CCF7 /* PlayerControlOptionsView.swift */; };
 		F5105F9A9A762F62D053A88E /* SideMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6958F46BEF2B6EC0D99E178 /* SideMenu.swift */; };
@@ -221,6 +222,7 @@
 		4E6B915710AF50EDFE20A1B7 /* KinescopeSideMenuConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeSideMenuConfiguration.swift; sourceTree = "<group>"; };
 		4E78E23612C669936E1B2506 /* KinescopePlayerTimeindicatorConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopePlayerTimeindicatorConfiguration.swift; sourceTree = "<group>"; };
 		4FAC36A9F1C959FCFE476D08 /* FileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileService.swift; sourceTree = "<group>"; };
+		52EAFC1CC7691D92306EF2D4 /* AirPlayOptionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlayOptionButton.swift; sourceTree = "<group>"; };
 		57BC229BAE8FF1B3AD5B46EC /* AttachmentDownloaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentDownloaderTests.swift; sourceTree = "<group>"; };
 		57F26BA927C1E89047C06770 /* KinescopeFullscreenConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeFullscreenConfiguration.swift; sourceTree = "<group>"; };
 		5F2AE32DEFC8E442E6B4421D /* KinescopeMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeMetaData.swift; sourceTree = "<group>"; };
@@ -528,6 +530,7 @@
 		659320BD79D04D2BBF0ED19F /* Layout */ = {
 			isa = PBXGroup;
 			children = (
+				52EAFC1CC7691D92306EF2D4 /* AirPlayOptionButton.swift */,
 				3ECE8E5A44CEF309F6946EC2 /* OptionButton.swift */,
 				D75F4484E565BBABC302CCF7 /* PlayerControlOptionsView.swift */,
 				A429BF92F67FB71A84E55D17 /* PlayerControlView.swift */,
@@ -974,6 +977,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EF5E87A092D929961E0611A4 /* AirPlayOptionButton.swift in Sources */,
 				CC9D79196CC38E9BBFD66345 /* Array+Safe.swift in Sources */,
 				9A6FB74D436C70656ED69129 /* AssetDownloader.swift in Sources */,
 				D524580109633CCBE89ECD25 /* AssetLinksService.swift in Sources */,
@@ -1118,7 +1122,6 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -1134,7 +1137,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1159,8 +1161,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
+				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -1245,7 +1246,6 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -1261,7 +1261,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1280,13 +1279,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};

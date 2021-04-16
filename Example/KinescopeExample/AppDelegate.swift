@@ -7,6 +7,7 @@
 
 import UIKit
 import KinescopeSDK
+import AVFoundation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -18,11 +19,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if #available(iOS 13.0, *) {
             window?.overrideUserInterfaceStyle = .light
         }
-
+        setupAudioSession()
         return true
     }
 
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
         return .allButUpsideDown
     }
+
+    private func setupAudioSession() {
+        do {
+            let audioSession = AVAudioSession.sharedInstance()
+            if #available(iOS 11.0, *) {
+                try audioSession.setCategory(
+                    AVAudioSession.Category.playback,
+                    mode: AVAudioSession.Mode.default,
+                    policy: AVAudioSession.RouteSharingPolicy.longForm)
+            } else {
+                try audioSession.setCategory(.playback)
+            }
+        } catch {
+            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.player)
+        }
+    }
+
 }

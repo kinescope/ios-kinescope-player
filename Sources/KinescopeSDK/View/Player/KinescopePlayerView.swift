@@ -339,6 +339,7 @@ private extension KinescopePlayerView {
 // MARK: - PlayerOverlayViewDelegate
 
 extension KinescopePlayerView: PlayerOverlayViewDelegate {
+
     func didShow() {
         UIView.animate(withDuration: 0.3) {
             self.controlPanel?.alpha = 1.0
@@ -403,6 +404,8 @@ extension KinescopePlayerView: PlayerControlOutput {
                                        isDownloadable: true,
                                        items: items)
             presentSideMenu(model: model)
+        case .airPlay:
+            break
         case .subtitles:
             let model = makeSubtitlesSideMenuModel(with: SideMenu.Settings.subtitles.rawValue,
                                                    root: true)

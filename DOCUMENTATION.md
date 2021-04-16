@@ -53,3 +53,7 @@ To add your delegate use add(delegate: KinescopeAttachmentDownloadableDelegate) 
 KinescopeAttachmentDownloadable uses concrete attachment id of some file for downloading and future access.  
 
 AttachmentDownloader(out-of-box implementation of KinescopeAssetDownloadable) is based on URLSession for downloading files and used documents directory on disk  for storing downloaded files, all attachments are kept in own directory "KinescopeAttachments".
+
+# AirPlay
+
+AirPlay lets you share video from Apple devices direct to Apple TV, speakers and popular smart TVs. SDK has out-of-box implementation of AirPlay. All you need to do is set your app’s AVAudioSession’s category, where policy should be AVAudioSession.RouteSharingPolicy.longForm.
