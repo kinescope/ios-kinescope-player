@@ -49,7 +49,9 @@ private extension AirPlayOptionButton {
 
     @objc
     func didAirPlayStateChanged(_ notification: NSNotification) {
-        guard let volumeView = notification.object as? MPVolumeView else { return }
+        guard let volumeView = notification.object as? MPVolumeView else {
+            return
+        }
         volumeView.setRouteButtonImage(UIImage.image(named: getImageName(for: volumeView)), for: .normal)
     }
 
