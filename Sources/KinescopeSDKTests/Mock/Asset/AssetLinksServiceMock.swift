@@ -1,5 +1,5 @@
 //
-//  AssetsServiceMock.swift
+//  AssetLinksServiceMock.swift
 //  KinescopeSDKTests
 //
 //  Created by Artemii Shabanov on 07.04.2021.

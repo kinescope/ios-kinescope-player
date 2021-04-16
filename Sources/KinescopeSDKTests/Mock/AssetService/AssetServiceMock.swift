@@ -25,7 +25,7 @@ final class AssetServiceMock: AssetService {
 
     // MARK: - Methods
 
-    func enqueueDownload(assetId: String) {
+    func enqueueDownload(assetId: String, url: URL) {
         switch assetStates[assetId] {
         case .completed(let value):
             let baseURL = URL(fileURLWithPath: NSHomeDirectory())

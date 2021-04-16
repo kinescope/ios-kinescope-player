@@ -14,43 +14,35 @@ final class MockURLSessionDownloadTask: URLSessionDownloadTask {
         return URLRequest(url: url)
     }
 
-    private let closure: (URLSessionDownloadTask) -> Void
+    private let closure: (URLSessionDownloadTask, MockTaskState) -> Void
     private let url: URL
+    private let result: MockResult
 
-    init(url: URL, closure: @escaping (URLSessionDownloadTask) -> Void) {
+    init(url: URL,
+         result: MockResult,
+         closure: @escaping (URLSessionDownloadTask, MockTaskState) -> Void) {
         self.url = url
+        self.result = result
         self.closure = closure
     }
 
     override func resume() {
-        closure(self)
+        closure(self, .resume(result))
     }
 
     override func cancel() {
-        closure(self)
+        closure(self, .cancel)
     }
 
     override func suspend() {
-        closure(self)
+        closure(self, .suspend)
     }
 
 }
 
 final class MockDownloadURLSession: URLSession {
 
-    enum Result {
-        case success
-        case error
-    }
-
-    enum TaskState {
-        case resume(Result)
-        case cancel
-        case suspend
-    }
-
-    var state: TaskState
-
+    var nextResult: MockResult = .success
     // task : isActive
     private var tasks: [URLSessionTask: Bool] = [:]
     private var newDelegate: URLSessionDelegate?
@@ -59,8 +51,7 @@ final class MockDownloadURLSession: URLSession {
         return newDelegate
     }
 
-    init(taskState: TaskState, delegate: URLSessionDelegate?) {
-        self.state = taskState
+    init(delegate: URLSessionDelegate?) {
         self.newDelegate = delegate
     }
 
@@ -69,8 +60,8 @@ final class MockDownloadURLSession: URLSession {
     }
 
     override func downloadTask(with url: URL) -> URLSessionDownloadTask {
-        return MockURLSessionDownloadTask(url: url) { task  in
-            switch self.state {
+        return MockURLSessionDownloadTask(url: url, result: nextResult) { task, state in
+            switch state {
             case .resume(let result):
                 switch result {
                 case .success:

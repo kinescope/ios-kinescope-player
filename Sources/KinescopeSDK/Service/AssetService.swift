@@ -15,7 +15,7 @@ protocol AssetServiceDelegate: class {
 
 protocol AssetService {
     var delegate: AssetServiceDelegate? { get set }
-    func enqueueDownload(assetId: String)
+    func enqueueDownload(assetId: String, url: URL)
     func pauseDownload(assetId: String)
     func resumeDownload(assetId: String)
     func dequeueDownload(assetId: String)
@@ -27,31 +27,34 @@ class AssetNetworkService: NSObject, AssetService {
     // MARK: - Constants
 
     private enum Constants {
-        static let downloadIdentifier = "io.kinescope.download_session"
+        static let downloadIdentifier = "io.kinescope.asset_download_session"
     }
 
     // MARK: - Properties
 
     weak var delegate: AssetServiceDelegate?
     private let idsStorage: IDsStorage
-    private let assetLinksService: AssetLinksService
     private lazy var session: AVAssetDownloadURLSession = {
         let configuration = URLSessionConfiguration.background(withIdentifier: Constants.downloadIdentifier)
 
         // Create a new AVAssetDownloadURLSession
         let downloadSession = AVAssetDownloadURLSession(configuration: configuration,
                                                         assetDownloadDelegate: self,
-                                                        delegateQueue: OperationQueue.main)
+                                                        delegateQueue: nil)
 
         return downloadSession
     }()
 
     // MARK: - Lyfecycle
 
-    init(assetLinksService: AssetLinksService,
-         idsStorage: IDsStorage = IDsUDStorage()) {
-        self.assetLinksService = assetLinksService
+    init(idsStorage: IDsStorage = IDsUDStorage()) {
         self.idsStorage = idsStorage
+    }
+
+    // MARK: - Internal Methods
+
+    func setSession(_ session: AVAssetDownloadURLSession) {
+        self.session = session
     }
 
 }
@@ -60,19 +63,12 @@ class AssetNetworkService: NSObject, AssetService {
 
 extension AssetNetworkService {
 
-    func enqueueDownload(assetId: String) {
+    func enqueueDownload(assetId: String, url: URL) {
         findTask(by: assetId) { task in
             task.resume()
         } notFoundCompletion: { [weak self] in
-            self?.assetLinksService.getAssetLink(by: assetId) { [weak self] in
-                switch $0 {
-                case .success(let link):
-                    self?.idsStorage.save(id: assetId, by: link.link)
-                    self?.startTask(url: link.link)
-                case .failure(_):
-                    self?.delegate?.downloadError(assetId: assetId, error: .notFound)
-                }
-            }
+            self?.idsStorage.save(id: assetId, by: url.absoluteString)
+            self?.startTask(url: url)
         }
     }
 
@@ -185,17 +181,16 @@ private extension AssetNetworkService {
         }
     }
 
-    func startTask(url urlString: String) {
-        guard let url = URL(string: urlString) else {
-            return
-        }
+    func startTask(url: URL) {
         let asset = AVURLAsset(url: url)
 
         // Create new AVAssetDownloadTask for the desired asset
+
         let downloadTask = session.makeAssetDownloadTask(asset: asset,
-                                                         assetTitle: "io.kinescope.\(urlString)",
+                                                         assetTitle: "io.kinescope.\(url.absoluteString)",
                                                          assetArtworkData: nil,
                                                          options: nil)
+
         // Start task and begin download
         downloadTask?.resume()
     }
