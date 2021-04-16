@@ -8,6 +8,7 @@
 import XCTest
 @testable import KinescopeSDK
 
+//swiftlint:disable all
 final class AssetDownloaderTests: XCTestCase {
 
     // MARK: - Setup

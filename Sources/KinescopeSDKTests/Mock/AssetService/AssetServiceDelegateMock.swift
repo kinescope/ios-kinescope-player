@@ -10,7 +10,7 @@ import Foundation
 
 final class AssetServiceDelegateMock: AssetServiceDelegate {
 
-    var completionHandler: ((String, String?, KinescopeDownloadError?) -> Void)? = nil
+    var completionHandler: ((String, String?, KinescopeDownloadError?) -> Void)?
 
     func downloadProgress(assetId: String, progress: Double) {
         completionHandler?(assetId, nil, nil)

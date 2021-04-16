@@ -60,7 +60,10 @@ final class MocAVAssetDownloadURLSession: AVAssetDownloadURLSession {
         return completionHandler(Array(tasks.keys))
     }
 
-    override func makeAssetDownloadTask(asset URLAsset: AVURLAsset, assetTitle title: String, assetArtworkData artworkData: Data?, options: [String : Any]? = nil) -> AVAssetDownloadTask? {
+    override func makeAssetDownloadTask(asset URLAsset: AVURLAsset,
+                                        assetTitle title: String,
+                                        assetArtworkData artworkData: Data?,
+                                        options: [String: Any]? = nil) -> AVAssetDownloadTask? {
         return MockAVAssetDownloadTask(url: URLAsset.url, result: nextResult) { task, state in
             switch state {
             case .resume(let result):
@@ -68,7 +71,9 @@ final class MocAVAssetDownloadURLSession: AVAssetDownloadURLSession {
                 case .success:
                     self.tasks[task] = true
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                        guard self.tasks[task] ?? false else { return }
+                        guard self.tasks[task] ?? false else {
+                            return
+                        }
                         (self.delegate as? AVAssetDownloadDelegate)?.urlSession?(self,
                                                                                  assetDownloadTask: task,
                                                                                  didFinishDownloadingTo: URLAsset.url)

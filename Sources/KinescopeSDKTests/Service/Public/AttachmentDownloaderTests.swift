@@ -48,7 +48,7 @@ final class AttachmentDownloaderTests: XCTestCase {
 
         // when
         for attachment in attachments {
-            downloader?.enqueueDownload(attachment: attachment, url: URL(string: attachment.url)!)
+            downloader?.enqueueDownload(attachment: attachment)
         }
 
         // then
@@ -64,7 +64,7 @@ final class AttachmentDownloaderTests: XCTestCase {
         let attachment = buildAttachment(by: attachmentId)
         fileService?.attachmentStates[attachmentId] = .completed
         //when
-        downloader?.enqueueDownload(attachment: attachment, url: URL(string: attachment.url)!)
+        downloader?.enqueueDownload(attachment: attachment)
 
         let isDownloaded = downloader?.isDownloaded(attachmentId: attachmentId) ?? false
         // Check that delegate got's attachemnt too
@@ -86,7 +86,7 @@ final class AttachmentDownloaderTests: XCTestCase {
 
         //when
         attachments.forEach {
-            downloader?.enqueueDownload(attachment: $0, url: URL(string: $0.url)!)
+            downloader?.enqueueDownload(attachment: $0)
         }
 
         //then
@@ -109,7 +109,7 @@ final class AttachmentDownloaderTests: XCTestCase {
         fileService?.attachmentStates[attachmentId] = .completed
 
         //when
-        downloader?.enqueueDownload(attachment: attachment, url: URL(string: attachment.url)!)
+        downloader?.enqueueDownload(attachment: attachment)
         let isDeleted = downloader?.delete(attachmentId: attachmentId) ?? false
 
         //then
@@ -124,7 +124,7 @@ final class AttachmentDownloaderTests: XCTestCase {
         fileService?.attachmentStates[attachmentId] = .completed
 
         //when
-        downloader?.enqueueDownload(attachment: attachment, url: URL(string: attachment.url)!)
+        downloader?.enqueueDownload(attachment: attachment)
         let isDeleted = downloader?.delete(attachmentId: "2") ?? false
 
         //then
@@ -142,7 +142,7 @@ final class AttachmentDownloaderTests: XCTestCase {
 
         //when
         attachments.forEach {
-            downloader?.enqueueDownload(attachment: $0, url: URL(string: $0.url)!)
+            downloader?.enqueueDownload(attachment: $0)
         }
         downloader?.clear()
 
@@ -161,7 +161,7 @@ final class AttachmentDownloaderTests: XCTestCase {
         fileService?.attachmentStates[attachmentId] = .completed
 
         //when
-        downloader?.enqueueDownload(attachment: attachment, url: URL(string: attachment.url)!)
+        downloader?.enqueueDownload(attachment: attachment)
         let isDownloaded = downloader?.isDownloaded(attachmentId: attachmentId) ?? false
 
         //then

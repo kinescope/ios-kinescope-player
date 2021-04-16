@@ -18,7 +18,7 @@ final class FileServiceTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        fileService = FileNetworkService()
+        fileService = FileNetworkService(downloadIdentifier: "attachments")
         fileServiceDelegate = FileServiceDelegateMock()
         fileService?.delegate = fileServiceDelegate
     }

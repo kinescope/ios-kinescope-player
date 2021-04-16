@@ -14,8 +14,14 @@ final class VideoViewController: UIViewController {
 
     // MARK: - Lifecycle
 
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        navigationController?.delegate = self
 
         playerView.setLayout(with: .default)
 
@@ -26,6 +32,12 @@ final class VideoViewController: UIViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        player?.stop()
+        player?.pause()
+    }
+}
+
+extension VideoViewController: UINavigationControllerDelegate {
+    func navigationControllerSupportedInterfaceOrientations(_ navigationController: UINavigationController) -> UIInterfaceOrientationMask {
+        return self.supportedInterfaceOrientations
     }
 }
