@@ -73,7 +73,6 @@ private extension AuthSelectorController {
 
         /// Set apiKey
         Kinescope.shared.setConfig(.init(apiKey: user.apiKey))
-        Kinescope.shared.set(logger: KinescopeDefaultLogger(), levels: KinescopeLoggerLevel.allCases)
 
         /// Set logger
         Kinescope.shared.set(logger: KinescopeDefaultLogger(),

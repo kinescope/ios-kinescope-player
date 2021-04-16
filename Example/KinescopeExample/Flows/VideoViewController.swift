@@ -28,6 +28,7 @@ final class VideoViewController: UIViewController {
         player = KinescopeVideoPlayer(config: .init(videoId: videoId))
         player?.attach(view: playerView)
         player?.play()
+        playerView.showOverlay(true)
     }
 
     override func viewWillDisappear(_ animated: Bool) {

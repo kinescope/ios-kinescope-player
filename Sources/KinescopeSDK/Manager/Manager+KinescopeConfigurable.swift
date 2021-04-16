@@ -5,6 +5,8 @@
 //  Created by Никита Коробейников on 23.03.2021.
 //
 
+import AVFoundation
+
 // MARK: - KinescopeConfigurable
 
 extension Manager: KinescopeConfigurable {
@@ -19,4 +21,5 @@ extension Manager: KinescopeConfigurable {
     func set(logger: KinescopeLogging, levels: [KinescopeLoggingLevel]) {
         self.logger = KinescopeLogger(logger: logger, levels: levels)
     }
+
 }

@@ -66,7 +66,7 @@ extension PlayerOverlayView: PlayerOverlayInput {
     }
 
     func set(playing: Bool) {
-        if !isRewind {
+        if !isRewind && self.isSelected {
             delegate?.didShow()
         }
 
@@ -79,7 +79,7 @@ extension PlayerOverlayView: PlayerOverlayInput {
 
 private extension PlayerOverlayView {
     func setupInitialState() {
-        isSelected = true
+        isSelected = false
 
         addGestureRecognizers()
         configureContentView()
