@@ -23,6 +23,8 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private var isManualQuality = false
     private var currentQuality = ""
     private var currentTime: CMTime = .zero
+    private var isPlaying = false
+    private var isOverlayed = false
     private weak var miniView: KinescopePlayerView?
 
     private var video: KinescopeVideo?
@@ -94,7 +96,6 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     public func attach(view: KinescopePlayerView) {
         view.playerView.player = self.strategy.player
         view.delegate = self
-
         self.view = view
         view.set(options: options)
 
@@ -296,6 +297,7 @@ private extension KinescopeVideoPlayer {
             \.timeControlStatus,
             options: [.new, .old],
             changeHandler: { [weak self] item, _ in
+                self?.isPlaying = item.timeControlStatus == .playing
                 self?.view?.change(timeControlStatus: item.timeControlStatus)
 
                 Kinescope.shared.logger?.log(
@@ -388,6 +390,12 @@ private extension KinescopeVideoPlayer {
             didPresentFullscreen(from: view)
         }
     }
+
+    func restoreView() {
+        view?.showOverlay(isOverlayed)
+        isPlaying ? play() : pause()
+    }
+
 }
 
 // MARK: - KinescopePlayerViewDelegate
@@ -458,7 +466,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         let rootVC = UIApplication.shared.keyWindow?.rootViewController
 
         if rootVC?.presentedViewController is KinescopeFullscreenViewController {
-            pause()
+            isOverlayed = view.overlay?.isSelected ?? false
             detach(view: view)
 
             rootVC?.dismiss(animated: true, completion: { [weak self] in
@@ -471,12 +479,12 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
                 self.attach(view: miniView)
                 self.view?.change(quality: self.currentQuality, manualQuality: self.isManualQuality)
-                self.play()
+                self.restoreView()
             })
         } else {
             miniView = view
+            isOverlayed = view.overlay?.isSelected ?? false
 
-            pause()
             detach(view: view)
 
             let playerVC = KinescopeFullscreenViewController(player: self,
@@ -491,10 +499,10 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                     return
                 }
 
-                self.play()
                 self.view?.change(status: .readyToPlay)
                 self.view?.change(quality: self.currentQuality, manualQuality: self.isManualQuality)
                 self.view?.overlay?.set(title: video.title, subtitle: video.description)
+                self.restoreView()
             })
         }
     }
@@ -633,5 +641,6 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         Kinescope.shared.logger?.log(message: "Select subtitles: \(subtitles)",
                                      level: KinescopeLoggerLevel.player)
     }
+
 }
 // swiftlint:enable file_length

@@ -131,6 +131,12 @@ public extension KinescopePlayerView {
         configureProgressView(with: config.activityIndicator)
     }
 
+    /// Show/hide player view overlay
+    /// - Parameter shown: if true - show, hide otherwise
+    func showOverlay(_ shown: Bool) {
+        self.overlay?.isSelected = shown
+    }
+
 }
 
 // MARK: - Private

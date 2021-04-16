@@ -25,4 +25,5 @@ extension Manager: KinescopeConfigurable {
     func set(logger: KinescopeLogging, levels: [KinescopeLoggingLevel]) {
         self.logger = KinescopeLogger(logger: logger, levels: levels)
     }
+
 }
