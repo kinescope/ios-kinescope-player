@@ -27,18 +27,32 @@ extension UIView {
         ])
     }
 
-    func leftCenterChild(view: UIView, padding: CGFloat = 56.0) {
+    func leftCenterChild(view: UIView, padding: CGFloat = 24.0) {
         view.translatesAutoresizingMaskIntoConstraints = false
+        let xConstraint = NSLayoutConstraint(item: view,
+                                             attribute: .centerX,
+                                             relatedBy: .equal,
+                                             toItem: self,
+                                             attribute: .centerX,
+                                             multiplier: 0.5,
+                                             constant: -padding)
         NSLayoutConstraint.activate([
-            view.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
+            xConstraint,
             view.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
     }
 
-    func rightCenterChild(view: UIView, padding: CGFloat = 56.0) {
+    func rightCenterChild(view: UIView, padding: CGFloat = 24.0) {
         view.translatesAutoresizingMaskIntoConstraints = false
+        let xConstraint = NSLayoutConstraint(item: view,
+                                             attribute: .centerX,
+                                             relatedBy: .equal,
+                                             toItem: self,
+                                             attribute: .centerX,
+                                             multiplier: 1.5,
+                                             constant: +padding)
         NSLayoutConstraint.activate([
-            view.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
+            xConstraint,
             view.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
     }
