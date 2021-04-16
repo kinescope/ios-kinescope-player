@@ -8,8 +8,6 @@
 /// Control protocol supporting connection between SDK and dashboard
 public protocol KinescopeConfigurable {
 
-    func setupSesson()
-
     /// - parameter config: Configuration parameters required to connection
     func setConfig(_ config: KinescopeConfig)
 

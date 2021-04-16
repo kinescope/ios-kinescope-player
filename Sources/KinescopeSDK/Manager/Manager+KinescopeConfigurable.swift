@@ -11,14 +11,6 @@ import AVFoundation
 
 extension Manager: KinescopeConfigurable {
 
-    func setupSesson() {
-        do {
-            try AVAudioSession.sharedInstance().setCategory(.playback)
-        } catch(let error) {
-            self.logger?.log(error: error, level: KinescopeLoggerLevel.player)
-        }
-    }
-
     func setConfig(_ config: KinescopeConfig) {
         self.config = config
         self.downloader = VideoDownloader(apiKey: config.apiKey)
