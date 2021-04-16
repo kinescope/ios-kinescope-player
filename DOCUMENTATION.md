@@ -20,4 +20,4 @@ AssetDownloader(out-of-box implementation of KinescopeAssetDownloadable) is base
 
 # AirPlay
 
-AirPlay lets you share video from Apple devices direct to Apple TV, columns and popular smart TVs. SDK has out-of-box implementation of AirPlay. All you need to do is set your app’s AVAudioSession’s category, where policy should be AVAudioSession.RouteSharingPolicy.longForm and include CategoryOptions.allowAirPlay option.
+AirPlay lets you share video from Apple devices direct to Apple TV, columns and popular smart TVs. SDK has out-of-box implementation of AirPlay. All you need to do is set your app’s AVAudioSession’s category, where policy should be AVAudioSession.RouteSharingPolicy.longForm.

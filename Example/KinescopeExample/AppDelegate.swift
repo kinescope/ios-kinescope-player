@@ -7,6 +7,7 @@
 
 import UIKit
 import KinescopeSDK
+import AVFoundation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -18,8 +19,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if #available(iOS 13.0, *) {
             window?.overrideUserInterfaceStyle = .light
         }
-
+        setupAudioSession()
         return true
+    }
+
+    private func setupAudioSession() {
+        do {
+            let audioSession = AVAudioSession.sharedInstance()
+            if #available(iOS 11.0, *) {
+                try audioSession.setCategory(
+                    AVAudioSession.Category.playback,
+                    mode: AVAudioSession.Mode.default,
+                    policy: AVAudioSession.RouteSharingPolicy.longForm,
+                    options: AVAudioSession.CategoryOptions([])
+                )
+            } else {
+                try audioSession.setCategory(.playback, options: AVAudioSession.CategoryOptions([]))
+            }
+        } catch {
+            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.player)
+        }
     }
 
 }
