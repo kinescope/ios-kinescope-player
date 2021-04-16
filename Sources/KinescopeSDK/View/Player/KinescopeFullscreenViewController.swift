@@ -40,6 +40,10 @@ final public class KinescopeFullscreenViewController: UIViewController {
         config.orientation
     }
 
+    public override var prefersHomeIndicatorAutoHidden: Bool {
+        return true
+    }
+
     // MARK: - Lifecycle
 
     public override func viewDidLoad() {
