@@ -135,7 +135,7 @@ public extension KinescopePlayerView {
     /// Show/hide player view overlay
     /// - Parameter shown: if true - show, hide otherwise
     func showOverlay(_ shown: Bool) {
-        didTap(isSelected: shown)
+        didTap(isSelected: !shown)
     }
 
 }
@@ -343,7 +343,7 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
 
     func didTap(isSelected: Bool) {
         overlayDebouncer.renewInterval()
-        if overlay?.isSelected ?? false {
+        if isSelected {
             if !(controlPanel?.expanded ?? true) {
                 overlay?.isSelected = false
                 UIView.animate(withDuration: 0.3) {
@@ -395,6 +395,7 @@ extension KinescopePlayerView: PlayerControlOutput {
         overlayDebouncer.renewInterval()
         switch option {
         case .fullscreen:
+            overlayDebouncer.handler = { }
             delegate?.didPresentFullscreen(from: self)
         case .settings:
             // FIXME: Add localization
@@ -446,7 +447,6 @@ extension KinescopePlayerView: PlayerControlOutput {
 extension KinescopePlayerView: SideMenuDelegate {
 
     func sideMenuWillBeDismissed(_ sideMenu: SideMenu, withRoot: Bool) {
-
         if withRoot {
             let sideMenus = subviews.compactMap { $0 as? SideMenu }
             sideMenus.forEach { [weak self] sideMenu in
