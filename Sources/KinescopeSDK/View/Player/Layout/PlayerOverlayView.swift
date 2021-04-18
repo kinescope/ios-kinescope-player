@@ -53,7 +53,9 @@ class PlayerOverlayView: UIControl {
 
     override var isSelected: Bool {
         didSet {
-            isSelected ? setSelectedState() : setDeselectedState()
+            UIView.animate(withDuration: 0.3) {
+                self.contentView.alpha = self.isSelected ? 1.0 : .zero
+            }
         }
     }
 }
@@ -66,9 +68,10 @@ extension PlayerOverlayView: PlayerOverlayInput {
     }
 
     func set(playing: Bool) {
-        if !isRewind && self.isSelected {
-            delegate?.didShow()
-        }
+//        if !isRewind && self.isSelected {
+//            // TODO: check
+//            delegate?.didTap(isSelected: isSelected)
+//        }
 
         self.isPlaying = playing
         playPauseImageView.image = playing ? config.pauseImage : config.playImage
@@ -136,26 +139,6 @@ private extension PlayerOverlayView {
         singleTapGestureRecognizer.require(toFail: doubleTapGestureRecognizer)
     }
 
-    func setSelectedState() {
-        delegate?.didShow()
-        UIView.animate(withDuration: 0.3) {
-            self.contentView.alpha = 1.0
-        }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + config.animationDuration) {
-            // TODO
-            self.isSelected = false
-        }
-    }
-
-    func setDeselectedState() {
-        delegate?.didHide()
-
-        UIView.animate(withDuration: 0.3) {
-            self.contentView.alpha = .zero
-        }
-    }
-
 }
 
 // MARK: - Actions
@@ -191,8 +174,7 @@ private extension PlayerOverlayView {
             playPauseAction()
         } else {
             isRewind = false
-
-            isSelected.toggle()
+            delegate?.didTap(isSelected: isSelected)
         }
     }
 

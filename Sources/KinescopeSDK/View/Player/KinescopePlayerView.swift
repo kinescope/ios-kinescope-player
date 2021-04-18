@@ -134,7 +134,7 @@ public extension KinescopePlayerView {
     /// Show/hide player view overlay
     /// - Parameter shown: if true - show, hide otherwise
     func showOverlay(_ shown: Bool) {
-        self.overlay?.isSelected = shown
+        didTap(isSelected: shown)
     }
 
 }
@@ -340,15 +340,22 @@ private extension KinescopePlayerView {
 
 extension KinescopePlayerView: PlayerOverlayViewDelegate {
 
-    func didShow() {
-        controlPanel?.setOptions(expanded: false)
-        UIView.animate(withDuration: 0.3) {
-            self.controlPanel?.alpha = 1.0
+    func didTap(isSelected: Bool) {
+        if overlay?.isSelected ?? false {
+            if !(controlPanel?.expanded ?? true) {
+                overlay?.isSelected = false
+                UIView.animate(withDuration: 0.3) {
+                    self.controlPanel?.alpha = 0.0
+                }
+            } else {
+                controlPanel?.expanded = false
+            }
+        } else {
+            overlay?.isSelected = true
+            UIView.animate(withDuration: 0.3) {
+                self.controlPanel?.alpha = 1.0
+            }
         }
-    }
-
-    func didHide() {
-        controlPanel?.setOptions(expanded: false)
     }
 
     func didPlay(videoEnded: Bool) {
