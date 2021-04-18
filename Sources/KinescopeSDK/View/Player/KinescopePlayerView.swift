@@ -341,15 +341,14 @@ private extension KinescopePlayerView {
 extension KinescopePlayerView: PlayerOverlayViewDelegate {
 
     func didShow() {
+        controlPanel?.setOptions(expanded: false)
         UIView.animate(withDuration: 0.3) {
             self.controlPanel?.alpha = 1.0
         }
     }
 
     func didHide() {
-        UIView.animate(withDuration: 0.3) {
-            self.controlPanel?.alpha = .zero
-        }
+        controlPanel?.setOptions(expanded: false)
     }
 
     func didPlay(videoEnded: Bool) {

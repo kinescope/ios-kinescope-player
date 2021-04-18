@@ -8,7 +8,9 @@
 
 import UIKit
 
-protocol PlayerControlInput: TimelineInput, TimeIndicatorInput, PlayerControlOptionsInput {}
+protocol PlayerControlInput: TimelineInput, TimeIndicatorInput, PlayerControlOptionsInput {
+    func setOptions(expanded: Bool)
+}
 
 protocol PlayerControlOutput: TimelineOutput {
     func didSelect(option: KinescopePlayerOption)
@@ -68,6 +70,10 @@ extension PlayerControlView: PlayerControlInput {
     func set(subtitleOn: Bool) {
         optionsMenu.set(subtitleOn: subtitleOn)
     }
+
+    func setOptions(expanded: Bool) {
+        didOptions(expanded: expanded)
+    }
 }
 
 // MARK: - PlayerControlOptionsOutput
@@ -75,8 +81,11 @@ extension PlayerControlView: PlayerControlInput {
 extension PlayerControlView: PlayerControlOptionsOutput {
 
     func didOptions(expanded: Bool) {
-        timeIndicator.isHidden = expanded
-        timeline.isHidden = expanded
+        UIView.animate(withDuration: 0.2, animations: {
+            let alpha: CGFloat = expanded ? 1.0 : 0.0
+            self.timeIndicator.alpha = alpha
+            self.timeline.alpha = alpha
+        })
     }
 
     func didSelect(option: KinescopePlayerOption) {

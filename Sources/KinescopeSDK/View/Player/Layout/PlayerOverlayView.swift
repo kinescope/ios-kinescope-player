@@ -143,6 +143,7 @@ private extension PlayerOverlayView {
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + config.animationDuration) {
+            // TODO
             self.isSelected = false
         }
     }
@@ -190,6 +191,7 @@ private extension PlayerOverlayView {
             playPauseAction()
         } else {
             isRewind = false
+
             isSelected.toggle()
         }
     }
