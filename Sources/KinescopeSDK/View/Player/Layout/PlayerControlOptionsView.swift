@@ -86,10 +86,6 @@ extension PlayerControlOptionsView: PlayerControlOptionsInput {
         button?.isSelected = subtitleOn
     }
 
-    func set(expanded: Bool) {
-        fillStack(with: options, expanded: isExpanded)
-    }
-
 }
 
 // MARK: - Private
