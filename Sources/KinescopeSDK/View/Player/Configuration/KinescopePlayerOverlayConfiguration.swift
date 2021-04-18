@@ -15,26 +15,26 @@ public struct KinescopePlayerOverlayConfiguration {
     let fastForwardImage: UIImage
     let fastBackwardImage: UIImage
     let backgroundColor: UIColor
-    let animationDuration: TimeInterval
+    let duration: TimeInterval
     let nameConfiguration: KinescopeVideoNameConfiguration
 
     /// - parameter playImage: Image showing If video started after tapping on overlay
     /// - parameter pauseImage: Image showing If video paused after tapping on overlay
     /// - parameter backgroundColor: Background color of overlay
-    /// - parameter animationDuration: Duration of image appear animation in seconds
+    /// - parameter animationDuration: Duration of overlay appear animation in seconds
     public init(playImage: UIImage,
                 pauseImage: UIImage,
                 fastForwardImage: UIImage,
                 fastBackwardImage: UIImage,
                 backgroundColor: UIColor,
-                animationDuration: TimeInterval,
+                duration: TimeInterval,
                 nameConfiguration: KinescopeVideoNameConfiguration) {
         self.playImage = playImage
         self.pauseImage = pauseImage
         self.fastForwardImage = fastForwardImage
         self.fastBackwardImage = fastBackwardImage
         self.backgroundColor = backgroundColor
-        self.animationDuration = animationDuration
+        self.duration = duration
         self.nameConfiguration = nameConfiguration
     }
 }
@@ -49,7 +49,7 @@ public extension KinescopePlayerOverlayConfiguration {
         fastForwardImage: UIImage.image(named: "fastForward"),
         fastBackwardImage: UIImage.image(named: "fastBackward"),
         backgroundColor: UIColor.black.withAlphaComponent(0.3),
-        animationDuration: 5.0,
+        duration: 5.0,
         nameConfiguration: .default
     )
 

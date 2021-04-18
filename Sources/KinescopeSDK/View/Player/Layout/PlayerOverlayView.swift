@@ -25,6 +25,9 @@ class PlayerOverlayView: UIControl {
     private var isPlaying = false
     private var isEndPlaying = false
     private var isRewind = false
+    var duration: TimeInterval {
+        return config.duration
+    }
 
     // MARK: - Lifecycle
 
@@ -68,11 +71,6 @@ extension PlayerOverlayView: PlayerOverlayInput {
     }
 
     func set(playing: Bool) {
-//        if !isRewind && self.isSelected {
-//            // TODO: check
-//            delegate?.didTap(isSelected: isSelected)
-//        }
-
         self.isPlaying = playing
         playPauseImageView.image = playing ? config.pauseImage : config.playImage
     }
