@@ -154,6 +154,7 @@ private extension PlayerOverlayView {
             self.contentView.alpha = .zero
         }
     }
+
 }
 
 // MARK: - Actions
@@ -213,7 +214,7 @@ private extension PlayerOverlayView {
 
             fastForwardImageView.alpha = 1.0
             UIView.animate(
-                withDuration: 0.3,
+                withDuration: 0.6,
                 animations: {
                     self.fastForwardImageView.transform = .init(scaleX: 2.0, y: 2.0)
                     self.fastForwardImageView.alpha = .zero
@@ -228,7 +229,7 @@ private extension PlayerOverlayView {
 
             fastBackwardImageView.alpha = 1.0
             UIView.animate(
-                withDuration: 0.3,
+                withDuration: 0.6,
                 animations: {
                     self.fastBackwardImageView.transform = .init(scaleX: 2.0, y: 2.0)
                     self.fastBackwardImageView.alpha = .zero
