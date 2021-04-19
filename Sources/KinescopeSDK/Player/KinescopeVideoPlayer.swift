@@ -195,7 +195,7 @@ private extension KinescopeVideoPlayer {
                 return
             }
 
-            /// Dose not make sense without control panel and curremtItem
+            /// Does not make sense without control panel and curremtItem
             guard let controlPanel = self?.view?.controlPanel,
                   let currentItem = self?.strategy.player.currentItem else {
                 return
@@ -370,6 +370,17 @@ private extension KinescopeVideoPlayer {
         isSeeking = true
         strategy.player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] _ in
             self?.isSeeking = false
+        }
+
+        // Update view because periodicTimeObserver won't trigger if current second of video didn't downloaded
+        // Also when video is seeking, periodicTimeObserver won't update the view
+        let duration = strategy.player.currentItem?.duration.seconds ?? .zero
+        let position = CGFloat(seconds / duration)
+        if !position.isNaN {
+            view?.controlPanel?.setTimeline(to: CGFloat(position))
+        }
+        if !seconds.isNaN {
+            view?.controlPanel?.setIndicator(to: seconds)
         }
     }
 

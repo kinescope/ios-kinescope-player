@@ -18,7 +18,6 @@ final class SideMenu: UIView {
 
     // MARK: - Nested Types
 
-    // FIXME: Add localization
     enum Settings: String {
         case playbackSpeed = "Playback speed"
         case subtitles = "Subtitles"

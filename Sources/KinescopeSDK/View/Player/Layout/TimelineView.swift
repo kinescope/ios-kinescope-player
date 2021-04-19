@@ -40,7 +40,6 @@ class TimelineView: UIControl {
     private let config: KinescopePlayerTimelineConfiguration
 
     private var isTouching = false
-    private var isAnimating = false
 
     weak var output: TimelineOutput?
 
@@ -78,21 +77,10 @@ class TimelineView: UIControl {
             return
         }
 
-        isAnimating = true
-        isTouching = false
-
         let relativePosition = getRelativePosition(from: point.x)
-
         output?.onTimelinePositionChanged(to: relativePosition)
-
-        UIView.animate(withDuration: 0.2,
-                       animations: { [weak self] in
-                        self?.updateFrames(with: point.x)
-                       },
-                       completion: { [weak self] _ in
-                        self?.isAnimating = false
-                       })
-
+        updateFrames(with: point.x)
+        isTouching = false
     }
 
 }
@@ -103,7 +91,7 @@ extension TimelineView: TimelineInput {
 
     func setTimeline(to position: CGFloat) {
 
-        guard !isTouching && !isAnimating else {
+        guard !isTouching else {
             return
         }
 
@@ -198,7 +186,7 @@ private extension TimelineView {
 
     /// Convert relative value from `0` to `1` to circle center coordinate
     func getCoordinateFrom(relative position: CGFloat) -> CGFloat {
-        position * futureProgress.frame.width
+        position * futureProgress.frame.width + config.circleRadius
     }
 
     /// Keep circle center x in view bounds
