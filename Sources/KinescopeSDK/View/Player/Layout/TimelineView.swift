@@ -28,19 +28,25 @@ protocol TimelineOutput: class {
     /// - parameter position: Value from `0` (start) to `1` (end)
     func onTimelinePositionChanged(to position: CGFloat)
 
+    func onUpdated()
+
 }
 
 class TimelineView: UIControl {
 
     private weak var circleView: UIView!
+    private weak var activeCircleView: UIView!
     private weak var futureProgress: UIView!
     private weak var pastProgress: UIView!
     private weak var preloadProgress: UIView!
 
     private let config: KinescopePlayerTimelineConfiguration
 
-    private var isTouching = false
-    private var isAnimating = false
+    private var isTouching = false {
+        didSet {
+            activeCircleView.isHidden = !isTouching
+        }
+    }
 
     weak var output: TimelineOutput?
 
@@ -63,6 +69,7 @@ class TimelineView: UIControl {
         }
 
         isTouching = true
+        output?.onUpdated()
 
         let point = touch.location(in: self)
 
@@ -78,21 +85,13 @@ class TimelineView: UIControl {
             return
         }
 
-        isAnimating = true
         isTouching = false
 
         let relativePosition = getRelativePosition(from: point.x)
 
         output?.onTimelinePositionChanged(to: relativePosition)
 
-        UIView.animate(withDuration: 0.2,
-                       animations: { [weak self] in
-                        self?.updateFrames(with: point.x)
-                       },
-                       completion: { [weak self] _ in
-                        self?.isAnimating = false
-                       })
-
+        updateFrames(with: point.x)
     }
 
 }
@@ -103,7 +102,7 @@ extension TimelineView: TimelineInput {
 
     func setTimeline(to position: CGFloat) {
 
-        guard !isTouching && !isAnimating else {
+        guard !isTouching else {
             return
         }
 
@@ -138,6 +137,11 @@ private extension TimelineView {
         addSubview(pastProgress)
         self.pastProgress = pastProgress
 
+        let activeCircleView = createCircle(with: UIColor(red: 1, green: 1, blue: 1, alpha: 0.16), radius: config.circleRadius + 4)
+        addSubview(activeCircleView)
+        self.activeCircleView = activeCircleView
+        self.activeCircleView.isHidden = true
+
         let circleView = createCircle(with: config.activeColor, radius: config.circleRadius)
         addSubview(circleView)
         self.circleView = circleView
@@ -165,6 +169,7 @@ private extension TimelineView {
         let centerY = frame.height / 2
 
         circleView.center = .init(x: normalizedX, y: centerY)
+        activeCircleView.center = .init(x: normalizedX, y: centerY)
 
         let progressOrigin = CGPoint(x: config.circleRadius, y: centerY - config.lineHeight / 2)
 
@@ -198,7 +203,7 @@ private extension TimelineView {
 
     /// Convert relative value from `0` to `1` to circle center coordinate
     func getCoordinateFrom(relative position: CGFloat) -> CGFloat {
-        position * futureProgress.frame.width
+        position * futureProgress.frame.width + config.circleRadius
     }
 
     /// Keep circle center x in view bounds

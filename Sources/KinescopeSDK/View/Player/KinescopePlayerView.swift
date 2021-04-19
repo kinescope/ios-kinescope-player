@@ -414,6 +414,7 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
     }
 
     func didPause() {
+        overlayDebouncer.renewInterval()
         delegate?.didPause()
     }
 
@@ -475,7 +476,12 @@ extension KinescopePlayerView: PlayerControlOutput {
     }
 
     func onTimelinePositionChanged(to position: CGFloat) {
+        overlayDebouncer.renewInterval()
         delegate?.didSeek(to: Double(position))
+    }
+
+    func onUpdated() {
+        overlayDebouncer.renewInterval()
     }
 
 }
