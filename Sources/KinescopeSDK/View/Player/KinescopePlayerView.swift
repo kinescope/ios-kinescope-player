@@ -521,7 +521,7 @@ extension KinescopePlayerView: SideMenuDelegate {
 extension KinescopePlayerView: ShadowOverlayDelegate {
 
     func onTap() {
-        if let sideMenu = subviews.compactMap { $0 as? SideMenu }.first {
+        if let sideMenu = subviews.compactMap({ $0 as? SideMenu }).first {
             sideMenuWillBeDismissed(sideMenu, withRoot: true)
         }
     }
