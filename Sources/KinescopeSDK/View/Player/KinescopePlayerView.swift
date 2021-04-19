@@ -37,6 +37,7 @@ public class KinescopePlayerView: UIView {
     // FIXME: Add localization
     private var selectedQuality = NSAttributedString(string: "Auto")
     private var selectedSubtitles = NSAttributedString(string: "Off")
+    private lazy var overlayDebouncer = Debouncer(timeInterval: overlay?.duration ?? 0.0)
 
     // MARK: - Public Properties
 
@@ -139,7 +140,7 @@ public extension KinescopePlayerView {
     /// Show/hide player view overlay
     /// - Parameter shown: if true - show, hide otherwise
     func showOverlay(_ shown: Bool) {
-        self.overlay?.isSelected = shown
+        didTap(isSelected: !shown)
     }
 
 }
@@ -378,15 +379,33 @@ private extension KinescopePlayerView {
 
 extension KinescopePlayerView: PlayerOverlayViewDelegate {
 
-    func didShow() {
-        UIView.animate(withDuration: 0.3) {
-            self.controlPanel?.alpha = 1.0
-        }
-    }
-
-    func didHide() {
-        UIView.animate(withDuration: 0.3) {
-            self.controlPanel?.alpha = .zero
+    func didTap(isSelected: Bool) {
+        overlayDebouncer.renewInterval()
+        if isSelected {
+            if !(controlPanel?.expanded ?? true) {
+                overlay?.isSelected = false
+                UIView.animate(withDuration: 0.3) {
+                    self.controlPanel?.alpha = 0.0
+                }
+            } else {
+                controlPanel?.expanded = false
+            }
+        } else {
+            overlay?.isSelected = true
+            UIView.animate(withDuration: 0.3) {
+                self.controlPanel?.alpha = 1.0
+            }
+            overlayDebouncer.handler = { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                self.overlay?.isSelected = false
+                UIView.animate(withDuration: 0.3, animations: {
+                    self.controlPanel?.alpha = 0.0
+                }, completion: { _ in
+                    self.controlPanel?.expanded = false
+                })
+            }
         }
     }
 
@@ -411,8 +430,10 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
 
 extension KinescopePlayerView: PlayerControlOutput {
     func didSelect(option: KinescopePlayerOption) {
+        overlayDebouncer.renewInterval()
         switch option {
         case .fullscreen:
+            overlayDebouncer.handler = { }
             delegate?.didPresentFullscreen(from: self)
         case .settings:
             // FIXME: Add localization
