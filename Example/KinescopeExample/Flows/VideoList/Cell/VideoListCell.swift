@@ -33,7 +33,8 @@ final class VideoListCell: UITableViewCell {
                                          activityIndicator: UIActivityIndicatorView(style: .white),
                                          overlay: nil,
                                          controlPanel: nil,
-                                         sideMenu: .default))
+                                         sideMenu: .default,
+                                         shadowOverlay: .default))
     }
 
     override func prepareForReuse() {

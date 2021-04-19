@@ -1,6 +1,5 @@
 protocol PlayerOverlayViewDelegate: class {
-    func didShow()
-    func didHide()
+    func didTap(isSelected: Bool)
     func didPlay(videoEnded: Bool)
     func didPause()
     func didFastForward()

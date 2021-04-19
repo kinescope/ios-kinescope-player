@@ -16,6 +16,7 @@ public struct KinescopePlayerViewConfiguration {
     let overlay: KinescopePlayerOverlayConfiguration?
     let controlPanel: KinescopeControlPanelConfiguration?
     let sideMenu: KinescopeSideMenuConfiguration
+    let shadowOverlay: KinescopePlayerShadowOverlayConfiguration?
 
     /// - parameter gravity: `AVLayerVideoGravity` value defines how the video is displayed within a layer’s bounds rectangle
     /// - parameter activityIndicator: Custom indicator view used to indicate process of video downloading
@@ -24,16 +25,19 @@ public struct KinescopePlayerViewConfiguration {
     /// - parameter controlPanel: Configuration of control panel with play/pause buttons and other controls
     /// Set `nil` to hide control panel
     /// - parameter sideMenu: Configuration of side menu with setings
+    /// - parameter shadowOverlay: Configuration of shadow overlay beneath side menu
     public init(gravity: AVLayerVideoGravity,
                 activityIndicator: KinescopeActivityIndicator,
                 overlay: KinescopePlayerOverlayConfiguration?,
                 controlPanel: KinescopeControlPanelConfiguration?,
-                sideMenu: KinescopeSideMenuConfiguration) {
+                sideMenu: KinescopeSideMenuConfiguration,
+                shadowOverlay: KinescopePlayerShadowOverlayConfiguration?) {
         self.gravity = gravity
         self.activityIndicator = activityIndicator
         self.overlay = overlay
         self.controlPanel = controlPanel
         self.sideMenu = sideMenu
+        self.shadowOverlay = shadowOverlay
     }
 
 }
@@ -52,6 +56,7 @@ public extension KinescopePlayerViewConfiguration {
                                                                                         timeIndicator: .default,
                                                                                         timeline: .default,
                                                                                         optionsMenu: .default),
-                                                                    sideMenu: .default)
+                                                                    sideMenu: .default,
+                                                                    shadowOverlay: .default)
 
 }

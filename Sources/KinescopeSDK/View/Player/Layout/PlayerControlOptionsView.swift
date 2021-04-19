@@ -36,7 +36,6 @@ class PlayerControlOptionsView: UIControl {
 
     private let config: KinescopePlayerOptionsConfiguration
     private(set) var options: [KinescopePlayerOption] = []
-    private var isExpanded: Bool = false
     private var isSubtitleOn = false
 
     weak var output: PlayerControlOptionsOutput?
@@ -53,6 +52,12 @@ class PlayerControlOptionsView: UIControl {
 
     override var intrinsicContentSize: CGSize {
         .init(width: config.iconSize * 2, height: config.iconSize)
+    }
+
+    var isExpanded: Bool = false {
+        didSet {
+            fillStack(with: options, expanded: isExpanded)
+        }
     }
 
 }
@@ -80,6 +85,7 @@ extension PlayerControlOptionsView: PlayerControlOptionsInput {
 
         button?.isSelected = subtitleOn
     }
+
 }
 
 // MARK: - Private
@@ -149,15 +155,7 @@ private extension PlayerControlOptionsView {
         Kinescope.shared.logger?.log(message: "Options menu button tapped: \(option)",
                                      level: KinescopeLoggerLevel.player)
 
-        switch option {
-        case .more:
-            isExpanded.toggle()
-            fillStack(with: options, expanded: isExpanded)
-
-            output?.didOptions(expanded: isExpanded)
-        default:
-            output?.didSelect(option: option)
-        }
+        output?.didSelect(option: option)
     }
 
 }
