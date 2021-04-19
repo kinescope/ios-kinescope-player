@@ -18,6 +18,7 @@ public class KinescopePlayerView: UIView {
     private(set) weak var controlPanel: PlayerControlView?
     private(set) weak var overlay: PlayerOverlayView?
     private(set) var progressView: KinescopeActivityIndicator!
+    private(set) var shadowOverlay: PlayerShadowOverlayView?
 
     private var config: KinescopePlayerViewConfiguration!
 
@@ -128,6 +129,10 @@ public extension KinescopePlayerView {
             configureControlPanel(with: controlPanel)
         }
 
+        if let shadowOverlay = config.shadowOverlay {
+            configureShadowOverlay(with: shadowOverlay)
+        }
+
         configureProgressView(with: config.activityIndicator)
     }
 
@@ -191,9 +196,17 @@ private extension KinescopePlayerView {
         self.overlay = overlay
     }
 
+    func configureShadowOverlay(with config: KinescopePlayerShadowOverlayConfiguration) {
+        let overlay = PlayerShadowOverlayView(config: config, delegate: self)
+        overlay.isHidden = true
+        addSubview(overlay)
+        stretch(view: overlay)
+
+        self.shadowOverlay = overlay
+    }
+
     func handleDisclosureActions(for title: String) {
         let model: SideMenu.Model
-        // FIXME: Add configs for subtitle and playback speed
         switch SideMenu.Settings(rawValue: title) {
         case .playbackSpeed:
             model = .init(title: title, isRoot: false, isDownloadable: false, items: [])
@@ -332,6 +345,31 @@ private extension KinescopePlayerView {
         let sideMenu = SideMenu(config: config.sideMenu, model: model)
         sideMenu.delegate = self
         sideMenuCoordinator.present(view: sideMenu, in: self, animated: true)
+        showOverlay(false)
+        showShadow()
+    }
+
+    func showShadow() {
+        guard let shadowOverlay = shadowOverlay else {
+            return
+        }
+        shadowOverlay.isHidden = false
+        UIView.animate(withDuration: 0.2,
+                       animations: {
+                        shadowOverlay.alpha = 1
+                       })
+    }
+
+    func hideShadow() {
+        guard let shadowOverlay = shadowOverlay else {
+            return
+        }
+        UIView.animate(withDuration: 0.2,
+                       animations: {
+                        shadowOverlay.alpha = 0
+                       }, completion: { _ in
+                        shadowOverlay.isHidden = false
+                       })
     }
 
 }
@@ -426,8 +464,8 @@ extension KinescopePlayerView: PlayerControlOutput {
 extension KinescopePlayerView: SideMenuDelegate {
 
     func sideMenuWillBeDismissed(_ sideMenu: SideMenu, withRoot: Bool) {
-
         if withRoot {
+            hideShadow()
             let sideMenus = subviews.compactMap { $0 as? SideMenu }
             sideMenus.forEach { [weak self] sideMenu in
                 guard let parentView = self else {
@@ -453,6 +491,18 @@ extension KinescopePlayerView: SideMenuDelegate {
 
     func downloadAllTapped(for title: String) {
         delegate?.didSelectDownloadAll(for: title)
+    }
+
+}
+
+// MARK: - ShadowOverlayOutput
+
+extension KinescopePlayerView: ShadowOverlayDelegate {
+
+    func onTap() {
+        if let sideMenu = subviews.compactMap { $0 as? SideMenu }.first {
+            sideMenuWillBeDismissed(sideMenu, withRoot: true)
+        }
     }
 
 }
