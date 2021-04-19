@@ -411,10 +411,12 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
     }
 
     func didFastForward() {
+        overlayDebouncer.renewInterval()
         delegate?.didFastForward()
     }
 
     func didFastBackward() {
+        overlayDebouncer.renewInterval()
         delegate?.didFastBackward()
     }
 }
