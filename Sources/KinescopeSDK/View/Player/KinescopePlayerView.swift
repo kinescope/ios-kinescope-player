@@ -34,7 +34,6 @@ public class KinescopePlayerView: UIView {
         return controlPanel?.optionsMenu.options.contains(.fullscreen) ?? false
     }
 
-    // FIXME: Add localization
     private var selectedQuality = NSAttributedString(string: "Auto")
     private var selectedSubtitles = NSAttributedString(string: "Off")
     private lazy var overlayDebouncer = Debouncer(timeInterval: overlay?.duration ?? 0.0)
@@ -96,7 +95,6 @@ public class KinescopePlayerView: UIView {
     }
 
     func change(quality: String, manualQuality: Bool) {
-        // FIXME: Add localization
         if manualQuality {
             set(quality: quality)
         } else {
@@ -243,7 +241,6 @@ private extension KinescopePlayerView {
             return .checkmark(title: .init(string: quality), selected: selected)
         }
 
-        // FIXME: Add localization
         let autoTitle = NSAttributedString(string: "Auto")
         let selected = selectedQuality.string.hasPrefix(autoTitle.string)
         items.insert(.checkmark(title: autoTitle, selected: selected), at: 0)
@@ -257,7 +254,6 @@ private extension KinescopePlayerView {
             return .checkmark(title: .init(string: subtitle), selected: selected)
         }
 
-        // FIXME: Add localization
         let offTitle = NSAttributedString(string: "Off")
         let selected = selectedSubtitles.string == offTitle.string
         items.insert(.checkmark(title: offTitle, selected: selected), at: 0)
@@ -274,7 +270,6 @@ private extension KinescopePlayerView {
         bcf.allowedUnits = [.useAll]
         bcf.countStyle = .file
 
-        // FIXME: Add localization
         for (index, material) in materials.enumerated() {
             let title = String(index + 1) + ". " + material.title
             let value = bcf.string(fromByteCount: Int64(material.size))
@@ -294,7 +289,6 @@ private extension KinescopePlayerView {
         bcf.allowedUnits = [.useAll]
         bcf.countStyle = .file
 
-        // FIXME: Add localization
         for material in materials {
             let title = material.quality
             let value = bcf.string(fromByteCount: Int64(material.fileSize))
@@ -305,7 +299,6 @@ private extension KinescopePlayerView {
     }
 
     func handleCheckmarkActions(for title: NSAttributedString, sideMenu: SideMenu) {
-        // FIXME: Add configs for another logic
         switch SideMenu.Settings(rawValue: sideMenu.title) {
         case .quality:
             handleQualityCheckmarkAction(for: title, sideMenu: sideMenu)
@@ -419,10 +412,12 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
     }
 
     func didFastForward() {
+        overlayDebouncer.renewInterval()
         delegate?.didFastForward()
     }
 
     func didFastBackward() {
+        overlayDebouncer.renewInterval()
         delegate?.didFastBackward()
     }
 }
@@ -437,7 +432,6 @@ extension KinescopePlayerView: PlayerControlOutput {
             overlayDebouncer.handler = { }
             delegate?.didPresentFullscreen(from: self)
         case .settings:
-            // FIXME: Add localization
             let model = SideMenu.Model(title: SideMenu.Settings.title,
                                        isRoot: true,
                                        isDownloadable: false,

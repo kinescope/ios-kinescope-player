@@ -157,7 +157,6 @@ private extension SideMenuBar {
 
     func configureDownloadButton() {
         let button = UIButton()
-        // FIXME: Add localization
         button.setTitle("Download all", for: .normal)
         button.titleLabel?.font = config.downloadAllFont
         button.setTitleColor(config.downloadAllColor, for: .normal)

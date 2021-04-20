@@ -67,9 +67,6 @@ class PlayerControlOptionsView: UIControl {
 extension PlayerControlOptionsView: PlayerControlOptionsInput {
 
     func set(options: [KinescopePlayerOption]) {
-        guard !options.isEmpty else {
-            return
-        }
         self.options = options
         self.isExpanded = false
 
@@ -125,6 +122,9 @@ private extension PlayerControlOptionsView {
     }
 
     func fillStack(with options: [KinescopePlayerOption], expanded: Bool) {
+        guard !options.isEmpty else {
+            return
+        }
 
         clearStack()
 
