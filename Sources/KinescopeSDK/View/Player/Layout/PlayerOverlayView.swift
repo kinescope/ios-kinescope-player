@@ -120,7 +120,7 @@ private extension PlayerOverlayView {
 
     func configureNameView() {
         contentView.addSubview(nameView)
-        contentView.topChild(view: nameView)
+        contentView.topChildWithSafeArea(view: nameView)
     }
 
     func addGestureRecognizers() {

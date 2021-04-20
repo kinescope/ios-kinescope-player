@@ -103,6 +103,10 @@ extension PlayerControlView: PlayerControlOptionsOutput {
 
 extension PlayerControlView: TimelineOutput {
 
+    func onUpdated() {
+        output?.onUpdated()
+    }
+
     func onTimelinePositionChanged(to position: CGFloat) {
         output?.onTimelinePositionChanged(to: position)
     }

@@ -11,14 +11,14 @@ import UIKit
 public struct KinescopePlayerTimeindicatorConfiguration {
 
     let color: UIColor
-    let font: UIFont
+    let fontSize: CGFloat
 
     /// - parameter color: Color of label with time value
-    /// - parameter font: Font of label with time value
+    /// - parameter fontSize: Font size of label with time value
     public init(color: UIColor,
-                font: UIFont) {
+                fontSize: CGFloat) {
         self.color = color
-        self.font = font
+        self.fontSize = fontSize
     }
 }
 
@@ -27,6 +27,6 @@ public struct KinescopePlayerTimeindicatorConfiguration {
 public extension KinescopePlayerTimeindicatorConfiguration {
 
     static let `default`: KinescopePlayerTimeindicatorConfiguration = .init(color: .white,
-                                                                            font: .systemFont(ofSize: 14))
+                                                                            fontSize: 14)
 
 }
