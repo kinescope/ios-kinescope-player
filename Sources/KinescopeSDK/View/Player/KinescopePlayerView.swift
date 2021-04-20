@@ -81,6 +81,7 @@ public class KinescopePlayerView: UIView {
     func change(timeControlStatus: AVPlayer.TimeControlStatus) {
         switch timeControlStatus {
         case .playing:
+            controlPanel?.isHidden = false
             overlay?.isHidden = false
             overlay?.set(playing: true)
         case .paused, .waitingToPlayAtSpecifiedRate:
@@ -181,6 +182,7 @@ private extension KinescopePlayerView {
         controlPanel.alpha = .zero
         addSubview(controlPanel)
         bottomChildWithSafeArea(view: controlPanel)
+        controlPanel.isHidden = true
 
         self.controlPanel = controlPanel
         controlPanel.output = self
@@ -402,8 +404,8 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
         }
     }
 
-    func didPlay(videoEnded: Bool) {
-        delegate?.didPlay(videoEnded: videoEnded)
+    func didPlay() {
+        delegate?.didPlay()
     }
 
     func didPause() {
@@ -470,11 +472,12 @@ extension KinescopePlayerView: PlayerControlOutput {
     }
 
     func onTimelinePositionChanged(to position: CGFloat) {
-        overlayDebouncer.renewInterval()
         delegate?.didSeek(to: Double(position))
+        overlayDebouncer.renewInterval()
     }
 
-    func onUpdated() {
+    func onUpdate() {
+        delegate?.didConfirmSeek()
         overlayDebouncer.renewInterval()
     }
 

@@ -38,11 +38,6 @@ class PlayerControlView: UIControl {
         .init(width: .greatestFiniteMagnitude, height: config.preferedHeight)
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        timeline.setTimeline(to: 0)
-    }
-
     // MARK: - Internal Properties
 
     var expanded: Bool = false {
@@ -103,8 +98,8 @@ extension PlayerControlView: PlayerControlOptionsOutput {
 
 extension PlayerControlView: TimelineOutput {
 
-    func onUpdated() {
-        output?.onUpdated()
+    func onUpdate() {
+        output?.onUpdate()
     }
 
     func onTimelinePositionChanged(to position: CGFloat) {

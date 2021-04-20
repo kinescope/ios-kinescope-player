@@ -23,12 +23,13 @@ protocol TimelineInput {
 
 protocol TimelineOutput: class {
 
-    /// Callback of user initiated timeline changes like circle dragging or tap released
+    /// Callback of user initiated timeline changes like circle dragging
     ///
     /// - parameter position: Value from `0` (start) to `1` (end)
     func onTimelinePositionChanged(to position: CGFloat)
 
-    func onUpdated()
+    /// Triggers update
+    func onUpdate()
 
 }
 
@@ -48,49 +49,59 @@ class TimelineView: UIControl {
         }
     }
 
-
     weak var output: TimelineOutput?
 
     init(config: KinescopePlayerTimelineConfiguration) {
         self.config = config
         super.init(frame: .zero)
         setupInitialState(with: config)
+
+        addTarget(self, action: #selector(endTouch),
+                  for: UIControl.Event.touchUpOutside)
+        addTarget(self, action: #selector(endTouch),
+                  for: UIControl.Event.touchUpInside)
+        addTarget(self, action: #selector(continueTouch),
+                  for: UIControl.Event.touchDragInside)
+        addTarget(self, action: #selector(continueTouch),
+                  for: UIControl.Event.touchDragOutside)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: - Touches
+}
 
-    override func continueTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
+// MARK: - Touches
 
-        guard isTouchInside else {
-            return false
+private extension TimelineView {
+
+    @objc
+    func continueTouch(control: TimelineView, withEvent event: UIEvent) {
+        guard let touch = event.touches(for: control)?.first else {
+            return
         }
-
         isTouching = true
-        output?.onUpdated()
 
         let point = touch.location(in: self)
-
+        let relativePosition = getRelativePosition(from: point.x)
+        output?.onTimelinePositionChanged(to: relativePosition)
         updateFrames(with: point.x)
-
-        return true
     }
 
-    override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
-
-        guard let point = touch?.location(in: self) else {
-            isTouching = false
+    @objc
+    func endTouch(control: TimelineView, withEvent event: UIEvent) {
+        guard let touch = event.touches(for: control)?.first else {
             return
         }
 
+        isTouching = false
+
+        let point = touch.location(in: self)
         let relativePosition = getRelativePosition(from: point.x)
         output?.onTimelinePositionChanged(to: relativePosition)
-
+        output?.onUpdate()
         updateFrames(with: point.x)
-        isTouching = false
     }
 
 }
@@ -100,7 +111,6 @@ class TimelineView: UIControl {
 extension TimelineView: TimelineInput {
 
     func setTimeline(to position: CGFloat) {
-
         guard !isTouching else {
             return
         }
