@@ -368,7 +368,7 @@ private extension KinescopeVideoPlayer {
                                      level: KinescopeLoggerLevel.player)
 
         isSeeking = true
-        strategy.player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] _ in
+        strategy.player.seek(to: time, toleranceBefore: .zero, toleranceAfter: time) { [weak self] _ in
             self?.isSeeking = false
         }
 
