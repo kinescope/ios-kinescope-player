@@ -34,10 +34,10 @@ class TimeIndicatorView: UIView {
 
     override var intrinsicContentSize: CGSize {
         let label = UILabel()
-        label.font = config.font
+        label.font = monospacedFont()
         label.text = getText(from: 3600 * 24)
         label.sizeToFit()
-        return .init(width: label.frame.size.width, height: config.font.lineHeight)
+        return .init(width: label.frame.size.width, height: label.font.lineHeight)
     }
 
 }
@@ -57,15 +57,13 @@ extension TimeIndicatorView: TimeIndicatorInput {
 private extension TimeIndicatorView {
 
     func setupInitialState(with config: KinescopePlayerTimeindicatorConfiguration) {
-
         backgroundColor = .clear
-
         configureLabel()
     }
 
     func configureLabel() {
         label.textColor = config.color
-        label.font = config.font
+        label.font = monospacedFont()
         label.textAlignment = .right
 
         addSubview(label)
@@ -75,13 +73,23 @@ private extension TimeIndicatorView {
     }
 
     func getText(from time: TimeInterval) -> String {
-
         let date = Date(timeIntervalSince1970: time)
-
         let duration = KinescopeVideoDuration.from(raw: time)
-
         formatter.dateFormat = duration.rawValue
-
         return formatter.string(from: date)
     }
+
+    func monospacedFont() -> UIFont {
+        let fontFeatures = [
+            [
+                UIFontDescriptor.FeatureKey.featureIdentifier: kNumberSpacingType,
+                UIFontDescriptor.FeatureKey.typeIdentifier: kMonospacedNumbersSelector
+            ]
+        ]
+        let descriptorWithFeatures = UIFont.systemFont(ofSize: config.fontSize)
+            .fontDescriptor
+            .addingAttributes([UIFontDescriptor.AttributeName.featureSettings: fontFeatures])
+        return UIFont(descriptor: descriptorWithFeatures, size: config.fontSize)
+    }
+
 }
