@@ -1,7 +1,8 @@
 protocol KinescopePlayerViewDelegate: class {
-    func didPlay(videoEnded: Bool)
+    func didPlay()
     func didPause()
     func didSeek(to position: Double)
+    func didConfirmSeek()
     func didFastForward()
     func didFastBackward()
     func didPresentFullscreen(from view: KinescopePlayerView)

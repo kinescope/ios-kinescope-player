@@ -23,7 +23,6 @@ class PlayerOverlayView: UIControl {
     private let config: KinescopePlayerOverlayConfiguration
     private weak var delegate: PlayerOverlayViewDelegate?
     private var isPlaying = false
-    private var isEndPlaying = false
     private var isRewind = false
     var duration: TimeInterval {
         return config.duration
@@ -37,11 +36,6 @@ class PlayerOverlayView: UIControl {
         self.nameView = VideoNameView(config: config.nameConfiguration)
         super.init(frame: .zero)
         self.setupInitialState()
-
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(didEndPlayingAction),
-                                               name: .AVPlayerItemDidPlayToEndTime,
-                                               object: nil)
     }
 
     required init?(coder: NSCoder) {
@@ -56,7 +50,7 @@ class PlayerOverlayView: UIControl {
 
     override var isSelected: Bool {
         didSet {
-            UIView.animate(withDuration: 0.3) {
+            UIView.animate(withDuration: 0.1) {
                 self.contentView.alpha = self.isSelected ? 1.0 : .zero
             }
         }
@@ -148,20 +142,11 @@ private extension PlayerOverlayView {
 
         if isPlaying {
             playPauseImageView.image = config.pauseImage
-            delegate?.didPlay(videoEnded: isEndPlaying)
+            delegate?.didPlay()
         } else {
             playPauseImageView.image = config.playImage
             delegate?.didPause()
         }
-
-        isEndPlaying = false
-    }
-
-    @objc
-    func didEndPlayingAction() {
-        isEndPlaying = true
-        isPlaying = false
-        playPauseImageView.image = config.playImage
     }
 
     @objc
