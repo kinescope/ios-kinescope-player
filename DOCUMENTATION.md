@@ -57,3 +57,7 @@ AttachmentDownloader(out-of-box implementation of KinescopeAssetDownloadable) is
 # AirPlay
 
 AirPlay lets you share video from Apple devices direct to Apple TV, speakers and popular smart TVs. SDK has out-of-box implementation of AirPlay. All you need to do is set your app’s AVAudioSession’s category, where policy should be AVAudioSession.RouteSharingPolicy.longForm.
+
+# Picture in Picture 
+
+Picture in Picture lets you watch a thumbnail-size video play in the corner of your screen while you do other things on your device.

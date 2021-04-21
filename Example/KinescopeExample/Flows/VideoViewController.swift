@@ -1,5 +1,6 @@
 import UIKit
 import KinescopeSDK
+import AVKit
 
 final class VideoViewController: UIViewController {
 
@@ -29,16 +30,26 @@ final class VideoViewController: UIViewController {
         player?.attach(view: playerView)
         player?.play()
         playerView.showOverlay(true)
+        player?.pipDelegate = self
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         player?.pause()
     }
+
 }
 
 extension VideoViewController: UINavigationControllerDelegate {
     func navigationControllerSupportedInterfaceOrientations(_ navigationController: UINavigationController) -> UIInterfaceOrientationMask {
         return self.supportedInterfaceOrientations
     }
+}
+
+extension VideoViewController: AVPictureInPictureControllerDelegate {
+
+    func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
+        print("start")
+    }
+    
 }

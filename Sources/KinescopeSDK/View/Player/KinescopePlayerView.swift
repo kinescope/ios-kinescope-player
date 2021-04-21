@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import AVKit
 
 public class KinescopePlayerView: UIView {
 
@@ -19,26 +20,27 @@ public class KinescopePlayerView: UIView {
     private(set) weak var overlay: PlayerOverlayView?
     private(set) var progressView: KinescopeActivityIndicator!
     private(set) var shadowOverlay: PlayerShadowOverlayView?
+    private(set) var pipController: AVPictureInPictureController?
 
     private var config: KinescopePlayerViewConfiguration!
 
     /// One coordination for phones and other for pads
     private let sideMenuCoordinator = SideMenuSlideCoordinator()
 
-    // MARK: - Internal Properties
-
-    weak var delegate: KinescopePlayerViewDelegate?
-    public private(set) var previewView: UIImageView = UIImageView()
-
-    var canBeFullScreen: Bool {
-        return controlPanel?.optionsMenu.options.contains(.fullscreen) ?? false
-    }
-
     private var selectedQuality = NSAttributedString(string: "Auto")
     private var selectedSubtitles = NSAttributedString(string: "Off")
     private lazy var overlayDebouncer = Debouncer(timeInterval: overlay?.duration ?? 0.0)
 
+    // MARK: - Internal Properties
+
+    weak var delegate: KinescopePlayerViewDelegate?
+    var canBeFullScreen: Bool {
+        return controlPanel?.optionsMenu.options.contains(.fullscreen) ?? false
+    }
+
     // MARK: - Public Properties
+
+    public private(set) var previewView: UIImageView = UIImageView()
 
     // MARK: - Lifecycle
 
@@ -133,6 +135,7 @@ public extension KinescopePlayerView {
         }
 
         configureProgressView(with: config.activityIndicator)
+        configurePip()
     }
 
     /// Show/hide player view overlay
@@ -174,6 +177,21 @@ private extension KinescopePlayerView {
         centerChild(view: progressView)
 
         self.progressView = progressView
+    }
+
+    func configurePip() {
+        guard AVPictureInPictureController.isPictureInPictureSupported() else {
+            return
+        }
+        pipController = AVPictureInPictureController(playerLayer: playerView.playerLayer)
+
+//        let pipPossibleObserver = pipController?.observe(\AVPictureInPictureController.isPictureInPicturePossible,
+//                                                         options: [.initial, .new]) { [weak self] _, change in
+////            self?.pictureInPictureButton.isEnabled = change.newValue ?? false
+//
+//            print("pip: \(change.newValue)")
+//        }
+
     }
 
     func configureControlPanel(with config: KinescopeControlPanelConfiguration) {
@@ -464,6 +482,9 @@ extension KinescopePlayerView: PlayerControlOutput {
             let model = makeSubtitlesSideMenuModel(with: SideMenu.Settings.subtitles.rawValue,
                                                    root: true)
             presentSideMenu(model: model)
+        case .pip:
+            let isPipActive = pipController?.isPictureInPictureActive ?? false
+            isPipActive ? pipController?.stopPictureInPicture() : pipController?.startPictureInPicture()
         default:
             break
         }
