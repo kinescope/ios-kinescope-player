@@ -57,13 +57,9 @@ class TimelineView: UIControl {
         setupInitialState(with: config)
 
         addTarget(self, action: #selector(endTouch),
-                  for: UIControl.Event.touchUpOutside)
-        addTarget(self, action: #selector(endTouch),
-                  for: UIControl.Event.touchUpInside)
+                  for: [UIControl.Event.touchUpOutside, UIControl.Event.touchUpInside])
         addTarget(self, action: #selector(continueTouch),
-                  for: UIControl.Event.touchDragInside)
-        addTarget(self, action: #selector(continueTouch),
-                  for: UIControl.Event.touchDragOutside)
+                  for: [UIControl.Event.touchDragInside, UIControl.Event.touchDragOutside])
     }
 
     required init?(coder: NSCoder) {
