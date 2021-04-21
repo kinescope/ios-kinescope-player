@@ -26,12 +26,18 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private var timeControlStatusObserver: NSKeyValueObservation?
     private var tracksObserver: NSKeyValueObservation?
 
+    private var time: TimeInterval = 0 {
+        didSet {
+            updateTimeline()
+        }
+    }
     private var isSeeking = false
+    private var isPreparingSeek = false
     private var isManualQuality = false
     private var currentQuality = ""
-    private var currentTime: CMTime = .zero
     private var isPlaying = false
     private var isOverlayed = false
+    private var savedTime: CMTime = .zero
     private weak var miniView: KinescopePlayerView?
 
     private var video: KinescopeVideo?
@@ -112,6 +118,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         self.view = view
         view.set(options: options)
         view.pipController?.delegate = pipDelegate
+        updateTimeline()
         observePlaybackTime()
         addPlayerTimeControlStatusObserver()
         addPlayerStatusObserver()
@@ -140,7 +147,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
             isManualQuality = true
         }
 
-        currentTime = strategy.player.currentTime()
+        savedTime = strategy.player.currentTime()
 
         removeTracksObserver()
         removePlayerItemStatusObserver()
@@ -177,7 +184,11 @@ private extension KinescopeVideoPlayer {
     }
 
     func makePlayerOptions(from video: KinescopeVideo) -> [KinescopePlayerOption] {
-        var options: [KinescopePlayerOption] = [.airPlay, .download, .settings, .fullscreen, .more]
+        var options: [KinescopePlayerOption] = [.airPlay, .settings, .fullscreen, .more]
+
+        if !video.assets.isEmpty {
+            options.insert(.download, at: 1)
+        }
 
         if !video.additionalMaterials.isEmpty {
             options.insert(.attachments, at: 0)
@@ -201,44 +212,31 @@ private extension KinescopeVideoPlayer {
         }
 
         let timeScale = CMTimeScale(NSEC_PER_SEC)
-        let period = CMTimeMakeWithSeconds(0.05, preferredTimescale: timeScale)
+        let period = CMTimeMakeWithSeconds(0.01, preferredTimescale: timeScale)
 
         timeObserver = strategy.player.addPeriodicTimeObserver(forInterval: period,
                                                                queue: .main) { [weak self] time in
-            let isSeeking = self?.isSeeking ?? false
-
-            /// Do not update timeline and indicator value when seeking to new position
-            guard !isSeeking else {
+            guard let self = self else {
                 return
             }
 
             /// Does not make sense without control panel and curremtItem
-            guard let controlPanel = self?.view?.controlPanel,
-                  let currentItem = self?.strategy.player.currentItem else {
+            guard let controlPanel = self.view?.controlPanel,
+                  let currentItem = self.strategy.player.currentItem else {
                 return
-            }
-
-            // MARK: - Current time observation
-
-            let time = time.seconds
-
-            Kinescope.shared.logger?.log(message: "playback position changed to \(time) seconds", level: KinescopeLoggerLevel.player)
-
-            if !time.isNaN {
-                controlPanel.setIndicator(to: time)
             }
 
             let duration = currentItem.duration.seconds
 
-            let position = CGFloat(time / duration)
-            if !position.isNaN {
-                controlPanel.setTimeline(to: position)
+            if !self.isSeeking, !self.isPreparingSeek {
+                self.time = min(duration, time.seconds)
             }
 
-            // MARK: - Preload observation
+            Kinescope.shared.logger?.log(message: "playback position changed to \(time) seconds", level: KinescopeLoggerLevel.player)
+
+            // Preload observation
 
             let buferredTime = currentItem.loadedTimeRanges.first?.timeRangeValue.end.seconds ?? 0
-
             Kinescope.shared.logger?.log(message: "playback buffered \(buferredTime) seconds", level: KinescopeLoggerLevel.player)
 
             let bufferProgress = CGFloat(buferredTime / duration)
@@ -287,9 +285,11 @@ private extension KinescopeVideoPlayer {
 
                 switch item.status {
                 case .readyToPlay:
-                    if self.currentTime.seconds > .zero {
-                        self.seek(to: self.currentTime.seconds)
-                        self.currentTime = .zero
+                    let seconds = self.savedTime.seconds
+                    if seconds > .zero {
+                        self.time = seconds
+                        self.savedTime = .zero
+                        self.seek(to: seconds)
                     }
                 case .failed, .unknown:
                     Kinescope.shared.logger?.log(message: "AVPlayerItem.error – \(String(describing: item.error))",
@@ -379,25 +379,18 @@ private extension KinescopeVideoPlayer {
     }
 
     func seek(to seconds: TimeInterval) {
+        let duration = strategy.player.currentItem?.duration.seconds ?? .zero
+        if seconds >= duration {
+            pause()
+        }
+        self.isSeeking = true
         let time = CMTime(seconds: seconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
 
         Kinescope.shared.logger?.log(message: "timeline changed to \(seconds) seconds",
                                      level: KinescopeLoggerLevel.player)
 
-        isSeeking = true
-        strategy.player.seek(to: time, toleranceBefore: .zero, toleranceAfter: time) { [weak self] _ in
+        strategy.player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] _ in
             self?.isSeeking = false
-        }
-
-        // Update view because periodicTimeObserver won't trigger if current second of video didn't downloaded
-        // Also when video is seeking, periodicTimeObserver won't update the view
-        let duration = strategy.player.currentItem?.duration.seconds ?? .zero
-        let position = CGFloat(seconds / duration)
-        if !position.isNaN {
-            view?.controlPanel?.setTimeline(to: CGFloat(position))
-        }
-        if !seconds.isNaN {
-            view?.controlPanel?.setIndicator(to: seconds)
         }
     }
 
@@ -436,15 +429,28 @@ private extension KinescopeVideoPlayer {
         isPlaying ? play() : pause()
     }
 
+    func updateTimeline() {
+        let duration = strategy.player.currentItem?.duration.seconds ?? .zero
+        let position = CGFloat(time / duration)
+        if !position.isNaN {
+            view?.controlPanel?.setTimeline(to: CGFloat(position))
+        }
+        if !time.isNaN {
+            view?.controlPanel?.setIndicator(to: time)
+        }
+    }
+
 }
 
 // MARK: - KinescopePlayerViewDelegate
 
 extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
-    func didPlay(videoEnded: Bool) {
-        if videoEnded {
-            self.strategy.player.seek(to: .zero)
+    func didPlay() {
+        let duration = strategy.player.currentItem?.duration.seconds ?? .zero
+        if time == duration {
+            time = .zero
+            seek(to: time)
         }
 
         self.play()
@@ -455,24 +461,29 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didSeek(to position: Double) {
+        isPreparingSeek = true
 
         guard let duration = strategy.player.currentItem?.duration.seconds else {
             return
         }
 
-        Kinescope.shared.logger?.log(message: "timeline changed to \(position)",
+        Kinescope.shared.logger?.log(message: "timeline seeked to \(position)",
                                      level: KinescopeLoggerLevel.player)
 
-        let seconds = position * duration
-        seek(to: seconds)
+        time = min(duration, position * duration)
+    }
+
+    func didConfirmSeek() {
+        isPreparingSeek = false
+        Kinescope.shared.logger?.log(message: "timeline change to time: \(time) confirmed",
+                                     level: KinescopeLoggerLevel.player)
+        seek(to: time)
     }
 
     func didSelect(option: KinescopePlayerOption) {
     }
 
     func didFastForward() {
-        let currentTime = strategy.player.currentTime().seconds
-
         guard
             let duration = strategy.player.currentItem?.duration.seconds
         else {
@@ -481,25 +492,15 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
         Kinescope.shared.logger?.log(message: "fast forward +15s", level: KinescopeLoggerLevel.player)
 
-        let seconds = currentTime + 15.0
-        if seconds < duration {
-            seek(to: seconds)
-        } else {
-            seek(to: duration)
-        }
+        time = min(duration, time + 15)
+        seek(to: time)
     }
 
     func didFastBackward() {
-        let currentTime = strategy.player.currentTime().seconds
-
         Kinescope.shared.logger?.log(message: "fast backward -15s", level: KinescopeLoggerLevel.player)
 
-        let seconds = currentTime - 15.0
-        if seconds > .zero {
-            seek(to: seconds)
-        } else {
-            seek(to: .zero)
-        }
+        time = max(time - 15.0, .zero)
+        seek(to: time)
     }
 
     func didPresentFullscreen(from view: KinescopePlayerView) {
