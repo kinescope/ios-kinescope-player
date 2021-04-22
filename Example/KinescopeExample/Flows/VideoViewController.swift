@@ -25,16 +25,15 @@ final class VideoViewController: UIViewController {
 
         playerView.setLayout(with: .default)
 
+        PipManager.shared.closePipIfNeeded(with: videoId)
+
         player = KinescopeVideoPlayer(config: .init(videoId: videoId))
         player?.attach(view: playerView)
         player?.play()
         playerView.showOverlay(true)
+        player?.pipDelegate = PipManager.shared
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        player?.pause()
-    }
 }
 
 extension VideoViewController: UINavigationControllerDelegate {

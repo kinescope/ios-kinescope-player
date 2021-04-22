@@ -10,6 +10,9 @@ import AVKit
 /// Control protocol for player
 public protocol KinescopePlayer {
 
+    /// Delegate of Picture in Picture controller
+    var pipDelegate: AVPictureInPictureControllerDelegate? { get set }
+
     /// - parameter config: player config
     init(config: KinescopePlayerConfig)
 
