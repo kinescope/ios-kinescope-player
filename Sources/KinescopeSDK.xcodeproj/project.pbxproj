@@ -93,6 +93,9 @@
 		9A6FB74D436C70656ED69129 /* AssetDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB57F3EF2DB2EE9170ECC68C /* AssetDownloader.swift */; };
 		A2698DC22C1DF19CA0E223D5 /* KinescopeVideoPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23BE651C440A4C2EDC4131E1 /* KinescopeVideoPlayerTests.swift */; };
 		A3A219679CA4A74CA5E6AC6C /* KinescopeVideoDownloadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1499B500CFAE02E588927AE9 /* KinescopeVideoDownloadable.swift */; };
+		A49030DF263175270094AB37 /* KinescopeEventsCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A49030DE263175270094AB37 /* KinescopeEventsCenter.swift */; };
+		A49030E72631827B0094AB37 /* LocalEventsCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A49030E62631827B0094AB37 /* LocalEventsCenter.swift */; };
+		A49030EA263187A20094AB37 /* KinescopeVideoPlayerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A49030E9263187A20094AB37 /* KinescopeVideoPlayerDelegate.swift */; };
 		A9F68DFF9E674497ED683217 /* String+AssetIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ADA59F2C8CCC165EC2016CE /* String+AssetIcon.swift */; };
 		AAB98EC0F67C269DA2E6EC31 /* KinescopeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20D4D486064D5C046AA39415 /* KinescopeSDK.framework */; };
 		ABD8067BA77BF40F13E05F81 /* DisclosureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE8E65CFDF9074DD17D40B5 /* DisclosureCell.swift */; };
@@ -266,6 +269,9 @@
 		A32846BC75FD21F8A038FA7B /* FileServiceDelegateMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileServiceDelegateMock.swift; sourceTree = "<group>"; };
 		A41FCECB94B1BC0CB88D2544 /* KinescopeVideoDownloadableDelegateMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeVideoDownloadableDelegateMock.swift; sourceTree = "<group>"; };
 		A429BF92F67FB71A84E55D17 /* PlayerControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerControlView.swift; sourceTree = "<group>"; };
+		A49030DE263175270094AB37 /* KinescopeEventsCenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KinescopeEventsCenter.swift; sourceTree = "<group>"; };
+		A49030E62631827B0094AB37 /* LocalEventsCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalEventsCenter.swift; sourceTree = "<group>"; };
+		A49030E9263187A20094AB37 /* KinescopeVideoPlayerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeVideoPlayerDelegate.swift; sourceTree = "<group>"; };
 		A497C7D65BD0F8F6E2868A83 /* AttachmentDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentDownloader.swift; sourceTree = "<group>"; };
 		A52FD36324CD4FBB4651A0A6 /* KinescopeServicesProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeServicesProvider.swift; sourceTree = "<group>"; };
 		A97C2E6E9FF596A9B9AC5E9E /* KinescopeVideoPathsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KinescopeVideoPathsStorage.swift; sourceTree = "<group>"; };
@@ -464,6 +470,7 @@
 		36B52B17E79CB05AD270BAB5 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
+				A49030DE263175270094AB37 /* KinescopeEventsCenter.swift */,
 				9348E4AA264325E1FA2D042B /* KinescopeConfigurable.swift */,
 				38FEE513248194C4BD09E687 /* KinescopeInspectable.swift */,
 				1722962B9FD72AA3EE9B4EBC /* KinescopeLogging.swift */,
@@ -722,6 +729,7 @@
 			isa = PBXGroup;
 			children = (
 				BC87DD8EA32020DEA2459733 /* KinescopeVideoPlayer.swift */,
+				A49030E9263187A20094AB37 /* KinescopeVideoPlayerDelegate.swift */,
 				E9B5DB3A355631852957F20D /* KinescopeVideoQuality+AVPlayerItem.swift */,
 				58E7B24B9F1861247460023B /* Dependencies */,
 				860EBB7E16518C82021FC8F2 /* Extensions */,
@@ -817,6 +825,7 @@
 				720AEB4FA77E3CA52C33CDCE /* Manager.swift */,
 				869CE1C2AE20F92390A017BF /* Manager+KinescopeConfigurable.swift */,
 				CB502E10695CE3F406F50648 /* VideoDownloader.swift */,
+				A49030E62631827B0094AB37 /* LocalEventsCenter.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -1045,6 +1054,7 @@
 				01C772F62FB45A601F8B5872 /* KinescopeVideo.swift in Sources */,
 				99F46F2B326DFF75C2BC9CF4 /* KinescopeVideoAdditionalMaterial.swift in Sources */,
 				86E179C9CDF3A1C6C4E3C4CF /* KinescopeVideoAsset.swift in Sources */,
+				A49030EA263187A20094AB37 /* KinescopeVideoPlayerDelegate.swift in Sources */,
 				3DB293B004DE02485AB467AF /* KinescopeVideoAssetLink.swift in Sources */,
 				9918F38133B81DE59A0C5350 /* KinescopeVideoChapter.swift in Sources */,
 				147E0AD19C306EA61DAF2E4A /* KinescopeVideoChapterItem.swift in Sources */,
@@ -1059,6 +1069,7 @@
 				2FCB1DD29DA974E4CBA16DB8 /* KinescopeVideoQuality+AVPlayerItem.swift in Sources */,
 				6875316A9DBF9590786F1E4D /* KinescopeVideoQuality.swift in Sources */,
 				1CB5B8B3BB6A235AD93CC356 /* KinescopeVideoRequest.swift in Sources */,
+				A49030E72631827B0094AB37 /* LocalEventsCenter.swift in Sources */,
 				31F53928F2CAB17559021BAB /* KinescopeVideoSubtitle.swift in Sources */,
 				FAB161BAF4738C14028AC4D9 /* LoopedPlayingStrategy.swift in Sources */,
 				FFBFFD55206F4338CC4C42E7 /* Manager+KinescopeConfigurable.swift in Sources */,
@@ -1074,6 +1085,7 @@
 				ACA34C881B3B73E1C9810CE9 /* PlayerShadowOverlayView.swift in Sources */,
 				D880B16D228D6A94F44387F8 /* PlayerView.swift in Sources */,
 				719FC5894BAFFB5F8387E255 /* PlayingStrategy.swift in Sources */,
+				A49030DF263175270094AB37 /* KinescopeEventsCenter.swift in Sources */,
 				B39B0100B5D076379C188FF7 /* PlayingStrategyProvider.swift in Sources */,
 				019BE3A15D8833FB4B17BF85 /* RequestBuilder.swift in Sources */,
 				70A52C77C283DD336EF9884A /* Response.swift in Sources */,
@@ -1197,7 +1209,11 @@
 				INFOPLIST_FILE = KinescopeSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = io.kinescope.sdk;
 				SDKROOT = iphoneos;
@@ -1221,7 +1237,11 @@
 				INFOPLIST_FILE = KinescopeSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = io.kinescope.sdk;
 				SDKROOT = iphoneos;
