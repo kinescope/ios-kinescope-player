@@ -54,6 +54,13 @@ public class KinescopePlayerView: UIView {
         setLayout(with: .default)
     }
 
+    deinit {
+        // Workaround to prevent plaing audio when player deinited(due to enabled background mode)
+        if !(pipController?.isPictureInPictureActive ?? false) {
+            playerView.player?.pause()
+        }
+    }
+
     // MARK: - Internal Methods
 
     func startLoader() {
@@ -181,18 +188,7 @@ private extension KinescopePlayerView {
     }
 
     func configurePip() {
-        guard AVPictureInPictureController.isPictureInPictureSupported() else {
-            return
-        }
         pipController = AVPictureInPictureController(playerLayer: playerView.playerLayer)
-
-//        let pipPossibleObserver = pipController?.observe(\AVPictureInPictureController.isPictureInPicturePossible,
-//                                                         options: [.initial, .new]) { [weak self] _, change in
-////            self?.pictureInPictureButton.isEnabled = change.newValue ?? false
-//
-//            print("pip: \(change.newValue)")
-//        }
-
     }
 
     func configureControlPanel(with config: KinescopeControlPanelConfiguration) {

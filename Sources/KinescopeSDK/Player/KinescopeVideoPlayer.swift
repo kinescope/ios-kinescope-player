@@ -5,7 +5,7 @@ import UIKit
 // swiftlint:disable file_length
 public class KinescopeVideoPlayer: KinescopePlayer {
 
-    public var pipDelegate: AVPictureInPictureControllerDelegate? {
+    public weak var pipDelegate: AVPictureInPictureControllerDelegate? {
         didSet {
             view?.pipController?.delegate = pipDelegate
         }
@@ -65,17 +65,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     init(config: KinescopePlayerConfig, dependencies: KinescopePlayerDependencies) {
         self.dependencies = dependencies
         self.config = config
-
-        NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterForeground),
-                                               name: UIApplication.willEnterForegroundNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground),
-                                               name: UIApplication.didEnterBackgroundNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(changeOrientation),
-                                               name: UIDevice.orientationDidChangeNotification,
-                                               object: nil)
+        addNotofications()
     }
 
     deinit {
@@ -376,6 +366,19 @@ private extension KinescopeVideoPlayer {
     func removeTracksObserver() {
         self.tracksObserver?.invalidate()
         self.tracksObserver = nil
+    }
+
+    func addNotofications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterForeground),
+                                               name: UIApplication.willEnterForegroundNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground),
+                                               name: UIApplication.didEnterBackgroundNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(changeOrientation),
+                                               name: UIDevice.orientationDidChangeNotification,
+                                               object: nil)
     }
 
     func seek(to seconds: TimeInterval) {

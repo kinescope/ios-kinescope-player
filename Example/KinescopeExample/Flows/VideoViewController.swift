@@ -1,6 +1,5 @@
 import UIKit
 import KinescopeSDK
-import AVKit
 
 final class VideoViewController: UIViewController {
 
@@ -26,16 +25,13 @@ final class VideoViewController: UIViewController {
 
         playerView.setLayout(with: .default)
 
+        PipManager.shared.closePipIfNeeded(with: videoId)
+
         player = KinescopeVideoPlayer(config: .init(videoId: videoId))
         player?.attach(view: playerView)
         player?.play()
         playerView.showOverlay(true)
-        player?.pipDelegate = self
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        player?.pause()
+        player?.pipDelegate = PipManager.shared
     }
 
 }
@@ -44,12 +40,4 @@ extension VideoViewController: UINavigationControllerDelegate {
     func navigationControllerSupportedInterfaceOrientations(_ navigationController: UINavigationController) -> UIInterfaceOrientationMask {
         return self.supportedInterfaceOrientations
     }
-}
-
-extension VideoViewController: AVPictureInPictureControllerDelegate {
-
-    func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        print("start")
-    }
-    
 }
