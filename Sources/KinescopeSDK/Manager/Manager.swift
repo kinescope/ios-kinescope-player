@@ -23,6 +23,6 @@ class Manager: KinescopeServicesProvider {
 
     var logger: KinescopeLogging?
 
-    var eventsCenter: KinescopeEventsCenter?
+    var eventsCenter: KinescopeEventsCenter!
 
 }

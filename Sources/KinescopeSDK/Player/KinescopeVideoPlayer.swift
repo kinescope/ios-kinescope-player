@@ -32,6 +32,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private var isOverlayed = false
     private var savedTime: CMTime = .zero
     private weak var miniView: KinescopePlayerView?
+    private weak var delegate: KinescopeVideoPlayerDelegate?
 
     private var video: KinescopeVideo?
     private let config: KinescopePlayerConfig
