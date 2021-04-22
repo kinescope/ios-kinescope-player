@@ -61,3 +61,6 @@ AirPlay lets you share video from Apple devices direct to Apple TV, speakers and
  To implement this features in project, just set your app’s AVAudioSession’s category to AVAudioSession.Category.playback and policy AVAudioSession.RouteSharingPolicy.longForm.
  For make this features working in background enable "Audio. AirPlay, and Picture in Picture" in Background Modes capability. Also with this capability audio from video will be playing after the app enters in background. 
 
+# Phone call
+
+With an incoming call, video will be paused by system, true for background. To resume video, use CXCallObserver of CallKit framework and it's delegate method.

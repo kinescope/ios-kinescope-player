@@ -1,6 +1,7 @@
 import AVFoundation
 import AVKit
 import UIKit
+import CallKit
 
 // swiftlint:disable file_length
 public class KinescopeVideoPlayer: KinescopePlayer {
@@ -17,6 +18,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private lazy var strategy: PlayingStrategy = {
         dependencies.provide(for: config)
     }()
+    private let callObserver = CallObserver()
 
     private weak var view: KinescopePlayerView?
 
@@ -66,6 +68,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         self.dependencies = dependencies
         self.config = config
         addNotofications()
+        callObserver.delegate = self
     }
 
     deinit {
@@ -441,6 +444,20 @@ private extension KinescopeVideoPlayer {
         if !time.isNaN {
             view?.controlPanel?.setIndicator(to: time)
         }
+    }
+
+}
+
+
+// MARK: - CallObserverDelegate
+
+extension KinescopeVideoPlayer: CallObserverDelegate {
+
+    func callObserver(_ callObserver: CXCallObserver, callChanged call: CXCall) {
+        guard call.hasEnded else {
+            return
+        }
+        play()
     }
 
 }

@@ -1,5 +1,6 @@
 import UIKit
 import KinescopeSDK
+import CallKit
 
 final class VideoViewController: UIViewController {
 
@@ -11,6 +12,7 @@ final class VideoViewController: UIViewController {
 
     var videoId = ""
     private var player: KinescopePlayer?
+    private let callObserver = CXCallObserver()
 
     // MARK: - Lifecycle
 
@@ -32,12 +34,39 @@ final class VideoViewController: UIViewController {
         player?.play()
         playerView.showOverlay(true)
         player?.pipDelegate = PipManager.shared
+        callObserver.setDelegate(self, queue: nil)
     }
 
 }
+
+// MARK: - UINavigationControllerDelegate
 
 extension VideoViewController: UINavigationControllerDelegate {
     func navigationControllerSupportedInterfaceOrientations(_ navigationController: UINavigationController) -> UIInterfaceOrientationMask {
         return self.supportedInterfaceOrientations
     }
+}
+
+// MARK: - CXCallObserverDelegate
+
+extension VideoViewController: CXCallObserverDelegate {
+    
+    func callObserver(_ callObserver: CXCallObserver, callChanged call: CXCall) {
+        if call.hasConnected {
+            print("Call Connect -> \(call.uuid)")
+        }
+
+        if call.isOutgoing {
+            print("Call outGoing \(call.uuid)")
+        }
+
+        if call.hasEnded {
+            player?.play()
+        }
+
+        if call.isOnHold {
+            print("Call onHold \(call.uuid)")
+        }
+    }
+
 }
