@@ -10,7 +10,6 @@ struct KinescopeVideoPlayerDependencies: KinescopePlayerDependencies {
     let inspector: KinescopeInspectable = Kinescope.shared.inspector
     let assetDownloader: KinescopeAssetDownloadable = Kinescope.shared.assetDownloader
     let attachmentDownloader: KinescopeAttachmentDownloadable = Kinescope.shared.attachmentDownloader
-    var eventsCenter: KinescopeEventsCenter = Kinescope.shared.eventsCenter
 
     // MARK: - PlayingStrategyProvider
 
