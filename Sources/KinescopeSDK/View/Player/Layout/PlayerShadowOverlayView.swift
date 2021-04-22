@@ -17,7 +17,7 @@ class PlayerShadowOverlayView: UIView {
     // MARK: - Private Properties
 
     private let config: KinescopePlayerShadowOverlayConfiguration
-    private let delegate: ShadowOverlayDelegate?
+    private weak var delegate: ShadowOverlayDelegate?
 
     // MARK: - Init
 

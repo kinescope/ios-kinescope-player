@@ -22,4 +22,6 @@ public enum KinescopePlayerOption: String {
     case airPlay
     /// Option to on/off subtitles and choose subtitle language
     case subtitles
+    /// Option to enter in Picture in Picture mode, availalble only if device supported PiP 
+    case pip
 }

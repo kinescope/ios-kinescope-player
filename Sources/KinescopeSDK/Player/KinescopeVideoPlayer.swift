@@ -1,8 +1,15 @@
 import AVFoundation
+import AVKit
 import UIKit
 
 // swiftlint:disable file_length
 public class KinescopeVideoPlayer: KinescopePlayer {
+
+    public weak var pipDelegate: AVPictureInPictureControllerDelegate? {
+        didSet {
+            view?.pipController?.delegate = pipDelegate
+        }
+    }
 
     // MARK: - Private Properties
 
@@ -58,11 +65,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     init(config: KinescopePlayerConfig, dependencies: KinescopePlayerDependencies) {
         self.dependencies = dependencies
         self.config = config
-
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(changeOrientation),
-                                               name: UIDevice.orientationDidChangeNotification,
-                                               object: nil)
+        addNotofications()
     }
 
     deinit {
@@ -104,8 +107,8 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         view.delegate = self
         self.view = view
         view.set(options: options)
+        view.pipController?.delegate = pipDelegate
         updateTimeline()
-
         observePlaybackTime()
         addPlayerTimeControlStatusObserver()
         addPlayerStatusObserver()
@@ -179,6 +182,10 @@ private extension KinescopeVideoPlayer {
 
         if !video.additionalMaterials.isEmpty {
             options.insert(.attachments, at: 0)
+        }
+
+        if AVPictureInPictureController.isPictureInPictureSupported() {
+            options.insert(.pip, at: options.count - 2)
         }
 
         if !video.subtitles.isEmpty {
@@ -361,6 +368,19 @@ private extension KinescopeVideoPlayer {
         self.tracksObserver = nil
     }
 
+    func addNotofications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterForeground),
+                                               name: UIApplication.willEnterForegroundNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground),
+                                               name: UIApplication.didEnterBackgroundNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(changeOrientation),
+                                               name: UIDevice.orientationDidChangeNotification,
+                                               object: nil)
+    }
+
     func seek(to seconds: TimeInterval) {
         let duration = strategy.player.currentItem?.duration.seconds ?? .zero
         if seconds >= duration {
@@ -392,6 +412,18 @@ private extension KinescopeVideoPlayer {
             didPresentFullscreen(from: view)
         } else if !UIDevice.current.orientation.isLandscape && isFullScreen {
             didPresentFullscreen(from: view)
+        }
+    }
+
+    @objc func appDidEnterForeground() {
+        if !(view?.pipController?.isPictureInPictureActive ?? false) {
+            view?.playerView.player = strategy.player
+        }
+    }
+
+    @objc func appDidEnterBackground() {
+        if !(view?.pipController?.isPictureInPictureActive ?? false) {
+            view?.playerView.player = nil
         }
     }
 
