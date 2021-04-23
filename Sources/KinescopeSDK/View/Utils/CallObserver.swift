@@ -7,8 +7,15 @@
 
 import CallKit
 
+public enum KinescopeCallState {
+    case ended
+    case outgoing
+    case connected
+    case hold
+}
+
 protocol CallObserverDelegate: class {
-    func callObserver(_ callObserver: CXCallObserver, callChanged call: CXCall)
+    func callObserver(callState: KinescopeCallState)
 }
 
 final class CallObserver: NSObject, CXCallObserverDelegate {
@@ -29,7 +36,25 @@ final class CallObserver: NSObject, CXCallObserverDelegate {
     // MARK: - CXCallObserverDelegate
 
     func callObserver(_ callObserver: CXCallObserver, callChanged call: CXCall) {
-        delegate?.callObserver(callObserver, callChanged: call)
+        var callState: KinescopeCallState = .connected
+
+        if call.hasConnected {
+            callState = .connected
+        }
+
+        if call.hasEnded {
+            callState = .ended
+        }
+
+        if call.isOnHold {
+            callState = .hold
+        }
+
+        if call.isOutgoing {
+            callState = .outgoing
+        }
+        
+        delegate?.callObserver(callState: callState)
     }
 
 }

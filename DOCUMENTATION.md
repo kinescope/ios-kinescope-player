@@ -63,4 +63,4 @@ AirPlay lets you share video from Apple devices direct to Apple TV, speakers and
 
 # Phone call
 
-With an incoming call, video will be paused by system, true for background. To resume video, use CXCallObserver of CallKit framework and it's delegate method.
+With an incoming call, video will be paused by system, true for background. To resume video, use didGetCall method KinescopeVideoPlayerDelegate. Method will be called on every call action: on end, connect, hold and on outgoing call.

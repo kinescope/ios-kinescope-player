@@ -38,4 +38,6 @@ public protocol KinescopeVideoPlayerDelegate: class {
     func player(didFastBackwardTo time: TimeInterval)
     /// Triggered on quality change
     func player(changedQualityTo quality: String)
+    /// Triggered on phone call actions
+    func didGetCall(callState: KinescopeCallState)
 }

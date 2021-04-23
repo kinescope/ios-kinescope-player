@@ -13,6 +13,8 @@ public protocol KinescopePlayer {
     /// Delegate of Picture in Picture controller
     var pipDelegate: AVPictureInPictureControllerDelegate? { get set }
 
+    var delegate: KinescopeVideoPlayerDelegate? { get set }
+
     /// - parameter config: player config
     init(config: KinescopePlayerConfig)
 

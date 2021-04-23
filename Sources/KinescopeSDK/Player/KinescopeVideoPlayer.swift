@@ -1,7 +1,6 @@
 import AVFoundation
 import AVKit
 import UIKit
-import CallKit
 
 // swiftlint:disable file_length
 public class KinescopeVideoPlayer: KinescopePlayer {
@@ -11,6 +10,8 @@ public class KinescopeVideoPlayer: KinescopePlayer {
             view?.pipController?.delegate = pipDelegate
         }
     }
+
+    public weak var delegate: KinescopeVideoPlayerDelegate?
 
     // MARK: - Private Properties
 
@@ -41,8 +42,6 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private var isOverlayed = false
     private var savedTime: CMTime = .zero
     private weak var miniView: KinescopePlayerView?
-    private weak var delegate: KinescopeVideoPlayerDelegate?
-
     private var video: KinescopeVideo?
     private let config: KinescopePlayerConfig
     private var options = [KinescopePlayerOption]()
@@ -466,11 +465,8 @@ private extension KinescopeVideoPlayer {
 
 extension KinescopeVideoPlayer: CallObserverDelegate {
 
-    func callObserver(_ callObserver: CXCallObserver, callChanged call: CXCall) {
-        guard call.hasEnded else {
-            return
-        }
-        play()
+    func callObserver(callState: KinescopeCallState) {
+        delegate?.didGetCall(callState: callState)
     }
 
 }
