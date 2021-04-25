@@ -63,4 +63,4 @@ AirPlay lets you share video from Apple devices direct to Apple TV, speakers and
 
 # Localization
 
-To add new localization to strings from SDK, add anywhere in your project file "KinescopeLocalizable.strings", copy all content from Localizable.strings file, which is located in KinescopeSDK and add new languages or change values of existing ones. 
+To add new localization to strings from SDK, add in your project file "KinescopeLocalizable.strings", file should located in main bundle(it is important to multi-modules projects), copy all content from Localizable.strings file, which is located in KinescopeSDK and add new languages or change values of existing ones. 

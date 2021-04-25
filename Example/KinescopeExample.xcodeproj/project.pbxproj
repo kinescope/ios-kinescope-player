@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0FFF3D55D5BF31BE595073DC /* Pods_KinescopeExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC9ED3553BFD520288B7F283 /* Pods_KinescopeExample.framework */; };
 		27803C78BC9292176387B837 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1297BC1CB454C3BA783E4F43 /* Main.storyboard */; };
+		394FD62226358CB5008739AF /* KinescopeLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 394FD62426358CB5008739AF /* KinescopeLocalizable.strings */; };
 		4CE8078E78304438232FCD0D /* ConfigStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B71D3741FB772726928CC02 /* ConfigStorage.swift */; };
 		4F66AFB3A32776CED4598E42 /* VideoListFocusableCellGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A366BFC33AA765D5889FCA5 /* VideoListFocusableCellGenerator.swift */; };
 		58B43A1C8C518A286DB9EBEB /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8FAFE6D902EDF9332B6176 /* VideoViewController.swift */; };
@@ -36,6 +37,9 @@
 		1B5BA8AD065732355D68FC30 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		246B7F2D473017AA57153302 /* VideoListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListController.swift; sourceTree = "<group>"; };
 		3299E0B8F9C5E0E62196C129 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		394FD62326358CB5008739AF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/KinescopeLocalizable.strings; sourceTree = "<group>"; };
+		394FD62626358CB8008739AF /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/KinescopeLocalizable.strings; sourceTree = "<group>"; };
+		394FD649263599DC008739AF /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/KinescopeLocalizable.strings; sourceTree = "<group>"; };
 		406FFA096A7AD6CD8255B8AC /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
 		4A366BFC33AA765D5889FCA5 /* VideoListFocusableCellGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListFocusableCellGenerator.swift; sourceTree = "<group>"; };
 		508C4602E3E4B5D5D5BA8FD8 /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
@@ -102,6 +106,7 @@
 		39619E1826345C080007000D /* Resourses */ = {
 			isa = PBXGroup;
 			children = (
+				394FD62426358CB5008739AF /* KinescopeLocalizable.strings */,
 			);
 			path = Resourses;
 			sourceTree = "<group>";
@@ -250,6 +255,7 @@
 				Base,
 				en,
 				ru,
+				uk,
 			);
 			mainGroup = D09F6815030B468C4B8FCCBD;
 			productRefGroup = 0E1DEFEC7B456B248F1F6FF5 /* Products */;
@@ -266,6 +272,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				394FD62226358CB5008739AF /* KinescopeLocalizable.strings in Resources */,
 				FA0B3C752FBA9905C7353D1C /* KinescopeConfig.plist in Resources */,
 				27803C78BC9292176387B837 /* Main.storyboard in Resources */,
 				E6F14042128A330F268DBED7 /* UserCell.xib in Resources */,
@@ -341,6 +348,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		394FD62426358CB5008739AF /* KinescopeLocalizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				394FD62326358CB5008739AF /* en */,
+				394FD62626358CB8008739AF /* ru */,
+				394FD649263599DC008739AF /* uk */,
+			);
+			name = KinescopeLocalizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		1C486D161EACA453645ACED6 /* Debug */ = {
