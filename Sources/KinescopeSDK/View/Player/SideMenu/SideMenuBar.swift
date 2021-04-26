@@ -157,7 +157,7 @@ private extension SideMenuBar {
 
     func configureDownloadButton() {
         let button = UIButton()
-        button.setTitle("Download all", for: .normal)
+        button.setTitle(L10n.Player.downloadAll, for: .normal)
         button.titleLabel?.font = config.downloadAllFont
         button.setTitleColor(config.downloadAllColor, for: .normal)
         button.setTitleColor(config.downloadAllHighlightedColor, for: .highlighted)
