@@ -39,18 +39,3 @@
 "Player.hide" = "Скрыть";
 "Player.reset" = "Сбросить";
 "Player.options" = "Параметры";
-
-// MARK: - Color
-
-"Color.fontColor" = "Цвет текста";
-"Color.fontSize" = "Размер текста";
-"Color.backgroundColor" = "Цвет фона";
-"Color.backgroundOpacity" = "Прозрачность фона";
-"Color.white" = "Белый";
-"Color.yellow" = "Желтый";
-"Color.green" = "Зеленый";
-"Color.cyan" = "Голубой";
-"Color.blue" = "Синий";
-"Color.magenta" = "Пурпурный";
-"Color.red" = "Красный";
-"Color.black" = "Черный";

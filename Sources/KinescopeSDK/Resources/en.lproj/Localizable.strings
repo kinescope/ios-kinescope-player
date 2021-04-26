@@ -39,18 +39,3 @@
 "Player.hide" = "Hide";
 "Player.reset" = "Reset";
 "Player.options" = "Options";
-
-// MARK: - Color
-
-"Color.fontColor" = "Font color";
-"Color.fontSize" = "Font size";
-"Color.backgroundColor" = "Background color";
-"Color.backgroundOpacity" = "Background opacity";
-"Color.white" = "White";
-"Color.yellow" = "Yellow";
-"Color.green" = "Green";
-"Color.cyan" = "Cyan";
-"Color.blue" = "Blue";
-"Color.magenta" = "Magenta";
-"Color.red" = "Red";
-"Color.black" = "Black";

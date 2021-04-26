@@ -88,33 +88,6 @@ internal enum L10n {
         internal static let options = L10n.tr("Localizable", "Player.options")
     }
 
-    enum Color {
-        /// Font color
-        internal static let fontColor = L10n.tr("Localizable", "Color.fontColor")
-        /// Font size
-        internal static let fontSize = L10n.tr("Localizable", "Color.fontSize")
-        /// Background color
-        internal static let backgroundColor = L10n.tr("Localizable", "Color.backgroundColor")
-        /// Background opacity
-        internal static let backgroundOpacity = L10n.tr("Localizable", "Color.backgroundOpacity")
-        /// White
-        internal static let white = L10n.tr("Localizable", "Color.white")
-        /// Yellow
-        internal static let yellow = L10n.tr("Localizable", "Color.yellow")
-        /// Green
-        internal static let green = L10n.tr("Localizable", "Color.green")
-        /// Cyan
-        internal static let cyan = L10n.tr("Localizable", "Color.cyan")
-        /// Blue
-        internal static let blue = L10n.tr("Localizable", "Color.blue")
-        /// Magenta
-        internal static let magenta = L10n.tr("Localizable", "Color.magenta")
-        /// Red
-        internal static let red = L10n.tr("Localizable", "Color.red")
-        /// Black
-        internal static let black = L10n.tr("Localizable", "Color.black")
-    }
-
 }
 
 // MARK: - Implementation Details
