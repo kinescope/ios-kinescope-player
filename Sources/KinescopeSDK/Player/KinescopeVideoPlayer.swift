@@ -535,6 +535,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                                                              config: .preferred(for: video))
             playerVC.modalPresentationStyle = .overFullScreen
             playerVC.modalTransitionStyle = .crossDissolve
+            playerVC.modalPresentationCapturesStatusBarAppearance = true
             rootVC?.present(playerVC, animated: true, completion: { [weak self] in
                 guard
                     let self = self,
