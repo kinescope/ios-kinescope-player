@@ -87,7 +87,7 @@ private extension CheckmarkCell {
             titleLabel.trailingAnchor.constraint(equalTo: iconView.leadingAnchor, constant: -4.0),
 
             iconView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            iconView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16.0)
+            iconView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8)
         ])
 
         self.titleLabel = titleLabel

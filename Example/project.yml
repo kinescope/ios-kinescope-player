@@ -28,6 +28,7 @@ targets:
           CFBundleName: KinescopeExample
           CFBundleShortVersionString: $(MARKETING_VERSION)
           CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+          UIBackgroundModes: [audio,airplay,and_picture_in_picture]
       settings:
         base:
           PRODUCT_BUNDLE_IDENTIFIER: io.kinescope.example

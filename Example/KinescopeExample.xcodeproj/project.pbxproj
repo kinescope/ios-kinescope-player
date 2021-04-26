@@ -15,7 +15,6 @@
 		6E4269CADAE4110CF3E96574 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA6D1B1FB02192C67211B98A /* AppDelegate.swift */; };
 		7368F7676D135E40AA776C50 /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508C4602E3E4B5D5D5BA8FD8 /* EmptyView.swift */; };
 		86BFCED3BCF786576F97697F /* KinescopeLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = ACEFB41275ECA833B7E5F404 /* KinescopeLocalizable.strings */; };
-		8AA356221323F1BC346B54B3 /* Pods_KinescopeExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA344255406E618A01663722 /* Pods_KinescopeExample.framework */; };
 		8BB99F9E7D641EA74050ABF7 /* FocusableItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03FA76E45742849B9B29429 /* FocusableItem.swift */; };
 		9F1820D56B96774A31DFEBED /* AuthSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B72FC26817E3EC28FCC3B21E /* AuthSelectorController.swift */; };
 		A9DC9A690B125B8124A8EBDF /* CurrentCellFocusPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA0B2A73C59AD113CB5976A /* CurrentCellFocusPlugin.swift */; };
@@ -27,26 +26,28 @@
 		E27847B7474CE6E6D06D2793 /* VideoListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59A91C77A3A14596F5C5226 /* VideoListCell.swift */; };
 		E2E3E7080D78E3690E531239 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B5BA8AD065732355D68FC30 /* UIKit.framework */; };
 		E6F14042128A330F268DBED7 /* UserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 51123599CB6E5F785E81071F /* UserCell.xib */; };
+		ED8D5439A58CCBB2979CB95C /* Pods_KinescopeExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4837E22C713F3E0A1F7CF62B /* Pods_KinescopeExample.framework */; };
 		FA0B3C752FBA9905C7353D1C /* KinescopeConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 78C442C19E61EBCB16A746A3 /* KinescopeConfig.plist */; };
 		FDE7CBB089D7D45FA27883F5 /* PaginatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1697D697E9F0904B87B756B7 /* PaginatorView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0037A15975D2389CE369F30F /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/KinescopeLocalizable.strings; sourceTree = "<group>"; };
+		05943A912685568D55CD36A7 /* Pods-KinescopeExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KinescopeExample.debug.xcconfig"; path = "Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample.debug.xcconfig"; sourceTree = "<group>"; };
 		1297BC1CB454C3BA783E4F43 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		1697D697E9F0904B87B756B7 /* PaginatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginatorView.swift; sourceTree = "<group>"; };
 		1B5BA8AD065732355D68FC30 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		246B7F2D473017AA57153302 /* VideoListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListController.swift; sourceTree = "<group>"; };
+		2CB6BCA5E16E5FB02C12CD8F /* Pods-KinescopeExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KinescopeExample.release.xcconfig"; path = "Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample.release.xcconfig"; sourceTree = "<group>"; };
 		3299E0B8F9C5E0E62196C129 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		3DE5C30711A48F6469FD4E09 /* Pods-KinescopeExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KinescopeExample.debug.xcconfig"; path = "Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample.debug.xcconfig"; sourceTree = "<group>"; };
 		406FFA096A7AD6CD8255B8AC /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
 		4325DEDAB8F065C61B6079A6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/KinescopeLocalizable.strings; sourceTree = "<group>"; };
+		4837E22C713F3E0A1F7CF62B /* Pods_KinescopeExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KinescopeExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A366BFC33AA765D5889FCA5 /* VideoListFocusableCellGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListFocusableCellGenerator.swift; sourceTree = "<group>"; };
 		508C4602E3E4B5D5D5BA8FD8 /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
 		51123599CB6E5F785E81071F /* UserCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserCell.xib; sourceTree = "<group>"; };
 		78C442C19E61EBCB16A746A3 /* KinescopeConfig.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = KinescopeConfig.plist; sourceTree = "<group>"; };
 		7B71D3741FB772726928CC02 /* ConfigStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigStorage.swift; sourceTree = "<group>"; };
-		861C16DD188C7814FDA35CA3 /* Pods-KinescopeExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KinescopeExample.release.xcconfig"; path = "Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample.release.xcconfig"; sourceTree = "<group>"; };
 		8DA6E3DD8840BCD239516A03 /* VideoListCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VideoListCell.xib; sourceTree = "<group>"; };
 		96FB4A4491B8B00FA3019B09 /* KinescopeExample.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = KinescopeExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B72FC26817E3EC28FCC3B21E /* AuthSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSelectorController.swift; sourceTree = "<group>"; };
@@ -56,7 +57,6 @@
 		CA9D2311AEDF8D389D577A35 /* Debouncer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debouncer.swift; sourceTree = "<group>"; };
 		DA6D1B1FB02192C67211B98A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DBA8C22D9B895D30AE66FB83 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/KinescopeLocalizable.strings; sourceTree = "<group>"; };
-		EA344255406E618A01663722 /* Pods_KinescopeExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KinescopeExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB8FAFE6D902EDF9332B6176 /* VideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
 		F59A91C77A3A14596F5C5226 /* VideoListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoListCell.swift; sourceTree = "<group>"; };
 		FD747CF272A25BB0F30BB85A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -68,7 +68,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E2E3E7080D78E3690E531239 /* UIKit.framework in Frameworks */,
-				8AA356221323F1BC346B54B3 /* Pods_KinescopeExample.framework in Frameworks */,
+				ED8D5439A58CCBB2979CB95C /* Pods_KinescopeExample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,7 +129,7 @@
 			isa = PBXGroup;
 			children = (
 				1B5BA8AD065732355D68FC30 /* UIKit.framework */,
-				EA344255406E618A01663722 /* Pods_KinescopeExample.framework */,
+				4837E22C713F3E0A1F7CF62B /* Pods_KinescopeExample.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -145,16 +145,6 @@
 			path = VideoList;
 			sourceTree = "<group>";
 		};
-		B1BA717C01E870B6A1A7FD6D /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				3DE5C30711A48F6469FD4E09 /* Pods-KinescopeExample.debug.xcconfig */,
-				861C16DD188C7814FDA35CA3 /* Pods-KinescopeExample.release.xcconfig */,
-			);
-			name = Pods;
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		B40A0E326F2A62509005F0D1 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
@@ -165,13 +155,23 @@
 			path = Helper;
 			sourceTree = "<group>";
 		};
+		BCF9D2E33A822D897DA9E79C /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				05943A912685568D55CD36A7 /* Pods-KinescopeExample.debug.xcconfig */,
+				2CB6BCA5E16E5FB02C12CD8F /* Pods-KinescopeExample.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		D09F6815030B468C4B8FCCBD = {
 			isa = PBXGroup;
 			children = (
 				7450ED92051EFFF412035B45 /* KinescopeExample */,
 				81BB57F38255C447C00A8B35 /* Frameworks */,
 				0E1DEFEC7B456B248F1F6FF5 /* Products */,
-				B1BA717C01E870B6A1A7FD6D /* Pods */,
+				BCF9D2E33A822D897DA9E79C /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -219,11 +219,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DD131C8ACC5712E5819DCDAE /* Build configuration list for PBXNativeTarget "KinescopeExample" */;
 			buildPhases = (
-				00B8516DE2BDF9BB388012BA /* [CP] Check Pods Manifest.lock */,
+				5C952DB6C7D9291CF87A9CD0 /* [CP] Check Pods Manifest.lock */,
 				1D1F2DA9F9E7D46D31255291 /* Sources */,
 				75391D939658B78C30F37B07 /* Resources */,
 				CB7AB8D3C554BB3208DC3C46 /* Frameworks */,
-				9FD7E03E672D2B60D19A46BA /* [CP] Embed Pods Frameworks */,
+				0E0FF49932B4B53AD2E94E36 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -285,7 +285,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		00B8516DE2BDF9BB388012BA /* [CP] Check Pods Manifest.lock */ = {
+		0E0FF49932B4B53AD2E94E36 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5C952DB6C7D9291CF87A9CD0 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -305,23 +322,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9FD7E03E672D2B60D19A46BA /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KinescopeExample/Pods-KinescopeExample-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -367,7 +367,7 @@
 /* Begin XCBuildConfiguration section */
 		1C486D161EACA453645ACED6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3DE5C30711A48F6469FD4E09 /* Pods-KinescopeExample.debug.xcconfig */;
+			baseConfigurationReference = 05943A912685568D55CD36A7 /* Pods-KinescopeExample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -443,7 +443,7 @@
 		};
 		85CDCF86B3F2840A9AC709CF /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 861C16DD188C7814FDA35CA3 /* Pods-KinescopeExample.release.xcconfig */;
+			baseConfigurationReference = 2CB6BCA5E16E5FB02C12CD8F /* Pods-KinescopeExample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";

@@ -93,7 +93,7 @@ private extension DisclosureCell {
             valueLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             valueLabel.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: 8),
             valueLabel.trailingAnchor.constraint(equalTo: iconView.leadingAnchor, constant: -16),
-            iconView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            iconView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
             iconView.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
 

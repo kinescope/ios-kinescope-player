@@ -93,7 +93,7 @@ private extension SideMenuBar {
                 titleView.trailingAnchor.constraint(equalTo: closeButton.leadingAnchor, constant: -4),
                 titleView.centerYAnchor.constraint(equalTo: centerYAnchor),
                 closeButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-                closeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
+                closeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8)
             ])
         } else {
             configureBackButton()
@@ -105,7 +105,7 @@ private extension SideMenuBar {
                 titleView.trailingAnchor.constraint(equalTo: closeButton.leadingAnchor, constant: -8),
                 titleView.centerYAnchor.constraint(equalTo: centerYAnchor),
                 closeButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-                closeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
+                closeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8)
             ])
         }
 
