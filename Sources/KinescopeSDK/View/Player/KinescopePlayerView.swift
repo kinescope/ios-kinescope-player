@@ -382,6 +382,20 @@ private extension KinescopePlayerView {
                        })
     }
 
+    func addDebouncerHandler() {
+        overlayDebouncer.handler = { [weak self] in
+            guard let self = self else {
+                return
+            }
+            self.overlay?.isSelected = false
+            UIView.animate(withDuration: 0.3, animations: {
+                self.controlPanel?.alpha = 0.0
+            }, completion: { _ in
+                self.controlPanel?.expanded = false
+            })
+        }
+    }
+
 }
 
 // MARK: - PlayerOverlayViewDelegate
@@ -389,7 +403,6 @@ private extension KinescopePlayerView {
 extension KinescopePlayerView: PlayerOverlayViewDelegate {
 
     func didTap(isSelected: Bool) {
-        overlayDebouncer.renewInterval()
         if isSelected {
             if !(controlPanel?.expanded ?? true) {
                 overlay?.isSelected = false
@@ -404,26 +417,19 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
             UIView.animate(withDuration: 0.3) {
                 self.controlPanel?.alpha = 1.0
             }
-            overlayDebouncer.handler = { [weak self] in
-                guard let self = self else {
-                    return
-                }
-                self.overlay?.isSelected = false
-                UIView.animate(withDuration: 0.3, animations: {
-                    self.controlPanel?.alpha = 0.0
-                }, completion: { _ in
-                    self.controlPanel?.expanded = false
-                })
-            }
+            addDebouncerHandler()
         }
+        overlayDebouncer.renewInterval()
     }
 
     func didPlay() {
+        addDebouncerHandler()
+        overlayDebouncer.renewInterval()
         delegate?.didPlay()
     }
 
     func didPause() {
-        overlayDebouncer.renewInterval()
+        overlayDebouncer.handler = { }
         delegate?.didPause()
     }
 
