@@ -1,0 +1,46 @@
+/* 
+  KinescopeLocalizable.strings
+  KinescopeExample
+
+  Created by Никита Гагаринов on 25.04.2021.
+  
+*/
+
+// MARK: - Player
+
+"Player.play" = "Смотреть";
+"Player.pause" = "Пауза";
+"Player.replay" = "Повторить";
+"Player.stop" = "Остановить";
+"Player.mute" = "Отключить звук";
+"Player.unmute" = "Включить звук";
+"Player.settings" = "Настройки";
+"Player.fullscreen" = "Во весь экран";
+"Player.exitFullscreen" = "Выход из полноэкранного режима";
+"Player.auto" = "Авто";
+"Player.error" = "Ошибка";
+"Player.videoPlaybackFailed" = "Ошибка проигрывания видео";
+"Player.tryAgain" = "Пожалуйста, попробуйте еще раз";
+"Player.refresh" = "Обновить";
+"Player.version" = "Версия";
+"Player.chapters" = "Главы";
+"Player.subtitles" = "Субтитры/СС";
+"Player.playlist" = "Плейлист";
+"Player.download" = "Загрузить";
+"Player.attachments" = "Материалы";
+"Player.live" = "В эфире";
+"Player.liveTooltip" = "Пропустить и перейти к прямой трансляции";
+"Player.off" = "Выкл.";
+"Player.share" = "Поделиться";
+"Player.airplay" = "AirPlay";
+"Player.additionalMaterials" = "Дополнительные материалы";
+"Player.downloadAll" = "Скачать все";
+"Player.playbackSpeed" = "Скорость";
+"Player.videoQuality" = "Качество";
+"Player.normal" = "Нормальная";
+"Player.saveLogToFile" = "Сохранить лог";
+"Player.aboutCompany" = "Подробнее о Kinescope";
+"Player.show" = "Показать";
+"Player.hide" = "Скрыть";
+"Player.reset" = "Сбросить";
+"Player.options" = "Параметры";

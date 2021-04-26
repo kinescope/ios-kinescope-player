@@ -614,20 +614,20 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didSelectDownloadAll(for title: String) {
-        switch title {
-        case SideMenu.DescriptionTitle.download.rawValue:
-            video?.downloadableAssets.forEach {
-                dependencies.assetDownloader.enqueueDownload(asset: $0)
-                Kinescope.shared.logger?.log(message: "Start downloading asset: \($0.quality) - \($0.id)",
-                                             level: KinescopeLoggerLevel.player)
-            }
-        case SideMenu.DescriptionTitle.attachments.rawValue:
+        switch SideMenu.DescriptionTitle.getType(by: title) {
+        case .attachments:
             video?.additionalMaterials.forEach {
                 dependencies.attachmentDownloader.enqueueDownload(attachment: $0)
                 Kinescope.shared.logger?.log(message: "Start downloading attachment: \($0.title)",
                                              level: KinescopeLoggerLevel.player)
             }
-        default:
+        case .download:
+            video?.downloadableAssets.forEach {
+                dependencies.assetDownloader.enqueueDownload(asset: $0)
+                Kinescope.shared.logger?.log(message: "Start downloading asset: \($0.quality) - \($0.id)",
+                                             level: KinescopeLoggerLevel.player)
+            }
+        case .none:
             break
         }
     }
