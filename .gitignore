@@ -28,6 +28,10 @@ DerivedData/
 #
 Pods/
 
+Sources/KinescopeSDK.xcodeproj/
+Example/KinescopeExample.xcworkspace
+Example/KinescopeExample.xcodeproj/
+
 # Exported environment variables for XcodeCoverage
 env.sh
 
