@@ -21,7 +21,10 @@ extension Manager: KinescopeConfigurable {
         self.inspector = Inspector(videosService: VideosNetworkService(transport: Transport(),
                                                                        config: config))
 
-        self.eventsCenter = LocalEventsCenter(analitycsService: ())
+        let innerService = AnalyticsNetworkService(transport: Transport(), config: config)
+        let innerHandler = InnerEventsProtoHandler(service: innerService)
+
+        self.eventsCenter = LocalEventsCenter(innerEventsHandler: innerHandler)
     }
 
     func set(logger: KinescopeLogging, levels: [KinescopeLoggingLevel]) {

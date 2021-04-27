@@ -8,7 +8,19 @@
 import Foundation
 
 public enum KinescopeEvent: String {
+    case playback
     case play
+    case pause
+    case end
+    case replay
+    case buffering
+    case seek
+    case rate
+    case view
+    case enterfullscreen
+    case exitfullscreen
+    case qualitychanged
+    case autoqualitychanged
 
     var notificationName: Notification.Name {
         return Notification.Name("io.kinescope." + rawValue)

@@ -12,12 +12,12 @@ class LocalEventsCenter: KinescopeEventsCenter {
     // MARK: - Private Properties
 
     private let nc = NotificationCenter.default
-    private let analitycsService: Void
+    private let innerEventsHandler: InnerEventsHandler
 
     // MARK: - Init
 
-    init(analitycsService: Void) {
-        self.analitycsService = analitycsService
+    init(innerEventsHandler: InnerEventsHandler) {
+        self.innerEventsHandler = innerEventsHandler
     }
 
     // MARK: - KinescopeEventsCenter
@@ -49,7 +49,49 @@ class LocalEventsCenter: KinescopeEventsCenter {
 private extension LocalEventsCenter {
 
     func handleAnalitycs(event: KinescopeEvent, userInfo: [AnyHashable : Any]? = nil) {
-
+        switch event {
+        case .playback:
+            guard let sec = userInfo?["sec"] as? TimeInterval else {
+                return
+            }
+            innerEventsHandler.playback(sec: sec)
+        case .play:
+            innerEventsHandler.play()
+        case .pause:
+            innerEventsHandler.pause()
+        case .end:
+            innerEventsHandler.end()
+        case .replay:
+            innerEventsHandler.replay()
+        case .buffering:
+            guard let sec = userInfo?["sec"] as? TimeInterval else {
+                return
+            }
+            innerEventsHandler.buffer(sec: sec)
+        case .seek:
+            innerEventsHandler.seek()
+        case .rate:
+            guard let rate = userInfo?["rate"] as? Float else {
+                return
+            }
+            innerEventsHandler.rate(rate)
+        case .view:
+            innerEventsHandler.view()
+        case .enterfullscreen:
+            innerEventsHandler.enterfullscreen()
+        case .exitfullscreen:
+            innerEventsHandler.exitfullscreen()
+        case .qualitychanged:
+            guard let quality = userInfo?["quality"] as? String else {
+                return
+            }
+            innerEventsHandler.qualitychanged(quality)
+        case .autoqualitychanged:
+            guard let quality = userInfo?["quality"] as? String else {
+                return
+            }
+            innerEventsHandler.autoqualitychanged(quality)
+        }
     }
 
 }
