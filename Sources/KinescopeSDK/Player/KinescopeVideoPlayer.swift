@@ -17,6 +17,10 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private lazy var strategy: PlayingStrategy = {
         dependencies.provide(for: config)
     }()
+    private lazy var innerEventsHandler: InnerEventsHandler = {
+        let service = AnalyticsNetworkService(transport: Transport(), config: Kinescope.shared.config)
+        return InnerEventsProtoHandler(service: service)
+    }()
 
     private weak var view: KinescopePlayerView?
 
@@ -39,6 +43,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private var isOverlayed = false
     private var savedTime: CMTime = .zero
     private weak var miniView: KinescopePlayerView?
+    private weak var delegate: KinescopeVideoPlayerDelegate?
 
     private var video: KinescopeVideo?
     private let config: KinescopePlayerConfig
@@ -87,6 +92,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     public func play() {
         if video != nil {
             self.strategy.play()
+            self.delegate?.playerDidPlay()
         } else {
             self.load()
         }
@@ -94,12 +100,14 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
     public func pause() {
         self.strategy.pause()
+        self.delegate?.playerDidPause()
     }
 
     public func stop() {
         self.strategy.pause()
         self.strategy.unbind()
         self.removeTracksObserver()
+        self.delegate?.playerDidStop()
     }
 
     public func attach(view: KinescopePlayerView) {
@@ -164,10 +172,12 @@ private extension KinescopeVideoPlayer {
                 self?.select(quality: .auto(hlsLink: video.hlsLink))
                 self?.view?.overlay?.set(title: video.title, subtitle: video.description)
                 self?.view?.set(options: self?.makePlayerOptions(from: video) ?? [])
+                self?.delegate?.playerDidLoadVideo(error: nil)
                 self?.play()
             },
             onError: { [weak self] error in
                 self?.view?.stopLoader()
+                self?.delegate?.playerDidLoadVideo(error: error)
                 Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.network)
             }
         )
@@ -223,11 +233,13 @@ private extension KinescopeVideoPlayer {
             }
 
             Kinescope.shared.logger?.log(message: "playback position changed to \(time) seconds", level: KinescopeLoggerLevel.player)
+            self.delegate?.player(playbackPositionMovedTo: time.seconds)
 
             // Preload observation
 
             let buferredTime = currentItem.loadedTimeRanges.first?.timeRangeValue.end.seconds ?? 0
             Kinescope.shared.logger?.log(message: "playback buffered \(buferredTime) seconds", level: KinescopeLoggerLevel.player)
+            self.delegate?.player(playbackBufferMovedTo: time.seconds)
 
             let bufferProgress = CGFloat(buferredTime / duration)
 
@@ -253,6 +265,7 @@ private extension KinescopeVideoPlayer {
 
                 Kinescope.shared.logger?.log(message: "AVPlayer.Status – \(item.status)",
                                              level: KinescopeLoggerLevel.player)
+                self?.delegate?.player(changedStatusTo: item.status)
             }
         )
     }
@@ -290,6 +303,7 @@ private extension KinescopeVideoPlayer {
 
                 Kinescope.shared.logger?.log(message: "AVPlayerItem.Status – \(item.status)",
                                              level: KinescopeLoggerLevel.player)
+                self.delegate?.player(changedItemStatusTo: item.status)
             }
         )
     }
@@ -311,6 +325,7 @@ private extension KinescopeVideoPlayer {
                     message: "AVPlayer.TimeControlStatus – \(item.timeControlStatus.rawValue)",
                     level: KinescopeLoggerLevel.player
                 )
+                self?.delegate?.player(changedTimeControlStatusTo: item.timeControlStatus)
             }
         )
     }
@@ -359,6 +374,7 @@ private extension KinescopeVideoPlayer {
                     message: "AVPlayerItem.presentationSize – \(item.presentationSize)",
                     level: KinescopeLoggerLevel.player
                 )
+                self.delegate?.player(changedPresentationSizeTo: item.presentationSize)
             }
         )
     }
@@ -391,6 +407,7 @@ private extension KinescopeVideoPlayer {
 
         Kinescope.shared.logger?.log(message: "timeline changed to \(seconds) seconds",
                                      level: KinescopeLoggerLevel.player)
+        delegate?.player(didSeekTo: seconds)
 
         strategy.player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] _ in
             self?.isSeeking = false
@@ -474,6 +491,8 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                                      level: KinescopeLoggerLevel.player)
 
         time = min(duration, position * duration)
+
+        delegate?.player(timelinePositionMovedTo: position)
     }
 
     func didConfirmSeek() {
@@ -497,6 +516,8 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
         time = min(duration, time + 15)
         seek(to: time)
+
+        delegate?.player(didFastForwardTo: time)
     }
 
     func didFastBackward() {
@@ -504,6 +525,8 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
         time = max(time - 15.0, .zero)
         seek(to: time)
+
+        delegate?.player(didFastBackwardTo: time)
     }
 
     func didPresentFullscreen(from view: KinescopePlayerView) {
@@ -592,6 +615,8 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
         Kinescope.shared.logger?.log(message: "Select quality: \(quality)",
                                      level: KinescopeLoggerLevel.player)
+
+        delegate?.player(changedQualityTo: quality)
     }
 
     func didSelectAttachment(with index: Int) {

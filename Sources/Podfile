@@ -1,0 +1,12 @@
+# Uncomment the next line to define a global platform for your project
+use_frameworks!
+inhibit_all_warnings!
+platform :ios, '10.0'
+
+target 'KinescopeSDK' do
+  # Comment the next line if you don't want to use dynamic frameworks
+
+  # Pods for KinescopeSDK
+  pod 'SwiftProtobuf', '~> 1.0'
+
+end

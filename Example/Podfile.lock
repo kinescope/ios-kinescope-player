@@ -1,7 +1,9 @@
 PODS:
-  - KinescopeSDK (0.1)
+  - KinescopeSDK (0.1):
+    - SwiftProtobuf (~> 1.0)
   - Kingfisher (6.2.1)
   - ReactiveDataDisplayManager (7.0.0)
+  - SwiftProtobuf (1.16.0)
 
 DEPENDENCIES:
   - KinescopeSDK (from `../`)
@@ -12,15 +14,17 @@ SPEC REPOS:
   trunk:
     - Kingfisher
     - ReactiveDataDisplayManager
+    - SwiftProtobuf
 
 EXTERNAL SOURCES:
   KinescopeSDK:
     :path: "../"
 
 SPEC CHECKSUMS:
-  KinescopeSDK: 48ce8517e66381bbd9ef336dadea4168bf4d151d
+  KinescopeSDK: 0e32c16a8005fc08901dac4ba2c0da820b6fe497
   Kingfisher: e71c6fac2aebb1262888cabc2cb13d313362a48f
   ReactiveDataDisplayManager: 0ff30e94f5c9785e4f366ca5e09bef00eb6a8ba8
+  SwiftProtobuf: 4e16842b83c6fda06b10fac50d73b3f1fce8ab7b
 
 PODFILE CHECKSUM: 16301e56b578a66ff683d6aae023c456365e17e9
 
