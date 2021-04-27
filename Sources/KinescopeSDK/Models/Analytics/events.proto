@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "gogo.proto";
+
+option (gogoproto.sizer_all)           = true;
+option (gogoproto.populate_all)        = false;
+option (gogoproto.marshaler_all)       = true;
+option (gogoproto.unmarshaler_all)     = true;
+option (gogoproto.goproto_getters_all) = false;
+
+package analytics;
+
+message Player {
+	string Type    = 1; // iOS SDK
+	string Version = 2; // 1.2.42
+}
+
+message Video {
+	string  Source   = 1; // https://kinescopecdn.net/xxx-xxx/xxx-xxx/video.mp4
+	uint32  Duration = 2; // 120 (seconds)
+}
+
+message Playback {
+	float   Rate            = 1;
+	int32   Volume          = 2; // 0-100
+	string  Quality         = 3; // 480p/720p/1080p ...
+	bool    IsMuted         = 4;
+	bool    IsFullscreen    = 5;
+	uint32  PreviewPosition = 6; // 120 (seconds)
+	uint32  CurrentPosition = 7; // 125 (seconds)
+}
+
+message Device {
+	string OS           = 1;
+	string OSVersion    = 2;
+	uint32 ScreenWidth  = 3;
+	uint32 ScreenHeight = 4;
+}
+/**
+* ID              - уникальный UUID, генерируется 1 раз при установке плеера, желательно не менять
+* ViewID          - уникальный UUID, генерируется каждый раз при начале просмотра ролика
+* IP              - IPv4/IPv6
+* WatchedDuration - количество уникальных просмотренных секунд ролика, если пользователь просмотрел 1 и тотже участок несколько раз - считается только 1
+*/
+
+enum SessionType {
+	Online  = 0;
+	Offline = 1;
+}
+
+message Session {
+	bytes       ID              = 1 [(gogoproto.nullable) = false, (gogoproto.customtype) = "gitlab.integros.com/go/libs/uuid.UUID"];
+	SessionType Type            = 2;
+	bytes       ViewID          = 3 [(gogoproto.nullable) = false, (gogoproto.customtype) = "gitlab.integros.com/go/libs/uuid.UUID"];
+	bytes       IPaddress       = 4;
+	string      ExternalID      = 5;
+	uint32      WatchedDuration = 6;
+}
+
+// EventName
+/** Воспроизведение. Отправляется каждые два процента от длительности ролика, но не чаще чем каждые 5 сек. и не реже чем каждые 60 сек. */
+// 'playback'
+/** Начато воспроизведение. */
+// 'play'
+/** Пауза. */
+// 'pause'
+/** Конец ролика. */
+// 'end'
+/** Начато повторное воспроизведение. */
+// 'replay'
+/** Длительность буферизации. Когда нет возможности продолжать воспроизведение, проигрывание приостанавливается для буферизации ролика. */
+// 'buffering' в Value сохраняем длительность в секундах
+/** Начато перемещение на новую позицию времени в ролике. */
+// 'seek'
+/** Изменена скорость воспроизведения. */
+// 'rate'
+/** Отправляется когда воспроизведение ролика длится более 5 сек. */
+// 'view'
+/** Переход в полноэкранный режим. */
+// 'enterfullscreen'
+/** Выход из полноэкранного режима. */
+// 'exitfullscreen'
+/** Установлено качество видео. */
+// 'qualitychanged'
+/** Качество видео поменялось автоматически. */
+// 'autoqualitychanged';
+
+message Native {
+	string                    Event     = 1;
+	float                     Value     = 2;
+	Video                     Video     = 3 [(gogoproto.nullable) = false];
+	Player                    Player    = 4 [(gogoproto.nullable) = false];
+	Device                    Device    = 5 [(gogoproto.nullable) = false];
+	Session                   Session   = 6 [(gogoproto.nullable) = false];
+	Playback                  Playback  = 7 [(gogoproto.nullable) = false];
+	google.protobuf.Timestamp EventTime = 8 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
+}
