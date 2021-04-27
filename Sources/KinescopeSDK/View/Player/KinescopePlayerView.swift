@@ -54,6 +54,11 @@ public class KinescopePlayerView: UIView {
         setLayout(with: .default)
     }
 
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        self.progressView.center = CGPoint(x: frame.width / 2, y: frame.height / 2)
+    }
+
     deinit {
         // Workaround to prevent plaing audio when player deinited(due to enabled background mode)
         if !(pipController?.isPictureInPictureActive ?? false) {
@@ -181,10 +186,8 @@ private extension KinescopePlayerView {
     }
 
     func configureProgressView(with progressView: KinescopeActivityIndicator) {
-        addSubview(progressView)
-        centerChild(view: progressView)
-
         self.progressView = progressView
+        addSubview(self.progressView)
     }
 
     func configurePip() {

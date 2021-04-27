@@ -30,7 +30,8 @@ final class VideoListCell: UITableViewCell {
         playerView.layer.cornerRadius = 20
         playerView.layer.masksToBounds = true
         playerView.setLayout(with: .init(gravity: .resizeAspect,
-                                         activityIndicator: UIActivityIndicatorView(style: .white),
+//                                         activityIndicator: UIActivityIndicatorView(style: .white),
+                                         activityIndicator: KinescopeSpinner(frame: CGRect(x: 0, y: 0, width: 48, height: 48)),
                                          overlay: nil,
                                          controlPanel: nil,
                                          sideMenu: .default,
