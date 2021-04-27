@@ -17,6 +17,7 @@ public struct KinescopePlayerViewConfiguration {
     let controlPanel: KinescopeControlPanelConfiguration?
     let sideMenu: KinescopeSideMenuConfiguration
     let shadowOverlay: KinescopePlayerShadowOverlayConfiguration?
+    let errorState: KinescopeErrorViewConfiguration
 
     /// - parameter gravity: `AVLayerVideoGravity` value defines how the video is displayed within a layer’s bounds rectangle
     /// - parameter activityIndicator: Custom indicator view used to indicate process of video downloading
@@ -26,18 +27,21 @@ public struct KinescopePlayerViewConfiguration {
     /// Set `nil` to hide control panel
     /// - parameter sideMenu: Configuration of side menu with setings
     /// - parameter shadowOverlay: Configuration of shadow overlay beneath side menu
+    /// - parameter errorView: Configuration of error state view
     public init(gravity: AVLayerVideoGravity,
                 activityIndicator: KinescopeActivityIndicator,
                 overlay: KinescopePlayerOverlayConfiguration?,
                 controlPanel: KinescopeControlPanelConfiguration?,
                 sideMenu: KinescopeSideMenuConfiguration,
-                shadowOverlay: KinescopePlayerShadowOverlayConfiguration?) {
+                shadowOverlay: KinescopePlayerShadowOverlayConfiguration?,
+                errorState: KinescopeErrorViewConfiguration) {
         self.gravity = gravity
         self.activityIndicator = activityIndicator
         self.overlay = overlay
         self.controlPanel = controlPanel
         self.sideMenu = sideMenu
         self.shadowOverlay = shadowOverlay
+        self.errorState = errorState
     }
 
 }
@@ -57,6 +61,7 @@ public extension KinescopePlayerViewConfiguration {
                                                                                         timeline: .default,
                                                                                         optionsMenu: .default),
                                                                     sideMenu: .default,
-                                                                    shadowOverlay: .default)
+                                                                    shadowOverlay: .default,
+                                                                    errorState: .default)
 
 }
