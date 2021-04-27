@@ -40,10 +40,12 @@ class InnerEventsProtoHandler: InnerEventsHandler {
         self.service = service
     }
 
+    // MARK: - Internal Methods
+
     // MARK: - InnerEventsHandler
 
     func playback(sec: TimeInterval) {
-
+        
     }
 
     func play() {

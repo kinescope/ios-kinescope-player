@@ -17,6 +17,10 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private lazy var strategy: PlayingStrategy = {
         dependencies.provide(for: config)
     }()
+    private lazy var innerEventsHandler: InnerEventsHandler = {
+        let service = AnalyticsNetworkService(transport: Transport(), config: Kinescope.shared.config)
+        return InnerEventsProtoHandler(service: service)
+    }()
 
     private weak var view: KinescopePlayerView?
 

@@ -12,17 +12,12 @@ public struct KinescopeConfig {
     let apiKey: String
     /// API endpoint
     let endpoint: String
-    /// Analytics API endpoint
-    let analyticsEndpoint: String
 
     /// - parameter apiKey: ApiKey from [dashboard](https://dashboard.kinescope.io/)
     /// - parameter endpoint: API endpoint
-    /// - parameter endpoint: Analytics API endpoint
     public init(apiKey: String,
-                endpoint: String = "https://api.kinescope.io/v1",
-                analyticsEndpoint: String = "https://metrics.kinescope.io/player-native") {
+                endpoint: String = "https://api.kinescope.io/v1") {
         self.apiKey = apiKey
         self.endpoint = endpoint
-        self.analyticsEndpoint = analyticsEndpoint
     }
 }
