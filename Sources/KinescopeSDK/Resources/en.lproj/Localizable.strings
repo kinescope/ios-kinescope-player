@@ -1,0 +1,41 @@
+// Localizable.strings
+// KinescopeSDK
+
+// MARK: - Player
+
+"Player.play" = "Play";
+"Player.pause" = "Pause";
+"Player.replay" = "Replay";
+"Player.stop" = "Stop";
+"Player.mute" = "Mute";
+"Player.unmute" = "Unmute";
+"Player.settings" = "Settings";
+"Player.fullscreen" = "Full screen";
+"Player.exitFullscreen" = "Exit full screen";
+"Player.auto" = "Auto";
+"Player.error" = "Error";
+"Player.videoPlaybackFailed" = "Video playback failed";
+"Player.tryAgain" = "Please try again";
+"Player.refresh" = "Refresh";
+"Player.version" = "Version";
+"Player.chapters" = "Chapters";
+"Player.subtitles" = "Subtitles/CC";
+"Player.playlist" = "Playlist";
+"Player.download" = "Download";
+"Player.attachments" = "Attachments";
+"Player.live" = "Live";
+"Player.liveTooltip" = "Skip ahead to live broadcast";
+"Player.off" = "Off";
+"Player.share" = "Share";
+"Player.airplay" = "AirPlay";
+"Player.additionalMaterials" = "Additional materials";
+"Player.downloadAll" = "Download All";
+"Player.playbackSpeed" = "Playback speed";
+"Player.videoQuality" = "Quality";
+"Player.normal" = "Normal";
+"Player.saveLogToFile" = "Save log";
+"Player.aboutCompany" = "About Kinescope";
+"Player.show" = "Show";
+"Player.hide" = "Hide";
+"Player.reset" = "Reset";
+"Player.options" = "Options";

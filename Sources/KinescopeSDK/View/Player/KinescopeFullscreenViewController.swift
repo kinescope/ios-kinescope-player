@@ -44,6 +44,10 @@ final public class KinescopeFullscreenViewController: UIViewController {
         return true
     }
 
+    public override var prefersStatusBarHidden: Bool {
+        return true
+    }
+
     // MARK: - Lifecycle
 
     public override func viewDidLoad() {

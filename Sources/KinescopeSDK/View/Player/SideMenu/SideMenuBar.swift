@@ -93,7 +93,7 @@ private extension SideMenuBar {
                 titleView.trailingAnchor.constraint(equalTo: closeButton.leadingAnchor, constant: -4),
                 titleView.centerYAnchor.constraint(equalTo: centerYAnchor),
                 closeButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-                closeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
+                closeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8)
             ])
         } else {
             configureBackButton()
@@ -105,7 +105,7 @@ private extension SideMenuBar {
                 titleView.trailingAnchor.constraint(equalTo: closeButton.leadingAnchor, constant: -8),
                 titleView.centerYAnchor.constraint(equalTo: centerYAnchor),
                 closeButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-                closeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
+                closeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8)
             ])
         }
 
@@ -157,7 +157,7 @@ private extension SideMenuBar {
 
     func configureDownloadButton() {
         let button = UIButton()
-        button.setTitle("Download all", for: .normal)
+        button.setTitle(L10n.Player.downloadAll, for: .normal)
         button.titleLabel?.font = config.downloadAllFont
         button.setTitleColor(config.downloadAllColor, for: .normal)
         button.setTitleColor(config.downloadAllHighlightedColor, for: .highlighted)
