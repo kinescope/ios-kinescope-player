@@ -11,12 +11,15 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         }
     }
 
+    public weak var delegate: KinescopeVideoPlayerDelegate?
+
     // MARK: - Private Properties
 
     private let dependencies: KinescopePlayerDependencies
     private lazy var strategy: PlayingStrategy = {
         dependencies.provide(for: config)
     }()
+    private let callObserver = CallObserver()
     private lazy var innerEventsHandler: InnerEventsHandler = {
         let service = AnalyticsNetworkService(transport: Transport(), config: Kinescope.shared.config)
         return InnerEventsProtoHandler(service: service)
@@ -43,8 +46,6 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private var isOverlayed = false
     private var savedTime: CMTime = .zero
     private weak var miniView: KinescopePlayerView?
-    private weak var delegate: KinescopeVideoPlayerDelegate?
-
     private var video: KinescopeVideo?
     private let config: KinescopePlayerConfig
     private var options = [KinescopePlayerOption]()
@@ -71,6 +72,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         self.dependencies = dependencies
         self.config = config
         addNotofications()
+        callObserver.delegate = self
     }
 
     deinit {
@@ -459,6 +461,17 @@ private extension KinescopeVideoPlayer {
         if !time.isNaN {
             view?.controlPanel?.setIndicator(to: time)
         }
+    }
+
+}
+
+
+// MARK: - CallObserverDelegate
+
+extension KinescopeVideoPlayer: CallObserverDelegate {
+
+    func callObserver(callState: KinescopeCallState) {
+        delegate?.didGetCall(callState: callState)
     }
 
 }
