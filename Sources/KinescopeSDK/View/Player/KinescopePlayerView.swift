@@ -55,6 +55,11 @@ public class KinescopePlayerView: UIView {
         setLayout(with: .default)
     }
 
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        self.progressView.center = CGPoint(x: frame.width / 2, y: frame.height / 2)
+    }
+
     deinit {
         // Workaround to prevent plaing audio when player deinited(due to enabled background mode)
         if !(pipController?.isPictureInPictureActive ?? false) {
@@ -66,11 +71,11 @@ public class KinescopePlayerView: UIView {
 
     func startLoader() {
         previewView.isHidden = false
-        progressView.showVideoProgress(isLoading: true)
+        progressView.showLoading(true)
     }
 
     func stopLoader() {
-        progressView.showVideoProgress(isLoading: false)
+        progressView.showLoading(false)
         previewView.isHidden = true
     }
 
@@ -78,7 +83,7 @@ public class KinescopePlayerView: UIView {
         switch status {
         case .readyToPlay:
             overlay?.isHidden = false
-            progressView.showVideoProgress(isLoading: false)
+            progressView.showLoading(false)
             previewView.isHidden = true
         case .failed, .unknown:
             // FIXME: Error handling
@@ -182,10 +187,9 @@ private extension KinescopePlayerView {
     }
 
     func configureProgressView(with progressView: KinescopeActivityIndicator) {
-        addSubview(progressView)
-        centerChild(view: progressView)
-
         self.progressView = progressView
+        addSubview(self.progressView)
+        self.progressView.isHidden = true
     }
 
     func configurePip() {
