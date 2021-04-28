@@ -177,6 +177,7 @@ private extension KinescopeVideoPlayer {
             },
             onError: { [weak self] error in
                 self?.view?.stopLoader()
+                self?.view?.showError()
                 self?.delegate?.playerDidLoadVideo(error: error)
                 Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.network)
             }

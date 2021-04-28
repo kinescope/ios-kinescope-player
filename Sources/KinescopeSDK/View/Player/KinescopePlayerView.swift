@@ -21,6 +21,7 @@ public class KinescopePlayerView: UIView {
     private(set) var progressView: KinescopeActivityIndicator!
     private(set) var shadowOverlay: PlayerShadowOverlayView?
     private(set) var pipController: AVPictureInPictureController?
+    private var errorView: ErrorView?
 
     private var config: KinescopePlayerViewConfiguration!
 
@@ -79,12 +80,20 @@ public class KinescopePlayerView: UIView {
         previewView.isHidden = true
     }
 
+    func showError() {
+        errorView?.isHidden = false
+        overlay?.isHidden = true
+        controlPanel?.isHidden = true
+        shadowOverlay?.isHidden = true
+    }
+
     func change(status: AVPlayer.Status) {
         switch status {
         case .readyToPlay:
             overlay?.isHidden = false
             progressView.showLoading(false)
             previewView.isHidden = true
+            errorView?.isHidden = true
         case .failed, .unknown:
             // FIXME: Error handling
             break
@@ -99,6 +108,7 @@ public class KinescopePlayerView: UIView {
             controlPanel?.isHidden = false
             overlay?.isHidden = false
             overlay?.set(playing: true)
+            errorView?.isHidden = true
         case .paused, .waitingToPlayAtSpecifiedRate:
             overlay?.set(playing: false)
         @unknown default:
@@ -135,6 +145,7 @@ public extension KinescopePlayerView {
 
         configurePlayerView(with: config.gravity)
         configurePreviewView()
+        configureErrorView(with: config.errorState)
 
         if let overlay = config.overlay {
             configureOverlay(with: overlay)
@@ -184,6 +195,15 @@ private extension KinescopePlayerView {
     func configurePreviewView() {
         addSubview(previewView)
         stretch(view: previewView)
+    }
+
+    func configureErrorView(with config: KinescopeErrorViewConfiguration) {
+        let errorView = ErrorView(config: config, delegate: self)
+        addSubview(errorView)
+        stretch(view: errorView)
+        errorView.isHidden = true
+
+        self.errorView = errorView
     }
 
     func configureProgressView(with progressView: KinescopeActivityIndicator) {
@@ -564,6 +584,16 @@ extension KinescopePlayerView: SideMenuDelegate {
 
     func downloadAllTapped(for title: String) {
         delegate?.didSelectDownloadAll(for: title)
+    }
+
+}
+
+// MARK: - ErorViewDelegate
+
+extension KinescopePlayerView: ErrorViewDelegate {
+
+    func didTapRefresh() {
+
     }
 
 }
