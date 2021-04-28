@@ -167,6 +167,7 @@ extension AssetDownloader: FileServiceDelegate {
         let fileUrl = getAssetUrl(of: fileId) ?? .init(fileURLWithPath: "")
         Kinescope.shared.logger?.log(message: "Asset \(fileId) download completed as \(fileUrl)", level: KinescopeLoggerLevel.network)
         do {
+            try? FileManager.default.removeItem(at: fileUrl)
             try FileManager.default.copyItem(at: location, to: fileUrl)
             savedFileUrl = fileUrl
         } catch {

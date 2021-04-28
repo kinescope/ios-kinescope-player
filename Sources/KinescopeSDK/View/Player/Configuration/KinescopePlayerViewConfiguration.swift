@@ -27,7 +27,7 @@ public struct KinescopePlayerViewConfiguration {
     /// Set `nil` to hide control panel
     /// - parameter sideMenu: Configuration of side menu with setings
     /// - parameter shadowOverlay: Configuration of shadow overlay beneath side menu
-    /// - parameter errorView: Configuration of error state view
+    /// - parameter errorState: Configuration of error state view
     public init(gravity: AVLayerVideoGravity,
                 activityIndicator: KinescopeActivityIndicator,
                 overlay: KinescopePlayerOverlayConfiguration?,
@@ -51,17 +51,17 @@ public struct KinescopePlayerViewConfiguration {
 public extension KinescopePlayerViewConfiguration {
 
     static let `default`: KinescopePlayerViewConfiguration = .init(gravity: .resizeAspect,
-                                                                    activityIndicator: UIActivityIndicatorView(style: .whiteLarge),
-                                                                    overlay: .default,
-                                                                    controlPanel: .init(tintColor: .gray,
-                                                                                        backgroundColor: .clear,
-                                                                                        preferedHeight: 40,
-                                                                                        hideOnPlayTimeout: 2,
-                                                                                        timeIndicator: .default,
-                                                                                        timeline: .default,
-                                                                                        optionsMenu: .default),
-                                                                    sideMenu: .default,
-                                                                    shadowOverlay: .default,
-                                                                    errorState: .default)
+                                                                   activityIndicator: KinescopeSpinner(frame: CGRect(x: 0, y: 0, width: 32, height: 32)),
+                                                                   overlay: .default,
+                                                                   controlPanel: .init(tintColor: .gray,
+                                                                                       backgroundColor: .clear,
+                                                                                       preferedHeight: 40,
+                                                                                       hideOnPlayTimeout: 2,
+                                                                                       timeIndicator: .default,
+                                                                                       timeline: .default,
+                                                                                       optionsMenu: .default),
+                                                                   sideMenu: .default,
+                                                                   shadowOverlay: .default,
+                                                                   errorState: .default)
 
 }

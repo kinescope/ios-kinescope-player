@@ -31,6 +31,7 @@ public class KinescopePlayerView: UIView {
     private var selectedQuality = NSAttributedString(string: L10n.Player.auto)
     private var selectedSubtitles = NSAttributedString(string: L10n.Player.off)
     private lazy var overlayDebouncer = Debouncer(timeInterval: overlay?.duration ?? 0.0)
+    private lazy var timelineDebouncer = Debouncer(timeInterval: 1)
 
     // MARK: - Internal Properties
 
@@ -55,6 +56,11 @@ public class KinescopePlayerView: UIView {
         setLayout(with: .default)
     }
 
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        self.progressView.center = CGPoint(x: frame.width / 2, y: frame.height / 2)
+    }
+
     deinit {
         // Workaround to prevent plaing audio when player deinited(due to enabled background mode)
         if !(pipController?.isPictureInPictureActive ?? false) {
@@ -66,11 +72,11 @@ public class KinescopePlayerView: UIView {
 
     func startLoader() {
         previewView.isHidden = false
-        progressView.showVideoProgress(isLoading: true)
+        progressView.showLoading(true)
     }
 
     func stopLoader() {
-        progressView.showVideoProgress(isLoading: false)
+        progressView.showLoading(false)
         previewView.isHidden = true
     }
 
@@ -85,7 +91,7 @@ public class KinescopePlayerView: UIView {
         switch status {
         case .readyToPlay:
             overlay?.isHidden = false
-            progressView.showVideoProgress(isLoading: false)
+            progressView.showLoading(false)
             previewView.isHidden = true
             errorView?.isHidden = true
         case .failed, .unknown:
@@ -201,10 +207,9 @@ private extension KinescopePlayerView {
     }
 
     func configureProgressView(with progressView: KinescopeActivityIndicator) {
-        addSubview(progressView)
-        centerChild(view: progressView)
-
         self.progressView = progressView
+        addSubview(self.progressView)
+        self.progressView.isHidden = true
     }
 
     func configurePip() {
@@ -416,6 +421,25 @@ private extension KinescopePlayerView {
         }
     }
 
+    func addTimelineDebouncerHandler() {
+        if !(overlay?.isSelected ?? false) {
+            timelineDebouncer.handler = { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                UIView.animate(withDuration: 0.3, animations: {
+                    self.controlPanel?.alpha = 0.0
+                }, completion: { _ in
+                    self.controlPanel?.expanded = false
+                })
+            }
+            timelineDebouncer.renewInterval()
+            UIView.animate(withDuration: 0.3, animations: {
+                self.controlPanel?.alpha = 1.0
+            })
+        }
+    }
+
 }
 
 // MARK: - PlayerOverlayViewDelegate
@@ -454,11 +478,13 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
     }
 
     func didFastForward() {
+        addTimelineDebouncerHandler()
         overlayDebouncer.renewInterval()
         delegate?.didFastForward()
     }
 
     func didFastBackward() {
+        addTimelineDebouncerHandler()
         overlayDebouncer.renewInterval()
         delegate?.didFastBackward()
     }
