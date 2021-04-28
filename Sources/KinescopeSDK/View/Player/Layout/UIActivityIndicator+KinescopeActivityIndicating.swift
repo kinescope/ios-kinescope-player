@@ -9,7 +9,7 @@ import UIKit
 
 extension UIActivityIndicatorView: KinescopeActivityIndicating {
 
-    public func showVideoProgress(isLoading: Bool) {
+    public func showLoading(_ isLoading: Bool) {
         if isLoading {
             isHidden = false
             startAnimating()

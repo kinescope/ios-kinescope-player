@@ -50,7 +50,7 @@ public final class KinescopeSpinner: UIView, KinescopeActivityIndicating {
 
     // MARK: - Public Methods
 
-    public func showVideoProgress(isLoading: Bool) {
+    public func showLoading(_ isLoading: Bool) {
         if isLoading {
             isHidden = false
             resume(layer: gradientLayer)
@@ -94,9 +94,9 @@ private extension KinescopeSpinner {
         gradientLayer.add(rotationAnimation, forKey: "rotationAnimation")
 
         let animation = CABasicAnimation(keyPath: "strokeEnd")
-        animation.fromValue = 0
-        animation.toValue = 1
-        animation.duration = 2.5
+        animation.fromValue = 0.2
+        animation.toValue = 0.8
+        animation.duration = 1.5
         animation.autoreverses = true
         animation.repeatCount = .infinity
         progressLayer.add(animation, forKey: "line")
