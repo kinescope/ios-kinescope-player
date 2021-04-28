@@ -40,6 +40,12 @@ public class KinescopePlayerView: UIView {
         return controlPanel?.optionsMenu.options.contains(.fullscreen) ?? false
     }
 
+    var playPauseReplayState: PlayPauseReplayState = .play {
+        didSet {
+            overlay?.playPauseReplayState = playPauseReplayState
+        }
+    }
+
     // MARK: - Public Properties
 
     public private(set) var previewView: UIImageView = UIImageView()
@@ -97,20 +103,6 @@ public class KinescopePlayerView: UIView {
         case .failed, .unknown:
             // FIXME: Error handling
             break
-        @unknown default:
-            break
-        }
-    }
-
-    func change(timeControlStatus: AVPlayer.TimeControlStatus) {
-        switch timeControlStatus {
-        case .playing:
-            controlPanel?.isHidden = false
-            overlay?.isHidden = false
-            overlay?.set(playing: true)
-            errorView?.isHidden = true
-        case .paused, .waitingToPlayAtSpecifiedRate:
-            overlay?.set(playing: false)
         @unknown default:
             break
         }
@@ -221,7 +213,6 @@ private extension KinescopePlayerView {
         controlPanel.alpha = .zero
         addSubview(controlPanel)
         bottomChildWithSafeArea(view: controlPanel)
-        controlPanel.isHidden = true
 
         self.controlPanel = controlPanel
         controlPanel.output = self
@@ -466,15 +457,14 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
         overlayDebouncer.renewInterval()
     }
 
-    func didPlay() {
-        addDebouncerHandler()
-        overlayDebouncer.renewInterval()
-        delegate?.didPlay()
-    }
-
-    func didPause() {
-        overlayDebouncer.handler = { }
-        delegate?.didPause()
+    func didPlayPause() {
+        if playPauseReplayState == .play {
+            overlayDebouncer.handler = { }
+        } else {
+            addDebouncerHandler()
+            overlayDebouncer.renewInterval()
+        }
+        delegate?.didPlayPause()
     }
 
     func didFastForward() {
