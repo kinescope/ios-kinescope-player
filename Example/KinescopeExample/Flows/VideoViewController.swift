@@ -32,7 +32,7 @@ final class VideoViewController: UIViewController {
         player?.play()
         playerView.showOverlay(true)
         player?.pipDelegate = PipManager.shared
-//        player?.delegate = self
+        player?.delegate = self
     }
 
 }
@@ -45,13 +45,18 @@ extension VideoViewController: UINavigationControllerDelegate {
     }
 }
 
-// MARK: - KinescopeVideoPlayerDelegate
-//
-//extension VideoViewController: KinescopeVideoPlayerDelegate {
-//
-//    func callObserver(callState: KinescopecCallState) {
-//    if callState == .ended {
-//        player?.play()
-//    }
-//    }
-//}
+ // MARK: - KinescopeVideoPlayerDelegate
+
+extension VideoViewController: KinescopeVideoPlayerDelegate {
+
+    func didGetCall(callState: KinescopeCallState) {
+        if callState == .ended {
+            player?.play()
+        }
+    }
+
+    func playerDidPlay() {
+        print("DIDPLAY")
+    }
+
+}

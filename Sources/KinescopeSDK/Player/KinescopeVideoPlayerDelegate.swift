@@ -58,4 +58,5 @@ public extension KinescopeVideoPlayerDelegate {
     func player(didFastForwardTo time: TimeInterval) { }
     func player(didFastBackwardTo time: TimeInterval) { }
     func player(changedQualityTo quality: String) { }
+    func didGetCall(callState: KinescopeCallState) { }
 }

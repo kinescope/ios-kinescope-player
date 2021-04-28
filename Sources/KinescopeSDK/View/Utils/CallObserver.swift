@@ -12,6 +12,7 @@ public enum KinescopeCallState {
     case outgoing
     case connected
     case hold
+    case none
 }
 
 protocol CallObserverDelegate: class {
@@ -36,7 +37,7 @@ final class CallObserver: NSObject, CXCallObserverDelegate {
     // MARK: - CXCallObserverDelegate
 
     func callObserver(_ callObserver: CXCallObserver, callChanged call: CXCall) {
-        var callState: KinescopeCallState = .connected
+        var callState: KinescopeCallState = .none
 
         if call.hasConnected {
             callState = .connected
