@@ -64,3 +64,7 @@ AirPlay lets you share video from Apple devices direct to Apple TV, speakers and
 # Phone call
 
 With an incoming call, video will be paused by system, true for background. To resume video, use didGetCall method KinescopeVideoPlayerDelegate. Method will be called on every call action: on end, connect, hold and on outgoing call.
+
+# Localization
+
+To add new localization to strings from SDK, add in your project file "KinescopeLocalizable.strings", file should located in main bundle(it is important to multi-modules projects), copy all content from Localizable.strings file, which is located in KinescopeSDK and add new languages or change values of existing ones. 

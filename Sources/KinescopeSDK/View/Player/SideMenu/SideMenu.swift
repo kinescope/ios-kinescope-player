@@ -7,6 +7,7 @@
 // swiftlint:disable implicitly_unwrapped_optional
 
 import UIKit
+import Foundation
 
 protocol SideMenuDelegate: class {
     func sideMenuWillBeDismissed(_ sideMenu: SideMenu, withRoot: Bool)
@@ -18,17 +19,41 @@ final class SideMenu: UIView {
 
     // MARK: - Nested Types
 
-    enum Settings: String {
-        case playbackSpeed = "Playback speed"
-        case subtitles = "Subtitles"
-        case quality = "Quality"
+    enum Settings {
+        case playbackSpeed
+        case subtitles
+        case quality
+        case none
 
-        static var title = "Settings"
+        static func getType(by title: String) -> Settings {
+            switch title {
+            case L10n.Player.playbackSpeed:
+                return .playbackSpeed
+            case L10n.Player.subtitles:
+                return .subtitles
+            case L10n.Player.videoQuality:
+                return .quality
+            default:
+                return .none
+            }
+        }
     }
 
-    enum DescriptionTitle: String {
-        case attachments = "Attachments"
-        case download = "Download"
+    enum DescriptionTitle {
+        case attachments
+        case download
+        case none
+
+        static func getType(by title: String) -> DescriptionTitle {
+            switch title {
+            case L10n.Player.attachments:
+                return .attachments
+            case L10n.Player.download:
+                return .download
+            default:
+                return .none
+            }
+        }
     }
 
     enum Item {

@@ -11,7 +11,7 @@ class Manager: KinescopeServicesProvider {
 
     // MARK: - Properties
 
-    var config: KinescopeConfig?
+    var config: KinescopeConfig!
 
     var assetDownloader: KinescopeAssetDownloadable!
 
@@ -23,6 +23,6 @@ class Manager: KinescopeServicesProvider {
 
     var logger: KinescopeLogging?
 
-    var eventsCenter: KinescopeEventsCenter?
+    var eventsCenter: KinescopeEventsCenter!
 
 }

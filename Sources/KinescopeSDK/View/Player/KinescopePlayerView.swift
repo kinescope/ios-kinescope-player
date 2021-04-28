@@ -27,8 +27,8 @@ public class KinescopePlayerView: UIView {
     /// One coordination for phones and other for pads
     private let sideMenuCoordinator = SideMenuSlideCoordinator()
 
-    private var selectedQuality = NSAttributedString(string: "Auto")
-    private var selectedSubtitles = NSAttributedString(string: "Off")
+    private var selectedQuality = NSAttributedString(string: L10n.Player.auto)
+    private var selectedSubtitles = NSAttributedString(string: L10n.Player.off)
     private lazy var overlayDebouncer = Debouncer(timeInterval: overlay?.duration ?? 0.0)
 
     // MARK: - Internal Properties
@@ -108,7 +108,7 @@ public class KinescopePlayerView: UIView {
         if manualQuality {
             set(quality: quality)
         } else {
-            set(quality: "Auto " + quality)
+            set(quality: L10n.Player.auto + " " + quality)
         }
     }
 
@@ -222,7 +222,7 @@ private extension KinescopePlayerView {
 
     func handleDisclosureActions(for title: String) {
         let model: SideMenu.Model
-        switch SideMenu.Settings(rawValue: title) {
+        switch SideMenu.Settings.getType(by: title) {
         case .playbackSpeed:
             model = .init(title: title, isRoot: false, isDownloadable: false, items: [])
         case .subtitles:
@@ -237,7 +237,7 @@ private extension KinescopePlayerView {
     }
 
     func handleDescriptionActions(for sideMenu: SideMenu, index: Int) {
-        switch SideMenu.DescriptionTitle(rawValue: sideMenu.title) {
+        switch SideMenu.DescriptionTitle.getType(by: sideMenu.title) {
         case .attachments:
             delegate?.didSelectAttachment(with: index)
             sideMenuWillBeDismissed(sideMenu, withRoot: true)
@@ -257,7 +257,7 @@ private extension KinescopePlayerView {
             return .checkmark(title: .init(string: quality), selected: selected)
         }
 
-        let autoTitle = NSAttributedString(string: "Auto")
+        let autoTitle = NSAttributedString(string: L10n.Player.auto)
         let selected = selectedQuality.string.hasPrefix(autoTitle.string)
         items.insert(.checkmark(title: autoTitle, selected: selected), at: 0)
         return .init(title: title, isRoot: false, isDownloadable: false, items: items)
@@ -270,7 +270,7 @@ private extension KinescopePlayerView {
             return .checkmark(title: .init(string: subtitle), selected: selected)
         }
 
-        let offTitle = NSAttributedString(string: "Off")
+        let offTitle = NSAttributedString(string: L10n.Player.off)
         let selected = selectedSubtitles.string == offTitle.string
         items.insert(.checkmark(title: offTitle, selected: selected), at: 0)
         return .init(title: title, isRoot: root, isDownloadable: false, items: items)
@@ -315,7 +315,7 @@ private extension KinescopePlayerView {
     }
 
     func handleCheckmarkActions(for title: NSAttributedString, sideMenu: SideMenu) {
-        switch SideMenu.Settings(rawValue: sideMenu.title) {
+        switch SideMenu.Settings.getType(by: sideMenu.title) {
         case .quality:
             handleQualityCheckmarkAction(for: title, sideMenu: sideMenu)
         case .subtitles:
@@ -382,6 +382,20 @@ private extension KinescopePlayerView {
                        })
     }
 
+    func addDebouncerHandler() {
+        overlayDebouncer.handler = { [weak self] in
+            guard let self = self else {
+                return
+            }
+            self.overlay?.isSelected = false
+            UIView.animate(withDuration: 0.3, animations: {
+                self.controlPanel?.alpha = 0.0
+            }, completion: { _ in
+                self.controlPanel?.expanded = false
+            })
+        }
+    }
+
 }
 
 // MARK: - PlayerOverlayViewDelegate
@@ -389,7 +403,6 @@ private extension KinescopePlayerView {
 extension KinescopePlayerView: PlayerOverlayViewDelegate {
 
     func didTap(isSelected: Bool) {
-        overlayDebouncer.renewInterval()
         if isSelected {
             if !(controlPanel?.expanded ?? true) {
                 overlay?.isSelected = false
@@ -404,26 +417,19 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
             UIView.animate(withDuration: 0.3) {
                 self.controlPanel?.alpha = 1.0
             }
-            overlayDebouncer.handler = { [weak self] in
-                guard let self = self else {
-                    return
-                }
-                self.overlay?.isSelected = false
-                UIView.animate(withDuration: 0.3, animations: {
-                    self.controlPanel?.alpha = 0.0
-                }, completion: { _ in
-                    self.controlPanel?.expanded = false
-                })
-            }
+            addDebouncerHandler()
         }
+        overlayDebouncer.renewInterval()
     }
 
     func didPlay() {
+        addDebouncerHandler()
+        overlayDebouncer.renewInterval()
         delegate?.didPlay()
     }
 
     func didPause() {
-        overlayDebouncer.renewInterval()
+        overlayDebouncer.handler = { }
         delegate?.didPause()
     }
 
@@ -448,28 +454,28 @@ extension KinescopePlayerView: PlayerControlOutput {
             overlayDebouncer.handler = { }
             delegate?.didPresentFullscreen(from: self)
         case .settings:
-            let model = SideMenu.Model(title: SideMenu.Settings.title,
+            let model = SideMenu.Model(title: L10n.Player.settings,
                                        isRoot: true,
                                        isDownloadable: false,
                                        items: [
-                                        .disclosure(title: SideMenu.Settings.playbackSpeed.rawValue,
+                                        .disclosure(title: L10n.Player.playbackSpeed,
                                                     value: nil),
-                                        .disclosure(title: SideMenu.Settings.subtitles.rawValue,
+                                        .disclosure(title: L10n.Player.subtitles,
                                                     value: selectedSubtitles),
-                                        .disclosure(title: SideMenu.Settings.quality.rawValue,
+                                        .disclosure(title: L10n.Player.videoQuality,
                                                     value: selectedQuality)
                                        ])
             presentSideMenu(model: model)
         case .download:
             let items = makeAssetsSideMenuItems()
-            let model = SideMenu.Model(title: SideMenu.DescriptionTitle.download.rawValue,
+            let model = SideMenu.Model(title: L10n.Player.download,
                                        isRoot: true,
                                        isDownloadable: true,
                                        items: items)
             presentSideMenu(model: model)
         case .attachments:
             let items = makeAttachmentSideMenuItems()
-            let model = SideMenu.Model(title: SideMenu.DescriptionTitle.attachments.rawValue,
+            let model = SideMenu.Model(title: L10n.Player.attachments,
                                        isRoot: true,
                                        isDownloadable: true,
                                        items: items)
@@ -477,7 +483,7 @@ extension KinescopePlayerView: PlayerControlOutput {
         case .airPlay:
             break
         case .subtitles:
-            let model = makeSubtitlesSideMenuModel(with: SideMenu.Settings.subtitles.rawValue,
+            let model = makeSubtitlesSideMenuModel(with: L10n.Player.subtitles,
                                                    root: true)
             presentSideMenu(model: model)
         case .pip:

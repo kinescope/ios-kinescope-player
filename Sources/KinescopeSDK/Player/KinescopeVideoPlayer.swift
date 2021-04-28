@@ -20,6 +20,10 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         dependencies.provide(for: config)
     }()
     private let callObserver = CallObserver()
+    private lazy var innerEventsHandler: InnerEventsHandler = {
+        let service = AnalyticsNetworkService(transport: Transport(), config: Kinescope.shared.config)
+        return InnerEventsProtoHandler(service: service)
+    }()
 
     private weak var view: KinescopePlayerView?
 
@@ -567,6 +571,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                                                              config: .preferred(for: video))
             playerVC.modalPresentationStyle = .overFullScreen
             playerVC.modalTransitionStyle = .crossDissolve
+            playerVC.modalPresentationCapturesStatusBarAppearance = true
             rootVC?.present(playerVC, animated: true, completion: { [weak self] in
                 guard
                     let self = self,
@@ -648,20 +653,20 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didSelectDownloadAll(for title: String) {
-        switch title {
-        case SideMenu.DescriptionTitle.download.rawValue:
-            video?.downloadableAssets.forEach {
-                dependencies.assetDownloader.enqueueDownload(asset: $0)
-                Kinescope.shared.logger?.log(message: "Start downloading asset: \($0.quality) - \($0.id)",
-                                             level: KinescopeLoggerLevel.player)
-            }
-        case SideMenu.DescriptionTitle.attachments.rawValue:
+        switch SideMenu.DescriptionTitle.getType(by: title) {
+        case .attachments:
             video?.additionalMaterials.forEach {
                 dependencies.attachmentDownloader.enqueueDownload(attachment: $0)
                 Kinescope.shared.logger?.log(message: "Start downloading attachment: \($0.title)",
                                              level: KinescopeLoggerLevel.player)
             }
-        default:
+        case .download:
+            video?.downloadableAssets.forEach {
+                dependencies.assetDownloader.enqueueDownload(asset: $0)
+                Kinescope.shared.logger?.log(message: "Start downloading asset: \($0.quality) - \($0.id)",
+                                             level: KinescopeLoggerLevel.player)
+            }
+        case .none:
             break
         }
     }

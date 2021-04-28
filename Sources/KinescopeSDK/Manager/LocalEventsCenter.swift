@@ -12,13 +12,6 @@ class LocalEventsCenter: KinescopeEventsCenter {
     // MARK: - Private Properties
 
     private let nc = NotificationCenter.default
-    private let analitycsService: Void
-
-    // MARK: - Init
-
-    init(analitycsService: Void) {
-        self.analitycsService = analitycsService
-    }
 
     // MARK: - KinescopeEventsCenter
 
@@ -38,18 +31,6 @@ class LocalEventsCenter: KinescopeEventsCenter {
 
     func post(event: KinescopeEvent, userInfo: [AnyHashable : Any]? = nil) {
         nc.post(name: event.notificationName, object: nil, userInfo: userInfo)
-        handleAnalitycs(event: event, userInfo: userInfo)
-    }
-
-
-}
-
-// MARK: - Private
-
-private extension LocalEventsCenter {
-
-    func handleAnalitycs(event: KinescopeEvent, userInfo: [AnyHashable : Any]? = nil) {
-
     }
 
 }

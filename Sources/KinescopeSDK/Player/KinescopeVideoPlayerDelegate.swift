@@ -41,3 +41,21 @@ public protocol KinescopeVideoPlayerDelegate: class {
     /// Triggered on phone call actions
     func didGetCall(callState: KinescopeCallState)
 }
+
+public extension KinescopeVideoPlayerDelegate {
+    func playerDidPlay() { }
+    func playerDidLoadVideo(error: Error?) { }
+    func playerDidPause() { }
+    func playerDidStop() { }
+    func player(playbackPositionMovedTo time: TimeInterval) { }
+    func player(playbackBufferMovedTo time: TimeInterval) { }
+    func player(changedStatusTo status: AVPlayer.Status) { }
+    func player(changedItemStatusTo status: AVPlayerItem.Status) { }
+    func player(changedTimeControlStatusTo status: AVPlayer.TimeControlStatus) { }
+    func player(changedPresentationSizeTo size: CGSize) { }
+    func player(didSeekTo time: TimeInterval) { }
+    func player(timelinePositionMovedTo position: Double) { }
+    func player(didFastForwardTo time: TimeInterval) { }
+    func player(didFastBackwardTo time: TimeInterval) { }
+    func player(changedQualityTo quality: String) { }
+}
