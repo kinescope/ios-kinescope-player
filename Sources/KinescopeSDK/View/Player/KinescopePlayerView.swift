@@ -30,6 +30,7 @@ public class KinescopePlayerView: UIView {
     private var selectedQuality = NSAttributedString(string: L10n.Player.auto)
     private var selectedSubtitles = NSAttributedString(string: L10n.Player.off)
     private lazy var overlayDebouncer = Debouncer(timeInterval: overlay?.duration ?? 0.0)
+    private lazy var timelineDebouncer = Debouncer(timeInterval: 1)
 
     // MARK: - Internal Properties
 
@@ -396,6 +397,25 @@ private extension KinescopePlayerView {
         }
     }
 
+    func addTimelineDebouncerHandler() {
+        if !(overlay?.isSelected ?? false) {
+            timelineDebouncer.handler = { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                UIView.animate(withDuration: 0.3, animations: {
+                    self.controlPanel?.alpha = 0.0
+                }, completion: { _ in
+                    self.controlPanel?.expanded = false
+                })
+            }
+            timelineDebouncer.renewInterval()
+            UIView.animate(withDuration: 0.3, animations: {
+                self.controlPanel?.alpha = 1.0
+            })
+        }
+    }
+
 }
 
 // MARK: - PlayerOverlayViewDelegate
@@ -434,11 +454,13 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
     }
 
     func didFastForward() {
+        addTimelineDebouncerHandler()
         overlayDebouncer.renewInterval()
         delegate?.didFastForward()
     }
 
     func didFastBackward() {
+        addTimelineDebouncerHandler()
         overlayDebouncer.renewInterval()
         delegate?.didFastBackward()
     }
