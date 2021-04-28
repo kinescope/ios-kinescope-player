@@ -566,7 +566,7 @@ extension KinescopePlayerView: SideMenuDelegate {
 
 extension KinescopePlayerView: ErrorViewDelegate {
 
-    func didRefreshTap() {
+    func didTapRefresh() {
 
     }
 

@@ -8,7 +8,7 @@
 import UIKit
 
 protocol ErrorViewDelegate: class {
-    func didRefreshTap()
+    func didTapRefresh()
 }
 
 final class ErrorView: UIView {
@@ -98,15 +98,15 @@ private extension ErrorView {
             stackView.setCustomSpacing(8, after: imageView)
             stackView.setCustomSpacing(16, after: subtitleLabel)
         } else {
-            stackView.addCustomSpacing(after: imageView, value: 8)
-            stackView.addCustomSpacing(after: subtitleLabel, value: 16)
+            stackView.addCustomSpacing(8, after: imageView)
+            stackView.addCustomSpacing(16, after: subtitleLabel)
         }
 
     }
 
     @objc
     private func refreshButtonAction() {
-        delegate?.didRefreshTap()
+        delegate?.didTapRefresh()
     }
 
 }
@@ -115,7 +115,7 @@ private extension ErrorView {
 
 private extension UIStackView {
 
-    func addCustomSpacing(after view: UIView, value: CGFloat)  {
+    func addCustomSpacing(_ value: CGFloat, after view: UIView)  {
         guard let arrangedSubviewIndex = arrangedSubviews.firstIndex(of: view) else {
             return
         }
