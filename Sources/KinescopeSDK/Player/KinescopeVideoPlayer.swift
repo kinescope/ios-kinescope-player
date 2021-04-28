@@ -11,12 +11,15 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         }
     }
 
+    public weak var delegate: KinescopeVideoPlayerDelegate?
+
     // MARK: - Private Properties
 
     private let dependencies: KinescopePlayerDependencies
     private lazy var strategy: PlayingStrategy = {
         dependencies.provide(for: config)
     }()
+    private let callObserver = CallObserver()
     private lazy var innerEventsHandler: InnerEventsHandler = {
         let service = AnalyticsNetworkService(transport: Transport(), config: Kinescope.shared.config)
         return InnerEventsProtoHandler(service: service)
@@ -30,21 +33,13 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private var timeControlStatusObserver: NSKeyValueObservation?
     private var tracksObserver: NSKeyValueObservation?
 
-    private var time: TimeInterval = 0 {
-        didSet {
-            updateTimeline()
-        }
-    }
     private var isSeeking = false
     private var isPreparingSeek = false
     private var isManualQuality = false
     private var currentQuality = ""
-    private var isPlaying = false
     private var isOverlayed = false
     private var savedTime: CMTime = .zero
     private weak var miniView: KinescopePlayerView?
-    private weak var delegate: KinescopeVideoPlayerDelegate?
-
     private var video: KinescopeVideo?
     private let config: KinescopePlayerConfig
     private var options = [KinescopePlayerOption]()
@@ -65,12 +60,35 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         return [rule]
     }
 
+    // MARK: - State
+
+    private var time: TimeInterval = 0 {
+        willSet {
+            let duration = strategy.player.currentItem?.duration.seconds ?? .zero
+            isAtEnd = newValue >= duration
+        }
+        didSet {
+            updateTimeline()
+        }
+    }
+    private var isPlaying = false {
+        didSet {
+            updatePlayPauseButton()
+        }
+    }
+    private var isAtEnd = false {
+        didSet {
+            updatePlayPauseButton()
+        }
+    }
+
     // MARK: - Lifecycle
 
     init(config: KinescopePlayerConfig, dependencies: KinescopePlayerDependencies) {
         self.dependencies = dependencies
         self.config = config
         addNotofications()
+        callObserver.delegate = self
     }
 
     deinit {
@@ -319,14 +337,23 @@ private extension KinescopeVideoPlayer {
             \.timeControlStatus,
             options: [.new, .old],
             changeHandler: { [weak self] item, _ in
-                self?.isPlaying = item.timeControlStatus == .playing
-                self?.view?.change(timeControlStatus: item.timeControlStatus)
+                guard let self = self else {
+                    return
+                }
+                self.isPlaying = item.timeControlStatus == .playing
+                switch item.timeControlStatus {
+                case .paused, .playing:
+                    break
+                case .waitingToPlayAtSpecifiedRate:
+                    // TODO: Nikita, add loading here
+                    break
+                }
 
                 Kinescope.shared.logger?.log(
                     message: "AVPlayer.TimeControlStatus – \(item.timeControlStatus.rawValue)",
                     level: KinescopeLoggerLevel.player
                 )
-                self?.delegate?.player(changedTimeControlStatusTo: item.timeControlStatus)
+                self.delegate?.player(changedTimeControlStatusTo: item.timeControlStatus)
             }
         )
     }
@@ -453,6 +480,7 @@ private extension KinescopeVideoPlayer {
     func updateTimeline() {
         let duration = strategy.player.currentItem?.duration.seconds ?? .zero
         let position = CGFloat(time / duration)
+        
         if !position.isNaN {
             view?.controlPanel?.setTimeline(to: CGFloat(position))
         }
@@ -461,24 +489,49 @@ private extension KinescopeVideoPlayer {
         }
     }
 
+    func updatePlayPauseButton() {
+        switch (isPlaying, isAtEnd) {
+        case (false, true):
+            view?.playPauseReplayState = .replay
+        case (false, false):
+            view?.playPauseReplayState = .play
+        case (true, false):
+            view?.playPauseReplayState = .pause
+        case (true, true):
+            break
+        }
+    }
+
+}
+
+
+// MARK: - CallObserverDelegate
+
+extension KinescopeVideoPlayer: CallObserverDelegate {
+
+    func callObserver(callState: KinescopeCallState) {
+        delegate?.didGetCall(callState: callState)
+    }
+
 }
 
 // MARK: - KinescopePlayerViewDelegate
 
 extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
-    func didPlay() {
-        let duration = strategy.player.currentItem?.duration.seconds ?? .zero
-        if time == duration {
+    func didPlayPause() {
+        switch (isPlaying, isAtEnd) {
+        case (false, true):
             time = .zero
             seek(to: time)
+            play()
+        case (false, false):
+            play()
+        case (true, false):
+            pause()
+        case (true, true):
+            break
         }
-
-        self.play()
-    }
-
-    func didPause() {
-        self.pause()
     }
 
     func didSeek(to position: Double) {

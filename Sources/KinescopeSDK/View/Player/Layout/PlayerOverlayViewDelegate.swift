@@ -1,7 +1,6 @@
 protocol PlayerOverlayViewDelegate: class {
     func didTap(isSelected: Bool)
-    func didPlay()
-    func didPause()
+    func didPlayPause()
     func didFastForward()
     func didFastBackward()
 }

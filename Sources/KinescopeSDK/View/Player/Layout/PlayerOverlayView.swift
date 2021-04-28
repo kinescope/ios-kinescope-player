@@ -7,10 +7,6 @@
 
 import UIKit
 
-protocol PlayerOverlayInput: VideoNameInput {
-    func set(playing: Bool)
-}
-
 class PlayerOverlayView: UIControl {
 
     // MARK: - Properties
@@ -22,8 +18,19 @@ class PlayerOverlayView: UIControl {
     private let contentView = UIView()
     private let config: KinescopePlayerOverlayConfiguration
     private weak var delegate: PlayerOverlayViewDelegate?
-    private var isPlaying = false
     private var isRewind = false
+    var playPauseReplayState: PlayPauseReplayState = .play {
+        didSet {
+            switch playPauseReplayState {
+            case .play:
+                playPauseImageView.image = config.playImage
+            case .pause:
+                playPauseImageView.image = config.pauseImage
+            case .replay:
+                playPauseImageView.image = config.replayImage
+            }
+        }
+    }
     var duration: TimeInterval {
         return config.duration
     }
@@ -57,16 +64,11 @@ class PlayerOverlayView: UIControl {
     }
 }
 
-// MARK: - PlayerOverlayInput
+// MARK: - VideoNameInput
 
-extension PlayerOverlayView: PlayerOverlayInput {
+extension PlayerOverlayView: VideoNameInput {
     func set(title: String, subtitle: String) {
         nameView.set(title: title, subtitle: subtitle)
-    }
-
-    func set(playing: Bool) {
-        self.isPlaying = playing
-        playPauseImageView.image = playing ? config.pauseImage : config.playImage
     }
 }
 
@@ -93,7 +95,7 @@ private extension PlayerOverlayView {
     }
 
     func configurePlayPauseImageView() {
-        playPauseImageView.image = isPlaying ? config.pauseImage : config.playImage
+        playPauseReplayState = .play
         contentView.addSubview(playPauseImageView)
         contentView.centerChild(view: playPauseImageView)
     }
@@ -138,15 +140,7 @@ private extension PlayerOverlayView {
 private extension PlayerOverlayView {
     @objc
     func playPauseAction() {
-        isPlaying.toggle()
-
-        if isPlaying {
-            playPauseImageView.image = config.pauseImage
-            delegate?.didPlay()
-        } else {
-            playPauseImageView.image = config.playImage
-            delegate?.didPause()
-        }
+        delegate?.didPlayPause()
     }
 
     @objc

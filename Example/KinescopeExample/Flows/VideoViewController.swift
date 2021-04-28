@@ -34,6 +34,7 @@ final class VideoViewController: UIViewController {
         configurePreviewView()
 
         player?.pipDelegate = PipManager.shared
+        player?.delegate = self
     }
 
     private func configurePreviewView() {
@@ -49,8 +50,26 @@ final class VideoViewController: UIViewController {
 
 }
 
+// MARK: - UINavigationControllerDelegate
+
 extension VideoViewController: UINavigationControllerDelegate {
     func navigationControllerSupportedInterfaceOrientations(_ navigationController: UINavigationController) -> UIInterfaceOrientationMask {
         return self.supportedInterfaceOrientations
     }
+}
+
+ // MARK: - KinescopeVideoPlayerDelegate
+
+extension VideoViewController: KinescopeVideoPlayerDelegate {
+
+    func didGetCall(callState: KinescopeCallState) {
+        if callState == .ended {
+            player?.play()
+        }
+    }
+
+    func playerDidPlay() {
+        print("DIDPLAY")
+    }
+
 }
