@@ -1,6 +1,5 @@
 protocol KinescopePlayerViewDelegate: class {
-    func didPlay()
-    func didPause()
+    func didPlayPause()
     func didSeek(to position: Double)
     func didConfirmSeek()
     func didFastForward()
