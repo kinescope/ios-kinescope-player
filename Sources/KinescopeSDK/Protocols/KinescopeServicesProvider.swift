@@ -9,6 +9,9 @@
 /// Provider of services working with kinescope api
 public protocol KinescopeServicesProvider {
 
+    /// Config for sdk
+    var config: KinescopeConfig! { get }
+
     /// Service managing downloading of assets
     var assetDownloader: KinescopeAssetDownloadable! { get }
 
@@ -20,5 +23,8 @@ public protocol KinescopeServicesProvider {
 
     /// Service managing logging process
     var logger: KinescopeLogging? { get }
+
+    /// Events center
+    var eventsCenter: KinescopeEventsCenter! { get }
 
 }

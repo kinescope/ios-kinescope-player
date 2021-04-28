@@ -15,7 +15,8 @@ public struct KinescopeConfig {
 
     /// - parameter apiKey: ApiKey from [dashboard](https://dashboard.kinescope.io/)
     /// - parameter endpoint: API endpoint
-    public init(apiKey: String, endpoint: String = "https://api.kinescope.io/v1") {
+    public init(apiKey: String,
+                endpoint: String = "https://api.kinescope.io/v1") {
         self.apiKey = apiKey
         self.endpoint = endpoint
     }
