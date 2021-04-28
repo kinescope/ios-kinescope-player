@@ -58,12 +58,12 @@ final class VideoListController: UIViewController {
         super.prepare(for: segue, sender: sender)
         guard
             let destination = segue.destination as? VideoViewController,
-            let id = sender as? String
+            let video = sender as? KinescopeVideo
         else {
             return
         }
 
-        destination.videoId = id
+        destination.video = video
     }
 }
 
@@ -112,7 +112,7 @@ private extension VideoListController {
             let generator = VideoListFocusableCellGenerator(with: video)
 
             generator.didSelectEvent.addListner { [weak self] in
-                self?.performSegue(withIdentifier: "toVideo", sender: video.id)
+                self?.performSegue(withIdentifier: "toVideo", sender: video)
             }
 
             return generator

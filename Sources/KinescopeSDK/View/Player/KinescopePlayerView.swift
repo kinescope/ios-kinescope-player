@@ -42,7 +42,7 @@ public class KinescopePlayerView: UIView {
 
     // MARK: - Public Properties
 
-    public private(set) var previewView: UIImageView = UIImageView()
+    public private(set) lazy var previewView: PreviewView = PreviewView(config: config.preview, delegate: self)
 
     // MARK: - Lifecycle
 
@@ -594,6 +594,16 @@ extension KinescopePlayerView: ErrorViewDelegate {
 
     func didTapRefresh() {
 
+    }
+
+}
+
+// MARK: - PreviewViewDelegate
+
+extension KinescopePlayerView: PreviewViewDelegate {
+
+    func didTap() {
+        
     }
 
 }
