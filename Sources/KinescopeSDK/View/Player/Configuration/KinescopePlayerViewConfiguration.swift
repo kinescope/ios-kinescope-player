@@ -47,7 +47,7 @@ public struct KinescopePlayerViewConfiguration {
 public extension KinescopePlayerViewConfiguration {
 
     static let `default`: KinescopePlayerViewConfiguration = .init(gravity: .resizeAspect,
-                                                                   activityIndicator: KinescopeSpinner(frame: CGRect(x: 0, y: 0, width: 48, height: 48)),
+                                                                   activityIndicator: KinescopeSpinner(frame: CGRect(x: 0, y: 0, width: 32, height: 32)),
                                                                    overlay: .default,
                                                                    controlPanel: .init(tintColor: .gray,
                                                                                        backgroundColor: .clear,

@@ -188,6 +188,7 @@ private extension KinescopePlayerView {
     func configureProgressView(with progressView: KinescopeActivityIndicator) {
         self.progressView = progressView
         addSubview(self.progressView)
+        self.progressView.isHidden = true
     }
 
     func configurePip() {
