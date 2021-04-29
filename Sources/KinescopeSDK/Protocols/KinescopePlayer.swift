@@ -18,8 +18,8 @@ public protocol KinescopePlayer {
     /// - parameter config: player config
     init(config: KinescopePlayerConfig)
 
-    /// Load video model from Kinescope
-    func preload()
+    /// Set video model model if it's already loaded
+    func setVideo(_ video: KinescopeVideo)
 
     /// Start playing of video
     func play()

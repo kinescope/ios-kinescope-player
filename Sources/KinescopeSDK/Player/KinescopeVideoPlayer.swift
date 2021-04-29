@@ -107,21 +107,11 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         self.init(config: config, dependencies: KinescopeVideoPlayerDependencies())
     }
 
-    public func preload() {
-        dependencies.inspector.video(
-            id: config.videoId,
-            onSuccess: { [weak self] video in
-                self?.video = video
-                self?.select(quality: .auto(hlsLink: video.hlsLink))
-                self?.view?.overlay?.set(title: video.title, subtitle: video.description)
-                self?.view?.set(options: self?.makePlayerOptions(from: video) ?? [])
-                self?.delegate?.playerDidLoadVideo(error: nil)
-            },
-            onError: { [weak self] error in
-                self?.delegate?.playerDidLoadVideo(error: error)
-                Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.network)
-            }
-        )
+    public func setVideo(_ video: KinescopeVideo) {
+        self.video = video
+        select(quality: .auto(hlsLink: video.hlsLink))
+        view?.overlay?.set(title: video.title, subtitle: video.description)
+        view?.set(options: makePlayerOptions(from: video) ?? [])
     }
 
     public func play() {
@@ -203,10 +193,7 @@ private extension KinescopeVideoPlayer {
         dependencies.inspector.video(
             id: config.videoId,
             onSuccess: { [weak self] video in
-                self?.video = video
-                self?.select(quality: .auto(hlsLink: video.hlsLink))
-                self?.view?.overlay?.set(title: video.title, subtitle: video.description)
-                self?.view?.set(options: self?.makePlayerOptions(from: video) ?? [])
+                self?.setVideo(video)
                 self?.delegate?.playerDidLoadVideo(error: nil)
                 self?.play()
             },

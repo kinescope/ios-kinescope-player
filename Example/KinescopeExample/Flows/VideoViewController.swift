@@ -30,7 +30,6 @@ final class VideoViewController: UIViewController {
 
         player = KinescopeVideoPlayer(config: .init(videoId: video?.id ?? ""))
         player?.attach(view: playerView)
-        player?.preload()
         playerView.showOverlay(true)
         configurePreviewView()
 
@@ -42,6 +41,7 @@ final class VideoViewController: UIViewController {
         guard let video = video else {
             return
         }
+        player?.setVideo(video)
         let previewModel = KinescopePreviewModel(from: video)
 
         previewView.delegate = self
