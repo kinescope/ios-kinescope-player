@@ -18,7 +18,6 @@ public struct KinescopePlayerViewConfiguration {
     let sideMenu: KinescopeSideMenuConfiguration
     let shadowOverlay: KinescopePlayerShadowOverlayConfiguration?
     let errorState: KinescopeErrorViewConfiguration
-    let preview: KinescopePreviewViewConfiguration
 
     /// - parameter gravity: `AVLayerVideoGravity` value defines how the video is displayed within a layer’s bounds rectangle
     /// - parameter activityIndicator: Custom indicator view used to indicate process of video downloading
@@ -35,8 +34,7 @@ public struct KinescopePlayerViewConfiguration {
                 controlPanel: KinescopeControlPanelConfiguration?,
                 sideMenu: KinescopeSideMenuConfiguration,
                 shadowOverlay: KinescopePlayerShadowOverlayConfiguration?,
-                errorState: KinescopeErrorViewConfiguration,
-                preview: KinescopePreviewViewConfiguration) {
+                errorState: KinescopeErrorViewConfiguration) {
         self.gravity = gravity
         self.activityIndicator = activityIndicator
         self.overlay = overlay
@@ -44,7 +42,6 @@ public struct KinescopePlayerViewConfiguration {
         self.sideMenu = sideMenu
         self.shadowOverlay = shadowOverlay
         self.errorState = errorState
-        self.preview = preview
     }
 
 }
@@ -65,7 +62,6 @@ public extension KinescopePlayerViewConfiguration {
                                                                                        optionsMenu: .default),
                                                                    sideMenu: .default,
                                                                    shadowOverlay: .default,
-                                                                   errorState: .default,
-                                                                   preview: .default)
+                                                                   errorState: .default)
 
 }

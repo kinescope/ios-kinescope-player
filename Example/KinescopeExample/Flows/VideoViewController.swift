@@ -6,6 +6,7 @@ final class VideoViewController: UIViewController {
     // MARK: - IBOutlets
 
     @IBOutlet private weak var playerView: KinescopePlayerView!
+    @IBOutlet private weak var previewView: KinescopePreviewView!
 
     // MARK: - Private properties
 
@@ -29,7 +30,7 @@ final class VideoViewController: UIViewController {
 
         player = KinescopeVideoPlayer(config: .init(videoId: video?.id ?? ""))
         player?.attach(view: playerView)
-        player?.play()
+        player?.preload()
         playerView.showOverlay(true)
         configurePreviewView()
 
@@ -43,9 +44,12 @@ final class VideoViewController: UIViewController {
         }
         let previewModel = KinescopePreviewModel(from: video)
 
-        playerView.previewView.setPreview(with: previewModel)
-        playerView.previewView.previewImageView.contentMode = .scaleAspectFit
-        playerView.previewView.previewImageView.kf.setImage(with: URL(string: video.poster?.md ?? ""))
+        previewView.delegate = self
+        previewView.setPreview(with: previewModel)
+        previewView.backgroundColor = .black
+        previewView.previewImageView.contentMode = .scaleAspectFit
+        previewView.previewImageView.kf.setImage(with: URL(string: video.poster?.md ?? ""))
+        view.bringSubviewToFront(previewView)
     }
 
 }
@@ -58,7 +62,17 @@ extension VideoViewController: UINavigationControllerDelegate {
     }
 }
 
- // MARK: - KinescopeVideoPlayerDelegate
+// MARK: - KinescopePreviewViewDelegate
+
+extension VideoViewController: KinescopePreviewViewDelegate {
+
+    func didTap() {
+        player?.play()
+        previewView.removeFromSuperview()
+    }
+
+}
+// MARK: - KinescopeVideoPlayerDelegate
 
 extension VideoViewController: KinescopeVideoPlayerDelegate {
 
@@ -66,10 +80,6 @@ extension VideoViewController: KinescopeVideoPlayerDelegate {
         if callState == .ended {
             player?.play()
         }
-    }
-
-    func playerDidPlay() {
-        print("DIDPLAY")
     }
 
 }

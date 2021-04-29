@@ -38,7 +38,7 @@ public extension KinescopePreviewViewConfiguration {
         playImage: UIImage.image(named: "play"),
         durationFont: .systemFont(ofSize: 14, weight: .regular),
         durationColor: .white,
-        nameConfiguration: .default
+        nameConfiguration: .preview
     )
 
 }
