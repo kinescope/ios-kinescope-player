@@ -20,6 +20,7 @@ public final class KinescopeSpinner: UIView, KinescopeActivityIndicating {
     private var progressLayer = CAShapeLayer()
     private var backgroundMask = CAShapeLayer()
     private var gradientLayer = CAGradientLayer()
+    private var isActive = false
 
     // MARK: - Lifecycle
 
@@ -52,12 +53,24 @@ public final class KinescopeSpinner: UIView, KinescopeActivityIndicating {
 
     public func showLoading(_ isLoading: Bool) {
         if isLoading {
+            guard !isActive else {
+                return
+            }
+            isActive = true
             isHidden = false
-            resume(layer: gradientLayer)
+            guard progressLayer.animation(forKey: "line") != nil else {
+                createAnimation()
+                return
+            }
             resume(layer: progressLayer)
+            resume(layer: gradientLayer)
         } else {
-            pause(layer: gradientLayer)
+            guard isActive else {
+                return
+            }
+            isActive = false
             pause(layer: progressLayer)
+            pause(layer: gradientLayer)
             isHidden = true
         }
     }
@@ -92,6 +105,7 @@ private extension KinescopeSpinner {
         rotationAnimation.duration = 1.0
 
         gradientLayer.add(rotationAnimation, forKey: "rotationAnimation")
+        resume(layer: gradientLayer)
 
         let animation = CABasicAnimation(keyPath: "strokeEnd")
         animation.fromValue = 0.2
@@ -100,20 +114,22 @@ private extension KinescopeSpinner {
         animation.autoreverses = true
         animation.repeatCount = .infinity
         progressLayer.add(animation, forKey: "line")
+        resume(layer: progressLayer)
     }
 
     func pause(layer: CALayer) {
-         let pausedTime = layer.convertTime(CACurrentMediaTime(), from: nil)
+        let pausedTime: CFTimeInterval = layer.convertTime(CACurrentMediaTime(), from: nil)
+        layer.timeOffset = pausedTime
+        layer.speed = 0.0
+    }
 
-         layer.speed = 0.0
-         layer.timeOffset = pausedTime
-     }
-
-     func resume(layer: CALayer) {
-         layer.speed = 1.0
-         layer.timeOffset = 0.0
-         layer.beginTime = 0.0
-     }
+    func resume(layer: CALayer) {
+        let pausedTime: CFTimeInterval = layer.timeOffset
+        let timeSincePause: CFTimeInterval = layer.convertTime(CACurrentMediaTime(), from: nil) - pausedTime
+        layer.beginTime = timeSincePause
+        layer.timeOffset = 0.0
+        layer.speed = 1.0
+    }
 
 }
 

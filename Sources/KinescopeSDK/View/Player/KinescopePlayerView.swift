@@ -10,6 +10,16 @@ import UIKit
 import AVFoundation
 import AVKit
 
+// TODO
+enum PlayerViewState {
+    case initialLoading
+    case loading
+    case playing
+    case paused
+    case error
+    case ended
+}
+
 public class KinescopePlayerView: UIView {
 
     // MARK: - Private Properties
@@ -38,6 +48,11 @@ public class KinescopePlayerView: UIView {
     weak var delegate: KinescopePlayerViewDelegate?
     var canBeFullScreen: Bool {
         return controlPanel?.optionsMenu.options.contains(.fullscreen) ?? false
+    }
+    var state: PlayerViewState = .loading {
+        didSet {
+            updateViewState()
+        }
     }
 
     var playPauseReplayState: PlayPauseReplayState = .play {
@@ -71,40 +86,6 @@ public class KinescopePlayerView: UIView {
         // Workaround to prevent plaing audio when player deinited(due to enabled background mode)
         if !(pipController?.isPictureInPictureActive ?? false) {
             playerView.player?.pause()
-        }
-    }
-
-    // MARK: - Internal Methods
-
-    func startLoader() {
-        previewImage.isHidden = false
-        progressView.showLoading(true)
-    }
-
-    func stopLoader() {
-        progressView.showLoading(false)
-        previewImage.isHidden = true
-    }
-
-    func showError() {
-        errorView?.isHidden = false
-        overlay?.isHidden = true
-        controlPanel?.isHidden = true
-        shadowOverlay?.isHidden = true
-    }
-
-    func change(status: AVPlayer.Status) {
-        switch status {
-        case .readyToPlay:
-            overlay?.isHidden = false
-            progressView.showLoading(false)
-            previewImage.isHidden = true
-            errorView?.isHidden = true
-        case .failed, .unknown:
-            // FIXME: Error handling
-            break
-        @unknown default:
-            break
         }
     }
 
@@ -199,9 +180,9 @@ private extension KinescopePlayerView {
     }
 
     func configureProgressView(with progressView: KinescopeActivityIndicator) {
+        addSubview(progressView)
+        progressView.isHidden = true
         self.progressView = progressView
-        addSubview(self.progressView)
-        self.progressView.isHidden = true
     }
 
     func configurePip() {
@@ -234,6 +215,36 @@ private extension KinescopePlayerView {
         stretch(view: overlay)
 
         self.shadowOverlay = overlay
+    }
+
+    func updateViewState() {
+        errorView?.isHidden = true
+        overlay?.isHidden = false
+        switch state {
+        case .initialLoading:
+            previewImage.isHidden = false
+            progressView.showLoading(true)
+            overlay?.playPauseReplayState = .loading
+        case .loading:
+            previewImage.isHidden = true
+            progressView.showLoading(true)
+            overlay?.playPauseReplayState = .loading
+        case .playing:
+            progressView.showLoading(false)
+            previewImage.isHidden = true
+            overlay?.playPauseReplayState = .pause
+            errorView?.isHidden = true
+        case .paused:
+            progressView.showLoading(false)
+            overlay?.playPauseReplayState = .play
+        case .error:
+            progressView.showLoading(false)
+            previewImage.isHidden = true
+            overlay?.isHidden = true
+            errorView?.isHidden = false
+        case .ended:
+            overlay?.playPauseReplayState = .replay
+        }
     }
 
     func handleDisclosureActions(for title: String) {

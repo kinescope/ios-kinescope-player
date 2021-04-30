@@ -49,6 +49,9 @@ final class VideoViewController: UIViewController {
         previewView.backgroundColor = .black
         previewView.previewImageView.contentMode = .scaleAspectFit
         previewView.previewImageView.kf.setImage(with: URL(string: video.poster?.md ?? ""))
+
+        playerView.previewImage.contentMode = .scaleAspectFit
+        playerView.previewImage.kf.setImage(with: URL(string: video.poster?.md ?? ""))
         view.bringSubviewToFront(previewView)
     }
 

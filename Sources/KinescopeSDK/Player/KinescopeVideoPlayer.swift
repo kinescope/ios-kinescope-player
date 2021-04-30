@@ -188,7 +188,7 @@ private extension KinescopeVideoPlayer {
 
     /// Sends request video by id and sets player's item
     func load() {
-        view?.startLoader()
+        view?.state = .initialLoading
 
         dependencies.inspector.video(
             id: config.videoId,
@@ -198,8 +198,7 @@ private extension KinescopeVideoPlayer {
                 self?.play()
             },
             onError: { [weak self] error in
-                self?.view?.stopLoader()
-                self?.view?.showError()
+                self?.view?.state = .error
                 self?.delegate?.playerDidLoadVideo(error: error)
                 Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.network)
             }
@@ -284,9 +283,7 @@ private extension KinescopeVideoPlayer {
             \.status,
             options: [.new, .old],
             changeHandler: { [weak self] item, _ in
-                self?.view?.change(status: item.status)
-
-                Kinescope.shared.logger?.log(message: "AVPlayer.Status – \(item.status)",
+                Kinescope.shared.logger?.log(message: "AVPlayer.Status – \(item.status.rawValue)",
                                              level: KinescopeLoggerLevel.player)
                 self?.delegate?.player(changedStatusTo: item.status)
             }
@@ -324,7 +321,7 @@ private extension KinescopeVideoPlayer {
                     break
                 }
 
-                Kinescope.shared.logger?.log(message: "AVPlayerItem.Status – \(item.status)",
+                Kinescope.shared.logger?.log(message: "AVPlayerItem.Status – \(item.status.rawValue)",
                                              level: KinescopeLoggerLevel.player)
                 self.delegate?.player(changedItemStatusTo: item.status)
             }
@@ -346,11 +343,13 @@ private extension KinescopeVideoPlayer {
                 }
                 self.isPlaying = item.timeControlStatus == .playing
                 switch item.timeControlStatus {
-                case .paused, .playing:
-                    break
+                case .paused:
+                    self.view?.state = .paused
+                break
+                case .playing:
+                    self.view?.state = .playing
                 case .waitingToPlayAtSpecifiedRate:
-                    // TODO: Nikita, add loading here
-                    break
+                    self.view?.state = self.time == 0 ? .initialLoading : .loading
                 }
 
                 Kinescope.shared.logger?.log(
@@ -496,11 +495,12 @@ private extension KinescopeVideoPlayer {
     func updatePlayPauseButton() {
         switch (isPlaying, isAtEnd) {
         case (false, true):
-            view?.playPauseReplayState = .replay
+            view?.state = .ended
         case (false, false):
-            view?.playPauseReplayState = .play
+//            view?.state = .paused
+        break
         case (true, false):
-            view?.playPauseReplayState = .pause
+            break
         case (true, true):
             break
         }
@@ -624,8 +624,6 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                 else {
                     return
                 }
-
-                self.view?.change(status: .readyToPlay)
                 self.view?.change(quality: self.currentQuality, manualQuality: self.isManualQuality)
                 self.view?.overlay?.set(title: video.title, subtitle: video.description)
                 self.restoreView()
@@ -689,7 +687,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didSelectAsset(with index: Int) {
-        guard let asset = video?.assets[safe: index] else {
+        guard let asset = video?.downloadableAssets[safe: index] else {
             return
         }
         dependencies.assetDownloader.enqueueDownload(asset: asset)

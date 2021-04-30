@@ -21,6 +21,7 @@ class PlayerOverlayView: UIControl {
     private var isRewind = false
     var playPauseReplayState: PlayPauseReplayState = .play {
         didSet {
+            playPauseImageView.isHidden = false
             switch playPauseReplayState {
             case .play:
                 playPauseImageView.image = config.playImage
@@ -28,6 +29,8 @@ class PlayerOverlayView: UIControl {
                 playPauseImageView.image = config.pauseImage
             case .replay:
                 playPauseImageView.image = config.replayImage
+            case .loading:
+                playPauseImageView.isHidden = true
             }
         }
     }
