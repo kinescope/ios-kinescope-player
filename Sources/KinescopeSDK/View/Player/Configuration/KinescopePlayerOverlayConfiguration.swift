@@ -8,7 +8,7 @@
 import UIKit
 
 /// Fast rewind(on double tap options)
-public enum FastRewind: Double {
+public enum KinescopeFastRewind: Double {
     case five = 5.0
     case ten = 10.0
     case fifteen = 15.0
@@ -42,8 +42,8 @@ public struct KinescopePlayerOverlayConfiguration {
     let playImage: UIImage
     let pauseImage: UIImage
     let replayImage: UIImage
-    let fastForward: FastRewind
-    let fastBackward: FastRewind
+    let fastForward: KinescopeFastRewind
+    let fastBackward: KinescopeFastRewind
     let fastForwardImage: UIImage
     let fastBackwardImage: UIImage
     let backgroundColor: UIColor
@@ -63,8 +63,8 @@ public struct KinescopePlayerOverlayConfiguration {
     public init(playImage: UIImage,
                 pauseImage: UIImage,
                 replayImage: UIImage,
-                fastForward: FastRewind,
-                fastBackward: FastRewind,
+                fastForward: KinescopeFastRewind,
+                fastBackward: KinescopeFastRewind,
                 fastForwardImage: UIImage?,
                 fastBackwardImage: UIImage?,
                 backgroundColor: UIColor,
