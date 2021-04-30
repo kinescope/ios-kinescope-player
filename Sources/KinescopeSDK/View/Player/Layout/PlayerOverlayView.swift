@@ -200,7 +200,7 @@ private extension PlayerOverlayView {
                 return
             }
 
-            delegate?.didFastForward()
+            delegate?.didFastForward(sec: config.fastForward.rawValue)
 
             fastForwardImageView.alpha = 1.0
             UIView.animate(
@@ -219,7 +219,7 @@ private extension PlayerOverlayView {
                 return
             }
 
-            delegate?.didFastBackward()
+            delegate?.didFastBackward(sec: config.fastBackward.rawValue)
 
             fastBackwardImageView.alpha = 1.0
             UIView.animate(
