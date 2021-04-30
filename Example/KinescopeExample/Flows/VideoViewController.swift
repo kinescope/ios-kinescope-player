@@ -1,5 +1,6 @@
 import UIKit
 import KinescopeSDK
+import MediaPlayer
 
 final class VideoViewController: UIViewController {
 
@@ -33,6 +34,23 @@ final class VideoViewController: UIViewController {
         playerView.showOverlay(true)
         player?.pipDelegate = PipManager.shared
         player?.delegate = self
+        setupCommandCenter()
+    }
+
+    private func setupCommandCenter() {
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = [MPMediaItemPropertyTitle: "Some title"]
+
+        let commandCenter = MPRemoteCommandCenter.shared()
+        commandCenter.playCommand.isEnabled = true
+        commandCenter.pauseCommand.isEnabled = true
+        commandCenter.playCommand.addTarget { [weak self] (event) -> MPRemoteCommandHandlerStatus in
+            self?.player?.play()
+            return .success
+        }
+        commandCenter.pauseCommand.addTarget { [weak self] (event) -> MPRemoteCommandHandlerStatus in
+            self?.player?.pause()
+            return .success
+        }
     }
 
 }
