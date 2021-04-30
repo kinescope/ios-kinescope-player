@@ -107,6 +107,23 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         self.init(config: config, dependencies: KinescopeVideoPlayerDependencies())
     }
 
+    public func preload() {
+        dependencies.inspector.video(
+            id: config.videoId,
+            onSuccess: { [weak self] video in
+                self?.video = video
+                self?.select(quality: .auto(hlsLink: video.hlsLink))
+                self?.view?.overlay?.set(title: video.title, subtitle: video.description)
+                self?.view?.set(options: self?.makePlayerOptions(from: video) ?? [])
+                self?.delegate?.playerDidLoadVideo(error: nil)
+            },
+            onError: { [weak self] error in
+                self?.delegate?.playerDidLoadVideo(error: error)
+                Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.network)
+            }
+        )
+    }
+
     public func play() {
         if video != nil {
             self.strategy.play()

@@ -6,10 +6,11 @@ final class VideoViewController: UIViewController {
     // MARK: - IBOutlets
 
     @IBOutlet private weak var playerView: KinescopePlayerView!
+    @IBOutlet private weak var previewView: KinescopePreviewView!
 
     // MARK: - Private properties
 
-    var videoId = ""
+    var video: KinescopeVideo?
     private var player: KinescopePlayer?
 
     // MARK: - Lifecycle
@@ -25,14 +26,30 @@ final class VideoViewController: UIViewController {
 
         playerView.setLayout(with: .default)
 
-        PipManager.shared.closePipIfNeeded(with: videoId)
+        PipManager.shared.closePipIfNeeded(with: video?.id ?? "")
 
-        player = KinescopeVideoPlayer(config: .init(videoId: videoId))
+        player = KinescopeVideoPlayer(config: .init(videoId: video?.id ?? ""))
         player?.attach(view: playerView)
-        player?.play()
+        player?.preload()
         playerView.showOverlay(true)
+        configurePreviewView()
+
         player?.pipDelegate = PipManager.shared
         player?.delegate = self
+    }
+
+    private func configurePreviewView() {
+        guard let video = video else {
+            return
+        }
+        let previewModel = KinescopePreviewModel(from: video)
+
+        previewView.delegate = self
+        previewView.setPreview(with: previewModel)
+        previewView.backgroundColor = .black
+        previewView.previewImageView.contentMode = .scaleAspectFit
+        previewView.previewImageView.kf.setImage(with: URL(string: video.poster?.md ?? ""))
+        view.bringSubviewToFront(previewView)
     }
 
 }
@@ -45,7 +62,17 @@ extension VideoViewController: UINavigationControllerDelegate {
     }
 }
 
- // MARK: - KinescopeVideoPlayerDelegate
+// MARK: - KinescopePreviewViewDelegate
+
+extension VideoViewController: KinescopePreviewViewDelegate {
+
+    func didTap() {
+        player?.play()
+        previewView.removeFromSuperview()
+    }
+
+}
+// MARK: - KinescopeVideoPlayerDelegate
 
 extension VideoViewController: KinescopeVideoPlayerDelegate {
 
@@ -53,10 +80,6 @@ extension VideoViewController: KinescopeVideoPlayerDelegate {
         if callState == .ended {
             player?.play()
         }
-    }
-
-    func playerDidPlay() {
-        print("DIDPLAY")
     }
 
 }

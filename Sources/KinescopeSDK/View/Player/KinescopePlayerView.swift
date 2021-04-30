@@ -48,7 +48,7 @@ public class KinescopePlayerView: UIView {
 
     // MARK: - Public Properties
 
-    public private(set) var previewView: UIImageView = UIImageView()
+    public private(set) var previewImage: UIImageView = UIImageView()
 
     // MARK: - Lifecycle
 
@@ -77,13 +77,13 @@ public class KinescopePlayerView: UIView {
     // MARK: - Internal Methods
 
     func startLoader() {
-        previewView.isHidden = false
+        previewImage.isHidden = false
         progressView.showLoading(true)
     }
 
     func stopLoader() {
         progressView.showLoading(false)
-        previewView.isHidden = true
+        previewImage.isHidden = true
     }
 
     func showError() {
@@ -98,7 +98,7 @@ public class KinescopePlayerView: UIView {
         case .readyToPlay:
             overlay?.isHidden = false
             progressView.showLoading(false)
-            previewView.isHidden = true
+            previewImage.isHidden = true
             errorView?.isHidden = true
         case .failed, .unknown:
             // FIXME: Error handling
@@ -136,7 +136,7 @@ public extension KinescopePlayerView {
         clearSubviews()
 
         configurePlayerView(with: config.gravity)
-        configurePreviewView()
+        configurePreviewImage()
         configureErrorView(with: config.errorState)
 
         if let overlay = config.overlay {
@@ -184,9 +184,9 @@ private extension KinescopePlayerView {
         self.playerView = playerView
     }
 
-    func configurePreviewView() {
-        addSubview(previewView)
-        stretch(view: previewView)
+    func configurePreviewImage() {
+        addSubview(previewImage)
+        stretch(view: previewImage)
     }
 
     func configureErrorView(with config: KinescopeErrorViewConfiguration) {
