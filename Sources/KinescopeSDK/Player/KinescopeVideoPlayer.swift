@@ -514,6 +514,9 @@ private extension KinescopeVideoPlayer {
     }
 
     func updateViewState() {
+        guard !isError else {
+            return
+        }
         switch (isPlaying, isAtEnd) {
         case (false, true):
             view?.state = .ended
