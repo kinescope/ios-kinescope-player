@@ -39,6 +39,8 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private var currentQuality = ""
     private var isOverlayed = false
     private var savedTime: CMTime = .zero
+    private var loadingDebouncer = Debouncer(timeInterval: 0.06)
+    private var pauseDebouncer = Debouncer(timeInterval: 0.02)
     private weak var miniView: KinescopePlayerView?
     private var video: KinescopeVideo?
     private let config: KinescopePlayerConfig
@@ -71,14 +73,23 @@ public class KinescopeVideoPlayer: KinescopePlayer {
             updateTimeline()
         }
     }
+
     private var isPlaying = false {
         didSet {
-            updatePlayPauseButton()
+            updateViewState()
         }
     }
     private var isAtEnd = false {
         didSet {
-            updatePlayPauseButton()
+            updateViewState()
+        }
+    }
+
+    private var isError = false {
+        didSet {
+            if isError {
+                view?.state = .error
+            }
         }
     }
 
@@ -119,6 +130,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
             self.strategy.play()
             self.delegate?.playerDidPlay()
         } else {
+            view?.state = .initialLoading
             self.load()
         }
     }
@@ -188,17 +200,16 @@ private extension KinescopeVideoPlayer {
 
     /// Sends request video by id and sets player's item
     func load() {
-        view?.state = .initialLoading
-
         dependencies.inspector.video(
             id: config.videoId,
             onSuccess: { [weak self] video in
                 self?.setVideo(video)
                 self?.delegate?.playerDidLoadVideo(error: nil)
                 self?.play()
+                self?.isError = false
             },
             onError: { [weak self] error in
-                self?.view?.state = .error
+                self?.isError = true
                 self?.delegate?.playerDidLoadVideo(error: error)
                 Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.network)
             }
@@ -283,6 +294,9 @@ private extension KinescopeVideoPlayer {
             \.status,
             options: [.new, .old],
             changeHandler: { [weak self] item, _ in
+                if item.status == .failed {
+                    self?.isError = true
+                }
                 Kinescope.shared.logger?.log(message: "AVPlayer.Status – \(item.status.rawValue)",
                                              level: KinescopeLoggerLevel.player)
                 self?.delegate?.player(changedStatusTo: item.status)
@@ -308,6 +322,7 @@ private extension KinescopeVideoPlayer {
 
                 switch item.status {
                 case .readyToPlay:
+                    self.isError = false
                     let seconds = self.savedTime.seconds
                     if seconds > .zero {
                         self.time = seconds
@@ -315,6 +330,7 @@ private extension KinescopeVideoPlayer {
                         self.seek(to: seconds)
                     }
                 case .failed, .unknown:
+                    self.isError = true
                     Kinescope.shared.logger?.log(message: "AVPlayerItem.error – \(String(describing: item.error))",
                                                  level: KinescopeLoggerLevel.player)
                 default:
@@ -338,18 +354,23 @@ private extension KinescopeVideoPlayer {
             \.timeControlStatus,
             options: [.new, .old],
             changeHandler: { [weak self] item, _ in
-                guard let self = self else {
+                guard let self = self, !self.isError else {
                     return
                 }
                 self.isPlaying = item.timeControlStatus == .playing
                 switch item.timeControlStatus {
-                case .paused:
-                    self.view?.state = .paused
-                break
-                case .playing:
-                    self.view?.state = .playing
+                case .paused, .playing:
+                    break
                 case .waitingToPlayAtSpecifiedRate:
-                    self.view?.state = self.time == 0 ? .initialLoading : .loading
+                    self.loadingDebouncer.renewInterval()
+                    self.loadingDebouncer.handler = { [weak self] in
+                        guard let self = self else {
+                            return
+                        }
+                        if self.strategy.player.timeControlStatus == .waitingToPlayAtSpecifiedRate {
+                            self.view?.state = self.time == 0 ? .initialLoading : .loading
+                        }
+                    }
                 }
 
                 Kinescope.shared.logger?.log(
@@ -492,15 +513,25 @@ private extension KinescopeVideoPlayer {
         }
     }
 
-    func updatePlayPauseButton() {
+    func updateViewState() {
         switch (isPlaying, isAtEnd) {
         case (false, true):
             view?.state = .ended
         case (false, false):
-//            view?.state = .paused
-        break
+            pauseDebouncer.renewInterval()
+            pauseDebouncer.handler = { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                if self.strategy.player.timeControlStatus == .paused {
+                    self.view?.state =  .paused
+                }
+            }
+
         case (true, false):
-            break
+            if strategy.player.timeControlStatus == .playing {
+                view?.state = .playing
+            }
         case (true, true):
             break
         }
@@ -716,6 +747,10 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
     func didShowSubtitles() -> [String] {
         return video?.subtitles.compactMap { $0.title } ?? []
+    }
+
+    func didRefresh() {
+        load()
     }
 
     func didSelect(subtitles: String) {

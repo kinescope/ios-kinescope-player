@@ -14,7 +14,7 @@ final class VideoListFocusableCellGenerator: FocusableItem, SelectableItem {
     var didSelectEvent = BaseEvent<Void>()
     var uuid: String = ""
     var isFocused = false
-    private var cell: VideoListCell?
+    private weak var cell: VideoListCell?
 
     private var model: VideoListCell.Model
 

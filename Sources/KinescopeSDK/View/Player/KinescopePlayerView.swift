@@ -10,16 +10,6 @@ import UIKit
 import AVFoundation
 import AVKit
 
-// TODO
-enum PlayerViewState {
-    case initialLoading
-    case loading
-    case playing
-    case paused
-    case error
-    case ended
-}
-
 public class KinescopePlayerView: UIView {
 
     // MARK: - Private Properties
@@ -42,6 +32,11 @@ public class KinescopePlayerView: UIView {
     private var selectedSubtitles = NSAttributedString(string: L10n.Player.off)
     private lazy var overlayDebouncer = Debouncer(timeInterval: overlay?.duration ?? 0.0)
     private lazy var timelineDebouncer = Debouncer(timeInterval: 1)
+    private var playPauseReplayState: PlayPauseReplayState = .play {
+        didSet {
+            overlay?.playPauseReplayState = playPauseReplayState
+        }
+    }
 
     // MARK: - Internal Properties
 
@@ -52,12 +47,6 @@ public class KinescopePlayerView: UIView {
     var state: PlayerViewState = .loading {
         didSet {
             updateViewState()
-        }
-    }
-
-    var playPauseReplayState: PlayPauseReplayState = .play {
-        didSet {
-            overlay?.playPauseReplayState = playPauseReplayState
         }
     }
 
@@ -75,11 +64,6 @@ public class KinescopePlayerView: UIView {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setLayout(with: .default)
-    }
-
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-        self.progressView.center = CGPoint(x: frame.width / 2, y: frame.height / 2)
     }
 
     deinit {
@@ -181,6 +165,11 @@ private extension KinescopePlayerView {
 
     func configureProgressView(with progressView: KinescopeActivityIndicator) {
         addSubview(progressView)
+        centerChild(view: progressView)
+        NSLayoutConstraint.activate([
+            progressView.widthAnchor.constraint(equalToConstant: progressView.frame.width),
+            progressView.heightAnchor.constraint(equalToConstant: progressView.frame.height)
+        ])
         progressView.isHidden = true
         self.progressView = progressView
     }
@@ -218,25 +207,28 @@ private extension KinescopePlayerView {
     }
 
     func updateViewState() {
+        if progressView.superview == nil {
+            configureProgressView(with: progressView)
+        }
         errorView?.isHidden = true
         overlay?.isHidden = false
         switch state {
         case .initialLoading:
             previewImage.isHidden = false
             progressView.showLoading(true)
-            overlay?.playPauseReplayState = .loading
+            playPauseReplayState = .loading
         case .loading:
             previewImage.isHidden = true
             progressView.showLoading(true)
-            overlay?.playPauseReplayState = .loading
+            playPauseReplayState = .loading
         case .playing:
             progressView.showLoading(false)
             previewImage.isHidden = true
-            overlay?.playPauseReplayState = .pause
+            playPauseReplayState = .pause
             errorView?.isHidden = true
         case .paused:
             progressView.showLoading(false)
-            overlay?.playPauseReplayState = .play
+            playPauseReplayState = .play
         case .error:
             progressView.showLoading(false)
             previewImage.isHidden = true
@@ -594,7 +586,7 @@ extension KinescopePlayerView: SideMenuDelegate {
 extension KinescopePlayerView: ErrorViewDelegate {
 
     func didTapRefresh() {
-
+        delegate?.didRefresh()
     }
 
 }
