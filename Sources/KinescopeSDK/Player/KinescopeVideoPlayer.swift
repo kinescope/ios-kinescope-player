@@ -87,9 +87,13 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
     private var isError = false {
         didSet {
-            if isError {
-                view?.state = .error
-            }
+            updateViewState()
+        }
+    }
+
+    private var isLoading = false {
+        didSet {
+            updateViewState()
         }
     }
 
@@ -360,17 +364,9 @@ private extension KinescopeVideoPlayer {
                 self.isPlaying = item.timeControlStatus == .playing
                 switch item.timeControlStatus {
                 case .paused, .playing:
-                    break
+                    self.isLoading = false
                 case .waitingToPlayAtSpecifiedRate:
-                    self.loadingDebouncer.renewInterval()
-                    self.loadingDebouncer.handler = { [weak self] in
-                        guard let self = self else {
-                            return
-                        }
-                        if self.strategy.player.timeControlStatus == .waitingToPlayAtSpecifiedRate {
-                            self.view?.state = self.time == 0 ? .initialLoading : .loading
-                        }
-                    }
+                    self.isLoading = true
                 }
 
                 Kinescope.shared.logger?.log(
@@ -515,6 +511,12 @@ private extension KinescopeVideoPlayer {
 
     func updateViewState() {
         guard !isError else {
+            view?.state = .error
+            return
+        }
+        guard !isLoading else {
+            loadingDebouncer.renewInterval()
+            addLoadingDebouncerHandler()
             return
         }
         switch (isPlaying, isAtEnd) {
@@ -522,21 +524,35 @@ private extension KinescopeVideoPlayer {
             view?.state = .ended
         case (false, false):
             pauseDebouncer.renewInterval()
-            pauseDebouncer.handler = { [weak self] in
-                guard let self = self else {
-                    return
-                }
-                if self.strategy.player.timeControlStatus == .paused {
-                    self.view?.state =  .paused
-                }
-            }
-
+            addPauseDebouncerHandler()
         case (true, false):
             if strategy.player.timeControlStatus == .playing {
                 view?.state = .playing
             }
         case (true, true):
             break
+        }
+    }
+
+    func addLoadingDebouncerHandler() {
+        loadingDebouncer.handler = { [weak self] in
+            guard let self = self else {
+                return
+            }
+            if self.strategy.player.timeControlStatus == .waitingToPlayAtSpecifiedRate {
+                self.view?.state = self.time == 0 ? .initialLoading : .loading
+            }
+        }
+    }
+
+    func addPauseDebouncerHandler() {
+        pauseDebouncer.handler = { [weak self] in
+            guard let self = self else {
+                return
+            }
+            if self.strategy.player.timeControlStatus == .paused {
+                self.view?.state =  .paused
+            }
         }
     }
 
