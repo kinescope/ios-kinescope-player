@@ -3,4 +3,5 @@ protocol PlayerOverlayViewDelegate: class {
     func didPlayPause()
     func didFastForward()
     func didFastBackward()
+    func didAlphaChanged(alpha: CGFloat)
 }

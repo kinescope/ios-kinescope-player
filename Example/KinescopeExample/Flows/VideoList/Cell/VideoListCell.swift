@@ -37,7 +37,9 @@ final class VideoListCell: UITableViewCell {
                                          controlPanel: nil,
                                          sideMenu: .default,
                                          shadowOverlay: .default,
-                                         errorState: .default))
+                                         errorState: .default,
+                                         nameDisplayingType: .hideWithOverlay,
+                                         nameConfiguration: .default))
     }
 
     override func prepareForReuse() {

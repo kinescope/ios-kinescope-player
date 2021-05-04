@@ -14,7 +14,6 @@ class PlayerOverlayView: UIControl {
     let playPauseImageView = UIImageView()
     let fastForwardImageView = UIImageView()
     let fastBackwardImageView = UIImageView()
-    let nameView: VideoNameView
     private let contentView = UIView()
     private let config: KinescopePlayerOverlayConfiguration
     private weak var delegate: PlayerOverlayViewDelegate?
@@ -43,7 +42,6 @@ class PlayerOverlayView: UIControl {
     init(config: KinescopePlayerOverlayConfiguration, delegate: PlayerOverlayViewDelegate? = nil) {
         self.config = config
         self.delegate = delegate
-        self.nameView = VideoNameView(config: config.nameConfiguration)
         super.init(frame: .zero)
         self.setupInitialState()
     }
@@ -61,17 +59,11 @@ class PlayerOverlayView: UIControl {
     override var isSelected: Bool {
         didSet {
             UIView.animate(withDuration: 0.1) {
-                self.contentView.alpha = self.isSelected ? 1.0 : .zero
+                let alpha: CGFloat = self.isSelected ? 1.0 : .zero
+                self.contentView.alpha = alpha
+                self.delegate?.didAlphaChanged(alpha: alpha)
             }
         }
-    }
-}
-
-// MARK: - VideoNameInput
-
-extension PlayerOverlayView: VideoNameInput {
-    func set(title: String, subtitle: String) {
-        nameView.set(title: title, subtitle: subtitle)
     }
 }
 
@@ -91,7 +83,6 @@ private extension PlayerOverlayView {
         addSubview(contentView)
         stretch(view: contentView)
 
-        configureNameView()
         configurePlayPauseImageView()
         configureFastForwardImageView()
         configureFastBackwardImageView()
@@ -115,11 +106,6 @@ private extension PlayerOverlayView {
         fastBackwardImageView.alpha = .zero
         addSubview(fastBackwardImageView)
         leftCenterChild(view: fastBackwardImageView)
-    }
-
-    func configureNameView() {
-        contentView.addSubview(nameView)
-        contentView.topChildWithSafeArea(view: nameView)
     }
 
     func addGestureRecognizers() {
