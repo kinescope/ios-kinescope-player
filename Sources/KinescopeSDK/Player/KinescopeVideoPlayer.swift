@@ -127,6 +127,8 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         select(quality: .auto(hlsLink: video.hlsLink))
         view?.overlay?.set(title: video.title, subtitle: video.description)
         view?.set(options: makePlayerOptions(from: video) ?? [])
+        view?.controlPanel?.hideTimeline(false)
+        view?.controlPanel?.setTimeline(to: 0)
     }
 
     public func play() {

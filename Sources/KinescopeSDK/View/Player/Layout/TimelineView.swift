@@ -49,8 +49,6 @@ class TimelineView: UIControl {
         }
     }
 
-    private var needSetInitialTimeline = true
-
     weak var output: TimelineOutput?
 
     init(config: KinescopePlayerTimelineConfiguration) {
@@ -67,15 +65,6 @@ class TimelineView: UIControl {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        guard needSetInitialTimeline else {
-            return
-        }
-        needSetInitialTimeline.toggle()
-        setTimeline(to: 0)
     }
 
 }

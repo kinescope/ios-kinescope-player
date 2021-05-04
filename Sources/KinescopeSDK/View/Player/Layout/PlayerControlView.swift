@@ -75,6 +75,11 @@ extension PlayerControlView: PlayerControlInput {
         optionsMenu.set(subtitleOn: subtitleOn)
     }
 
+    func hideTimeline(_ isHidden: Bool) {
+        timeline.isHidden = isHidden
+        timeIndicator.isHidden = isHidden
+    }
+
 }
 
 // MARK: - PlayerControlOptionsOutput
@@ -124,6 +129,8 @@ private extension PlayerControlView {
         addSubviews(timeIndicator, timeline, optionsMenu)
 
         setupConstraints()
+
+        hideTimeline(true)
 
         optionsMenu.output = self
         timeline.output = self
