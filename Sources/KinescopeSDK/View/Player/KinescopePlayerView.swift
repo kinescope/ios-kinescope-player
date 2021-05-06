@@ -23,7 +23,7 @@ public class KinescopePlayerView: UIView {
     private(set) var pipController: AVPictureInPictureController?
     private var errorView: ErrorView?
     private var nameView: VideoNameView?
-    private var nameDisplayingType: KinescopeVideoNameDisplayingType = .hideWithOverlay
+    private var nameDisplayingType: KinescopeVideoNameDisplayingType = .hidesWithOverlay
 
     private var config: KinescopePlayerViewConfiguration!
 
@@ -109,6 +109,7 @@ public extension KinescopePlayerView {
         configurePlayerView(with: config.gravity)
         configurePreviewImage()
         configureErrorView(with: config.errorState)
+        configureNameView(with: config)
 
         if let overlay = config.overlay {
             configureOverlay(with: overlay)
@@ -124,7 +125,6 @@ public extension KinescopePlayerView {
 
         configureProgressView(with: config.activityIndicator)
         configurePip()
-        configureNameView(with: config)
     }
 
     /// Show/hide player view overlay
@@ -189,7 +189,6 @@ private extension KinescopePlayerView {
         let nameView = VideoNameView(config: config.nameConfiguration)
         addSubview(nameView)
         topChildWithSafeArea(view: nameView)
-        bringSubviewToFront(nameView)
         nameView.alpha = 0.0
         self.nameView = nameView
         self.nameDisplayingType = config.nameDisplayingType

@@ -71,7 +71,7 @@ public extension KinescopePlayerViewConfiguration {
                                                                    sideMenu: .default,
                                                                    shadowOverlay: .default,
                                                                    errorState: .default,
-                                                                   nameDisplayingType: .hideWithOverlay,
+                                                                   nameDisplayingType: .hidesWithOverlay,
                                                                    nameConfiguration: .default)
 
 }
