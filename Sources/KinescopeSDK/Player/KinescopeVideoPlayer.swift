@@ -499,6 +499,8 @@ private extension KinescopeVideoPlayer {
 
     @objc
     func didAirPlayStateChanged(_ notification: NSNotification) {
+        // Workaround. When player enters in AirPlay mode, timeControlStatus sets in pause even though video is playing
+        // So we are looking at player rate to know what current view state is, but rate has correct state only after ~0.5 sec
         airPlayDebouncer.renewInterval()
         airPlayDebouncer.handler = { [weak self] in
             guard let self = self else { return }
