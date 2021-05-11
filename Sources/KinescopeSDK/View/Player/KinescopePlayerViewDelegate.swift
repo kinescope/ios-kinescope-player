@@ -2,8 +2,8 @@ protocol KinescopePlayerViewDelegate: class {
     func didPlayPause()
     func didSeek(to position: Double)
     func didConfirmSeek()
-    func didFastForward()
-    func didFastBackward()
+    func didFastForward(sec: Double)
+    func didFastBackward(sec: Double)
     func didPresentFullscreen(from view: KinescopePlayerView)
     func didShowQuality() -> [String]
     func didShowAttachments() -> [KinescopeVideoAdditionalMaterial]?

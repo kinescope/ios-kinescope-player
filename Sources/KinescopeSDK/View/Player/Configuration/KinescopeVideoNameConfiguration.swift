@@ -26,13 +26,6 @@ public struct KinescopeVideoNameConfiguration {
 public extension KinescopeVideoNameConfiguration {
     static let `default`: KinescopeVideoNameConfiguration = .init(
         titleFont: .systemFont(ofSize: 14.0, weight: .medium),
-        titleColor: UIColor.white.withAlphaComponent(0.8),
-        subtitleFont: .systemFont(ofSize: 12.0),
-        subtitleColor: UIColor.white.withAlphaComponent(0.8)
-    )
-
-    static let preview: KinescopeVideoNameConfiguration = .init(
-        titleFont: .systemFont(ofSize: 14.0, weight: .medium),
         titleColor: UIColor.white,
         subtitleFont: .systemFont(ofSize: 12.0),
         subtitleColor: UIColor.white

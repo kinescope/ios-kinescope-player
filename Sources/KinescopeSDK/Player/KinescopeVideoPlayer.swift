@@ -41,6 +41,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private var savedTime: CMTime = .zero
     private var loadingDebouncer = Debouncer(timeInterval: 0.06)
     private var pauseDebouncer = Debouncer(timeInterval: 0.02)
+    private var airPlayDebouncer = Debouncer(timeInterval: 0.5)
     private weak var miniView: KinescopePlayerView?
     private var video: KinescopeVideo?
     private let config: KinescopePlayerConfig
@@ -125,7 +126,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     public func setVideo(_ video: KinescopeVideo) {
         self.video = video
         select(quality: .auto(hlsLink: video.hlsLink))
-        view?.overlay?.set(title: video.title, subtitle: video.description)
+        view?.set(title: video.title, subtitle: video.description)
         view?.set(options: makePlayerOptions(from: video) ?? [])
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.view?.controlPanel?.hideTimeline(false)
@@ -448,6 +449,10 @@ private extension KinescopeVideoPlayer {
                                                selector: #selector(changeOrientation),
                                                name: UIDevice.orientationDidChangeNotification,
                                                object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(didAirPlayStateChanged),
+                                               name: AVAudioSession.routeChangeNotification,
+                                               object: nil)
     }
 
     func seek(to seconds: TimeInterval) {
@@ -497,6 +502,19 @@ private extension KinescopeVideoPlayer {
         }
     }
 
+    @objc
+    func didAirPlayStateChanged(_ notification: NSNotification) {
+        // Workaround. When player enters in AirPlay mode, timeControlStatus sets in pause even though video is playing
+        // So we are looking at player rate to know what current view state is, but rate has correct state only after ~0.5 sec
+        airPlayDebouncer.renewInterval()
+        airPlayDebouncer.handler = { [weak self] in
+            guard let self = self else { return }
+            self.isPlaying = self.strategy.player.rate == 1.0
+            self.updateTimeline()
+            self.view?.controlPanel?.expanded = false
+        }
+    }
+
     func restoreView() {
         view?.showOverlay(isOverlayed)
         isPlaying ? play() : pause()
@@ -505,7 +523,7 @@ private extension KinescopeVideoPlayer {
     func updateTimeline() {
         let duration = strategy.player.currentItem?.duration.seconds ?? .zero
         let position = CGFloat(time / duration)
-        
+
         if !position.isNaN {
             view?.controlPanel?.setTimeline(to: CGFloat(position))
         }
@@ -531,9 +549,7 @@ private extension KinescopeVideoPlayer {
             pauseDebouncer.renewInterval()
             addPauseDebouncerHandler()
         case (true, false):
-            if strategy.player.timeControlStatus == .playing {
-                view?.state = .playing
-            }
+            view?.state = .playing
         case (true, true):
             break
         }
@@ -621,25 +637,25 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     func didSelect(option: KinescopePlayerOption) {
     }
 
-    func didFastForward() {
+    func didFastForward(sec: Double) {
         guard
             let duration = strategy.player.currentItem?.duration.seconds
         else {
             return
         }
 
-        Kinescope.shared.logger?.log(message: "fast forward +15s", level: KinescopeLoggerLevel.player)
+        Kinescope.shared.logger?.log(message: "fast forward +\(sec)s", level: KinescopeLoggerLevel.player)
 
-        time = min(duration, time + 15)
+        time = min(duration, time + sec)
         seek(to: time)
 
         delegate?.player(didFastForwardTo: time)
     }
 
-    func didFastBackward() {
-        Kinescope.shared.logger?.log(message: "fast backward -15s", level: KinescopeLoggerLevel.player)
+    func didFastBackward(sec: Double) {
+        Kinescope.shared.logger?.log(message: "fast backward -\(sec)s", level: KinescopeLoggerLevel.player)
 
-        time = max(time - 15.0, .zero)
+        time = max(time - sec, .zero)
         seek(to: time)
 
         delegate?.player(didFastBackwardTo: time)
@@ -683,7 +699,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                     return
                 }
                 self.view?.change(quality: self.currentQuality, manualQuality: self.isManualQuality)
-                self.view?.overlay?.set(title: video.title, subtitle: video.description)
+                self.view?.set(title: video.title, subtitle: video.description)
                 self.restoreView()
             })
         }

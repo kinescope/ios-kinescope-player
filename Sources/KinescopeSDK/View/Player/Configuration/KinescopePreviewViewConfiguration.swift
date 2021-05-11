@@ -18,7 +18,7 @@ public struct KinescopePreviewViewConfiguration {
     /// - parameter playImage: Image showing If video started after tapping on overlay
     /// - parameter durationFont: Font of duration video label
     /// - parameter durationColor: Text color of  duration video label
-    /// - parameter nameConfiguration: Configuration of video title and subtitle lables
+    /// - parameter nameConfiguration: Configuration of video title and description lables
     public init(playImage: UIImage,
                 durationFont: UIFont,
                 durationColor: UIColor,
@@ -38,7 +38,7 @@ public extension KinescopePreviewViewConfiguration {
         playImage: UIImage.image(named: "play"),
         durationFont: .systemFont(ofSize: 14, weight: .regular),
         durationColor: .white,
-        nameConfiguration: .preview
+        nameConfiguration: .default
     )
 
 }
