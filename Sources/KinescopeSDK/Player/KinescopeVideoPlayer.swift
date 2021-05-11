@@ -127,8 +127,10 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         select(quality: .auto(hlsLink: video.hlsLink))
         view?.overlay?.set(title: video.title, subtitle: video.description)
         view?.set(options: makePlayerOptions(from: video) ?? [])
-        view?.controlPanel?.hideTimeline(false)
-        view?.controlPanel?.setTimeline(to: 0)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.view?.controlPanel?.hideTimeline(false)
+            self.view?.controlPanel?.setTimeline(to: 0)
+        }
     }
 
     public func play() {
@@ -206,6 +208,7 @@ private extension KinescopeVideoPlayer {
 
     /// Sends request video by id and sets player's item
     func load() {
+        view?.controlPanel?.hideTimeline(true)
         dependencies.inspector.video(
             id: config.videoId,
             onSuccess: { [weak self] video in
@@ -593,8 +596,11 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     func didSeek(to position: Double) {
         isPreparingSeek = true
 
-        guard let duration = strategy.player.currentItem?.duration.seconds else {
+        guard var duration = strategy.player.currentItem?.duration.seconds else {
             return
+        }
+        if duration.isNaN {
+            duration = video?.duration ?? .nan
         }
 
         Kinescope.shared.logger?.log(message: "timeline seeked to \(position)",

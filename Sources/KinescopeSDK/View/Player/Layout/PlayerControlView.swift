@@ -130,8 +130,6 @@ private extension PlayerControlView {
 
         setupConstraints()
 
-        hideTimeline(true)
-
         optionsMenu.output = self
         timeline.output = self
     }
