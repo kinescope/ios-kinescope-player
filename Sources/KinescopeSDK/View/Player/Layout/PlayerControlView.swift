@@ -75,6 +75,11 @@ extension PlayerControlView: PlayerControlInput {
         optionsMenu.set(subtitleOn: subtitleOn)
     }
 
+    func hideTimeline(_ isHidden: Bool) {
+        timeline.isHidden = isHidden
+        timeIndicator.isHidden = isHidden
+    }
+
 }
 
 // MARK: - PlayerControlOptionsOutput

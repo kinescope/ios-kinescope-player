@@ -228,6 +228,7 @@ private extension KinescopePlayerView {
         }
         errorView?.isHidden = true
         overlay?.isHidden = false
+        controlPanel?.isHidden = false
         nameView?.isHidden = false
         switch state {
         case .initialLoading:
@@ -252,6 +253,7 @@ private extension KinescopePlayerView {
             overlay?.isHidden = true
             nameView?.isHidden = true
             errorView?.isHidden = false
+            controlPanel?.isHidden = true
         case .ended:
             overlay?.playPauseReplayState = .replay
         }
