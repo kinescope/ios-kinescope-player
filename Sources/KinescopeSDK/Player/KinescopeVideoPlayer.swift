@@ -576,25 +576,25 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     func didSelect(option: KinescopePlayerOption) {
     }
 
-    func didFastForward() {
+    func didFastForward(sec: Double) {
         guard
             let duration = strategy.player.currentItem?.duration.seconds
         else {
             return
         }
 
-        Kinescope.shared.logger?.log(message: "fast forward +15s", level: KinescopeLoggerLevel.player)
+        Kinescope.shared.logger?.log(message: "fast forward +\(sec)s", level: KinescopeLoggerLevel.player)
 
-        time = min(duration, time + 15)
+        time = min(duration, time + sec)
         seek(to: time)
 
         delegate?.player(didFastForwardTo: time)
     }
 
-    func didFastBackward() {
-        Kinescope.shared.logger?.log(message: "fast backward -15s", level: KinescopeLoggerLevel.player)
+    func didFastBackward(sec: Double) {
+        Kinescope.shared.logger?.log(message: "fast backward -\(sec)s", level: KinescopeLoggerLevel.player)
 
-        time = max(time - 15.0, .zero)
+        time = max(time - sec, .zero)
         seek(to: time)
 
         delegate?.player(didFastBackwardTo: time)

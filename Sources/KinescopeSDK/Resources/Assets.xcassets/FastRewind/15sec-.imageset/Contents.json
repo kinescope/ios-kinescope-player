@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "15 sec +.pdf",
+      "filename" : "15 sec -.pdf",
       "idiom" : "universal"
     }
   ],
@@ -10,6 +10,7 @@
     "version" : 1
   },
   "properties" : {
-    "preserves-vector-representation" : true
+    "preserves-vector-representation" : true,
+    "template-rendering-intent" : "template"
   }
 }
