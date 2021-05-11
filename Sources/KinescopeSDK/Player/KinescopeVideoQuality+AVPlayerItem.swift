@@ -10,16 +10,7 @@ import AVFoundation
 extension KinescopeVideoQuality {
 
     var item: AVPlayerItem? {
-        switch self {
-        case .auto(let hlsLink):
-            return makeAutoItem(from: hlsLink)
-        case .exact(let asset):
-            return makeExactItem(from: asset)
-        case .exactWithSubtitles(let asset, let subtitles):
-            return makeExactItem(from: asset, subtitles: subtitles)
-        case .downloaded(let url):
-            return makeDownloadedItem(from: url)
-        }
+        return makeItem()
     }
 
 }
@@ -28,44 +19,18 @@ extension KinescopeVideoQuality {
 
 fileprivate extension KinescopeVideoQuality {
 
-    func makeAutoItem(from hlsLink: String) -> AVPlayerItem? {
-        guard let url = URL(string: hlsLink) else {
+    func makeItem() -> AVPlayerItem? {
+        guard let url = URL(string: link) else {
             return nil
-        }
-
-        let asset = AVAsset(url: url)
-        return AVPlayerItem(asset: asset)
-    }
-
-    func makeExactItem(from asset: KinescopeVideoAsset) -> AVPlayerItem? {
-        guard let url = URL(string: asset.url) else {
-            return nil
-        }
-
-        return AVPlayerItem(url: url)
-    }
-
-    func makeExactItem(from asset: KinescopeVideoAsset,
-                       subtitles: KinescopeVideoSubtitle) -> AVPlayerItem? {
-        guard
-            let url = URL(string: asset.url)
-        else {
-            return nil
-        }
-
-        guard
-            let subtitleURL = URL(string: subtitles.url)
-        else {
-            return AVPlayerItem(url: url)
         }
 
         let composition = AVMutableComposition()
 
-        let videoAsset = AVURLAsset(url: url)
+        // Video
 
+        let videoAsset = AVURLAsset(url: url)
         let videoTrack = composition.addMutableTrack(withMediaType: .video,
                                                      preferredTrackID: kCMPersistentTrackID_Invalid)
-
         if let track = videoAsset.tracks(withMediaType: .video).first {
             do {
                 try videoTrack?.insertTimeRange(.init(start: .zero, duration: videoAsset.duration),
@@ -74,14 +39,20 @@ fileprivate extension KinescopeVideoQuality {
             } catch {
                 Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.player)
             }
-        } else {
-            return AVPlayerItem(url: url)
+        }
+
+        // Audio
+
+        var audioAsset = videoAsset
+
+        if let audio = audio, let audioURL = URL(string: audio) {
+            audioAsset = AVURLAsset(url: audioURL)
         }
 
         let audioTrack = composition.addMutableTrack(withMediaType: .audio,
                                                      preferredTrackID: kCMPersistentTrackID_Invalid)
 
-        if let track = videoAsset.tracks(withMediaType: .audio).first {
+        if let track = audioAsset.tracks(withMediaType: .audio).first {
             do {
                 try audioTrack?.insertTimeRange(.init(start: .zero, duration: videoAsset.duration),
                                                 of: track,
@@ -89,11 +60,15 @@ fileprivate extension KinescopeVideoQuality {
             } catch {
                 Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.player)
             }
-        } else {
-            return AVPlayerItem(url: url)
         }
 
-        let subAsset = AVURLAsset(url: subtitleURL)
+        // Subtitles
+
+        var subAsset = videoAsset
+
+        if let subtitles = subtitles, let subtitlesURL = URL(string: subtitles) {
+            subAsset = AVURLAsset(url: subtitlesURL)
+        }
 
         let subTrack = composition.addMutableTrack(withMediaType: .text,
                                                    preferredTrackID: kCMPersistentTrackID_Invalid)
@@ -109,10 +84,6 @@ fileprivate extension KinescopeVideoQuality {
         }
 
         return AVPlayerItem(asset: composition)
-    }
-
-    func makeDownloadedItem(from url: URL) -> AVPlayerItem? {
-        return AVPlayerItem(url: url)
     }
 
 }

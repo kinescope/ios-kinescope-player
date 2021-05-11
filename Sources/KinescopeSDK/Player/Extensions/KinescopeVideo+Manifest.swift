@@ -11,17 +11,27 @@ import GoSwiftyM3U8
 extension KinescopeVideo {
 
     var qualities: [String] {
-        guard let tags = manifest?.tags.streamTags as? [BaseAttributedTag] else {
+        guard let tags = manifest?.tags.streamTags else {
             return []
         }
-        return tags.compactMap { $0.resolution }
+        return tags.compactMap { $0.quality }
+    }
+
+    func link(for quality: String) -> String? {
+        guard
+            let tags = manifest?.tags.streamTags ,
+            let url = tags.first(where: { $0.quality == quality })?.uri
+        else {
+            return nil
+        }
+        return manifest?.baseUrl.deletingLastPathComponent().appendingPathComponent(url).absoluteString
     }
 
 }
 
 private extension GoSwiftyM3U8.BaseAttributedTag {
 
-    var resolution: String? {
+    var quality: String? {
         if let attribute = attributes.first(where: { $0.key == "RESOLUTION" }) {
             var string = string(forResulution: attribute.value)
             if let frameRate = frameRate, Int(frameRate) ?? 0 > 30 {
