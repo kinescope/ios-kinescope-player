@@ -132,6 +132,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
             self.view?.controlPanel?.hideTimeline(false)
             self.view?.controlPanel?.setTimeline(to: 0)
         }
+        loadManifest()
     }
 
     public func play() {
@@ -229,7 +230,7 @@ private extension KinescopeVideoPlayer {
     func makePlayerOptions(from video: KinescopeVideo) -> [KinescopePlayerOption] {
         var options: [KinescopePlayerOption] = [.airPlay, .settings, .fullscreen, .more]
 
-        if !video.assets.isEmpty {
+        if !video.downloadableAssets.isEmpty {
             options.insert(.download, at: 1)
         }
 
@@ -577,6 +578,26 @@ private extension KinescopeVideoPlayer {
         }
     }
 
+    func loadManifest() {
+        guard var video = video else {
+            return
+        }
+        dependencies.inspector.fetchPlaylist(video: video) { [weak self] result in
+            guard let self = self else {
+                return
+            }
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let playlist):
+                    self.video?.manifest = playlist
+                    self.view?.set(options: self.makePlayerOptions(from: video) ?? [])
+                case .cancelled, .failure:
+                    break
+                }
+            }
+        }
+    }
+
 }
 
 
@@ -706,9 +727,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didShowQuality() -> [String] {
-        return video?.assets
-            .compactMap { $0.quality }
-            .filter { $0 != "original" } ?? []
+        return video?.qualities ?? []
     }
 
     func didShowAttachments() -> [KinescopeVideoAdditionalMaterial]? {

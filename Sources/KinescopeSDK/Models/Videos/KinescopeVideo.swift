@@ -38,5 +38,5 @@ public struct KinescopeVideo: Codable {
     public let additionalMaterials: [KinescopeVideoAdditionalMaterial]
     public let subtitles: [KinescopeVideoSubtitle]
     public let hlsLink: String
-    public var manifest: Playlist? = nil
+    public var manifest: MasterPlaylist? = nil
 }
