@@ -109,6 +109,7 @@ private extension PlayerOverlayView {
 
     func configureFastForwardImageView() {
         fastForwardImageView.image = config.fastForwardImage
+        fastForwardImageView.tintColor = .white
         fastForwardImageView.alpha = .zero
         addSubview(fastForwardImageView)
         rightCenterChild(view: fastForwardImageView)
@@ -116,6 +117,7 @@ private extension PlayerOverlayView {
 
     func configureFastBackwardImageView() {
         fastBackwardImageView.image = config.fastBackwardImage
+        fastBackwardImageView.tintColor = .white
         fastBackwardImageView.alpha = .zero
         addSubview(fastBackwardImageView)
         leftCenterChild(view: fastBackwardImageView)

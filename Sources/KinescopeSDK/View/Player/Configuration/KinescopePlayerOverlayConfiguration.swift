@@ -16,22 +16,22 @@ public enum KinescopeFastRewind: Double {
     var imageForward: UIImage {
         switch self {
         case .five:
-            return UIImage.image(named: "fastForward")
+            return UIImage.image(named: "FastRewind/5sec+")
         case .ten:
-            return UIImage.image(named: "fastForward")
+            return UIImage.image(named: "FastRewind/10sec+")
         case .fifteen:
-            return UIImage.image(named: "fastForward")
+            return UIImage.image(named: "FastRewind/15sec+")
         }
     }
 
     var imageBackward: UIImage {
         switch self {
         case .five:
-            return UIImage.image(named: "fastBackward")
+            return UIImage.image(named: "FastRewind/5sec-")
         case .ten:
-            return UIImage.image(named: "fastBackward")
+            return UIImage.image(named: "FastRewind/10sec-")
         case .fifteen:
-            return UIImage.image(named: "fastBackward")
+            return UIImage.image(named: "FastRewind/15sec-")
         }
     }
 }
