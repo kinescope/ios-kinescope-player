@@ -41,6 +41,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private var savedTime: CMTime = .zero
     private var loadingDebouncer = Debouncer(timeInterval: 0.06)
     private var pauseDebouncer = Debouncer(timeInterval: 0.02)
+    private var airPlayDebouncer = Debouncer(timeInterval: 0.5)
     private weak var miniView: KinescopePlayerView?
     private var video: KinescopeVideo?
     private let config: KinescopePlayerConfig
@@ -443,6 +444,10 @@ private extension KinescopeVideoPlayer {
                                                selector: #selector(changeOrientation),
                                                name: UIDevice.orientationDidChangeNotification,
                                                object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(didAirPlayStateChanged),
+                                               name: AVAudioSession.routeChangeNotification,
+                                               object: nil)
     }
 
     func seek(to seconds: TimeInterval) {
@@ -492,6 +497,19 @@ private extension KinescopeVideoPlayer {
         }
     }
 
+    @objc
+    func didAirPlayStateChanged(_ notification: NSNotification) {
+        // Workaround. When player enters in AirPlay mode, timeControlStatus sets in pause even though video is playing
+        // So we are looking at player rate to know what current view state is, but rate has correct state only after ~0.5 sec
+        airPlayDebouncer.renewInterval()
+        airPlayDebouncer.handler = { [weak self] in
+            guard let self = self else { return }
+            self.isPlaying = self.strategy.player.rate == 1.0
+            self.updateTimeline()
+            self.view?.controlPanel?.expanded = false
+        }
+    }
+
     func restoreView() {
         view?.showOverlay(isOverlayed)
         isPlaying ? play() : pause()
@@ -500,7 +518,7 @@ private extension KinescopeVideoPlayer {
     func updateTimeline() {
         let duration = strategy.player.currentItem?.duration.seconds ?? .zero
         let position = CGFloat(time / duration)
-        
+
         if !position.isNaN {
             view?.controlPanel?.setTimeline(to: CGFloat(position))
         }
@@ -526,9 +544,7 @@ private extension KinescopeVideoPlayer {
             pauseDebouncer.renewInterval()
             addPauseDebouncerHandler()
         case (true, false):
-            if strategy.player.timeControlStatus == .playing {
-                view?.state = .playing
-            }
+            view?.state = .playing
         case (true, true):
             break
         }
