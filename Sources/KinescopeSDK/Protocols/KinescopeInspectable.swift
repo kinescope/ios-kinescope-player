@@ -5,8 +5,10 @@
 //  Created by Никита Коробейников on 23.03.2021.
 //
 
+import GoSwiftyM3U8
+
 /// Protocol managing inspectations of dashboard content like videos, projects etc
-public protocol KinescopeInspectable: class {
+public protocol KinescopeInspectable: AnyObject {
 
     /// Entry for `GET` Video list
     ///
@@ -17,8 +19,16 @@ public protocol KinescopeInspectable: class {
               onSuccess: @escaping (([KinescopeVideo], KinescopeMetaData)) -> Void,
               onError: @escaping (KinescopeInspectError) -> Void)
 
+    /// Entry for `GET` Video
+    ///
+    /// - parameter id: video id
+    /// - parameter onSuccess: callback on success. Returns video model
+    /// - parameter onError: callback on error.
     func video(id: String,
                onSuccess: @escaping (KinescopeVideo) -> Void,
                onError: @escaping (KinescopeInspectError) -> Void)
+
+    /// Entry for video playlists fetching
+    func fetchPlaylist(video: KinescopeVideo, completion: @escaping (M3U8Manager.Result<MasterPlaylist>) -> (Void))
 
 }

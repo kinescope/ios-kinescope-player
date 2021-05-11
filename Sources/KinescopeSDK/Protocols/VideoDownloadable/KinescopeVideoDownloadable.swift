@@ -8,7 +8,7 @@
 import Foundation
 
 /// Control protocol managing downloading of assets and videos
-public protocol KinescopeVideoDownloadable: class {
+public protocol KinescopeVideoDownloadable: AnyObject {
 
     /// Request downloadable link for video and start downloading
     ///

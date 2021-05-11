@@ -1,5 +1,7 @@
 PODS:
+  - GoSwiftyM3U8 (1.0.0)
   - KinescopeSDK (0.1):
+    - GoSwiftyM3U8 (~> 1.0.0)
     - SwiftProtobuf (~> 1.0)
   - Kingfisher (6.2.1)
   - ReactiveDataDisplayManager (7.0.0)
@@ -12,6 +14,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - GoSwiftyM3U8
     - Kingfisher
     - ReactiveDataDisplayManager
     - SwiftProtobuf
@@ -21,7 +24,8 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  KinescopeSDK: 0e32c16a8005fc08901dac4ba2c0da820b6fe497
+  GoSwiftyM3U8: 24c6ca77a150fc7f0cf17895ff11c9e8ff1e4d87
+  KinescopeSDK: 16c1d95ca4ebf4275e15ec3097c59487e42042ec
   Kingfisher: e71c6fac2aebb1262888cabc2cb13d313362a48f
   ReactiveDataDisplayManager: 0ff30e94f5c9785e4f366ca5e09bef00eb6a8ba8
   SwiftProtobuf: 4e16842b83c6fda06b10fac50d73b3f1fce8ab7b

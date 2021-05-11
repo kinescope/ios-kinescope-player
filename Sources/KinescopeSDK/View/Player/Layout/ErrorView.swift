@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol ErrorViewDelegate: class {
+protocol ErrorViewDelegate: AnyObject {
     func didTapRefresh()
 }
 
@@ -128,6 +128,8 @@ private extension UIStackView {
             separatorView.widthAnchor.constraint(equalToConstant: value).isActive = true
         case .vertical:
             separatorView.heightAnchor.constraint(equalToConstant: value).isActive = true
+        @unknown default:
+            break
         }
 
         insertArrangedSubview(separatorView, at: arrangedSubviewIndex + 1)

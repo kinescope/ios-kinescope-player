@@ -9,7 +9,7 @@
 import UIKit
 import Foundation
 
-protocol SideMenuDelegate: class {
+protocol SideMenuDelegate: AnyObject {
     func sideMenuWillBeDismissed(_ sideMenu: SideMenu, withRoot: Bool)
     func sideMenuDidSelect(item: SideMenu.Item, rowIndex: Int, sideMenu: SideMenu)
     func downloadAllTapped(for title: String)

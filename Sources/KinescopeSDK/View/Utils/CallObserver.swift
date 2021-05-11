@@ -15,7 +15,7 @@ public enum KinescopeCallState {
     case none
 }
 
-protocol CallObserverDelegate: class {
+protocol CallObserverDelegate: AnyObject {
     func callObserver(callState: KinescopeCallState)
 }
 
