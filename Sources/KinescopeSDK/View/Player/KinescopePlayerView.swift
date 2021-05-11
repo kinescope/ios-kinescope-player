@@ -22,6 +22,8 @@ public class KinescopePlayerView: UIView {
     private(set) var shadowOverlay: PlayerShadowOverlayView?
     private(set) var pipController: AVPictureInPictureController?
     private var errorView: ErrorView?
+    private var nameView: VideoNameView?
+    private var nameDisplayingType: KinescopeVideoNameDisplayingType = .hidesWithOverlay
 
     private var config: KinescopePlayerViewConfiguration!
 
@@ -85,6 +87,10 @@ public class KinescopePlayerView: UIView {
         }
     }
 
+    func set(title: String, subtitle: String) {
+        nameView?.set(title: title, subtitle: subtitle)
+    }
+
 }
 
 // MARK: - Public
@@ -103,6 +109,7 @@ public extension KinescopePlayerView {
         configurePlayerView(with: config.gravity)
         configurePreviewImage()
         configureErrorView(with: config.errorState)
+        configureNameView(with: config)
 
         if let overlay = config.overlay {
             configureOverlay(with: overlay)
@@ -178,6 +185,15 @@ private extension KinescopePlayerView {
         pipController = AVPictureInPictureController(playerLayer: playerView.playerLayer)
     }
 
+    func configureNameView(with config: KinescopePlayerViewConfiguration) {
+        let nameView = VideoNameView(config: config.nameConfiguration)
+        addSubview(nameView)
+        topChildWithSafeArea(view: nameView)
+        nameView.alpha = 0.0
+        self.nameView = nameView
+        self.nameDisplayingType = config.nameDisplayingType
+    }
+
     func configureControlPanel(with config: KinescopeControlPanelConfiguration) {
         let controlPanel = PlayerControlView(config: config)
         controlPanel.alpha = .zero
@@ -212,6 +228,7 @@ private extension KinescopePlayerView {
         }
         errorView?.isHidden = true
         overlay?.isHidden = false
+        nameView?.isHidden = false
         switch state {
         case .initialLoading:
             previewImage.isHidden = false
@@ -233,6 +250,7 @@ private extension KinescopePlayerView {
             progressView.showLoading(false)
             previewImage.isHidden = true
             overlay?.isHidden = true
+            nameView?.isHidden = true
             errorView?.isHidden = false
         case .ended:
             overlay?.playPauseReplayState = .replay
@@ -462,10 +480,10 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
 
     func didPlayPause() {
         if playPauseReplayState == .play {
-            overlayDebouncer.handler = { }
-        } else {
             addDebouncerHandler()
             overlayDebouncer.renewInterval()
+        } else {
+            overlayDebouncer.handler = { }
         }
         delegate?.didPlayPause()
     }
@@ -481,6 +499,11 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
         overlayDebouncer.renewInterval()
         delegate?.didFastBackward(sec: sec)
     }
+
+    func didAlphaChanged(alpha: CGFloat) {
+        nameView?.alpha = nameDisplayingType.convertAlpha(from: alpha)
+    }
+
 }
 
 // MARK: - PlayerControlOutput

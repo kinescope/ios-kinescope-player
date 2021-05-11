@@ -125,7 +125,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     public func setVideo(_ video: KinescopeVideo) {
         self.video = video
         select(quality: .auto(hlsLink: video.hlsLink))
-        view?.overlay?.set(title: video.title, subtitle: video.description)
+        view?.set(title: video.title, subtitle: video.description)
         view?.set(options: makePlayerOptions(from: video) ?? [])
     }
 
@@ -675,7 +675,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                     return
                 }
                 self.view?.change(quality: self.currentQuality, manualQuality: self.isManualQuality)
-                self.view?.overlay?.set(title: video.title, subtitle: video.description)
+                self.view?.set(title: video.title, subtitle: video.description)
                 self.restoreView()
             })
         }
