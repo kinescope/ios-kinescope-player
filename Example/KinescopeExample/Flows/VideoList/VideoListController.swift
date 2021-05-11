@@ -107,9 +107,8 @@ private extension VideoListController {
     }
 
     func fillAdapter(with videos: [KinescopeVideo]) {
-
-        let generators = videos.map { video -> BaseCellGenerator<VideoListCell> in
-            let generator = VideoListFocusableCellGenerator(with: video)
+        let generators = videos.map { video -> VideoListFocusableCellGenerator in
+            let generator = VideoListFocusableCellGenerator(video: video)
 
             generator.didSelectEvent.addListner { [weak self] in
                 self?.performSegue(withIdentifier: "toVideo", sender: video)

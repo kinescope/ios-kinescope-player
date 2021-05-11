@@ -11,4 +11,5 @@ enum PlayPauseReplayState {
     case play
     case pause
     case replay
+    case loading
 }

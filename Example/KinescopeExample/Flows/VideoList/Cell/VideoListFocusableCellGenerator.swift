@@ -7,15 +7,22 @@
 
 import ReactiveDataDisplayManager
 
-final class VideoListFocusableCellGenerator: BaseCellGenerator<VideoListCell>, FocusableItem {
+final class VideoListFocusableCellGenerator: FocusableItem, SelectableItem {
 
     // MARK: - Properties
 
+    var didSelectEvent = BaseEvent<Void>()
     var uuid: String = ""
-
     var isFocused = false
+    private weak var cell: VideoListCell?
 
-    weak var cell: VideoListCell?
+    private var model: VideoListCell.Model
+
+    // MARK: - Initialization
+
+    init(video: VideoListCell.Model) {
+        self.model = video
+    }
 
     // MARK: - FocusableItem
 
@@ -23,15 +30,39 @@ final class VideoListFocusableCellGenerator: BaseCellGenerator<VideoListCell>, F
         self.isFocused = isFocused
         self.updateCell(isFocused: isFocused)
     }
+    
+}
 
-    // MARK: - Configure
+// MARK: - TableCellGenerator
 
-    override func configure(cell: VideoListCell, with model: VideoListCell.Model) {
-        super.configure(cell: cell, with: model)
+extension VideoListFocusableCellGenerator: TableCellGenerator {
+    
+    var identifier: String {
+        String(describing: VideoListCell.self)
+    }
 
+    func generate(tableView: UITableView, for indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = VideoListCell.loadFromNib() as? VideoListCell else {
+            return UITableViewCell()
+        }
+        cell.configure(with: model)
+        uuid = model.id
+        updateCell(isFocused: isFocused)
         self.cell = cell
-        self.uuid = model.id
-        self.updateCell(isFocused: isFocused)
+        return cell
+    }
+
+    func registerCell(in tableView: UITableView) {
+        tableView.register(UINib(nibName: identifier.nameOfClass, bundle: Bundle(for: VideoListCell.self)),
+                           forCellReuseIdentifier: identifier.nameOfClass)
+    }
+
+    var cellHeight: CGFloat {
+        VideoListCell.height
+    }
+
+    var estimatedCellHeight: CGFloat? {
+        VideoListCell.height
     }
 
 }

@@ -49,12 +49,15 @@ class TimelineView: UIControl {
         }
     }
 
+    private var needSetInitialTimeline = true
+
     weak var output: TimelineOutput?
 
     init(config: KinescopePlayerTimelineConfiguration) {
         self.config = config
         super.init(frame: .zero)
         setupInitialState(with: config)
+
 
         addTarget(self, action: #selector(endTouch),
                   for: [UIControl.Event.touchUpOutside, UIControl.Event.touchUpInside])
@@ -64,6 +67,15 @@ class TimelineView: UIControl {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        guard needSetInitialTimeline else {
+            return
+        }
+        needSetInitialTimeline.toggle()
+        setTimeline(to: 0)
     }
 
 }

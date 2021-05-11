@@ -53,11 +53,15 @@ public final class KinescopeSpinner: UIView, KinescopeActivityIndicating {
     public func showLoading(_ isLoading: Bool) {
         if isLoading {
             isHidden = false
-            resume(layer: gradientLayer)
+            guard progressLayer.animation(forKey: "line") != nil else {
+                createAnimation()
+                return
+            }
             resume(layer: progressLayer)
+            resume(layer: gradientLayer)
         } else {
-            pause(layer: gradientLayer)
             pause(layer: progressLayer)
+            pause(layer: gradientLayer)
             isHidden = true
         }
     }
@@ -92,28 +96,25 @@ private extension KinescopeSpinner {
         rotationAnimation.duration = 1.0
 
         gradientLayer.add(rotationAnimation, forKey: "rotationAnimation")
+        resume(layer: gradientLayer)
 
         let animation = CABasicAnimation(keyPath: "strokeEnd")
         animation.fromValue = 0.2
         animation.toValue = 0.8
-        animation.duration = 1.5
+        animation.duration = 1
         animation.autoreverses = true
         animation.repeatCount = .infinity
         progressLayer.add(animation, forKey: "line")
+        resume(layer: progressLayer)
     }
 
     func pause(layer: CALayer) {
-         let pausedTime = layer.convertTime(CACurrentMediaTime(), from: nil)
+        layer.speed = 0.0
+    }
 
-         layer.speed = 0.0
-         layer.timeOffset = pausedTime
-     }
-
-     func resume(layer: CALayer) {
-         layer.speed = 1.0
-         layer.timeOffset = 0.0
-         layer.beginTime = 0.0
-     }
+    func resume(layer: CALayer) {
+        layer.speed = 1.0
+    }
 
 }
 

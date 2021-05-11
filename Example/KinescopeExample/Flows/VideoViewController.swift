@@ -31,7 +31,6 @@ final class VideoViewController: UIViewController {
 
         player = KinescopeVideoPlayer(config: .init(videoId: video?.id ?? ""))
         player?.attach(view: playerView)
-        player?.preload()
         playerView.showOverlay(true)
         configurePreviewView()
 
@@ -60,6 +59,7 @@ final class VideoViewController: UIViewController {
         guard let video = video else {
             return
         }
+        player?.setVideo(video)
         let previewModel = KinescopePreviewModel(from: video)
 
         previewView.delegate = self
@@ -67,6 +67,9 @@ final class VideoViewController: UIViewController {
         previewView.backgroundColor = .black
         previewView.previewImageView.contentMode = .scaleAspectFit
         previewView.previewImageView.kf.setImage(with: URL(string: video.poster?.md ?? ""))
+
+        playerView.previewImage.contentMode = .scaleAspectFit
+        playerView.previewImage.kf.setImage(with: URL(string: video.poster?.md ?? ""))
         view.bringSubviewToFront(previewView)
     }
 

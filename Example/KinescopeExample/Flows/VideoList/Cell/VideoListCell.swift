@@ -18,6 +18,8 @@ final class VideoListCell: UITableViewCell {
 
     // MARK: - Properties
 
+    static var height: CGFloat = 216
+
     private var player: KinescopePlayer?
 
     // MARK: - Lifecycle
@@ -40,7 +42,6 @@ final class VideoListCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-
         player?.detach(view: playerView)
     }
 

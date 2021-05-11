@@ -14,4 +14,5 @@ protocol KinescopePlayerViewDelegate: class {
     func didSelectDownloadAll(for title: String)
     func didShowSubtitles() -> [String]
     func didSelect(subtitles: String)
+    func didRefresh()
 }
