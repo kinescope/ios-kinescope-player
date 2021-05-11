@@ -37,6 +37,13 @@ class PlayerOverlayView: UIControl {
         return config.duration
     }
 
+    // Taps
+
+    private var activeTaps = 0
+    private let tapDebouncer = Debouncer(timeInterval: 0.2)
+    private var lastTapLocation: CGPoint? = .zero
+    private var previousTapLocation: CGPoint? = .zero
+
     // MARK: - Lifecycle
 
     init(config: KinescopePlayerOverlayConfiguration, delegate: PlayerOverlayViewDelegate? = nil) {
@@ -96,6 +103,7 @@ private extension PlayerOverlayView {
 
     func configureFastForwardImageView() {
         fastForwardImageView.image = config.fastForwardImage
+        fastForwardImageView.tintColor = .white
         fastForwardImageView.alpha = .zero
         addSubview(fastForwardImageView)
         rightCenterChild(view: fastForwardImageView)
@@ -103,6 +111,7 @@ private extension PlayerOverlayView {
 
     func configureFastBackwardImageView() {
         fastBackwardImageView.image = config.fastBackwardImage
+        fastBackwardImageView.tintColor = .white
         fastBackwardImageView.alpha = .zero
         addSubview(fastBackwardImageView)
         leftCenterChild(view: fastBackwardImageView)
@@ -110,16 +119,9 @@ private extension PlayerOverlayView {
 
     func addGestureRecognizers() {
         let singleTapGestureRecognizer = UITapGestureRecognizer(target: self,
-                                                             action: #selector(singleTapAction))
+                                                                action: #selector(tapAction))
         singleTapGestureRecognizer.numberOfTapsRequired = 1
         addGestureRecognizer(singleTapGestureRecognizer)
-
-        let doubleTapGestureRecognizer = UITapGestureRecognizer(target: self,
-                                                             action: #selector(doubleTapAction))
-        doubleTapGestureRecognizer.numberOfTapsRequired = 2
-        addGestureRecognizer(doubleTapGestureRecognizer)
-
-        singleTapGestureRecognizer.require(toFail: doubleTapGestureRecognizer)
     }
 
 }
@@ -127,16 +129,40 @@ private extension PlayerOverlayView {
 // MARK: - Actions
 
 private extension PlayerOverlayView {
-    @objc
+
     func playPauseAction() {
         delegate?.didPlayPause()
     }
 
     @objc
-    func singleTapAction(recognizer: UITapGestureRecognizer) {
-        let location = recognizer.location(in: contentView)
+    func tapAction(recognizer: UITapGestureRecognizer) {
+        if activeTaps == 0 {
+            tapDebouncer.handler = { [weak self] in
+                guard let self = self else {
+                    return
+                }
+                if self.activeTaps == 1 {
+                    self.singleTapAction()
+                }
+                self.activeTaps = 0
+                self.lastTapLocation = nil
+                self.previousTapLocation = nil
+            }
+        } else {
+            doubleTapAction()
+        }
+        previousTapLocation = lastTapLocation
+        lastTapLocation = recognizer.location(in: contentView)
+        activeTaps += 1
+        tapDebouncer.renewInterval()
+    }
 
-        if isSelected && playPauseImageView.frame.contains(location) {
+    func singleTapAction() {
+        guard let lastTapLocation = lastTapLocation else {
+            return
+        }
+
+        if isSelected && playPauseImageView.frame.contains(lastTapLocation) {
             playPauseAction()
         } else {
             isRewind = false
@@ -144,11 +170,12 @@ private extension PlayerOverlayView {
         }
     }
 
-    @objc
-    func doubleTapAction(recognizer: UITapGestureRecognizer) {
+    func doubleTapAction() {
+        guard let lastTapLocation = lastTapLocation else {
+            return
+        }
         isRewind = true
 
-        let location = recognizer.location(in: self)
         let rightFrame = CGRect(x: contentView.center.x + 24.0,
                                 y: .zero,
                                 width: contentView.bounds.width - contentView.center.x + 24.0,
@@ -159,8 +186,12 @@ private extension PlayerOverlayView {
                                width: contentView.bounds.width - contentView.center.x - 24.0,
                                height: contentView.bounds.height)
 
-        if rightFrame.contains(location) {
-            delegate?.didFastForward()
+        if rightFrame.contains(lastTapLocation) {
+            if let previousTapLocation = previousTapLocation, !rightFrame.contains(previousTapLocation) {
+                return
+            }
+
+            delegate?.didFastForward(sec: config.fastForward.rawValue)
 
             fastForwardImageView.alpha = 1.0
             UIView.animate(
@@ -174,8 +205,12 @@ private extension PlayerOverlayView {
                     self.fastForwardImageView.transform = .identity
                 }
             )
-        } else if leftFrame.contains(location) {
-            delegate?.didFastBackward()
+        } else if leftFrame.contains(lastTapLocation) {
+            if let previousTapLocation = previousTapLocation, !leftFrame.contains(previousTapLocation) {
+                return
+            }
+
+            delegate?.didFastBackward(sec: config.fastBackward.rawValue)
 
             fastBackwardImageView.alpha = 1.0
             UIView.animate(

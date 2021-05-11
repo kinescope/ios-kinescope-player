@@ -488,16 +488,16 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
         delegate?.didPlayPause()
     }
 
-    func didFastForward() {
+    func didFastForward(sec: Double) {
         addTimelineDebouncerHandler()
         overlayDebouncer.renewInterval()
-        delegate?.didFastForward()
+        delegate?.didFastForward(sec: sec)
     }
 
-    func didFastBackward() {
+    func didFastBackward(sec: Double) {
         addTimelineDebouncerHandler()
         overlayDebouncer.renewInterval()
-        delegate?.didFastBackward()
+        delegate?.didFastBackward(sec: sec)
     }
 
     func didAlphaChanged(alpha: CGFloat) {
