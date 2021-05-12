@@ -832,19 +832,17 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             return
         }
 
-
-        if let currentSutitle = video.subtitles.first(where: { $0.title == subtitles })?.url,
-           let currentQuality = getCurrentQuality() {
-            self.currentSutitle = currentSutitle
+        self.currentSutitle = video.subtitles.first(where: { $0.title == subtitles })?.url
+        if let currentQuality = getCurrentQuality() {
             select(quality: currentQuality)
-
-            self.strategy.player.currentItem?.textStyleRules = textStyleRules
-
-            let isOn = video.subtitles.contains { $0.title == subtitles }
-            view?.controlPanel?.set(subtitleOn: isOn)
-            Kinescope.shared.logger?.log(message: "Select subtitles: \(subtitles)",
-                                         level: KinescopeLoggerLevel.player)
         }
+
+        self.strategy.player.currentItem?.textStyleRules = textStyleRules
+
+        let isOn = video.subtitles.contains { $0.title == subtitles }
+        view?.controlPanel?.set(subtitleOn: isOn)
+        Kinescope.shared.logger?.log(message: "Select subtitles: \(subtitles)",
+                                     level: KinescopeLoggerLevel.player)
     }
 
 }
