@@ -5,7 +5,7 @@
 //  Created by Никита Коробейников on 24.03.2021.
 //
 
-protocol FocusableItem: class {
+protocol FocusableItem: AnyObject {
 
     var uuid: String { get }
 

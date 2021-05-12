@@ -37,7 +37,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private var isPreparingSeek = false
     private var isManualQuality = false
     private var currentQuality = ""
-    private var currentSutitle: String?
+    private var currentSutitle: KinescopeVideoSubtitle?
     private var currentAudio: String?
     private var isOverlayed = false
     private var savedTime: CMTime = .zero
@@ -598,20 +598,24 @@ private extension KinescopeVideoPlayer {
     }
 
     func getCurrentQuality() -> KinescopeVideoQuality? {
-        var link: String? = video?.hlsLink
-        var isAuto = true
-        if let exactLink = video?.link(for: currentQuality) {
-            link = exactLink
-            isAuto = false
-        }
         if let asset = video?.downloadableAssets.first(where: { $0.quality == currentQuality }) {
             if let path = dependencies.assetDownloader.getLocation(by: asset.id) {
-                link = path.absoluteString
-                isAuto = false
+                return KinescopeAssetVideoQuality(video: path.absoluteString,
+                                                  audio: currentAudio,
+                                                  subtitles: currentSutitle?.url)
             }
         }
-        if let link = link {
-            return .init(link: link, audio: currentAudio, subtitles: currentSutitle, isAuto: isAuto)
+        if let exactLink = video?.link(for: currentQuality) {
+            return KinescopeStreamVideoQuality(hlsLink: exactLink,
+                                               audioLocale: nil,
+                                               subtitlesLocale: currentSutitle?.language,
+                                               isAuto: false)
+        }
+        if let link = video?.hlsLink {
+            return KinescopeStreamVideoQuality(hlsLink: link,
+                                               audioLocale: nil,
+                                               subtitlesLocale: currentSutitle?.language,
+                                               isAuto: true)
         } else {
             return nil
         }
@@ -832,7 +836,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             return
         }
 
-        self.currentSutitle = video.subtitles.first(where: { $0.title == subtitles })?.url
+        self.currentSutitle = video.subtitles.first(where: { $0.title == subtitles })
         if let currentQuality = getCurrentQuality() {
             select(quality: currentQuality)
         }
