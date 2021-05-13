@@ -476,15 +476,16 @@ private extension KinescopeVideoPlayer {
     func changeOrientation() {
         guard
             let view = view,
-            view.canBeFullScreen
+            view.canBeFullScreen,
+            !KinescopeFullscreenConfiguration.preferred(for: video).orientation.isPortrait
         else {
             return
         }
 
         let isFullScreen = UIApplication.shared.keyWindow?.rootViewController?.presentedViewController is KinescopeFullscreenViewController
-
         let isLandscape = [UIDeviceOrientation.landscapeLeft, UIDeviceOrientation.landscapeRight]
             .contains(UIDevice.current.orientation)
+
         if isLandscape && !isFullScreen {
             didPresentFullscreen(from: view)
         } else if UIDevice.current.orientation.isPortrait && isFullScreen {
