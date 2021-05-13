@@ -716,8 +716,6 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             isOverlayed = view.overlay?.isSelected ?? false
             detach(view: view)
 
-            let value = UIInterfaceOrientation.portrait.rawValue
-            UIDevice.current.setValue(value, forKey: "orientation")
             rootVC?.dismiss(animated: true, completion: { [weak self] in
                 guard
                     let self = self,
@@ -729,6 +727,8 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                 self.attach(view: miniView)
                 self.view?.change(quality: self.currentQuality, manualQuality: self.isManualQuality)
                 self.restoreView()
+                let newvalue = UIInterfaceOrientation.portrait.rawValue
+                UIDevice.current.setValue(newvalue, forKey: "orientation")
             })
         } else {
             miniView = view
@@ -742,8 +742,6 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             playerVC.modalTransitionStyle = .crossDissolve
             playerVC.modalPresentationCapturesStatusBarAppearance = true
 
-            let value = UIInterfaceOrientation.landscapeRight.rawValue
-            UIDevice.current.setValue(value, forKey: "orientation")
             rootVC?.present(playerVC, animated: true, completion: { [weak self] in
                 guard
                     let self = self,
