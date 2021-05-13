@@ -1,4 +1,6 @@
-protocol PlayerOverlayViewDelegate: class {
+import UIKit
+
+protocol PlayerOverlayViewDelegate: AnyObject {
     func didTap(isSelected: Bool)
     func didPlayPause()
     func didAlphaChanged(alpha: CGFloat)

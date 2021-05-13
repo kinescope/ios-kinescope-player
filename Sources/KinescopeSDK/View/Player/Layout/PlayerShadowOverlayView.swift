@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol ShadowOverlayDelegate: class {
+protocol ShadowOverlayDelegate: AnyObject {
     /// Tap callback
     func onTap()
 }

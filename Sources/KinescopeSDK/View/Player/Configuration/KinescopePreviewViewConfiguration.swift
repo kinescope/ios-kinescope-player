@@ -5,6 +5,7 @@
 //  Created by Никита Гагаринов on 28.04.2021.
 //
 
+import UIKit
 import Foundation
 
 /// Appearence preferences for preview view

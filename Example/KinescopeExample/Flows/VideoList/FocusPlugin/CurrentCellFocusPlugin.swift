@@ -7,14 +7,14 @@
 
 import ReactiveDataDisplayManager
 
-public protocol CurrentCellFocusInput: class {
+public protocol CurrentCellFocusInput: AnyObject {
 
     func updateFocus()
 
     func clearFocus()
 }
 
-public protocol CurrentCellFocusOutput: class {
+public protocol CurrentCellFocusOutput: AnyObject {
 
     func onFocusInitialized(with input: CurrentCellFocusInput)
 }

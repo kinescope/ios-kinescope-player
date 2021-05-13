@@ -16,7 +16,7 @@ protocol PlayerControlOptionsInput {
     func set(subtitleOn: Bool)
 }
 
-protocol PlayerControlOptionsOutput: class {
+protocol PlayerControlOptionsOutput: AnyObject {
 
     /// Callback of user initiated expand action. Called on three dots tapped.
     ///

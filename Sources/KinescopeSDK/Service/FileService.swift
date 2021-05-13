@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol FileServiceDelegate: class {
+protocol FileServiceDelegate: AnyObject {
     func downloadProgress(fileId: String, progress: Double)
     func downloadError(fileId: String, error: KinescopeDownloadError)
     func downloadComplete(fileId: String, location: URL)
