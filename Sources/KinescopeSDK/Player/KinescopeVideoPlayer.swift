@@ -201,6 +201,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         addPlayerItemStatusObserver()
         addTracksObserver()
     }
+
 }
 
 // MARK: - Private
@@ -715,6 +716,8 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             isOverlayed = view.overlay?.isSelected ?? false
             detach(view: view)
 
+            let value = UIInterfaceOrientation.portrait.rawValue
+            UIDevice.current.setValue(value, forKey: "orientation")
             rootVC?.dismiss(animated: true, completion: { [weak self] in
                 guard
                     let self = self,
@@ -738,6 +741,9 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             playerVC.modalPresentationStyle = .overFullScreen
             playerVC.modalTransitionStyle = .crossDissolve
             playerVC.modalPresentationCapturesStatusBarAppearance = true
+
+            let value = UIInterfaceOrientation.landscapeRight.rawValue
+            UIDevice.current.setValue(value, forKey: "orientation")
             rootVC?.present(playerVC, animated: true, completion: { [weak self] in
                 guard
                     let self = self,

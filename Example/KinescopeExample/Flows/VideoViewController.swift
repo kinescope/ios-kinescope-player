@@ -79,7 +79,7 @@ final class VideoViewController: UIViewController {
 
 extension VideoViewController: UINavigationControllerDelegate {
     func navigationControllerSupportedInterfaceOrientations(_ navigationController: UINavigationController) -> UIInterfaceOrientationMask {
-        return .allButUpsideDown
+        return KinescopeFullscreenConfiguration.orientations(for: video)
     }
 }
 
