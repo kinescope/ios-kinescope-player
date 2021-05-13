@@ -422,6 +422,7 @@ private extension KinescopePlayerView {
     }
 
     func addDebouncerHandler() {
+        timelineDebouncer.handler = { }
         overlayDebouncer.handler = { [weak self] in
             guard let self = self else {
                 return
