@@ -53,24 +53,28 @@ private extension GoSwiftyM3U8.BaseAttributedTag {
     }
 
     private func string(forResulution resulution: String) -> String? {
-        switch resulution {
-        case "426x240":
+        if resulution.hasSuffix("240") {
             return "240p"
-        case "640x360":
-            return "360p"
-        case "854x480":
-            return "480p"
-        case "1280x720":
-            return "720p"
-        case "1920x1080":
-            return "1080p"
-        case "2560x1440":
-            return "1440p"
-        case "3840x2160":
-            return "2160p"
-        default:
-            return resulution
         }
+        if resulution.hasSuffix("360") {
+            return "360p"
+        }
+        if resulution.hasSuffix("480") {
+            return "480p"
+        }
+        if resulution.hasSuffix("720") {
+            return "720p"
+        }
+        if resulution.hasSuffix("1080") {
+            return "1080p"
+        }
+        if resulution.hasSuffix("1440") {
+            return "1440p"
+        }
+        if resulution.hasSuffix("2160") {
+            return "2160p"
+        }
+        return resulution
     }
 
 }
