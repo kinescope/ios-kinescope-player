@@ -41,8 +41,8 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private var currentAudio: String?
     private var isOverlayed = false
     private var savedTime: CMTime = .zero
-    private var loadingDebouncer = Debouncer(timeInterval: 0.06)
-    private var pauseDebouncer = Debouncer(timeInterval: 0.02)
+    private var loadingDebouncer = Debouncer(timeInterval: 0.1)
+    private var pauseDebouncer = Debouncer(timeInterval: 0.05)
     private var airPlayDebouncer = Debouncer(timeInterval: 0.5)
     private weak var miniView: KinescopePlayerView?
     private var video: KinescopeVideo?

@@ -255,7 +255,9 @@ private extension KinescopePlayerView {
             errorView?.isHidden = false
             controlPanel?.isHidden = true
         case .ended:
-            overlay?.playPauseReplayState = .replay
+            playPauseReplayState = .replay
+            overlay?.isSelected = true
+            controlPanel?.alpha = 1
         }
     }
 
@@ -427,6 +429,9 @@ private extension KinescopePlayerView {
             guard let self = self else {
                 return
             }
+            guard self.state != .ended else {
+                return
+            }
             self.overlay?.isSelected = false
             UIView.animate(withDuration: 0.3, animations: {
                 self.controlPanel?.alpha = 0.0
@@ -440,6 +445,9 @@ private extension KinescopePlayerView {
         if !(overlay?.isSelected ?? false) {
             timelineDebouncer.handler = { [weak self] in
                 guard let self = self else {
+                    return
+                }
+                guard self.state != .ended else {
                     return
                 }
                 UIView.animate(withDuration: 0.3, animations: {
@@ -462,6 +470,9 @@ private extension KinescopePlayerView {
 extension KinescopePlayerView: PlayerOverlayViewDelegate {
 
     func didTap(isSelected: Bool) {
+        guard state != .ended else {
+            return
+        }
         if isSelected {
             if !(controlPanel?.expanded ?? true) {
                 overlay?.isSelected = false
@@ -482,7 +493,7 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
     }
 
     func didPlayPause() {
-        if playPauseReplayState == .play {
+        if playPauseReplayState == .play || playPauseReplayState == .replay {
             addDebouncerHandler()
             overlayDebouncer.renewInterval()
         } else {
