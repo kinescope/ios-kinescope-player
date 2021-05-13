@@ -120,7 +120,10 @@ private extension VideoListController {
         adapter.addCellGenerators(generators)
 
         adapter.forceRefill { [weak self] in
-            self?.focusInput?.updateFocus()
+            // Preventing triggering focus on not presented view controller
+            if self?.viewIfLoaded?.window != nil {
+                self?.focusInput?.updateFocus()
+            }
         }
     }
 
