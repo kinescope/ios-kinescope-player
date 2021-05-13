@@ -45,55 +45,81 @@ class InnerEventsProtoHandler: InnerEventsHandler {
     // MARK: - InnerEventsHandler
 
     func playback(sec: TimeInterval) {
-        
+        service.send(event: build(event: .playback, value: Float(sec))) { _ in
+
+        }
     }
 
     func play() {
-        
+        service.send(event: build(event: .play, value: 0)) { _ in
+
+        }
     }
 
     func pause() {
+        service.send(event: build(event: .pause, value: 0)) { _ in
 
+        }
     }
 
     func end() {
+        service.send(event: build(event: .end, value: 0)) { _ in
 
+        }
     }
 
     func replay() {
+        service.send(event: build(event: .replay, value: 0)) { _ in
 
+        }
     }
 
     func buffer(sec: TimeInterval) {
+        service.send(event: build(event: .buffering, value: Float(sec))) { _ in
 
+        }
     }
 
     func seek() {
+        service.send(event: build(event: .seek, value: 0)) { _ in
 
+        }
     }
 
     func rate(_ rate: Float) {
+        service.send(event: build(event: .rate, value: Float(rate))) { _ in
 
+        }
     }
 
     func view() {
+        service.send(event: build(event: .view, value: 0)) { _ in
 
+        }
     }
 
     func enterfullscreen() {
+        service.send(event: build(event: .enterfullscreen, value: 0)) { _ in
 
+        }
     }
 
     func exitfullscreen() {
+        service.send(event: build(event: .exitfullscreen, value: 0)) { _ in
 
+        }
     }
 
-    func qualitychanged(_ quality: String) {
+    func qualitychanged() {
+        service.send(event: build(event: .qualitychanged, value: 0)) { _ in
 
+        }
     }
 
-    func autoqualitychanged(_ quality: String) {
+    func autoqualitychanged() {
+        service.send(event: build(event: .autoqualitychanged, value: 0)) { _ in
 
+        }
     }
     
 }

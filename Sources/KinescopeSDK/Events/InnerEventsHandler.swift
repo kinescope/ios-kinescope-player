@@ -19,6 +19,6 @@ protocol InnerEventsHandler {
     func view()
     func enterfullscreen()
     func exitfullscreen()
-    func qualitychanged(_ quality: String)
-    func autoqualitychanged(_ quality: String)
+    func qualitychanged()
+    func autoqualitychanged()
 }
