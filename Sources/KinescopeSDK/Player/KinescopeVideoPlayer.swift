@@ -201,6 +201,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         addPlayerItemStatusObserver()
         addTracksObserver()
     }
+
 }
 
 // MARK: - Private
@@ -476,16 +477,19 @@ private extension KinescopeVideoPlayer {
     func changeOrientation() {
         guard
             let view = view,
-            view.canBeFullScreen
+            view.canBeFullScreen,
+            !KinescopeFullscreenConfiguration.preferred(for: video).orientation.isPortrait
         else {
             return
         }
 
         let isFullScreen = UIApplication.shared.keyWindow?.rootViewController?.presentedViewController is KinescopeFullscreenViewController
+        let isLandscape = [UIDeviceOrientation.landscapeLeft, UIDeviceOrientation.landscapeRight]
+            .contains(UIDevice.current.orientation)
 
-        if UIDevice.current.orientation.isLandscape && !isFullScreen {
+        if isLandscape && !isFullScreen {
             didPresentFullscreen(from: view)
-        } else if !UIDevice.current.orientation.isLandscape && isFullScreen {
+        } else if UIDevice.current.orientation.isPortrait && isFullScreen {
             didPresentFullscreen(from: view)
         }
     }
@@ -723,6 +727,8 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                 self.attach(view: miniView)
                 self.view?.change(quality: self.currentQuality, manualQuality: self.isManualQuality)
                 self.restoreView()
+                let newvalue = UIInterfaceOrientation.portrait.rawValue
+                UIDevice.current.setValue(newvalue, forKey: "orientation")
             })
         } else {
             miniView = view
@@ -735,6 +741,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             playerVC.modalPresentationStyle = .overFullScreen
             playerVC.modalTransitionStyle = .crossDissolve
             playerVC.modalPresentationCapturesStatusBarAppearance = true
+
             rootVC?.present(playerVC, animated: true, completion: { [weak self] in
                 guard
                     let self = self,

@@ -40,7 +40,7 @@ final class VideoViewController: UIViewController {
     }
 
     private func setupCommandCenter() {
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = [MPMediaItemPropertyTitle: "Some title"]
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = [MPMediaItemPropertyTitle: video?.title ?? "some title"]
 
         let commandCenter = MPRemoteCommandCenter.shared()
         commandCenter.playCommand.isEnabled = true
@@ -79,7 +79,7 @@ final class VideoViewController: UIViewController {
 
 extension VideoViewController: UINavigationControllerDelegate {
     func navigationControllerSupportedInterfaceOrientations(_ navigationController: UINavigationController) -> UIInterfaceOrientationMask {
-        return self.supportedInterfaceOrientations
+        return KinescopeFullscreenConfiguration.orientations(for: video)
     }
 }
 

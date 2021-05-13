@@ -198,7 +198,7 @@ private extension KinescopePlayerView {
         let controlPanel = PlayerControlView(config: config)
         controlPanel.alpha = .zero
         addSubview(controlPanel)
-        bottomChildWithSafeArea(view: controlPanel)
+        bottomChildWithBottomSafeArea(view: controlPanel)
 
         self.controlPanel = controlPanel
         controlPanel.output = self
@@ -422,6 +422,7 @@ private extension KinescopePlayerView {
     }
 
     func addDebouncerHandler() {
+        timelineDebouncer.handler = { }
         overlayDebouncer.handler = { [weak self] in
             guard let self = self else {
                 return
