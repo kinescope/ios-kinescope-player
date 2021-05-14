@@ -564,6 +564,9 @@ private extension KinescopeVideoPlayer {
             guard let self = self else {
                 return
             }
+            guard !self.isError else {
+                return
+            }
             if self.strategy.player.timeControlStatus == .waitingToPlayAtSpecifiedRate {
                 self.view?.state = self.time == 0 ? .initialLoading : .loading
             }
@@ -573,6 +576,9 @@ private extension KinescopeVideoPlayer {
     func addPauseDebouncerHandler() {
         pauseDebouncer.handler = { [weak self] in
             guard let self = self else {
+                return
+            }
+            guard !self.isError, !self.isLoading else {
                 return
             }
             if self.strategy.player.timeControlStatus == .paused {
