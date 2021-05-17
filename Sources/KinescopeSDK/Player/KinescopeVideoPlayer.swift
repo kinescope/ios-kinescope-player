@@ -131,7 +131,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
             select(quality: quality)
         }
         view?.set(title: video.title, subtitle: video.description)
-        view?.set(options: makePlayerOptions(from: video) ?? [])
+        view?.set(options: makePlayerOptions(from: video) )
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.view?.controlPanel?.hideTimeline(false)
             self.view?.controlPanel?.setTimeline(to: 0)
@@ -374,6 +374,8 @@ private extension KinescopeVideoPlayer {
                     self.isLoading = false
                 case .waitingToPlayAtSpecifiedRate:
                     self.isLoading = true
+                @unknown default:
+                    break
                 }
 
                 Kinescope.shared.logger?.log(
@@ -588,7 +590,7 @@ private extension KinescopeVideoPlayer {
     }
 
     func loadManifest() {
-        guard var video = video else {
+        guard let video = video else {
             return
         }
         dependencies.inspector.fetchPlaylist(video: video) { [weak self] result in
@@ -599,7 +601,7 @@ private extension KinescopeVideoPlayer {
                 switch result {
                 case .success(let playlist):
                     self.video?.manifest = playlist
-                    self.view?.set(options: self.makePlayerOptions(from: video) ?? [])
+                    self.view?.set(options: self.makePlayerOptions(from: video))
                 case .cancelled, .failure:
                     break
                 }
@@ -733,8 +735,6 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                 self.attach(view: miniView)
                 self.view?.change(quality: self.currentQuality, manualQuality: self.isManualQuality)
                 self.restoreView()
-                let newvalue = UIInterfaceOrientation.portrait.rawValue
-                UIDevice.current.setValue(newvalue, forKey: "orientation")
             })
         } else {
             miniView = view
@@ -776,7 +776,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
     func didSelect(quality: String) {
         guard
-            let video = video
+            video != nil
         else {
             Kinescope.shared.logger?.log(message: "Can't find video",
                                          level: KinescopeLoggerLevel.player)
