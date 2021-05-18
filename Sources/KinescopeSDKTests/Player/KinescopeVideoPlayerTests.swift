@@ -33,7 +33,8 @@ final class KinescopeVideoPlayerTests: XCTestCase {
         let dependencies = KinescopeVideoPlayerDependenciesMock(inspectorMock: inspector,
                                                                 assetDownloaderMock: downloader,
                                                                 strategyMock: strategy,
-                                                                attachmentDownloaderMock: attachmentDownloader)
+                                                                attachmentDownloaderMock: attachmentDownloader,
+                                                                eventsCenter: LocalEventsCenter())
 
         self.player = KinescopeVideoPlayer(config: .init(videoId: Constants.videoId),
                                            dependencies: dependencies)
@@ -102,7 +103,10 @@ final class KinescopeVideoPlayerTests: XCTestCase {
     func testSelectQualityDelegateToStrategy() {
         // given
 
-        let quality: KinescopeVideoQuality = .auto(hlsLink: Constants.hlsStub)
+        let quality: KinescopeVideoQuality = KinescopeStreamVideoQuality(hlsLink: Constants.hlsStub,
+                                                                         audioLocale: nil,
+                                                                         subtitlesLocale: nil,
+                                                                         isAuto: true)
 
         // when
 

@@ -15,6 +15,7 @@ struct KinescopeVideoPlayerDependenciesMock: KinescopePlayerDependencies {
     let assetDownloaderMock: KinescopeAssetDownloadableMock
     let strategyMock: PlayingStrategyMock
     let attachmentDownloaderMock: KinescopeAttachmentDownloaderMock
+    let eventsCenter: KinescopeEventsCenter
 
     // MARK: - Mock Implementation
 

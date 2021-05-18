@@ -3,11 +3,15 @@ use_frameworks!
 inhibit_all_warnings!
 platform :ios, '10.0'
 
-target 'KinescopeSDK' do
-  # Comment the next line if you don't want to use dynamic frameworks
-
-  # Pods for KinescopeSDK
+def common_pods
   pod 'SwiftProtobuf', '~> 1.0'
   pod 'GoSwiftyM3U8', '~> 1.0.0'
+end
 
+target 'KinescopeSDK' do
+  common_pods
+end
+
+target 'KinescopeSDKTests' do
+  common_pods
 end

@@ -6,6 +6,7 @@
 //
 
 @testable import KinescopeSDK
+import GoSwiftyM3U8
 
 final class KinescopeInspectableMock: KinescopeInspectable {
 
@@ -43,6 +44,9 @@ final class KinescopeInspectableMock: KinescopeInspectable {
         } else {
             onSuccess(.stub())
         }
+    }
+
+    func fetchPlaylist(video: KinescopeVideo, completion: @escaping (M3U8Manager.Result<MasterPlaylist>) -> (Void)) {
     }
 
 }
