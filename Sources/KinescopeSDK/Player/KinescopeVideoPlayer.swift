@@ -228,7 +228,11 @@ private extension KinescopeVideoPlayer {
     }
 
     func makePlayerOptions(from video: KinescopeVideo) -> [KinescopePlayerOption] {
-        var options: [KinescopePlayerOption] = [.airPlay, .settings, .fullscreen, .more]
+        var options: [KinescopePlayerOption] = [.settings, .fullscreen, .more]
+
+        if #available(iOS 12.3, *) {
+            options.insert(.airPlay, at: 0)
+        }
 
         if !video.downloadableAssets.isEmpty {
             options.insert(.download, at: 1)
