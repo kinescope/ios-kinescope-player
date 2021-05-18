@@ -19,7 +19,7 @@ final class MockAVAssetDownloadTask: AVAssetDownloadTask {
     private let url: URL
     private let result: MockResult
 
-    init(url: URL,
+    convenience init(url: URL,
          result: MockResult,
          closure: @escaping (AVAssetDownloadTask, MockTaskState) -> Void) {
         self.url = url
@@ -41,7 +41,7 @@ final class MockAVAssetDownloadTask: AVAssetDownloadTask {
 
 }
 
-final class MocAVAssetDownloadURLSession: AVAssetDownloadURLSession {
+final class MockAVAssetDownloadURLSession: AVAssetDownloadURLSession {
 
     var nextResult: MockResult = .success
     // task : isActive
@@ -52,7 +52,7 @@ final class MocAVAssetDownloadURLSession: AVAssetDownloadURLSession {
         return newDelegate
     }
 
-    init(delegate: URLSessionDelegate?) {
+    convenience init(delegate: URLSessionDelegate?) {
         self.newDelegate = delegate
     }
 
