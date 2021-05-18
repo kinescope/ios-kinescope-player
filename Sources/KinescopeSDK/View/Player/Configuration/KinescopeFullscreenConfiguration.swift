@@ -29,6 +29,10 @@ public struct KinescopeFullscreenConfiguration {
 
 public extension KinescopeFullscreenConfiguration {
 
+    static func orientations(for video: KinescopeVideo?) -> UIInterfaceOrientationMask {
+        return preferred(for: video).orientationMask.union(.portrait)
+    }
+
     static func preferred(for video: KinescopeVideo?) -> KinescopeFullscreenConfiguration {
         guard let asset = video?.assets.first else {
             return landscape
@@ -52,4 +56,5 @@ public extension KinescopeFullscreenConfiguration {
         orientation: .portrait,
         orientationMask: .portrait,
         backgroundColor: .black)
+
 }

@@ -49,7 +49,7 @@ final class AssetServiceTests: XCTestCase {
             err = error
             exp.fulfill()
         }
-        assetService?.setSession(MocAVAssetDownloadURLSession(delegate: assetService))
+        assetService?.setSession(MockAVAssetDownloadURLSession(delegate: assetService))
 
         // when
         assetLinksServiceMock?.linkMock = ["1": .success(.init(link: mockUrlString))]
@@ -72,7 +72,7 @@ final class AssetServiceTests: XCTestCase {
             err = error
             exp.fulfill()
         }
-        let session = MocAVAssetDownloadURLSession(delegate: assetService)
+        let session = MockAVAssetDownloadURLSession(delegate: assetService)
         session.nextResult = .error
         assetService?.setSession(session)
 
@@ -92,7 +92,7 @@ final class AssetServiceTests: XCTestCase {
         let exp = expectation(description: "testDequeueDownload")
         let assetId = "1"
         var isTaskFinished = false
-        let session = MocAVAssetDownloadURLSession(delegate: assetService)
+        let session = MockAVAssetDownloadURLSession(delegate: assetService)
 
         assetServiceDelegate?.completionHandler = { _, _, _ in
             isTaskFinished = true
@@ -122,7 +122,7 @@ final class AssetServiceTests: XCTestCase {
         let resumeExp = expectation(description: "testResumeDownloadAfterPause")
         let assetId = "1"
         var isTaskFinished = false
-        let session = MocAVAssetDownloadURLSession(delegate: assetService)
+        let session = MockAVAssetDownloadURLSession(delegate: assetService)
 
         assetServiceDelegate?.completionHandler = { _, _, _ in
             isTaskFinished = true
@@ -156,7 +156,7 @@ final class AssetServiceTests: XCTestCase {
         //assetId : isFinished
         var assetIds = ["1" : false, "2" : false, "3": false]
         var isAllTasksFinished = false
-        let session = MocAVAssetDownloadURLSession(delegate: assetService)
+        let session = MockAVAssetDownloadURLSession(delegate: assetService)
 
         assetServiceDelegate?.completionHandler = { assetId, _, _ in
             assetIds[assetId] = true

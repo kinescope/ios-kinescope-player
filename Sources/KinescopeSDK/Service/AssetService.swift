@@ -7,7 +7,7 @@
 
 import AVFoundation
 
-protocol AssetServiceDelegate: class {
+protocol AssetServiceDelegate: AnyObject {
     func downloadProgress(assetId: String, progress: Double)
     func downloadError(assetId: String, error: KinescopeDownloadError)
     func downloadComplete(assetId: String, path: String)

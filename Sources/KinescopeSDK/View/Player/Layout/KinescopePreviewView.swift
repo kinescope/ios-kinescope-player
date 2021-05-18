@@ -7,7 +7,7 @@
 
 import UIKit
 
-public protocol KinescopePreviewViewDelegate: class {
+public protocol KinescopePreviewViewDelegate: AnyObject {
     func didTap()
 }
 

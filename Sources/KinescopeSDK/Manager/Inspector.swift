@@ -5,6 +5,8 @@
 //  Created by Никита Коробейников on 23.03.2021.
 //
 
+import GoSwiftyM3U8
+
 // MARK: - KinescopeInspectable
 
 class Inspector: KinescopeInspectable {
@@ -45,6 +47,10 @@ class Inspector: KinescopeInspectable {
                 onError(Inspector.parse(error: error))
             }
         }
+    }
+
+    func fetchPlaylist(video: KinescopeVideo, completion: @escaping (M3U8Manager.Result<MasterPlaylist>) -> (Void)) {
+        videosService.fetchPlaylist(video: video, completion: completion)
     }
 }
 

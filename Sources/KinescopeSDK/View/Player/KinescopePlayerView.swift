@@ -198,7 +198,7 @@ private extension KinescopePlayerView {
         let controlPanel = PlayerControlView(config: config)
         controlPanel.alpha = .zero
         addSubview(controlPanel)
-        bottomChildWithSafeArea(view: controlPanel)
+        bottomChildWithBottomSafeArea(view: controlPanel)
 
         self.controlPanel = controlPanel
         controlPanel.output = self
@@ -255,7 +255,9 @@ private extension KinescopePlayerView {
             errorView?.isHidden = false
             controlPanel?.isHidden = true
         case .ended:
-            overlay?.playPauseReplayState = .replay
+            playPauseReplayState = .replay
+            overlay?.isSelected = true
+            controlPanel?.alpha = 1
         }
     }
 
@@ -422,8 +424,12 @@ private extension KinescopePlayerView {
     }
 
     func addDebouncerHandler() {
+        timelineDebouncer.handler = { }
         overlayDebouncer.handler = { [weak self] in
             guard let self = self else {
+                return
+            }
+            guard self.state != .ended else {
                 return
             }
             self.overlay?.isSelected = false
@@ -439,6 +445,9 @@ private extension KinescopePlayerView {
         if !(overlay?.isSelected ?? false) {
             timelineDebouncer.handler = { [weak self] in
                 guard let self = self else {
+                    return
+                }
+                guard self.state != .ended else {
                     return
                 }
                 UIView.animate(withDuration: 0.3, animations: {
@@ -461,6 +470,9 @@ private extension KinescopePlayerView {
 extension KinescopePlayerView: PlayerOverlayViewDelegate {
 
     func didTap(isSelected: Bool) {
+        guard state != .ended else {
+            return
+        }
         if isSelected {
             if !(controlPanel?.expanded ?? true) {
                 overlay?.isSelected = false
@@ -481,7 +493,7 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
     }
 
     func didPlayPause() {
-        if playPauseReplayState == .play {
+        if playPauseReplayState == .play || playPauseReplayState == .replay {
             addDebouncerHandler()
             overlayDebouncer.renewInterval()
         } else {

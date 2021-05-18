@@ -9,7 +9,7 @@
 import UIKit
 import Foundation
 
-protocol SideMenuDelegate: class {
+protocol SideMenuDelegate: AnyObject {
     func sideMenuWillBeDismissed(_ sideMenu: SideMenu, withRoot: Bool)
     func sideMenuDidSelect(item: SideMenu.Item, rowIndex: Int, sideMenu: SideMenu)
     func downloadAllTapped(for title: String)
@@ -199,7 +199,7 @@ private extension SideMenu {
         tableView.separatorStyle = .none
 
         addSubview(tableView)
-        bottomChild(view: tableView)
+        bottomChildWithSafeArea(view: tableView)
 
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: bar.bottomAnchor)
@@ -220,7 +220,7 @@ private extension SideMenu {
                               model: .init(title: model.title, isRoot: model.isRoot, isDownloadable: model.isDownloadable))
 
         addSubview(bar)
-        topChild(view: bar, padding: 0)
+        topChildWithSafeArea(view: bar, padding: 0)
 
         bar.delegate = self
 

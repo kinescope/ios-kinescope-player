@@ -8,7 +8,7 @@
 import Foundation
 
 /// Control protocol managing downloading of attachments
-public protocol KinescopeAttachmentDownloadable: class {
+public protocol KinescopeAttachmentDownloadable: AnyObject {
 
     /// Start downloading attachment
     /// Downloading won't start if the attachment already stored on disk

@@ -130,10 +130,6 @@ private extension PlayerOverlayView {
 
 private extension PlayerOverlayView {
 
-    func playPauseAction() {
-        delegate?.didPlayPause()
-    }
-
     @objc
     func tapAction(recognizer: UITapGestureRecognizer) {
         if activeTaps == 0 {
@@ -163,7 +159,7 @@ private extension PlayerOverlayView {
         }
 
         if isSelected && playPauseImageView.frame.contains(lastTapLocation) {
-            playPauseAction()
+            delegate?.didPlayPause()
         } else {
             isRewind = false
             delegate?.didTap(isSelected: isSelected)

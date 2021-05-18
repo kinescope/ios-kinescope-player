@@ -5,6 +5,7 @@
 //  Created by Никита Гагаринов on 04.05.2021.
 //
 
+import UIKit
 import Foundation
 
 /// Type of displaying view with title and description of video
