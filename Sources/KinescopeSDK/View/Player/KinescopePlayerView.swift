@@ -51,6 +51,7 @@ public class KinescopePlayerView: UIView {
             updateViewState()
         }
     }
+    let uuid = UUID()
 
     // MARK: - Public Properties
 

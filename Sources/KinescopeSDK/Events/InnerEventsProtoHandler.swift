@@ -5,7 +5,7 @@
 //  Created by Artemii Shabanov on 27.04.2021.
 //
 
-import Foundation
+import UIKit
 
 enum InnerProtoEvent: String {
     case playback
@@ -27,12 +27,14 @@ class InnerEventsProtoHandler: InnerEventsHandler {
 
     // MARK: - Properties
 
-    private let service: AnalyticsService
-    private let video = Analytics_Video()
-    private let player = Analytics_Player()
-    private let device = Analytics_Device()
-    private let session = Analytics_Session()
-    private let playback = Analytics_Playback()
+    private var service: AnalyticsService
+    private var video = Analytics_Video()
+    private var player = Analytics_Player()
+    private var device = Analytics_Device()
+    private var session = Analytics_Session()
+    private var playback = Analytics_Playback()
+
+    var mirror: KinescopeEventsCenter?
 
     // MARK: - Init
 
@@ -41,6 +43,88 @@ class InnerEventsProtoHandler: InnerEventsHandler {
     }
 
     // MARK: - Internal Methods
+
+    // Video
+
+    func setupVideo(_ video: KinescopeVideo) {
+        self.video.duration = UInt32(video.duration)
+        self.video.source = video.hlsLink
+    }
+
+    // Player
+
+    func setupPlayer() {
+        self.player.type = "iOS SDK"
+        self.player.version = Bundle(for: Self.self).infoDictionary?["CFBundleVersion"] as? String ?? ""
+    }
+
+    // Device
+
+    func setupDevice() {
+        self.device.os = "iOS"
+        self.device.osversion = UIDevice.current.systemVersion
+        self.device.screenWidth = UInt32(UIScreen.main.bounds.width)
+        self.device.screenHeight = UInt32(UIScreen.main.bounds.height)
+    }
+
+    // Session
+
+    func setSessionId() {
+        let uuid = UUID()
+        let data = withUnsafePointer(to: uuid) {
+            Data(bytes: $0, count: MemoryLayout.size(ofValue: uuid))
+        }
+        self.session.id = data
+    }
+
+    func setSession(viewID uuid: UUID) {
+        let data = withUnsafePointer(to: uuid) {
+            Data(bytes: $0, count: MemoryLayout.size(ofValue: uuid))
+        }
+        self.session.viewID = data
+    }
+
+    func setSession(type: Analytics_SessionType) {
+        self.session.type = type
+    }
+
+    func setSession(watchedDuration duration: Int) {
+        self.session.watchedDuration = UInt32(duration) // TODO: what is this?
+    }
+
+    func setSession(externalId id: String) {
+        self.session.externalID = id // TODO: what is this?
+    }
+
+    // Playback
+
+    func setPlayback(rate: Float) {
+        self.playback.rate = rate
+    }
+
+    func setPlayback(volume: Int) {
+        self.playback.volume = Int32(volume)
+    }
+
+    func setPlayback(quality: String) {
+        self.playback.quality = quality
+    }
+
+    func setPlayback(isMuted: Bool) {
+        self.playback.isMuted = isMuted // TODO: what is this?
+    }
+
+    func setPlayback(isFullscreen: Bool) {
+        self.playback.isFullscreen = isFullscreen
+    }
+
+    func setPlayback(previewPosition position: Int) {
+        self.playback.previewPosition = UInt32(position) // TODO: why int?
+    }
+
+    func setPlayback(currentPosition position: Int) {
+        self.playback.currentPosition = UInt32(position) // TODO: why int?
+    }
 
     // MARK: - InnerEventsHandler
 

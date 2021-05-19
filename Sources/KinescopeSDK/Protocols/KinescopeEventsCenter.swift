@@ -28,7 +28,7 @@ public enum KinescopeEvent: String {
 }
 
 /// Interface for events center
-public protocol KinescopeEventsCenter {
+public protocol KinescopeEventsCenter: AnyObject {
 
     /// Add observer for event
     /// - Parameters:
