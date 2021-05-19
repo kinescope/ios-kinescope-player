@@ -12,6 +12,24 @@ target 'KinescopeSDK' do
   common_pods
 end
 
+
 target 'KinescopeSDKTests' do
   common_pods
+end
+
+post_install do |installer|
+  puts "-- post install --"
+    installer.pods_project.targets.each do |target|
+        if target.name == "Pods-KinescopeSDK"
+            puts "Updating #{target.name} OTHER_LDFLAGS"
+            target.build_configurations.each do |config|
+              puts "Updating #{config} OTHER_LDFLAGS"
+                xcconfig_path = config.base_configuration_reference.real_path
+                xcconfig = File.read(xcconfig_path)
+                new_xcconfig = xcconfig.sub('OTHER_LDFLAGS = $(inherited)', 'OTHER_LDFLAGS = $(inherited) -weak_framework "AVFoundation"')
+                File.open(xcconfig_path, "w") { |file| file << new_xcconfig }
+            end
+        end
+    end
+    puts "-- post install --"
 end
