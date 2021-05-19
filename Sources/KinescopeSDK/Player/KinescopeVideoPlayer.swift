@@ -54,7 +54,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         guard
             let rule = AVTextStyleRule(
                 textMarkupAttributes: [
-                    pos as String: 75.0,
+                    pos as String: 95.0,
                     kCMTextMarkupAttribute_RelativeFontSize as String: 100.0
                 ]
             )
