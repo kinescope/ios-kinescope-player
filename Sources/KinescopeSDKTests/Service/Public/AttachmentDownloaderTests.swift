@@ -94,7 +94,12 @@ final class AttachmentDownloaderTests: XCTestCase {
         let attachemntsList = downloader!.downloadedList()
 
         attachmentsIds.forEach {
-            filePaths.append(downloader!.getLocation(of: $0)!)
+            let location = downloader!.getLocation(of: $0)
+            guard let location = location else {
+                XCTAssertNotNil(location)
+                return
+            }
+            filePaths.append(location)
         }
         let isContainsAll = attachemntsList.allSatisfy(filePaths.contains)
 
@@ -171,7 +176,11 @@ final class AttachmentDownloaderTests: XCTestCase {
         let attachmentLocation = downloader?.getLocation(of: attachmentId)
 
         //then
-        let fileData = try? String(contentsOf: attachmentLocation!, encoding: .utf8)
+        guard let attachmentLocation = attachmentLocation else {
+            XCTAssertNotNil(attachmentLocation)
+            return
+        }
+        let fileData = try? String(contentsOf: attachmentLocation, encoding: .utf8)
         XCTAssertEqual(fileData, mockFileData)
 
         //when
