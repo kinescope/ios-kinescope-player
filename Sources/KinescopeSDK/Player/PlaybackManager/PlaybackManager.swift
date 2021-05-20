@@ -58,6 +58,7 @@ final class PlaybackManager {
             return
         }
         delegate?.bufferingActionTriggered(time: Date().timeIntervalSince(bufferingStart))
+        self.bufferingStart = nil
     }
 
     // MARK: - Private Methods
@@ -78,11 +79,12 @@ final class PlaybackManager {
             let nextStep = lastRegisteredPlaybackStep + playbackStep
             if second >= nextStep || second <= prevStep {
                 delegate?.playbackActionTriggered(second: second)
+                self.lastRegisteredPlaybackStep = second
             }
         } else {
             delegate?.playbackActionTriggered(second: second)
+            self.lastRegisteredPlaybackStep = second
         }
-        lastRegisteredPlaybackStep = second
     }
 
 }
