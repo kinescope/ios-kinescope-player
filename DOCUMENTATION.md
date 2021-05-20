@@ -68,3 +68,7 @@ With an incoming call, video will be paused by system, true for background. To r
 # Localization
 
 To add new localization to strings from SDK, add in your project file "KinescopeLocalizable.strings", file should located in main bundle(it is important to multi-modules projects), copy all content from Localizable.strings file, which is located in KinescopeSDK and add new languages or change values of existing ones. 
+
+# KinescopeEventsCenter
+
+KinescopeServicesProvider includes KinescopeEventsCenter which has out-of-box implementation - LocalEventsCenter. It is used to handle player events(KinescopeEvent enum), based on NotificationCenter and has similar API, but with KinescopeEvent as a key insead of string.
