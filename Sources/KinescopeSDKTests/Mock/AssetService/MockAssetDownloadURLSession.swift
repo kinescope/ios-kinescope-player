@@ -15,28 +15,28 @@
 //        return AVURLAsset(url: url)
 //    }
 //
-//    private let closure: (AVAssetDownloadTask, MockTaskState) -> Void
-//    private let url: URL
-//    private let result: MockResult
+//    private var closure: ((AVAssetDownloadTask, MockTaskState) -> Void)?
+//    private var url: URL = URL(fileURLWithPath: "")
+//    private var result: MockResult = .error
 //
-//    convenience init(url: URL,
-//         result: MockResult,
-//         closure: @escaping (AVAssetDownloadTask, MockTaskState) -> Void) {
+//    init(url: URL,
+//                     result: MockResult,
+//                     closure: @escaping (AVAssetDownloadTask, MockTaskState) -> Void) {
 //        self.url = url
 //        self.result = result
 //        self.closure = closure
 //    }
 //
 //    override func resume() {
-//        closure(self, .resume(result))
+//        closure?(self, .resume(result))
 //    }
 //
 //    override func cancel() {
-//        closure(self, .cancel)
+//        closure?(self, .cancel)
 //    }
 //
 //    override func suspend() {
-//        closure(self, .suspend)
+//        closure?(self, .suspend)
 //    }
 //
 //}
@@ -52,7 +52,7 @@
 //        return newDelegate
 //    }
 //
-//    convenience init(delegate: URLSessionDelegate?) {
+//    init(delegate: URLSessionDelegate?) {
 //        self.newDelegate = delegate
 //    }
 //

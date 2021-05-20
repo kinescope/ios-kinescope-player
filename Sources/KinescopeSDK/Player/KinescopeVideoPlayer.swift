@@ -70,8 +70,8 @@ public class KinescopeVideoPlayer: NSObject, KinescopePlayer {
         guard
             let rule = AVTextStyleRule(
                 textMarkupAttributes: [
-                    pos as String: 75.0,
-                    kCMTextMarkupAttribute_BaseFontSizePercentageRelativeToVideoHeight as String: 10.0
+                    pos as String: 95.0,
+                    kCMTextMarkupAttribute_RelativeFontSize as String: 100.0
                 ]
             )
         else {
