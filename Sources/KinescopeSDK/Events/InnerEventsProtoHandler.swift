@@ -126,8 +126,8 @@ class InnerEventsProtoHandler: InnerEventsHandler {
 
     // MARK: - InnerEventsHandler
 
-    func playback(sec: TimeInterval) {
-        send(event: .playback, value: 0)
+    func playback(sec: Int) {
+        send(event: .playback, value: Float(sec))
     }
 
     func play() {
@@ -188,9 +188,9 @@ private extension InnerEventsProtoHandler {
         service.send(event: build(event: event, value: value)) {
             switch $0 {
             case .failure(let error):
-                Kinescope.shared.logger?.log(message: "Inner event (\(event) registration failed with error: \(error)", level: KinescopeLoggerLevel.analytics)
+                Kinescope.shared.logger?.log(message: "Inner event (\(event)) registration failed with error: \(error)", level: KinescopeLoggerLevel.analytics)
             case .success(_):
-                Kinescope.shared.logger?.log(message: "Inner event (\(event) was registered", level: KinescopeLoggerLevel.analytics)
+                Kinescope.shared.logger?.log(message: "Inner event (\(event)) was registered", level: KinescopeLoggerLevel.analytics)
             }
         }
     }

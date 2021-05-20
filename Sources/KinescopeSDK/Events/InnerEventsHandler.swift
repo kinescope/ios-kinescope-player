@@ -8,7 +8,7 @@
 import Foundation
 
 protocol InnerEventsHandler {
-    func playback(sec: TimeInterval)
+    func playback(sec: Int)
     func play()
     func pause()
     func end()

@@ -80,14 +80,14 @@ public class KinescopeVideoPlayer: NSObject, KinescopePlayer {
 
         return [rule]
     }
-    private lazy var playbackManager: PlaybackManager? {
+    private lazy var playbackManager: PlaybackManager? = {
         if let duration = video?.duration, duration.isNormal {
             let manager = PlaybackManager(duration: Int(duration), viewSeconds: 5)
             manager.delegate = self
             return manager
         }
         return nil
-    }
+    }()
 
     // MARK: - State
 
@@ -332,7 +332,7 @@ private extension KinescopeVideoPlayer {
 
             if !self.isSeeking, !self.isPreparingSeek {
                 self.time = min(duration, time.seconds)
-                playbackManager.register(second: time.seconds)
+                self.playbackManager?.register(second: Int(time.seconds))
             }
 
             Kinescope.shared.logger?.log(message: "playback position changed to \(time) seconds", level: KinescopeLoggerLevel.player)
@@ -431,10 +431,10 @@ private extension KinescopeVideoPlayer {
                 switch item.timeControlStatus {
                 case .paused, .playing:
                     self.isLoading = false
-                    playbackManager?.stopBuffering()
+                    self.playbackManager?.stopBuffering()
                 case .waitingToPlayAtSpecifiedRate:
                     self.isLoading = true
-                    playbackManager?.startBuffering()
+                    self.playbackManager?.startBuffering()
                 @unknown default:
                     break
                 }
@@ -960,8 +960,8 @@ extension KinescopeVideoPlayer: PlaybackManagerDelegate {
         dependencies.eventsCenter.post(event: .view, userInfo: nil)
     }
 
-    func playbackActionTriggered() {
-        innerEventsHandler.playback()
+    func playbackActionTriggered(second: Int) {
+        innerEventsHandler.playback(sec: second)
         dependencies.eventsCenter.post(event: .playback, userInfo: nil)
     }
 

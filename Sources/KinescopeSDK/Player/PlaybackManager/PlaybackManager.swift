@@ -13,7 +13,7 @@ protocol PlaybackManagerDelegate: AnyObject {
     /// For "view" analytics events. Called once
     func viewSecondsReached()
     /// Every 2% of video. At least once at 60 seconds
-    func playbackActionTriggered()
+    func playbackActionTriggered(second: Int)
     /// time: buffering duration
     func bufferingActionTriggered(time: TimeInterval)
 }
@@ -75,12 +75,12 @@ final class PlaybackManager {
     private func handlePlayback(second: Int) {
         if let lastRegisteredPlaybackStep = lastRegisteredPlaybackStep {
             let prevStep = lastRegisteredPlaybackStep - playbackStep
-            let nextStep = lastRegisteredPlaybackStep - playbackStep
+            let nextStep = lastRegisteredPlaybackStep + playbackStep
             if second >= nextStep || second <= prevStep {
-                delegate?.playbackActionTriggered()
+                delegate?.playbackActionTriggered(second: second)
             }
         } else {
-            delegate?.playbackActionTriggered()
+            delegate?.playbackActionTriggered(second: second)
         }
         lastRegisteredPlaybackStep = second
     }
