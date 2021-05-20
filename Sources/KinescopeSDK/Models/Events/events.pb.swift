@@ -149,8 +149,6 @@ struct Analytics_Session {
 
   var viewID: Data = Data()
 
-  var ipaddress: Data = Data()
-
   var externalID: String = String()
 
   var watchedDuration: UInt32 = 0
@@ -447,9 +445,8 @@ extension Analytics_Session: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     1: .same(proto: "ID"),
     2: .same(proto: "Type"),
     3: .same(proto: "ViewID"),
-    4: .same(proto: "IPaddress"),
-    5: .same(proto: "ExternalID"),
-    6: .same(proto: "WatchedDuration"),
+    4: .same(proto: "ExternalID"),
+    5: .same(proto: "WatchedDuration"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -461,9 +458,8 @@ extension Analytics_Session: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
       case 1: try { try decoder.decodeSingularBytesField(value: &self.id) }()
       case 2: try { try decoder.decodeSingularEnumField(value: &self.type) }()
       case 3: try { try decoder.decodeSingularBytesField(value: &self.viewID) }()
-      case 4: try { try decoder.decodeSingularBytesField(value: &self.ipaddress) }()
-      case 5: try { try decoder.decodeSingularStringField(value: &self.externalID) }()
-      case 6: try { try decoder.decodeSingularUInt32Field(value: &self.watchedDuration) }()
+      case 4: try { try decoder.decodeSingularStringField(value: &self.externalID) }()
+      case 5: try { try decoder.decodeSingularUInt32Field(value: &self.watchedDuration) }()
       default: break
       }
     }
@@ -479,14 +475,11 @@ extension Analytics_Session: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     if !self.viewID.isEmpty {
       try visitor.visitSingularBytesField(value: self.viewID, fieldNumber: 3)
     }
-    if !self.ipaddress.isEmpty {
-      try visitor.visitSingularBytesField(value: self.ipaddress, fieldNumber: 4)
-    }
     if !self.externalID.isEmpty {
-      try visitor.visitSingularStringField(value: self.externalID, fieldNumber: 5)
+      try visitor.visitSingularStringField(value: self.externalID, fieldNumber: 4)
     }
     if self.watchedDuration != 0 {
-      try visitor.visitSingularUInt32Field(value: self.watchedDuration, fieldNumber: 6)
+      try visitor.visitSingularUInt32Field(value: self.watchedDuration, fieldNumber: 5)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -495,7 +488,6 @@ extension Analytics_Session: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     if lhs.id != rhs.id {return false}
     if lhs.type != rhs.type {return false}
     if lhs.viewID != rhs.viewID {return false}
-    if lhs.ipaddress != rhs.ipaddress {return false}
     if lhs.externalID != rhs.externalID {return false}
     if lhs.watchedDuration != rhs.watchedDuration {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}

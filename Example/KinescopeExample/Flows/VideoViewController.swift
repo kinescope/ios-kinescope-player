@@ -37,6 +37,13 @@ final class VideoViewController: UIViewController {
         player?.pipDelegate = PipManager.shared
         player?.delegate = self
         setupCommandCenter()
+
+        Kinescope.shared.eventsCenter.addObserver(self, selector: #selector(handlePlayEvent), event: .play)
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        Kinescope.shared.eventsCenter.removeObserver(self)
     }
 
     private func setupCommandCenter() {
@@ -71,6 +78,11 @@ final class VideoViewController: UIViewController {
         playerView.previewImage.contentMode = .scaleAspectFit
         playerView.previewImage.kf.setImage(with: URL(string: video.poster?.md ?? ""))
         view.bringSubviewToFront(previewView)
+    }
+
+    @objc
+    private func handlePlayEvent() {
+        print("send analytics")
     }
 
 }

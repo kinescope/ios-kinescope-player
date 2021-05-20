@@ -3,7 +3,7 @@ import AVKit
 import UIKit
 
 // swiftlint:disable file_length
-public class KinescopeVideoPlayer: KinescopePlayer {
+public class KinescopeVideoPlayer: NSObject, KinescopePlayer {
 
     public weak var pipDelegate: AVPictureInPictureControllerDelegate? {
         didSet {
@@ -20,9 +20,15 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         dependencies.provide(for: config)
     }()
     private let callObserver = CallObserver()
-    private lazy var innerEventsHandler: InnerEventsHandler = {
+    private lazy var innerEventsHandler: InnerEventsProtoHandler = {
         let service = AnalyticsNetworkService(transport: Transport(), config: Kinescope.shared.config)
-        return InnerEventsProtoHandler(service: service)
+        let handler = InnerEventsProtoHandler(service: service)
+        handler.setupPlayer()
+        handler.setupDevice()
+        handler.setSessionId()
+        handler.setPlayback(rate: 1)
+        handler.setPlayback(isMuted: false)
+        return handler
     }()
 
     private weak var view: KinescopePlayerView?
@@ -36,7 +42,11 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private var isSeeking = false
     private var isPreparingSeek = false
     private var isManualQuality = false
-    private var currentQuality = ""
+    private var currentQuality = "" {
+        didSet {
+            innerEventsHandler.setPlayback(quality: currentQuality)
+        }
+    }
     private var currentSutitle: KinescopeVideoSubtitle?
     private var currentAudio: String?
     private var isOverlayed = false
@@ -45,7 +55,13 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private var pauseDebouncer = Debouncer(timeInterval: 0.05)
     private var airPlayDebouncer = Debouncer(timeInterval: 0.5)
     private weak var miniView: KinescopePlayerView?
-    private var video: KinescopeVideo?
+    private var video: KinescopeVideo? {
+        didSet {
+            if let video = video {
+                innerEventsHandler.setupVideo(video)
+            }
+        }
+    }
     private let config: KinescopePlayerConfig
     private var options = [KinescopePlayerOption]()
 
@@ -64,6 +80,14 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
         return [rule]
     }
+    private lazy var playbackManager: PlaybackManager? = {
+        if let duration = video?.duration, duration.isNormal {
+            let manager = PlaybackManager(duration: Int(duration), viewSeconds: 5)
+            manager.delegate = self
+            return manager
+        }
+        return nil
+    }()
 
     // MARK: - State
 
@@ -74,6 +98,9 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         }
         didSet {
             updateTimeline()
+            if time.isNormal {
+                innerEventsHandler.setPlayback(currentPosition: Int(time))
+            }
         }
     }
 
@@ -85,6 +112,10 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private var isAtEnd = false {
         didSet {
             updateViewState()
+            if isAtEnd {
+                innerEventsHandler.end()
+                dependencies.eventsCenter.post(event: .end, userInfo: nil)
+            }
         }
     }
 
@@ -105,7 +136,9 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     init(config: KinescopePlayerConfig, dependencies: KinescopePlayerDependencies) {
         self.dependencies = dependencies
         self.config = config
+        super.init()
         addNotofications()
+        addVolumeListener()
         callObserver.delegate = self
     }
 
@@ -147,11 +180,15 @@ public class KinescopeVideoPlayer: KinescopePlayer {
             view?.state = .initialLoading
             self.load()
         }
+        innerEventsHandler.play()
+        dependencies.eventsCenter.post(event: .play, userInfo: nil)
     }
 
     public func pause() {
         self.strategy.pause()
         self.delegate?.playerDidPause()
+        innerEventsHandler.pause()
+        dependencies.eventsCenter.post(event: .pause, userInfo: nil)
     }
 
     public func stop() {
@@ -171,6 +208,8 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         observePlaybackTime()
         addPlayerTimeControlStatusObserver()
         addPlayerStatusObserver()
+        innerEventsHandler.setSession(viewID: view.uuid)
+        innerEventsHandler.setPlayback(isFullscreen: (view.superview ?? UIViewController()) is KinescopeFullscreenViewController)
     }
 
     public func detach(view: KinescopePlayerView) {
@@ -190,6 +229,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         }
 
         isManualQuality = !quality.isAuto
+        innerEventsHandler.setSession(type: quality.isOnline ? .online : .offline)
 
         savedTime = strategy.player.currentTime()
 
@@ -200,6 +240,20 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
         addPlayerItemStatusObserver()
         addTracksObserver()
+
+        innerEventsHandler.qualitychanged()
+        dependencies.eventsCenter.post(event: .qualitychanged, userInfo: nil)
+    }
+
+    public override func observeValue(forKeyPath keyPath: String?,
+                                      of object: Any?,
+                                      change: [NSKeyValueChangeKey : Any]?,
+                                      context: UnsafeMutableRawPointer?) {
+        if keyPath == "outputVolume"{
+            let audioSession = AVAudioSession.sharedInstance()
+            innerEventsHandler.setPlayback(volume: Int(audioSession.outputVolume*100))
+            print(audioSession.outputVolume)
+        }
     }
 
 }
@@ -278,6 +332,7 @@ private extension KinescopeVideoPlayer {
 
             if !self.isSeeking, !self.isPreparingSeek {
                 self.time = min(duration, time.seconds)
+                self.playbackManager?.register(second: Int(time.seconds))
             }
 
             Kinescope.shared.logger?.log(message: "playback position changed to \(time) seconds", level: KinescopeLoggerLevel.player)
@@ -376,8 +431,10 @@ private extension KinescopeVideoPlayer {
                 switch item.timeControlStatus {
                 case .paused, .playing:
                     self.isLoading = false
+                    self.playbackManager?.stopBuffering()
                 case .waitingToPlayAtSpecifiedRate:
                     self.isLoading = true
+                    self.playbackManager?.startBuffering()
                 @unknown default:
                     break
                 }
@@ -412,8 +469,7 @@ private extension KinescopeVideoPlayer {
 
                 let height = String(format: "%.0f", size.height)
 
-                let qualities = video.assets
-                    .compactMap { $0.quality }
+                let qualities = video.qualities
                     .filter { $0.hasPrefix(height) }
 
                 let expectedQuality: String?
@@ -430,6 +486,9 @@ private extension KinescopeVideoPlayer {
                 }
 
                 self.view?.change(quality: quality, manualQuality: self.isManualQuality)
+                self.innerEventsHandler.setPlayback(quality: quality)
+                self.innerEventsHandler.autoqualitychanged()
+                self.dependencies.eventsCenter.post(event: .autoqualitychanged, userInfo: nil)
 
                 Kinescope.shared.logger?.log(
                     message: "AVPlayerItem.presentationSize – \(item.presentationSize)",
@@ -462,6 +521,18 @@ private extension KinescopeVideoPlayer {
                                                object: nil)
     }
 
+    func addVolumeListener() {
+        let audioSession = AVAudioSession.sharedInstance()
+        do {
+            try audioSession.setActive(true, options: [])
+            audioSession.addObserver(self, forKeyPath: "outputVolume",
+                                     options: NSKeyValueObservingOptions.new, context: nil)
+            innerEventsHandler.setPlayback(volume: Int(audioSession.outputVolume * 10))
+        } catch {
+            print("Error")
+        }
+    }
+
     func seek(to seconds: TimeInterval) {
         let duration = strategy.player.currentItem?.duration.seconds ?? .zero
         if seconds >= duration {
@@ -477,6 +548,8 @@ private extension KinescopeVideoPlayer {
         strategy.player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] _ in
             self?.isSeeking = false
         }
+        innerEventsHandler.seek()
+        dependencies.eventsCenter.post(event: .seek, userInfo: nil)
     }
 
     @objc
@@ -660,6 +733,8 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             time = .zero
             seek(to: time)
             play()
+            innerEventsHandler.replay()
+            dependencies.eventsCenter.post(event: .replay, userInfo: nil)
         case (false, false):
             play()
         case (true, false):
@@ -740,6 +815,8 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                 self.view?.change(quality: self.currentQuality, manualQuality: self.isManualQuality)
                 self.restoreView()
             })
+            innerEventsHandler.exitfullscreen()
+            dependencies.eventsCenter.post(event: .exitfullscreen, userInfo: nil)
         } else {
             miniView = view
             isOverlayed = view.overlay?.isSelected ?? false
@@ -763,6 +840,8 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                 self.view?.set(title: video.title, subtitle: video.description)
                 self.restoreView()
             })
+            innerEventsHandler.enterfullscreen()
+            dependencies.eventsCenter.post(event: .enterfullscreen, userInfo: nil)
         }
     }
 
@@ -867,4 +946,30 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
 }
+
+// MARK: - PlaybackManagerDelegate
+
+extension KinescopeVideoPlayer: PlaybackManagerDelegate {
+
+    func uniqueSecondsUpdated(seconds: Int) {
+        innerEventsHandler.setSession(watchedDuration: seconds)
+    }
+
+    func viewSecondsReached() {
+        innerEventsHandler.view()
+        dependencies.eventsCenter.post(event: .view, userInfo: nil)
+    }
+
+    func playbackActionTriggered(second: Int) {
+        innerEventsHandler.playback(sec: second)
+        dependencies.eventsCenter.post(event: .playback, userInfo: nil)
+    }
+
+    func bufferingActionTriggered(time: TimeInterval) {
+        innerEventsHandler.buffering(sec: time)
+        dependencies.eventsCenter.post(event: .buffering, userInfo: ["value": time])
+    }
+
+}
+
 // swiftlint:enable file_length

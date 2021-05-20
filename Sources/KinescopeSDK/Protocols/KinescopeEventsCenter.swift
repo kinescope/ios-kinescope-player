@@ -28,7 +28,7 @@ public enum KinescopeEvent: String {
 }
 
 /// Interface for events center
-public protocol KinescopeEventsCenter {
+public protocol KinescopeEventsCenter: AnyObject {
 
     /// Add observer for event
     /// - Parameters:
@@ -37,16 +37,20 @@ public protocol KinescopeEventsCenter {
     ///   - event: Kinescope event
     func addObserver(_ observer: Any, selector: Selector, event: KinescopeEvent)
 
-
     /// Removes observer for event
     /// - Parameters:
     ///   - observer: Observer object
     ///   - event: Kinescope event
     func removeObserver(_ observer: Any, event: KinescopeEvent)
 
-
     /// Removes observer for all events
     /// - Parameters:
     ///   - observer: Observer object
     func removeObserver(_ observer: Any)
+
+
+    /// Posts event
+    /// - Parameters:
+    ///   - event: Kinescope event
+    func post(event: KinescopeEvent, userInfo: [AnyHashable : Any]?)
 }

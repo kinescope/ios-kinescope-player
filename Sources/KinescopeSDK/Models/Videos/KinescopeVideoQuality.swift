@@ -12,6 +12,8 @@ public protocol KinescopeVideoQuality {
     var item: AVPlayerItem? { get }
     /// Flag pointing if this is auto quality
     var isAuto: Bool { get }
+    /// Flag pointing if this is online stream not offline
+    var isOnline: Bool { get }
 }
 
 /// Quality for hls streams
@@ -25,6 +27,9 @@ public struct KinescopeStreamVideoQuality: KinescopeVideoQuality {
     public let subtitlesLocale: String?
     /// Flag pointing if this is auto quality
     public let isAuto: Bool
+    public var isOnline: Bool {
+        return true
+    }
 
     public var item: AVPlayerItem? {
         return makeItem()
@@ -75,6 +80,9 @@ public struct KinescopeAssetVideoQuality: KinescopeVideoQuality {
     }
 
     public var isAuto: Bool {
+        return false
+    }
+    public var isOnline: Bool {
         return false
     }
 
