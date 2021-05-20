@@ -13,7 +13,7 @@ protocol InnerEventsHandler {
     func pause()
     func end()
     func replay()
-    func buffer(sec: TimeInterval)
+    func buffering(sec: TimeInterval)
     func seek()
     func rate(_ rate: Float)
     func view()

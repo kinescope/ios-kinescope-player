@@ -37,16 +37,20 @@ public protocol KinescopeEventsCenter: AnyObject {
     ///   - event: Kinescope event
     func addObserver(_ observer: Any, selector: Selector, event: KinescopeEvent)
 
-
     /// Removes observer for event
     /// - Parameters:
     ///   - observer: Observer object
     ///   - event: Kinescope event
     func removeObserver(_ observer: Any, event: KinescopeEvent)
 
-
     /// Removes observer for all events
     /// - Parameters:
     ///   - observer: Observer object
     func removeObserver(_ observer: Any)
+
+
+    /// Posts event
+    /// - Parameters:
+    ///   - event: Kinescope event
+    func post(event: KinescopeEvent, userInfo: [AnyHashable : Any]?)
 }
