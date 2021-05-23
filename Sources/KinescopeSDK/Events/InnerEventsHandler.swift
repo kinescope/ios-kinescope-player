@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Protocol for inner SDK analytics handler
 protocol InnerEventsHandler {
     func playback(sec: Int)
     func play()

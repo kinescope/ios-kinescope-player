@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// IDsStorage implementation based on UserDefaults
 final class IDsUDStorage: IDsStorage {
 
     // MARK: - Nested Types

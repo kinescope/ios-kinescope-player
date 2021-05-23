@@ -1,3 +1,4 @@
+/// Main player view delegate
 protocol KinescopePlayerViewDelegate: AnyObject {
     func didPlayPause()
     func didSeek(to position: Double)

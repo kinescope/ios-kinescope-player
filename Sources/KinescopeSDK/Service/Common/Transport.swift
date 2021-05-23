@@ -1,5 +1,6 @@
 import Foundation
 
+/// Performs request and parses responce
 final class Transport {
 
     // MARK: - Private Properties

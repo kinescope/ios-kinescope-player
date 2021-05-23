@@ -7,6 +7,7 @@
 
 import UIKit
 
+/// UIButton subclass using KinescopePlayerOption to provide image
 final class OptionButton: UIButton {
 
     let option: KinescopePlayerOption

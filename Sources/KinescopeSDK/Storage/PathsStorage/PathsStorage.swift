@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Manages urls by ids pairs storing
 protocol PathsStorage {
     func save(relativeUrl: String, id: String)
     func readUrl(by id: String) -> String?

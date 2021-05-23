@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// Side menu cell with two labels and forward icon
 final class DisclosureCell: UITableViewCell {
 
     struct Model {

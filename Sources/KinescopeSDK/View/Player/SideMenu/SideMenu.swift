@@ -9,12 +9,25 @@
 import UIKit
 import Foundation
 
+/// Side menu delegate
 protocol SideMenuDelegate: AnyObject {
+    /// Triggered when side menu should be dismissed
+    /// - Parameters:
+    ///   - sideMenu: side menu instance
+    ///   - withRoot: true if side menu shuold be closed^
     func sideMenuWillBeDismissed(_ sideMenu: SideMenu, withRoot: Bool)
+    /// Triggered on item selection
+    /// - Parameters:
+    ///   - item: side menu item
+    ///   - rowIndex: item order number
+    ///   - sideMenu: side menu instance
     func sideMenuDidSelect(item: SideMenu.Item, rowIndex: Int, sideMenu: SideMenu)
+    /// Triggered when download all button tapped
+    /// - Parameter title: current menu title
     func downloadAllTapped(for title: String)
 }
 
+/// Side menu view. Based on table view.
 final class SideMenu: UIView {
 
     // MARK: - Nested Types

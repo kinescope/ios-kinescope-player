@@ -5,7 +5,11 @@
 //  Created by Никита Коробейников on 29.03.2021.
 //
 
+
+/// KinescopePlayerDependencies default implementation
 struct KinescopeVideoPlayerDependencies: KinescopePlayerDependencies {
+
+    // MARK: - KinescopePlayerDependencies
 
     let inspector: KinescopeInspectable = Kinescope.shared.inspector
     let assetDownloader: KinescopeAssetDownloadable = Kinescope.shared.assetDownloader

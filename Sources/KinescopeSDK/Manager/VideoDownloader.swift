@@ -9,6 +9,7 @@ import Foundation
 
 // MARK: - KinescopeVideoDownloadable
 
+/// Base KinescopeVideoDownloadable implementation
 class VideoDownloader: KinescopeVideoDownloadable {
 
     // MARK: - Properties

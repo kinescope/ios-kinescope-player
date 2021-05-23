@@ -8,6 +8,7 @@
 import UIKit
 import AVFoundation
 
+/// View with AVPlayerLayer layerClass
 class PlayerView: UIView {
 
     // MARK: - Private Properties

@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Player view central button possible states
 enum PlayPauseReplayState {
     case play
     case pause

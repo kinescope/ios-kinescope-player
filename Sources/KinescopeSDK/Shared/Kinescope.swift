@@ -5,6 +5,7 @@
 //  Created by Никита Коробейников on 22.03.2021.
 //
 
+/// Holds entry point for sdk services
 public enum Kinescope {
 
     // MARK: - Alias

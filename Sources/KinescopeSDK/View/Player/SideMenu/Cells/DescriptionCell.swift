@@ -7,6 +7,7 @@
 
 import UIKit
 
+/// Side menu cell with two labels
 final class DescriptionCell: UITableViewCell {
 
     // MARK: - Nested

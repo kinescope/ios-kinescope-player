@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// View controller with player view over fullscreen
 final public class KinescopeFullscreenViewController: UIViewController {
 
     // MARK: - Private properties
@@ -20,6 +21,9 @@ final public class KinescopeFullscreenViewController: UIViewController {
 
     // MARK: - Init
 
+    /// - Parameters:
+    ///   - player: Kinescope player instance to manage attach/detach actions
+    ///   - config: configuration
     public init(player: KinescopePlayer, config: KinescopeFullscreenConfiguration) {
         self.player = player
         self.config = config

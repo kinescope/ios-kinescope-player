@@ -7,6 +7,7 @@
 
 import AVFoundation
 
+/// Player delegate protocol
 public protocol KinescopeVideoPlayerDelegate: AnyObject {
     /// Triggered on successfull play action
     func playerDidPlay()

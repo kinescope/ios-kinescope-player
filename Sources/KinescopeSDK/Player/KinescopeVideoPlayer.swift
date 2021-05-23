@@ -1,17 +1,10 @@
 import AVFoundation
 import AVKit
 import UIKit
-
 // swiftlint:disable file_length
+
+/// KinescopePlayer implementation
 public class KinescopeVideoPlayer: NSObject, KinescopePlayer {
-
-    public weak var pipDelegate: AVPictureInPictureControllerDelegate? {
-        didSet {
-            view?.pipController?.delegate = pipDelegate
-        }
-    }
-
-    public weak var delegate: KinescopeVideoPlayerDelegate?
 
     // MARK: - Private Properties
 
@@ -153,6 +146,13 @@ public class KinescopeVideoPlayer: NSObject, KinescopePlayer {
     }
 
     // MARK: - KinescopePlayer
+
+    public weak var pipDelegate: AVPictureInPictureControllerDelegate? {
+        didSet {
+            view?.pipController?.delegate = pipDelegate
+        }
+    }
+    public weak var delegate: KinescopeVideoPlayerDelegate?
 
     public required convenience init(config: KinescopePlayerConfig) {
         self.init(config: config, dependencies: KinescopeVideoPlayerDependencies())
@@ -527,7 +527,7 @@ private extension KinescopeVideoPlayer {
             try audioSession.setActive(true, options: [])
             audioSession.addObserver(self, forKeyPath: "outputVolume",
                                      options: NSKeyValueObservingOptions.new, context: nil)
-            innerEventsHandler.setPlayback(volume: Int(audioSession.outputVolume * 10))
+            innerEventsHandler.setPlayback(volume: Int(audioSession.outputVolume * 100))
         } catch {
             print("Error")
         }
@@ -670,7 +670,7 @@ private extension KinescopeVideoPlayer {
         guard let video = video else {
             return
         }
-        dependencies.inspector.fetchPlaylist(video: video) { [weak self] result in
+        dependencies.inspector.fetchPlaylist(link: video.hlsLink) { [weak self] result in
             guard let self = self else {
                 return
             }

@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Player view possible states
 enum PlayerViewState {
     case initialLoading
     case loading

@@ -1,9 +1,15 @@
 import Foundation
 
+/// Works with asses links
 protocol AssetLinksService {
+    /// Requests asset link
+    /// - Parameters:
+    ///   - id: asset id
+    ///   - completion: completion block
     func getAssetLink(by id: String, completion: @escaping (Result<KinescopeVideoAssetLink, Error>) -> Void)
 }
 
+/// AssetLinksService implementation
 final class AssetLinksNetworkService: AssetLinksService {
 
     // MARK: - Private Properties

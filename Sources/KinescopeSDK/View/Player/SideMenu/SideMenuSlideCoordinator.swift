@@ -7,6 +7,7 @@
 
 import UIKit
 
+/// SideMenuCoordinator implementation with sliding behavior
 struct SideMenuSlideCoordinator: SideMenuCoordinator {
 
     // MARK: - Constants

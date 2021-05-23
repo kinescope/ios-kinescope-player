@@ -13,12 +13,13 @@ public protocol KinescopePlayer {
     /// Delegate of Picture in Picture controller
     var pipDelegate: AVPictureInPictureControllerDelegate? { get set }
 
+    /// Player delegate
     var delegate: KinescopeVideoPlayerDelegate? { get set }
 
-    /// - parameter config: player config
+    /// - parameter config: player configuration
     init(config: KinescopePlayerConfig)
 
-    /// Set video model model if it's already loaded
+    /// Set video model model(if it's already loaded for example)
     func setVideo(_ video: KinescopeVideo)
 
     /// Start playing of video
@@ -39,7 +40,7 @@ public protocol KinescopePlayer {
     /// - Parameter view: view for binding
     func attach(view: KinescopePlayerView)
 
-    /// Unbind player to view
+    /// Unbind player from view
     /// - Parameter view: view for unbinding
     func detach(view: KinescopePlayerView)
 }

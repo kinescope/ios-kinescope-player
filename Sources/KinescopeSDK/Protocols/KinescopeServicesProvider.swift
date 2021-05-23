@@ -6,7 +6,7 @@
 //
 // swiftlint:disable implicitly_unwrapped_optional
 
-/// Provider of services working with kinescope api
+/// Provider of services working with kinescope api and events
 public protocol KinescopeServicesProvider {
 
     /// Config for sdk

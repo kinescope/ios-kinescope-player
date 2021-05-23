@@ -3,14 +3,29 @@ import GoSwiftyM3U8
 
 typealias AllVideosResponse = MetaResponse<[KinescopeVideo], KinescopeMetaData>
 
+/// Works with video models download
 protocol VideosService {
+    /// Loads video models list
+    /// - Parameters:
+    ///   - request: request model
+    ///   - completion: completion block
     func getAll(request: KinescopeVideosRequest,
                 completion: @escaping (Swift.Result<AllVideosResponse, Error>) -> Void)
+    /// Loads concrete video model
+    /// - Parameters:
+    ///   - id: video id
+    ///   - completion: completion block
     func getVideo(by id: String,
                   completion: @escaping (Swift.Result<KinescopeVideo, Error>) -> Void)
-    func fetchPlaylist(video: KinescopeVideo, completion: @escaping (M3U8Manager.Result<MasterPlaylist>) -> (Void))
+    /// Loads m3u8 manifest for video
+    /// - Parameters:
+    ///   - link: link to video/manifest
+    ///   - completion: completion block
+    func fetchPlaylist(link: String,
+                       completion: @escaping (M3U8Manager.Result<MasterPlaylist>) -> (Void))
 }
 
+/// VideosService implementation
 final class VideosNetworkService: VideosService {
 
     // MARK: - Private Properties
@@ -81,8 +96,8 @@ final class VideosNetworkService: VideosService {
         }
     }
 
-    func fetchPlaylist(video: KinescopeVideo, completion: @escaping (M3U8Manager.Result<MasterPlaylist>) -> (Void)) {
-        guard let url = URL(string: video.hlsLink) else {
+    func fetchPlaylist(link: String, completion: @escaping (M3U8Manager.Result<MasterPlaylist>) -> (Void)) {
+        guard let url = URL(string: link) else {
             return
         }
         let manager = M3U8Manager()
@@ -94,7 +109,7 @@ final class VideosNetworkService: VideosService {
     // MARK: - Private
 
     private func fetchPlaylists(videos: [KinescopeVideo],
-                        completion: @escaping (M3U8Manager.Result<[MediaPlaylist]>) -> (Void)) {
+                                completion: @escaping (M3U8Manager.Result<[MediaPlaylist]>) -> (Void)) {
         let manager = M3U8Manager()
 
         let operationsData = videos.compactMap { video -> M3U8Manager.PlaylistOperationData? in

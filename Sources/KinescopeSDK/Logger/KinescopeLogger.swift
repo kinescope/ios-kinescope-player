@@ -1,3 +1,4 @@
+/// Inner logger proxy. Supports logging levels setup and handling
 final class KinescopeLogger: KinescopeLogging {
 
     // MARK: - Properties

@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Manages ids by urls pairs storing
 protocol IDsStorage {
     func save(id: String, by url: String)
     func contains(url: String) -> Bool

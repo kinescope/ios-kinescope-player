@@ -33,6 +33,7 @@ protocol TimelineOutput: AnyObject {
 
 }
 
+/// Configurable timeline view
 class TimelineView: UIControl {
 
     private weak var circleView: UIView!

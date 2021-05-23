@@ -14,6 +14,7 @@ protocol SideMenuBarDelegate: AnyObject {
     func downloadAllTapped(for title: String)
 }
 
+/// Side menu top bar
 final class SideMenuBar: UIView {
 
     struct Model {
