@@ -111,7 +111,7 @@ You PRs are always welcome.
 
 ## Tech documentation
 
-Generated tech documenation can be found in [this file](./TechDoc.md).
+Generated with [swift-doc](https://github.com/SwiftDocOrg/swift-doc) tech doc can be found in [this file](./TechDoc.md).
 
 ## How to reach us
 
