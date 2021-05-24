@@ -8,7 +8,7 @@ public class KinescopeVideoPlayer: NSObject, KinescopePlayer
 
 ## Inheritance
 
-[`PlaybackManagerDelegate`](/PlaybackManagerDelegate), [`KinescopePlayer`](/KinescopePlayer), [`KinescopePlayerViewDelegate`](/KinescopePlayerViewDelegate), [`CallObserverDelegate`](/CallObserverDelegate), `NSObject`
+[`PlaybackManagerDelegate`](/Documentation/PlaybackManagerDelegate), [`KinescopePlayer`](/Documentation/KinescopePlayer), [`KinescopePlayerViewDelegate`](/Documentation/KinescopePlayerViewDelegate), [`CallObserverDelegate`](/Documentation/CallObserverDelegate), `NSObject`
 
 ## Initializers
 

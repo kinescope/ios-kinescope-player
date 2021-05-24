@@ -8,7 +8,7 @@ public final class KinescopeDefaultLogger: KinescopeLogging
 
 ## Inheritance
 
-[`KinescopeLogging`](/KinescopeLogging)
+[`KinescopeLogging`](/Documentation/KinescopeLogging)
 
 ## Initializers
 

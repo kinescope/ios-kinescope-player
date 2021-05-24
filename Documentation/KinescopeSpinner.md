@@ -8,7 +8,7 @@ public final class KinescopeSpinner: UIView, KinescopeActivityIndicating
 
 ## Inheritance
 
-[`KinescopeActivityIndicating`](/KinescopeActivityIndicating), `UIView`
+[`KinescopeActivityIndicating`](/Documentation/KinescopeActivityIndicating), `UIView`
 
 ## Initializers
 
