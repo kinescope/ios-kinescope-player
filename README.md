@@ -21,7 +21,9 @@ This framework can help you include customizable video player into your mobile a
 ## Documentation
 
 Generated with [swift-doc](https://github.com/SwiftDocOrg/swift-doc) tech doc can be found in [this file](./TechDoc.md).
+
 Top-level sdk [scheme](/Resources/TopLevelScheme.png)
+
 Advanced usage [guide](./AdvancedGuide.md)
 
 ## Usage
