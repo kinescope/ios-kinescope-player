@@ -107,11 +107,11 @@ For issues, file directly in the [main repo](https://github.com/surfstudio/ios-k
 
 If you would like to contribute to the package (e.g. by improving the documentation, solving a bug or adding a cool new feature), please review our [contribution guide](CONTRIBUTING.md) first and send us your pull request.
 
+You PRs are always welcome.
+
 ## Tech documentation
 
-Generated tech documenation can be found in [this file](./TECHDOC.md).
-
-You PRs are always welcome.
+Generated tech documenation can be found in [this file](./TechDoc.md).
 
 ## How to reach us
 
