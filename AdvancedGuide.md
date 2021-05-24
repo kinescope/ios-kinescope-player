@@ -1,5 +1,29 @@
 <!-- TODO describe player and player view customisation -->
 
+# Logger
+
+For logging network request, player events or something else use `KinescopeDefaultLogger`.
+
+First step is set `KinescopeLoggerLevel` into configuration at application startup:
+
+```swift
+Kinescope.shared.set(logger: KinescopeDefaultLogger(), levels: [KinescopeLoggerLevel.network, KinescopeLoggerLevel.player])
+```
+
+Use logger like this:
+
+```swift
+Kinescope.shared.logger.log(message: "Bad Request", level: KinescopeLoggerLevel.network)
+```
+
+or 
+
+```swift
+Kinescope.shared.logger.log(error: NSError(), level: KinescopeLoggerLevel.network)
+```
+
+Also SDK has opportunity to use custom logger. Just use protocols `KinescopeLoggingLevel`, `KinescopeLogging`.
+
 # KinescopeAssetDownloadable and AssetDownloader
 
 KinescopeServicesProvider includes KinescopeAssetDownloadable which has out-of-box implementation - AssetDownloader. 
