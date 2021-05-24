@@ -7,18 +7,20 @@
 
 import Foundation
 
+/// Playback manager delegate protocol
 protocol PlaybackManagerDelegate: AnyObject {
     /// Unique video seconds watched
     func uniqueSecondsUpdated(seconds: Int)
     /// For "view" analytics events. Called once
     func viewSecondsReached()
-    /// Every 2% of video. At least once at 60 seconds
+    /// Triggred every 2% of video(but no more than 5 seconds and no less than 60 seconds)
     func playbackActionTriggered(second: Int)
-    /// time: buffering duration
+    /// Buffering finished event
+    /// - Parameter time: buffering duration
     func bufferingActionTriggered(time: TimeInterval)
 }
 
-// Handles player playback actions for analytics
+/// Handles player playback actions for analytics
 final class PlaybackManager {
 
     // MARK: - Properties

@@ -5,6 +5,7 @@ enum RequestBuilderError: Error {
     case wrongURL
 }
 
+/// Builds URLRequest using provided data
 final class RequestBuilder {
 
     // MARK: - Private Properties

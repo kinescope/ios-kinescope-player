@@ -1,6 +1,10 @@
 import UIKit
 
 extension String {
+
+    /// Adds to string HD/4K icons if needed
+    /// - Parameter attributes: attributes for NSAttributedString
+    /// - Returns: attributed string with icon insered
     func attributedStringWithAssetIconIfNeeded(
         attributes: [NSAttributedString.Key: Any]
     ) -> NSAttributedString {

@@ -9,6 +9,7 @@ protocol VideoNameInput {
     func set(title: String, subtitle: String)
 }
 
+/// Configurable video name view with title and subtitle
 final class VideoNameView: UIView {
 
     // MARK: - Properties

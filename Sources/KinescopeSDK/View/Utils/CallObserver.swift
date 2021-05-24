@@ -7,6 +7,7 @@
 
 import CallKit
 
+/// On-device calls states
 public enum KinescopeCallState {
     case ended
     case outgoing
@@ -15,10 +16,14 @@ public enum KinescopeCallState {
     case none
 }
 
+/// Delegate for CallObserver
 protocol CallObserverDelegate: AnyObject {
+    /// Triggered on state change
+    /// - Parameter callState: State
     func callObserver(callState: KinescopeCallState)
 }
 
+/// Handles on-device calls
 final class CallObserver: NSObject, CXCallObserverDelegate {
 
     // MARK: - Properties

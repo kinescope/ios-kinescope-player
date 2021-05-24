@@ -7,8 +7,7 @@
 
 import GoSwiftyM3U8
 
-// MARK: - KinescopeInspectable
-
+/// Base KinescopeInspectable implementation
 class Inspector: KinescopeInspectable {
 
     // MARK: - Properties
@@ -21,7 +20,7 @@ class Inspector: KinescopeInspectable {
         self.videosService = videosService
     }
 
-    // MARK: - Methods
+    // MARK: - KinescopeInspectable
 
     func list(request: KinescopeVideosRequest,
               onSuccess: @escaping (([KinescopeVideo], KinescopeMetaData)) -> Void,
@@ -49,8 +48,8 @@ class Inspector: KinescopeInspectable {
         }
     }
 
-    func fetchPlaylist(video: KinescopeVideo, completion: @escaping (M3U8Manager.Result<MasterPlaylist>) -> (Void)) {
-        videosService.fetchPlaylist(video: video, completion: completion)
+    func fetchPlaylist(link: String, completion: @escaping (M3U8Manager.Result<MasterPlaylist>) -> (Void)) {
+        videosService.fetchPlaylist(link: link, completion: completion)
     }
 }
 

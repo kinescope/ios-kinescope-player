@@ -14,6 +14,7 @@ protocol PlayerControlOutput: TimelineOutput {
     func didSelect(option: KinescopePlayerOption)
 }
 
+/// Configurable control panel view. Contains timeline,  time indicator and options stack views.
 class PlayerControlView: UIControl {
 
     private(set) var timeIndicator: TimeIndicatorView!

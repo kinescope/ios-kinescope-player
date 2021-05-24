@@ -7,21 +7,48 @@
 
 import AVFoundation
 
+/// AssetService delegate protocol
 protocol AssetServiceDelegate: AnyObject {
+    /// Trigerred on progress change
+    /// - Parameters:
+    ///   - assetId: asset id
+    ///   - progress: download progress
     func downloadProgress(assetId: String, progress: Double)
+    /// Triggered on donwlod error
+    /// - Parameters:
+    ///   - assetId: asset id
+    ///   - error: download error
     func downloadError(assetId: String, error: KinescopeDownloadError)
+    /// Triggered on download success
+    /// - Parameters:
+    ///   - assetId: asset id
+    ///   - path: path to downloaded file
     func downloadComplete(assetId: String, path: String)
 }
 
+/// Service managing hls/m3u8 assets downloading
 protocol AssetService {
+    /// Delegate
     var delegate: AssetServiceDelegate? { get set }
+    /// Starts download
+    /// - Parameters:
+    ///   - assetId: asset id
+    ///   - url: url for hls asset
     func enqueueDownload(assetId: String, url: URL)
+    /// Pauses download
+    /// - Parameter assetId: asset id
     func pauseDownload(assetId: String)
+    /// Continues download if it was paused before
+    /// - Parameter assetId: asset id
     func resumeDownload(assetId: String)
+    /// Stops download
+    /// - Parameter assetId: asset id
     func dequeueDownload(assetId: String)
+    /// Restores downloding session if it was interrupted before
     func restore()
 }
 
+/// AssetService implementation
 class AssetNetworkService: NSObject, AssetService {
 
     // MARK: - Constants

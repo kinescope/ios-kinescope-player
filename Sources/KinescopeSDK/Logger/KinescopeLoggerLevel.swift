@@ -1,3 +1,4 @@
+/// Default logger levels 
 public enum KinescopeLoggerLevel: KinescopeLoggingLevel, Equatable, CaseIterable {
     /// Network logs
     case network

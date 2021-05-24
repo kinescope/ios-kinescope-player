@@ -30,6 +30,7 @@ protocol PlayerControlOptionsOutput: AnyObject {
 
 }
 
+/// Configurable control panel options view. Looks like stack of option icons
 class PlayerControlOptionsView: UIControl {
 
     private let stackView = UIStackView()

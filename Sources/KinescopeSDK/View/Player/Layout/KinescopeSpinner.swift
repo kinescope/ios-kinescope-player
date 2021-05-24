@@ -8,6 +8,7 @@
 import UIKit
 import QuartzCore
 
+/// Custom loading indicator
 public final class KinescopeSpinner: UIView, KinescopeActivityIndicating {
 
     // MARK: - Public Properties

@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Base KinescopeAttachmentDownloadable implementation
 class AttachmentDownloader: KinescopeAttachmentDownloadable {
 
     // MARK: - Constants

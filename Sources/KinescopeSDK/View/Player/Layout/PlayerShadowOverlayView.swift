@@ -12,6 +12,7 @@ protocol ShadowOverlayDelegate: AnyObject {
     func onTap()
 }
 
+/// Confidurable shadow view handling tap gesture
 class PlayerShadowOverlayView: UIView {
 
     // MARK: - Private Properties

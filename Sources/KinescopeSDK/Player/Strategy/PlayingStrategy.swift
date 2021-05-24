@@ -7,8 +7,10 @@
 
 import AVFoundation
 
+/// Manages AVFoundation player behavior
 protocol PlayingStrategy {
 
+    /// Get access to inner AVPlayer
     var player: AVPlayer { get }
 
     /// Set AVPlayerItem to `Player`

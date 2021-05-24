@@ -10,6 +10,7 @@ import UIKit
 import AVFoundation
 import AVKit
 
+/// Main player view
 public class KinescopePlayerView: UIView {
 
     // MARK: - Private Properties
@@ -55,6 +56,7 @@ public class KinescopePlayerView: UIView {
 
     // MARK: - Public Properties
 
+    /// Preview image view
     public private(set) var previewImage: UIImageView = UIImageView()
 
     // MARK: - Lifecycle

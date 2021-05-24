@@ -1,5 +1,6 @@
 import Foundation
 
+/// Subtitle(of video) model
 public struct KinescopeVideoSubtitle: Codable {
     public let id: String
     public let description: String

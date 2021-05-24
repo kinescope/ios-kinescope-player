@@ -9,6 +9,7 @@ import Foundation
 
 // MARK: - KinescopeAssetDownloadable
 
+/// Base KinescopeAssetDownloadable implementation
 class AssetDownloader: KinescopeAssetDownloadable {
 
     // MARK: - Constants

@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Video duration enum. Raw value - string in format: "mm:ss"
 public enum KinescopeVideoDuration: String {
 
     case inTenMinute = "m:ss"

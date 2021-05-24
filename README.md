@@ -109,6 +109,10 @@ If you would like to contribute to the package (e.g. by improving the documentat
 
 You PRs are always welcome.
 
+## Tech documentation
+
+Generated with [swift-doc](https://github.com/SwiftDocOrg/swift-doc) tech doc can be found in [this file](./TechDoc.md).
+
 ## How to reach us
 
 <!-- TODO add some channel of communication  -->

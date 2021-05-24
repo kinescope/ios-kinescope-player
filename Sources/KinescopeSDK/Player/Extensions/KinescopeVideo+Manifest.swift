@@ -10,6 +10,7 @@ import GoSwiftyM3U8
 
 extension KinescopeVideo {
 
+    /// List of available qualities in string format based on manifest
     var qualities: [String] {
         guard let tags = manifest?.tags.streamTags else {
             return []
@@ -17,6 +18,7 @@ extension KinescopeVideo {
         return tags.compactMap { $0.quality }.sorted(by: { weight(for: $0) < weight(for: $1) })
     }
 
+    /// Link for concrete quality manfiest
     func link(for quality: String) -> String? {
         guard
             let tags = manifest?.tags.streamTags ,
@@ -30,6 +32,7 @@ extension KinescopeVideo {
         return manifest?.baseUrl.deletingLastPathComponent().appendingPathComponent(urlString).absoluteString
     }
 
+    /// User for sorting
     private func weight(for resolution: String) -> Int {
         switch resolution {
         case "2160p":

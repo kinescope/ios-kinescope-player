@@ -1,5 +1,6 @@
 import UIKit
 
+/// Side menu cell with chackmark
 final class CheckmarkCell: UITableViewCell {
 
     // MARK: - Nested

@@ -11,6 +11,7 @@ protocol ErrorViewDelegate: AnyObject {
     func didTapRefresh()
 }
 
+/// Configurable error state view
 final class ErrorView: UIView {
 
     // MARK: - Private Properties

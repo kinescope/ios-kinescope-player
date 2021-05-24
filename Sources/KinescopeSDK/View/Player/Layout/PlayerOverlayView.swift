@@ -7,6 +7,7 @@
 
 import UIKit
 
+/// Configurable player overlay view. Handles play/pause and fast rewind taps&
 class PlayerOverlayView: UIControl {
 
     // MARK: - Properties

@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// KinescopeFileNamesStorage implementation based on PathsUDStorage
 final class FileNamesUDStorage: KinescopeFileNamesStorage {
 
     // MARK: - Properties

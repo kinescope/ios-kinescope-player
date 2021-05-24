@@ -7,7 +7,6 @@
 
 /// Options available in player control panel
 public enum KinescopePlayerOption: String {
-
     /// Option to expand control panel and show all available options
     case more
     /// Option to open player in fullscreen mode

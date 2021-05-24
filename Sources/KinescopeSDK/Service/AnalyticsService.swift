@@ -7,10 +7,16 @@
 
 import Foundation
 
+/// Works with inner sdk analytics
 protocol AnalyticsService {
+    /// Sends analytics event
+    /// - Parameters:
+    ///   - event: event model
+    ///   - completion: completion block
     func send(event: Analytics_Native, completion: @escaping (Result<Int, Error>) -> Void)
 }
 
+/// AnalyticsService implementation
 final class AnalyticsNetworkService: AnalyticsService {
 
     // MARK: - Private Properties
@@ -25,7 +31,7 @@ final class AnalyticsNetworkService: AnalyticsService {
         self.config = config
     }
 
-    // MARK: - Public Methods
+    // MARK: - AnalyticsService
 
     func send(event: Analytics_Native, completion: @escaping (Result<Int, Error>) -> Void) {
         guard let data = try? event.serializedData() else {

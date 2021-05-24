@@ -1,3 +1,4 @@
+/// Additional materials(of video) model
 public struct KinescopeVideoAdditionalMaterial: Codable {
     public let id: String
     public let title: String

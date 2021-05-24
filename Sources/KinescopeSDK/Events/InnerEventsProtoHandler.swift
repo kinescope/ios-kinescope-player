@@ -7,6 +7,7 @@
 
 import UIKit
 
+/// Inner analytics event
 enum InnerProtoEvent: String {
     case playback
     case play
@@ -23,7 +24,8 @@ enum InnerProtoEvent: String {
     case autoqualitychanged
 }
 
-class InnerEventsProtoHandler: InnerEventsHandler {
+/// Based on protobuf InnerEventsHandler implementation
+final class InnerEventsProtoHandler: InnerEventsHandler {
 
     // MARK: - Properties
 

@@ -7,9 +7,11 @@
 
 import MediaPlayer
 
+/// MPVolumeView button wrapper view
+/// Also observes AirPlay statuses to change ui
 final class AirPlayOptionButton: UIButton {
 
-    // MARK: - Initialization
+    // MARK: - Init and deinit
 
     init() {
         super.init(frame: .zero)

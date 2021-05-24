@@ -1,3 +1,4 @@
+/// Asset(of video) model
 public struct KinescopeVideoAsset: Codable {
     public let id: String
     public let videoId: String

@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Enumeration of sdk events
 public enum KinescopeEvent: String {
     case playback
     case play

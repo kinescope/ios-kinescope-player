@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// PathsStorage implementation based on UserDefaults
 final class PathsUDStorage: PathsStorage {
 
     // MARK: - Private Properties

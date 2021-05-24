@@ -7,21 +7,48 @@
 
 import Foundation
 
+/// FileService delegate
 protocol FileServiceDelegate: AnyObject {
+    /// Trigerred on progress change
+    /// - Parameters:
+    ///   - fileId: file id
+    ///   - progress: download progress
     func downloadProgress(fileId: String, progress: Double)
+    /// Triggered on donwlod error
+    /// - Parameters:
+    ///   - fileId: file id
+    ///   - error: download error
     func downloadError(fileId: String, error: KinescopeDownloadError)
+    /// Triggered on donwlod success
+    /// - Parameters:
+    ///   - fileId: file id
+    ///   - location: path to downloaded file
     func downloadComplete(fileId: String, location: URL)
 }
 
+/// Service managing files downloading
 protocol FileService {
+    /// Delegate
     var delegate: FileServiceDelegate? { get set }
+    /// Starts download
+    /// - Parameters:
+    ///   - fileId: file id
+    ///   - url: url to file
     func enqueueDownload(fileId: String, url: URL)
+    /// Pauses download
+    /// - Parameter fileId: file id
     func pauseDownload(fileId: String)
+    /// Continues download if it was paused before
+    /// - Parameter fileId: file id
     func resumeDownload(fileId: String)
+    /// Stops download
+    /// - Parameter fileId: file id
     func dequeueDownload(fileId: String)
+    /// Restores downloding session if it was interrupted before
     func restore()
 }
 
+/// FileService implementation
 final class FileNetworkService: NSObject, FileService {
 
     // MARK: - Constants
@@ -34,6 +61,7 @@ final class FileNetworkService: NSObject, FileService {
 
     weak var delegate: FileServiceDelegate?
     private let idsStorage: IDsStorage
+    // Should be unique and consistent across app launches
     private let downloadIdentifier: String
     private lazy var session: URLSession = {
         let config = URLSessionConfiguration.background(withIdentifier: Constants.downloadIdentifierPrefix + downloadIdentifier)
@@ -43,7 +71,6 @@ final class FileNetworkService: NSObject, FileService {
 
     // MARK: - Initialization
 
-    /// downloadIdentifier should be unique and consistent across app launches
     init(downloadIdentifier: String, idsStorage: IDsStorage = IDsUDStorage()) {
         self.downloadIdentifier = downloadIdentifier
         self.idsStorage = idsStorage

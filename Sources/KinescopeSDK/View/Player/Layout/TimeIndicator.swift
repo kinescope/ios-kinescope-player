@@ -15,6 +15,7 @@ protocol TimeIndicatorInput {
     func setIndicator(to time: TimeInterval)
 }
 
+/// Configurable time indicator(clock) view
 class TimeIndicatorView: UIView {
 
     private let label = UILabel()

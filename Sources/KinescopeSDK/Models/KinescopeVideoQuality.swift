@@ -7,6 +7,7 @@
 
 import AVFoundation
 
+/// Player item configutation
 public protocol KinescopeVideoQuality {
     /// Builded AVPlayerItem
     var item: AVPlayerItem? { get }
@@ -25,19 +26,20 @@ public struct KinescopeStreamVideoQuality: KinescopeVideoQuality {
     public let audioLocale: String?
     /// Subtitles locale string. en-EN like
     public let subtitlesLocale: String?
-    /// Flag pointing if this is auto quality
+
+    // MARK: - KinescopeVideoQuality
+
     public let isAuto: Bool
     public var isOnline: Bool {
         return true
     }
-
     public var item: AVPlayerItem? {
         return makeItem()
     }
 
     // MARK: - Private
 
-    func makeItem() -> AVPlayerItem? {
+    private func makeItem() -> AVPlayerItem? {
         let asset = AVURLAsset(url: URL(string: hlsLink)!)
         let playerItem = AVPlayerItem(asset: asset)
         if let audioLocale = audioLocale {
@@ -75,10 +77,11 @@ public struct KinescopeAssetVideoQuality: KinescopeVideoQuality {
     /// Link for subtitles. Optional
     public let subtitles: String?
 
+    // MARK: - KinescopeVideoQuality
+
     public var item: AVPlayerItem? {
         return makeItem()
     }
-
     public var isAuto: Bool {
         return false
     }
@@ -88,7 +91,7 @@ public struct KinescopeAssetVideoQuality: KinescopeVideoQuality {
 
     // MARK: - Private
 
-    func makeItem() -> AVPlayerItem? {
+    private func makeItem() -> AVPlayerItem? {
         guard let url = URL(string: video) else {
             return nil
         }

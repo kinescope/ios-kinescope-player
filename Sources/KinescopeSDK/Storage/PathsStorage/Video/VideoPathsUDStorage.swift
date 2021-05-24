@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// KinescopeVideoPathsStorage implementation based on PathsUDStorage
 final class VideoPathsUDStorage: KinescopeVideoPathsStorage {
 
     // MARK: - Properties

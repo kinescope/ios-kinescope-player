@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Base KinescopeEventsCenter implementation. Uses NotificationCenter
 class LocalEventsCenter: KinescopeEventsCenter {
 
     // MARK: - Private Properties
@@ -26,8 +27,6 @@ class LocalEventsCenter: KinescopeEventsCenter {
     func removeObserver(_ observer: Any) {
         nc.removeObserver(observer)
     }
-
-    // MARK: - Internal API
 
     func post(event: KinescopeEvent, userInfo: [AnyHashable : Any]? = nil) {
         nc.post(name: event.notificationName, object: nil, userInfo: userInfo)

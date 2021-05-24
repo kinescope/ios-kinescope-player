@@ -6,6 +6,7 @@
 //
 import GoSwiftyM3U8
 
+/// Video model
 public struct KinescopeVideo: Codable {
     enum CodingKeys: String, CodingKey {
         case id
