@@ -386,21 +386,27 @@ private extension KinescopePlayerView {
     }
 
     func handleQualityCheckmarkAction(for title: NSAttributedString, sideMenu: SideMenu) {
-        delegate?.didSelect(quality: title.string)
         sideMenuWillBeDismissed(sideMenu, withRoot: true)
-        set(quality: title.string)
+        if !selectedQuality.string.starts(with: title.string) {
+            delegate?.didSelect(quality: title.string)
+            set(quality: title.string)
+        }
     }
 
     func handleSubtitlesCheckmarkAction(for title: NSAttributedString, sideMenu: SideMenu) {
-        delegate?.didSelect(subtitles: title.string)
         sideMenuWillBeDismissed(sideMenu, withRoot: true)
-        set(subtitles: title.string)
+        if selectedSubtitles.string != title.string {
+            delegate?.didSelect(subtitles: title.string)
+            set(subtitles: title.string)
+        }
     }
 
     func handleSpeedCheckmarkAction(for title: NSAttributedString, sideMenu: SideMenu) {
-        delegate?.didSelect(speed: title.string)
         sideMenuWillBeDismissed(sideMenu, withRoot: true)
-        set(speed: title.string)
+        if selectedSpeed.string != title.string {
+            delegate?.didSelect(speed: title.string)
+            set(speed: title.string)
+        }
     }
 
     func set(quality: String) {
