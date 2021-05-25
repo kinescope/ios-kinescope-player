@@ -98,6 +98,7 @@ private extension SideMenuBar {
             ])
         } else {
             configureBackButton()
+            addBackActionForTitle()
 
             NSLayoutConstraint.activate([
                 backButton.centerYAnchor.constraint(equalTo: centerYAnchor),
@@ -154,6 +155,11 @@ private extension SideMenuBar {
         button.addTarget(nil, action: #selector(onBackTapped), for: .touchUpInside)
 
         self.backButton = button
+    }
+
+    func addBackActionForTitle() {
+        titleView.isUserInteractionEnabled = true
+        titleView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBackTapped)))
     }
 
     func configureDownloadButton() {
