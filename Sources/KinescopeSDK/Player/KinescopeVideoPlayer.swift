@@ -617,7 +617,7 @@ private extension KinescopeVideoPlayer {
         airPlayDebouncer.renewInterval()
         airPlayDebouncer.handler = { [weak self] in
             guard let self = self else { return }
-            self.isPlaying = self.strategy.player.rate > 1.0
+            self.isPlaying = self.strategy.player.rate > 0.0
             self.updateTimeline()
             self.view?.controlPanel?.expanded = false
         }
