@@ -229,6 +229,7 @@ public class KinescopeVideoPlayer: NSObject, KinescopePlayer {
     }
 
     public func select(quality: KinescopeVideoQuality) {
+        strategy.player.rate = 1
         guard let item = quality.item else {
             // Log here critical error
             return
@@ -421,6 +422,7 @@ private extension KinescopeVideoPlayer {
                         self.time = seconds
                         self.savedTime = .zero
                         self.seek(to: seconds)
+                        self.strategy.player.rate = self.currentSpeed.rawValue
                     }
                 case .failed, .unknown:
                     self.isError = true
