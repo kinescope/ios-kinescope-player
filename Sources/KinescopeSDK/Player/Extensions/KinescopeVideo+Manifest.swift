@@ -60,7 +60,7 @@ private extension GoSwiftyM3U8.BaseAttributedTag {
 
     var quality: String? {
         if let attribute = attributes.first(where: { $0.key == "RESOLUTION" }) {
-            var string = string(forResulution: attribute.value)
+            var string = getString(forResulution: attribute.value)
             if let frameRate = frameRate, Int(frameRate) ?? 0 > 30 {
                 string?.append(frameRate)
             }
@@ -79,7 +79,7 @@ private extension GoSwiftyM3U8.BaseAttributedTag {
         }
     }
 
-    func string(forResulution resulution: String) -> String? {
+    func getString(forResulution resulution: String) -> String? {
         if resulution.contains("240") {
             return "240p"
         }
