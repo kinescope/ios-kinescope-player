@@ -10,11 +10,11 @@ import Foundation
 public enum KinescopePlayerSpeed: Float, CaseIterable {
     case oneQuarter = 0.25
     case oneHalf = 0.5
-    case threeQuatrers = 0.75
+    case threeQuaters = 0.75
     case normal = 1
     case oneAndQuarter = 1.25
     case oneAndHalf = 1.5
-    case oneAndThreeQuatrers = 1.75
+    case oneAndThreeQuaters = 1.75
     case double = 2
 
     public func toString() -> String {

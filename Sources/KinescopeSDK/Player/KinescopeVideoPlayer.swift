@@ -229,7 +229,7 @@ public class KinescopeVideoPlayer: NSObject, KinescopePlayer {
     }
 
     public func select(quality: KinescopeVideoQuality) {
-        strategy.player.rate = 1
+        strategy.player.rate = 0
         guard let item = quality.item else {
             // Log here critical error
             return
