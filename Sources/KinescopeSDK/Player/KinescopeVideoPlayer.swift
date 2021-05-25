@@ -40,6 +40,11 @@ public class KinescopeVideoPlayer: NSObject, KinescopePlayer {
             innerEventsHandler.setPlayback(quality: currentQuality)
         }
     }
+    private var currentSpeed = KinescopePlayerSpeed.normal {
+        didSet {
+            innerEventsHandler.setPlayback(rate: currentSpeed.rawValue)
+        }
+    }
     private var currentSutitle: KinescopeVideoSubtitle?
     private var currentAudio: String?
     private var isOverlayed = false
@@ -175,6 +180,7 @@ public class KinescopeVideoPlayer: NSObject, KinescopePlayer {
     public func play() {
         if video != nil {
             self.strategy.play()
+            self.strategy.player.rate = currentSpeed.rawValue
             self.delegate?.playerDidPlay()
         } else {
             view?.state = .initialLoading
@@ -223,6 +229,7 @@ public class KinescopeVideoPlayer: NSObject, KinescopePlayer {
     }
 
     public func select(quality: KinescopeVideoQuality) {
+        strategy.player.rate = 0
         guard let item = quality.item else {
             // Log here critical error
             return
@@ -254,6 +261,23 @@ public class KinescopeVideoPlayer: NSObject, KinescopePlayer {
             innerEventsHandler.setPlayback(volume: Int(audioSession.outputVolume*100))
             print(audioSession.outputVolume)
         }
+    }
+
+}
+
+// MARK: - KinescopePlayerConfigurable
+
+extension KinescopeVideoPlayer: KinescopePlayerConfigurable {
+
+    public func set(speed: KinescopePlayerSpeed) {
+        strategy.player.rate = speed.rawValue
+        self.currentSpeed = speed
+        view?.change(speed: currentSpeed.toString())
+    }
+
+    public func set(muted: Bool) {
+        strategy.player.isMuted = muted
+        innerEventsHandler.setPlayback(isMuted: muted)
     }
 
 }
@@ -398,6 +422,7 @@ private extension KinescopeVideoPlayer {
                         self.time = seconds
                         self.savedTime = .zero
                         self.seek(to: seconds)
+                        self.strategy.player.rate = self.currentSpeed.rawValue
                     }
                 case .failed, .unknown:
                     self.isError = true
@@ -592,13 +617,15 @@ private extension KinescopeVideoPlayer {
         airPlayDebouncer.renewInterval()
         airPlayDebouncer.handler = { [weak self] in
             guard let self = self else { return }
-            self.isPlaying = self.strategy.player.rate == 1.0
+            self.isPlaying = self.strategy.player.rate > 0.0
             self.updateTimeline()
             self.view?.controlPanel?.expanded = false
         }
     }
 
     func restoreView() {
+        view?.change(quality: self.currentQuality, manualQuality: self.isManualQuality)
+        view?.change(speed: currentSpeed.toString())
         view?.showOverlay(isOverlayed)
         isPlaying ? play() : pause()
     }
@@ -812,7 +839,6 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                 }
 
                 self.attach(view: miniView)
-                self.view?.change(quality: self.currentQuality, manualQuality: self.isManualQuality)
                 self.restoreView()
             })
             innerEventsHandler.exitfullscreen()
@@ -836,9 +862,8 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                 else {
                     return
                 }
-                self.view?.change(quality: self.currentQuality, manualQuality: self.isManualQuality)
-                self.view?.set(title: video.title, subtitle: video.description)
                 self.restoreView()
+                self.view?.set(title: video.title, subtitle: video.description)
             })
             innerEventsHandler.enterfullscreen()
             dependencies.eventsCenter.post(event: .enterfullscreen, userInfo: nil)
@@ -851,6 +876,10 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
     func didShowAttachments() -> [KinescopeVideoAdditionalMaterial]? {
         return video?.additionalMaterials
+    }
+
+    func didShowSpeeds() -> [String] {
+        KinescopePlayerSpeed.allCases.map { $0.toString() }
     }
 
     func didShowAssets() -> [KinescopeVideoAsset]? {
@@ -873,6 +902,12 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                                          level: KinescopeLoggerLevel.player)
 
             delegate?.player(changedQualityTo: quality)
+        }
+    }
+
+    func didSelect(speed: String) {
+        if let speedCase = KinescopePlayerSpeed.from(string: speed) {
+            set(speed: speedCase)
         }
     }
 

@@ -33,6 +33,7 @@ public class KinescopePlayerView: UIView {
 
     private var selectedQuality = NSAttributedString(string: L10n.Player.auto)
     private var selectedSubtitles = NSAttributedString(string: L10n.Player.off)
+    private var selectedSpeed = NSAttributedString(string: L10n.Player.normal)
     private lazy var overlayDebouncer = Debouncer(timeInterval: overlay?.duration ?? 0.0)
     private lazy var timelineDebouncer = Debouncer(timeInterval: 1)
     private var playPauseReplayState: PlayPauseReplayState = .play {
@@ -88,6 +89,10 @@ public class KinescopePlayerView: UIView {
         } else {
             set(quality: L10n.Player.auto + " " + quality)
         }
+    }
+
+    func change(speed: String) {
+        set(speed: speed)
     }
 
     func set(title: String, subtitle: String) {
@@ -268,7 +273,7 @@ private extension KinescopePlayerView {
         let model: SideMenu.Model
         switch SideMenu.Settings.getType(by: title) {
         case .playbackSpeed:
-            model = .init(title: title, isRoot: false, isDownloadable: false, items: [])
+            model = makeSpeedSideMenuModel(with: title)
         case .subtitles:
             model = makeSubtitlesSideMenuModel(with: title, root: false)
         case .quality:
@@ -320,6 +325,15 @@ private extension KinescopePlayerView {
         return .init(title: title, isRoot: root, isDownloadable: false, items: items)
     }
 
+    func makeSpeedSideMenuModel(with title: String) -> SideMenu.Model {
+        let speeds = delegate?.didShowSpeeds() ?? []
+        var items = speeds.compactMap { speed -> SideMenu.Item in
+            let selected = self.selectedSpeed.string.trimmingCharacters(in: .symbols) == speed
+            return .checkmark(title: .init(string: speed), selected: selected)
+        }
+        return .init(title: title, isRoot: false, isDownloadable: false, items: items)
+    }
+
     func makeAttachmentSideMenuItems() -> [SideMenu.Item] {
         guard let materials = delegate?.didShowAttachments() else {
             return []
@@ -364,21 +378,35 @@ private extension KinescopePlayerView {
             handleQualityCheckmarkAction(for: title, sideMenu: sideMenu)
         case .subtitles:
             handleSubtitlesCheckmarkAction(for: title, sideMenu: sideMenu)
-        case .playbackSpeed, .none:
+        case .playbackSpeed:
+             handleSpeedCheckmarkAction(for: title, sideMenu: sideMenu)
+        case .none:
             break
         }
     }
 
     func handleQualityCheckmarkAction(for title: NSAttributedString, sideMenu: SideMenu) {
-        delegate?.didSelect(quality: title.string)
         sideMenuWillBeDismissed(sideMenu, withRoot: true)
-        set(quality: title.string)
+        if !selectedQuality.string.starts(with: title.string) {
+            delegate?.didSelect(quality: title.string)
+            set(quality: title.string)
+        }
     }
 
     func handleSubtitlesCheckmarkAction(for title: NSAttributedString, sideMenu: SideMenu) {
-        delegate?.didSelect(subtitles: title.string)
         sideMenuWillBeDismissed(sideMenu, withRoot: true)
-        set(subtitles: title.string)
+        if selectedSubtitles.string != title.string {
+            delegate?.didSelect(subtitles: title.string)
+            set(subtitles: title.string)
+        }
+    }
+
+    func handleSpeedCheckmarkAction(for title: NSAttributedString, sideMenu: SideMenu) {
+        sideMenuWillBeDismissed(sideMenu, withRoot: true)
+        if selectedSpeed.string != title.string {
+            delegate?.didSelect(speed: title.string)
+            set(speed: title.string)
+        }
     }
 
     func set(quality: String) {
@@ -393,6 +421,13 @@ private extension KinescopePlayerView {
         let font = config.sideMenu.item.valueFont
         let attributes: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: color]
         selectedSubtitles = NSAttributedString(string: subtitles, attributes: attributes)
+    }
+
+    func set(speed: String) {
+        let color = config.sideMenu.item.valueColor
+        let font = config.sideMenu.item.valueFont
+        let attributes: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: color]
+        selectedSpeed = NSAttributedString(string: speed, attributes: attributes)
     }
 
     func presentSideMenu(model: SideMenu.Model) {
@@ -538,7 +573,7 @@ extension KinescopePlayerView: PlayerControlOutput {
                                        isDownloadable: false,
                                        items: [
                                         .disclosure(title: L10n.Player.playbackSpeed,
-                                                    value: nil),
+                                                    value: selectedSpeed),
                                         .disclosure(title: L10n.Player.subtitles,
                                                     value: selectedSubtitles),
                                         .disclosure(title: L10n.Player.videoQuality,
