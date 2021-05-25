@@ -190,18 +190,7 @@ private extension PlayerOverlayView {
 
             delegate?.didFastForward(sec: config.fastForward.rawValue)
 
-            fastForwardImageView.alpha = 1.0
-            UIView.animate(
-                withDuration: 0.6,
-                animations: {
-                    self.fastForwardImageView.transform = .init(scaleX: 2.0, y: 2.0)
-                    self.fastForwardImageView.alpha = .zero
-                },
-                completion: { _ in
-                    self.fastForwardImageView.alpha = .zero
-                    self.fastForwardImageView.transform = .identity
-                }
-            )
+            animateZoomFade(for: fastForwardImageView)
         } else if leftFrame.contains(lastTapLocation) {
             if let previousTapLocation = previousTapLocation, !leftFrame.contains(previousTapLocation) {
                 return
@@ -209,18 +198,26 @@ private extension PlayerOverlayView {
 
             delegate?.didFastBackward(sec: config.fastBackward.rawValue)
 
-            fastBackwardImageView.alpha = 1.0
-            UIView.animate(
-                withDuration: 0.6,
-                animations: {
-                    self.fastBackwardImageView.transform = .init(scaleX: 2.0, y: 2.0)
-                    self.fastBackwardImageView.alpha = .zero
-                },
-                completion: { _ in
-                    self.fastBackwardImageView.alpha = .zero
-                    self.fastBackwardImageView.transform = .identity
-                }
-            )
+            animateZoomFade(for: fastBackwardImageView)
         }
+    }
+
+    func animateZoomFade(for view: UIView) {
+        view.layer.removeAllAnimations()
+        view.transform = .identity
+        view.alpha = 1.0
+        UIView.animate(
+            withDuration: 0.6,
+            animations: {
+                view.transform = .init(scaleX: 2.0, y: 2.0)
+            }
+        )
+        UIView.animate(
+            withDuration: 0.6,
+            delay: 0.3,
+            animations: {
+                view.alpha = .zero
+            }
+        )
     }
 }
