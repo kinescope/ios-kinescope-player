@@ -117,7 +117,6 @@ public extension KinescopePlayerView {
         configurePlayerView(with: config.gravity)
         configurePreviewImage()
         configureErrorView(with: config.errorState)
-        configureNameView(with: config)
 
         if let overlay = config.overlay {
             configureOverlay(with: overlay)
@@ -131,6 +130,7 @@ public extension KinescopePlayerView {
             configureShadowOverlay(with: shadowOverlay)
         }
 
+        configureNameView(with: config)
         configureProgressView(with: config.activityIndicator)
         configurePip()
     }

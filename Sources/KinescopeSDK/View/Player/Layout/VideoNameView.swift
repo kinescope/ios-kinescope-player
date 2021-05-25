@@ -62,12 +62,23 @@ private extension VideoNameView {
         titleLabel.font = config.titleFont
         titleLabel.numberOfLines = 2
         titleLabel.textColor = config.titleColor
+        addShadow(to: titleLabel)
         stackView.addArrangedSubview(titleLabel)
     }
 
     func configureSubtitleLabel() {
         subtitleLabel.font = config.subtitleFont
         subtitleLabel.textColor = config.subtitleColor
+        addShadow(to: subtitleLabel)
         stackView.addArrangedSubview(subtitleLabel)
     }
+
+    func addShadow(to label: UILabel) {
+        let layer = label.layer
+        layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.64).cgColor
+        layer.shadowOpacity = 1
+        layer.shadowRadius = 2
+        layer.shadowOffset = CGSize(width: 0.5, height: 0.5)
+    }
+
 }

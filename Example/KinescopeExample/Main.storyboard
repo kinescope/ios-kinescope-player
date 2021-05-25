@@ -118,14 +118,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Mt-Oj-buA" customClass="KinescopePlayerView" customModule="KinescopeSDK">
-                                <rect key="frame" x="0.0" y="88" width="414" height="400"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="233"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="400" id="C1n-q6-hl7"/>
-                                </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kch-46-Ytr" customClass="KinescopePreviewView" customModule="KinescopeSDK">
-                                <rect key="frame" x="0.0" y="88" width="414" height="400"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="233"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                         </subviews>
@@ -139,6 +136,7 @@
                             <constraint firstItem="kch-46-Ytr" firstAttribute="top" secondItem="0Mt-Oj-buA" secondAttribute="top" id="Pq2-NJ-H7U"/>
                             <constraint firstItem="GgO-Ol-gXU" firstAttribute="top" secondItem="0Mt-Oj-buA" secondAttribute="top" id="Wmo-Wl-sTw"/>
                             <constraint firstItem="kch-46-Ytr" firstAttribute="trailing" secondItem="0Mt-Oj-buA" secondAttribute="trailing" id="a78-qH-526"/>
+                            <constraint firstItem="0Mt-Oj-buA" firstAttribute="height" secondItem="KKX-JV-eMz" secondAttribute="width" multiplier="9/16" id="oGp-AJ-mew"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Quj-GN-m8L"/>
