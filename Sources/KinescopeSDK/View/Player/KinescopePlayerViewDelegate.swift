@@ -14,6 +14,8 @@ protocol KinescopePlayerViewDelegate: AnyObject {
     func didSelectAsset(with index: Int)
     func didSelectDownloadAll(for title: String)
     func didShowSubtitles() -> [String]
+    func didShowSpeeds() -> [String]
     func didSelect(subtitles: String)
+    func didSelect(speed: String)
     func didRefresh()
 }
