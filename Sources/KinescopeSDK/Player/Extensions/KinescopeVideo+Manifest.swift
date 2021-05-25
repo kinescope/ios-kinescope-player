@@ -32,26 +32,30 @@ extension KinescopeVideo {
         return manifest?.baseUrl.deletingLastPathComponent().appendingPathComponent(urlString).absoluteString
     }
 
-    /// User for sorting
+    /// Used for sorting
     private func weight(for resolution: String) -> Int {
-        switch resolution {
-        case "2160p":
+        if resolution.contains("2160p") {
             return 0
-        case "1440p":
-            return 1
-        case "1080p":
-            return 2
-        case "720p":
-            return 3
-        case "480p":
-            return 4
-        case "360p":
-            return 5
-        case "240p":
-            return 6
-        default:
-            return 10
         }
+        if resolution.contains("1440p") {
+            return 1
+        }
+        if resolution.contains("1080p") {
+            return 2
+        }
+        if resolution.contains("720p") {
+            return 3
+        }
+        if resolution.contains("480p") {
+            return 4
+        }
+        if resolution.contains("360p") {
+            return 5
+        }
+        if resolution.contains("240p") {
+            return 6
+        }
+        return 10
     }
 
 }
@@ -79,29 +83,29 @@ private extension GoSwiftyM3U8.BaseAttributedTag {
         }
     }
 
-    func getString(forResulution resulution: String) -> String? {
-        if resulution.contains("240") {
+    func getString(forResulution resolution: String) -> String? {
+        if resolution.contains("240") {
             return "240p"
         }
-        if resulution.contains("360") {
+        if resolution.contains("360") {
             return "360p"
         }
-        if resulution.contains("480") {
+        if resolution.contains("480") {
             return "480p"
         }
-        if resulution.contains("720") {
+        if resolution.contains("720") {
             return "720p"
         }
-        if resulution.contains("1080") {
+        if resolution.contains("1080") {
             return "1080p"
         }
-        if resulution.contains("1440") {
+        if resolution.contains("1440") {
             return "1440p"
         }
-        if resulution.contains("2160") {
+        if resolution.contains("2160") {
             return "2160p"
         }
-        return resulution
+        return resolution
     }
 
 }
