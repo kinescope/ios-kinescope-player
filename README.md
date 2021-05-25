@@ -8,13 +8,23 @@ This framework created to help you include [Kinescope](https://kinescope.io/) pl
 
 ## About
 
-This framework can help you include customizable video player into your mobile application, organize offline playing of your videos.
+This framework can help you include customizable video player into your mobile application and organize offline playing of your videos.
 
 ## Currently supported features
 
 - online and offline playing
+- video and attachments download
 - fullscreen, minimal or picture in picture
 - customizable UI of player
+- and many more(see advanced usage guide)
+
+## Documentation
+
+Generated with [swift-doc](https://github.com/SwiftDocOrg/swift-doc) tech doc can be found in [this file](./TechDoc.md).
+
+Top-level sdk [scheme](/Resources/TopLevelScheme.png)
+
+Advanced usage [guide](./AdvancedGuide.md)
 
 ## Usage
 
@@ -63,30 +73,6 @@ Enjoy.
 All controls already included into `KinescopePlayerView` and can be hidden optionally.
 You can read full [documentation](./DOCUMENTATION.md) or find more examples in our [Example-project](/Example).  
 
-### Logger
-
-For logging network request, player events or something else use `KinescopeDefaultLogger`.
-
-First step is set `KinescopeLoggerLevel` into configuration at application startup:
-
-```swift
-Kinescope.shared.set(logger: KinescopeDefaultLogger(), levels: [KinescopeLoggerLevel.network, KinescopeLoggerLevel.player])
-```
-
-Use logger like this:
-
-```swift
-Kinescope.shared.logger.log(message: "Bad Request", level: KinescopeLoggerLevel.network)
-```
-
-or 
-
-```swift
-Kinescope.shared.logger.log(error: NSError(), level: KinescopeLoggerLevel.network)
-```
-
-Also SDK has opportunity to use custom logger. Just use protocols `KinescopeLoggingLevel`, `KinescopeLogging`.
-
 ## Installation
 
 Just add KinescopeSDK to your `Podfile` like this
@@ -108,10 +94,6 @@ For issues, file directly in the [main repo](https://github.com/surfstudio/ios-k
 If you would like to contribute to the package (e.g. by improving the documentation, solving a bug or adding a cool new feature), please review our [contribution guide](CONTRIBUTING.md) first and send us your pull request.
 
 You PRs are always welcome.
-
-## Tech documentation
-
-Generated with [swift-doc](https://github.com/SwiftDocOrg/swift-doc) tech doc can be found in [this file](./TechDoc.md).
 
 ## How to reach us
 
