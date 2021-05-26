@@ -252,17 +252,6 @@ public class KinescopeVideoPlayer: NSObject, KinescopePlayer {
         dependencies.eventsCenter.post(event: .qualitychanged, userInfo: nil)
     }
 
-    public override func observeValue(forKeyPath keyPath: String?,
-                                      of object: Any?,
-                                      change: [NSKeyValueChangeKey : Any]?,
-                                      context: UnsafeMutableRawPointer?) {
-        if keyPath == "outputVolume"{
-            let audioSession = AVAudioSession.sharedInstance()
-            innerEventsHandler.setPlayback(volume: Int(audioSession.outputVolume*100))
-            print(audioSession.outputVolume)
-        }
-    }
-
 }
 
 // MARK: - KinescopePlayerConfigurable
@@ -544,18 +533,6 @@ private extension KinescopeVideoPlayer {
                                                selector: #selector(didAirPlayStateChanged),
                                                name: AVAudioSession.routeChangeNotification,
                                                object: nil)
-    }
-
-    func addVolumeListener() {
-        let audioSession = AVAudioSession.sharedInstance()
-        do {
-            try audioSession.setActive(true, options: [])
-            audioSession.addObserver(self, forKeyPath: "outputVolume",
-                                     options: NSKeyValueObservingOptions.new, context: nil)
-            innerEventsHandler.setPlayback(volume: Int(audioSession.outputVolume * 100))
-        } catch {
-            print("Error")
-        }
     }
 
     func seek(to seconds: TimeInterval) {
