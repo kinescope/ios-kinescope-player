@@ -587,7 +587,9 @@ private extension KinescopeVideoPlayer {
             return
         }
 
-        let isFullScreen = UIApplication.shared.keyWindow?.rootViewController?.presentedViewController is KinescopeFullscreenViewController
+        let rootVC = findRootVc()
+
+        let isFullScreen = rootVC?.presentedViewController is KinescopeFullscreenViewController
         let isLandscape = [UIDeviceOrientation.landscapeLeft, UIDeviceOrientation.landscapeRight]
             .contains(UIDevice.current.orientation)
 
@@ -737,6 +739,18 @@ private extension KinescopeVideoPlayer {
         }
     }
 
+
+    func findRootVc() -> UIViewController? {
+        let rootVC = UIApplication.shared.keyWindow?.rootViewController
+        let presentedVC = rootVC?.presentedViewController
+        // If there is presented VC and it's not our fullscreenVC -> consider that this VC is root
+        if presentedVC != nil && !(presentedVC is KinescopeFullscreenViewController) {
+            return presentedVC
+        } else {
+           return rootVC
+        }
+    }
+
 }
 
 
@@ -824,28 +838,27 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didPresentFullscreen(from view: KinescopePlayerView) {
-        let rootVC = UIApplication.shared.keyWindow?.rootViewController
+
+        let rootVC = findRootVc()
 
         if rootVC?.presentedViewController is KinescopeFullscreenViewController {
+            guard let miniView = miniView else {
+                return
+            }
             isOverlayed = view.overlay?.isSelected ?? false
             detach(view: view)
+            miniView.isHidden = false
+            rootVC?.dismiss(animated: true)
+            attach(view: miniView)
+            restoreView()
 
-            rootVC?.dismiss(animated: true, completion: { [weak self] in
-                guard
-                    let self = self,
-                    let miniView = self.miniView
-                else {
-                    return
-                }
-
-                self.attach(view: miniView)
-                self.restoreView()
-            })
             innerEventsHandler.exitfullscreen()
             dependencies.eventsCenter.post(event: .exitfullscreen, userInfo: nil)
         } else {
             miniView = view
             isOverlayed = view.overlay?.isSelected ?? false
+
+            view.isHidden = true
 
             detach(view: view)
 

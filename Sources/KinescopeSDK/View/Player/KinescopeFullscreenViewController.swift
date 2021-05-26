@@ -65,11 +65,6 @@ final public class KinescopeFullscreenViewController: UIViewController {
         player.attach(view: playerView)
     }
 
-    public override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        player.detach(view: playerView)
-    }
-
     public override func willMove(toParent parent: UIViewController?) {
         super.willMove(toParent: parent)
         if parent == nil {
