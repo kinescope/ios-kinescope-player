@@ -136,7 +136,6 @@ public class KinescopeVideoPlayer: NSObject, KinescopePlayer {
         self.config = config
         super.init()
         addNotofications()
-        addVolumeListener()
         callObserver.delegate = self
     }
 
