@@ -84,7 +84,7 @@ private extension CheckmarkCell {
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8.0),
             titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8.0),
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24.0),
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16.0),
             titleLabel.trailingAnchor.constraint(equalTo: iconView.leadingAnchor, constant: -4.0),
 
             iconView.centerYAnchor.constraint(equalTo: centerYAnchor),
