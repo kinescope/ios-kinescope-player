@@ -37,6 +37,7 @@ targets:
           LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks @loader_path/Frameworks"
           CODE_SIGN_IDENTITY: "iPhone Developer"
           CODE_SIGN_STYLE: Automatic
+          EXCLUDED_ARCHS[sdk=iphonesimulator*]: "arm64"
 
     KinescopeSDKTests:
       type: bundle.unit-test
