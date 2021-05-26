@@ -46,6 +46,8 @@ class TimelineView: UIControl {
 
     private var isTouching = false {
         didSet {
+            circleView.transform = isTouching ? .init(scaleX: 1.25, y: 1.25) : .identity
+            activeCircleView.transform = isTouching ? .init(scaleX: 1.25, y: 1.25) : .identity
             activeCircleView.isHidden = !isTouching
         }
     }
