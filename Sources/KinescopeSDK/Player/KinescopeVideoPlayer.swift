@@ -258,8 +258,8 @@ public class KinescopeVideoPlayer: NSObject, KinescopePlayer {
 extension KinescopeVideoPlayer: KinescopePlayerConfigurable {
 
     public func set(speed: KinescopePlayerSpeed) {
-        strategy.player.rate = speed.rawValue
         self.currentSpeed = speed
+        strategy.player.rate = speed.rawValue
         view?.change(speed: currentSpeed.toString())
     }
 
@@ -442,9 +442,15 @@ private extension KinescopeVideoPlayer {
                 }
                 self.isPlaying = item.timeControlStatus == .playing
                 switch item.timeControlStatus {
-                case .paused, .playing:
+                case .paused:
                     self.isLoading = false
                     self.playbackManager?.stopBuffering()
+                case .playing:
+                    self.isLoading = false
+                    self.playbackManager?.stopBuffering()
+                    if self.strategy.player.rate != self.currentSpeed.rawValue {
+                        self.strategy.player.rate = self.currentSpeed.rawValue
+                    }
                 case .waitingToPlayAtSpecifiedRate:
                     self.isLoading = true
                     self.playbackManager?.startBuffering()
