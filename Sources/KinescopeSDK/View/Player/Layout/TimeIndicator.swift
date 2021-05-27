@@ -65,7 +65,7 @@ private extension TimeIndicatorView {
     func configureLabel() {
         label.textColor = config.color
         label.font = monospacedFont()
-        label.textAlignment = .right
+        label.textAlignment = .center
 
         addSubview(label)
         stretch(view: label)

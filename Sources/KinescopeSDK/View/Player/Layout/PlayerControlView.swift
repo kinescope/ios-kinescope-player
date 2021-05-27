@@ -153,10 +153,10 @@ private extension PlayerControlView {
         NSLayoutConstraint.activate([
             timeIndicator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             timeIndicator.centerYAnchor.constraint(equalTo: centerYAnchor),
-            timeline.leadingAnchor.constraint(equalTo: timeIndicator.trailingAnchor, constant: 16),
+            timeline.leadingAnchor.constraint(equalTo: timeIndicator.trailingAnchor, constant: 8),
             timeline.topAnchor.constraint(equalTo: topAnchor),
             timeline.bottomAnchor.constraint(equalTo: bottomAnchor),
-            timeline.trailingAnchor.constraint(equalTo: optionsMenu.leadingAnchor, constant: -16),
+            timeline.trailingAnchor.constraint(equalTo: optionsMenu.leadingAnchor, constant: -8),
             optionsMenu.centerYAnchor.constraint(equalTo: centerYAnchor),
             optionsMenu.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
         ])
