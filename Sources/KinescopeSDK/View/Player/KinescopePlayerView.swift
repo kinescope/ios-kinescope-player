@@ -508,9 +508,6 @@ private extension KinescopePlayerView {
 extension KinescopePlayerView: PlayerOverlayViewDelegate {
 
     func didTap(isSelected: Bool) {
-        guard state != .ended else {
-            return
-        }
         if isSelected {
             if !(controlPanel?.expanded ?? true) {
                 overlay?.isSelected = false

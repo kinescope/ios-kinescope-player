@@ -37,6 +37,8 @@ class PlayerOverlayView: UIControl {
     var duration: TimeInterval {
         return config.duration
     }
+    var isAtBeginning = true
+    var isAtEnd = false
 
     // Taps
 
@@ -133,6 +135,7 @@ private extension PlayerOverlayView {
 
     @objc
     func tapAction(recognizer: UITapGestureRecognizer) {
+        previousTapLocation = lastTapLocation
         if activeTaps == 0 {
             tapDebouncer.handler = { [weak self] in
                 guard let self = self else {
@@ -148,7 +151,6 @@ private extension PlayerOverlayView {
         } else {
             doubleTapAction()
         }
-        previousTapLocation = lastTapLocation
         lastTapLocation = recognizer.location(in: contentView)
         activeTaps += 1
         tapDebouncer.renewInterval()
@@ -187,7 +189,10 @@ private extension PlayerOverlayView {
             if let previousTapLocation = previousTapLocation, !rightFrame.contains(previousTapLocation) {
                 return
             }
-
+            if isAtEnd {
+                singleTapAction()
+                return
+            }
             delegate?.didFastForward(sec: config.fastForward.rawValue)
 
             animateZoomFade(for: fastForwardImageView)
@@ -196,6 +201,10 @@ private extension PlayerOverlayView {
                 return
             }
 
+            if isAtBeginning {
+                singleTapAction()
+                return
+            }
             delegate?.didFastBackward(sec: config.fastBackward.rawValue)
 
             animateZoomFade(for: fastBackwardImageView)
