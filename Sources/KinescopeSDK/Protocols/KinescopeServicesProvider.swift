@@ -10,10 +10,13 @@
 public protocol KinescopeServicesProvider {
 
     /// Config for sdk
-    var config: KinescopeConfig! { get }
+    var config: KinescopeConfig? { get }
 
     /// Service managing downloading of assets
     var assetDownloader: KinescopeAssetDownloadable! { get }
+
+    /// Service managing downloading of videos
+    var videoDownloader: KinescopeVideoDownloadable! { get }
 
     /// Service managing downloading of attachments
     var attachmentDownloader: KinescopeAttachmentDownloadable! { get }

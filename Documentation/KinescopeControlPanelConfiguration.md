@@ -29,3 +29,11 @@ public init(tintColor: UIColor,
   - parameter timeIndicator: Appearance of current tme indicator
   - parameter timeline: Appearance of timeline
   - parameter options: Appearance of expandable options menu
+
+## Properties
+
+### `` `default` ``
+
+``` swift
+static let `default`: KinescopeControlPanelConfiguration 
+```

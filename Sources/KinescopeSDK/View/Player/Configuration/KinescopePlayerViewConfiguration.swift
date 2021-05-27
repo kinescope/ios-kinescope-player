@@ -33,14 +33,14 @@ public struct KinescopePlayerViewConfiguration {
     /// - parameter nameDisplayingType: Type of displaying view with title and description of video
     /// - parameter nameConfiguration: Configuration of video title and description lables
     public init(gravity: AVLayerVideoGravity,
-                activityIndicator: KinescopeActivityIndicator,
-                overlay: KinescopePlayerOverlayConfiguration?,
-                controlPanel: KinescopeControlPanelConfiguration?,
-                sideMenu: KinescopeSideMenuConfiguration,
-                shadowOverlay: KinescopePlayerShadowOverlayConfiguration?,
-                errorState: KinescopeErrorViewConfiguration,
-                nameDisplayingType: KinescopeVideoNameDisplayingType,
-                nameConfiguration: KinescopeVideoNameConfiguration) {
+                activityIndicator: KinescopeActivityIndicator = KinescopeSpinner(frame: CGRect(x: 0, y: 0, width: 32, height: 32)),
+                overlay: KinescopePlayerOverlayConfiguration? = .default,
+                controlPanel: KinescopeControlPanelConfiguration? = .default,
+                sideMenu: KinescopeSideMenuConfiguration = .default,
+                shadowOverlay: KinescopePlayerShadowOverlayConfiguration? = .default,
+                errorState: KinescopeErrorViewConfiguration = .default,
+                nameDisplayingType: KinescopeVideoNameDisplayingType = .hidesWithOverlay,
+                nameConfiguration: KinescopeVideoNameConfiguration = .default) {
         self.gravity = gravity
         self.activityIndicator = activityIndicator
         self.overlay = overlay
@@ -61,13 +61,7 @@ public extension KinescopePlayerViewConfiguration {
     static let `default`: KinescopePlayerViewConfiguration = .init(gravity: .resizeAspect,
                                                                    activityIndicator: KinescopeSpinner(frame: CGRect(x: 0, y: 0, width: 32, height: 32)),
                                                                    overlay: .default,
-                                                                   controlPanel: .init(tintColor: .gray,
-                                                                                       backgroundColor: .clear,
-                                                                                       preferedHeight: 40,
-                                                                                       hideOnPlayTimeout: 2,
-                                                                                       timeIndicator: .default,
-                                                                                       timeline: .default,
-                                                                                       optionsMenu: .default),
+                                                                   controlPanel: .default,
                                                                    sideMenu: .default,
                                                                    shadowOverlay: .default,
                                                                    errorState: .default,

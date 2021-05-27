@@ -8,7 +8,7 @@ public class KinescopePlayerView: UIView
 
 ## Inheritance
 
-[`ErrorViewDelegate`](/Documentation/ErrorViewDelegate), [`PlayerControlOutput`](/Documentation/PlayerControlOutput), [`PlayerOverlayViewDelegate`](/Documentation/PlayerOverlayViewDelegate), [`ShadowOverlayDelegate`](/Documentation/ShadowOverlayDelegate), [`SideMenuDelegate`](/Documentation/SideMenuDelegate), `UIView`
+[`ErrorViewDelegate`](/ErrorViewDelegate), [`PlayerControlOutput`](/PlayerControlOutput), [`PlayerOverlayViewDelegate`](/PlayerOverlayViewDelegate), [`ShadowOverlayDelegate`](/ShadowOverlayDelegate), [`SideMenuDelegate`](/SideMenuDelegate), `UIView`
 
 ## Properties
 

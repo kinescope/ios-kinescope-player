@@ -8,7 +8,7 @@ public class KinescopeVideoPlayer: NSObject, KinescopePlayer
 
 ## Inheritance
 
-[`PlaybackManagerDelegate`](/Documentation/PlaybackManagerDelegate), [`KinescopePlayer`](/Documentation/KinescopePlayer), [`KinescopePlayerViewDelegate`](/Documentation/KinescopePlayerViewDelegate), [`CallObserverDelegate`](/Documentation/CallObserverDelegate), `NSObject`
+[`KinescopePlayer`](/KinescopePlayer), [`KinescopePlayerConfigurable`](/KinescopePlayerConfigurable), [`KinescopePlayerViewDelegate`](/KinescopePlayerViewDelegate), [`CallObserverDelegate`](/CallObserverDelegate), `NSObject`, [`PlaybackManagerDelegate`](/PlaybackManagerDelegate)
 
 ## Initializers
 
@@ -83,4 +83,16 @@ public override func observeValue(forKeyPath keyPath: String?,
                                       of object: Any?,
                                       change: [NSKeyValueChangeKey : Any]?,
                                       context: UnsafeMutableRawPointer?) 
+```
+
+### `set(speed:)`
+
+``` swift
+public func set(speed: KinescopePlayerSpeed) 
+```
+
+### `set(muted:)`
+
+``` swift
+public func set(muted: Bool) 
 ```

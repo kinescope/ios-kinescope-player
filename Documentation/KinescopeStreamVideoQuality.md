@@ -8,7 +8,7 @@ public struct KinescopeStreamVideoQuality: KinescopeVideoQuality
 
 ## Inheritance
 
-[`KinescopeVideoQuality`](/Documentation/KinescopeVideoQuality)
+[`KinescopeVideoQuality`](/KinescopeVideoQuality)
 
 ## Properties
 

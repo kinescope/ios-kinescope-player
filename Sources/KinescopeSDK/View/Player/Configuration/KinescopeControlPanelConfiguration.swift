@@ -43,3 +43,18 @@ public struct KinescopeControlPanelConfiguration {
         self.optionsMenu = optionsMenu
     }
 }
+
+// MARK: - Defaults
+
+public extension KinescopeControlPanelConfiguration {
+
+    static let `default`: KinescopeControlPanelConfiguration = .init(tintColor: .gray,
+                                                                     backgroundColor: .clear,
+                                                                     preferedHeight: 40,
+                                                                     hideOnPlayTimeout: 2,
+                                                                     timeIndicator: .default,
+                                                                     timeline: .default,
+                                                                     optionsMenu: .default)
+
+}
+
