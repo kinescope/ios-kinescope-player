@@ -93,6 +93,7 @@ public class KinescopeVideoPlayer: NSObject, KinescopePlayer {
         willSet {
             let duration = strategy.player.currentItem?.duration.seconds ?? .zero
             isAtEnd = newValue >= duration
+            view?.overlay?.isAtBegining = newValue == 0
         }
         didSet {
             updateTimeline()
@@ -114,6 +115,7 @@ public class KinescopeVideoPlayer: NSObject, KinescopePlayer {
                 innerEventsHandler.end()
                 dependencies.eventsCenter.post(event: .end, userInfo: nil)
             }
+            view?.overlay?.isAtEnd = isAtEnd
         }
     }
 
