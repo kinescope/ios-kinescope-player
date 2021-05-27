@@ -37,7 +37,7 @@ class PlayerOverlayView: UIControl {
     var duration: TimeInterval {
         return config.duration
     }
-    var isAtBegining = true
+    var isAtBeginning = true
     var isAtEnd = false
 
     // Taps
@@ -201,7 +201,7 @@ private extension PlayerOverlayView {
                 return
             }
 
-            if isAtBegining {
+            if isAtBeginning {
                 singleTapAction()
                 return
             }
