@@ -33,12 +33,12 @@ class TimeIndicatorView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override var intrinsicContentSize: CGSize {
+    func getIndicatorWidth(with duration: TimeInterval) -> CGFloat {
         let label = UILabel()
         label.font = monospacedFont()
-        label.text = getText(from: 3600 * 24)
+        label.text = getText(from: duration)
         label.sizeToFit()
-        return .init(width: label.frame.size.width, height: label.font.lineHeight)
+        return label.frame.size.width
     }
 
 }

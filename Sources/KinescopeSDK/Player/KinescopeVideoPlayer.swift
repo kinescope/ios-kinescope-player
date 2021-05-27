@@ -169,10 +169,9 @@ public class KinescopeVideoPlayer: NSObject, KinescopePlayer {
         }
         view?.set(title: video.title, subtitle: video.description)
         view?.set(options: makePlayerOptions(from: video) )
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.view?.controlPanel?.hideTimeline(false)
-            self.view?.controlPanel?.setTimeline(to: 0)
-        }
+        self.view?.controlPanel?.updateIndicatorWidth(with: video.duration)
+        self.view?.controlPanel?.setTimeline(to: 0)
+        self.view?.controlPanel?.hideTimeline(false)
         loadManifest()
     }
 
