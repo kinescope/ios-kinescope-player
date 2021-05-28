@@ -56,16 +56,10 @@ public override var prefersStatusBarHidden: Bool
 public override func viewDidLoad() 
 ```
 
-### `viewDidAppear(_:)`
+### `viewWillAppear(_:)`
 
 ``` swift
-public override func viewDidAppear(_ animated: Bool) 
-```
-
-### `viewWillDisappear(_:)`
-
-``` swift
-public override func viewWillDisappear(_ animated: Bool) 
+public override func viewWillAppear(_ animated: Bool) 
 ```
 
 ### `willMove(toParent:)`

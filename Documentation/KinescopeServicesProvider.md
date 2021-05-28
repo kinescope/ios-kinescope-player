@@ -24,6 +24,14 @@ Service managing downloading of assets
 var assetDownloader: KinescopeAssetDownloadable! 
 ```
 
+### videoDownloader
+
+Service managing downloading of videos
+
+``` swift
+var videoDownloader: KinescopeVideoDownloadable! 
+```
+
 ### attachmentDownloader
 
 Service managing downloading of attachments

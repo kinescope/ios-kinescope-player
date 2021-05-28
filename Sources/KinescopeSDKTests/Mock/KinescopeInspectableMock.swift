@@ -49,4 +49,7 @@ final class KinescopeInspectableMock: KinescopeInspectable {
     func fetchPlaylist(video: KinescopeVideo, completion: @escaping (M3U8Manager.Result<MasterPlaylist>) -> (Void)) {
     }
 
+    func fetchPlaylist(link: String, completion: @escaping (M3U8Manager.Result<MasterPlaylist>) -> (Void)) {
+    }
+
 }

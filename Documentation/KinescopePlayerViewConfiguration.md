@@ -12,14 +12,14 @@ public struct KinescopePlayerViewConfiguration
 
 ``` swift
 public init(gravity: AVLayerVideoGravity,
-                activityIndicator: KinescopeActivityIndicator,
-                overlay: KinescopePlayerOverlayConfiguration?,
-                controlPanel: KinescopeControlPanelConfiguration?,
-                sideMenu: KinescopeSideMenuConfiguration,
-                shadowOverlay: KinescopePlayerShadowOverlayConfiguration?,
-                errorState: KinescopeErrorViewConfiguration,
-                nameDisplayingType: KinescopeVideoNameDisplayingType,
-                nameConfiguration: KinescopeVideoNameConfiguration) 
+                activityIndicator: KinescopeActivityIndicator = KinescopeSpinner(frame: CGRect(x: 0, y: 0, width: 32, height: 32)),
+                overlay: KinescopePlayerOverlayConfiguration? = .default,
+                controlPanel: KinescopeControlPanelConfiguration? = .default,
+                sideMenu: KinescopeSideMenuConfiguration = .default,
+                shadowOverlay: KinescopePlayerShadowOverlayConfiguration? = .default,
+                errorState: KinescopeErrorViewConfiguration = .default,
+                nameDisplayingType: KinescopeVideoNameDisplayingType = .hidesWithOverlay,
+                nameConfiguration: KinescopeVideoNameConfiguration = .default) 
 ```
 
   - parameter gravity: `AVLayerVideoGravity` value defines how the video is displayed within a layer’s bounds rectangle

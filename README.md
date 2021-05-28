@@ -71,7 +71,7 @@ player.attach(view: playerView)
 Enjoy.
 
 All controls already included into `KinescopePlayerView` and can be hidden optionally.
-You can read full [documentation](./DOCUMENTATION.md) or find more examples in our [Example-project](/Example).  
+You can read full [documentation](./TechDoc.md) or find more examples in advanced [guide](./AdvancedGuide.md) or our [Example-project](/Example).  
 
 ## Installation
 
@@ -87,7 +87,7 @@ All notable changes to this project will be documented in [this file](./CHANGELO
 
 ## Issues
 
-For issues, file directly in the [main repo](https://github.com/surfstudio/ios-kinescope-sdk).
+For issues, file directly in the <!-- TODO add main repo  -->.
 
 ## Contribute
 

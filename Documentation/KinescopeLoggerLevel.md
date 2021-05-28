@@ -8,7 +8,7 @@ public enum KinescopeLoggerLevel: KinescopeLoggingLevel, Equatable, CaseIterable
 
 ## Inheritance
 
-`CaseIterable`, `Equatable`, [`KinescopeLoggingLevel`](/Documentation/KinescopeLoggingLevel)
+`CaseIterable`, `Equatable`, [`KinescopeLoggingLevel`](/KinescopeLoggingLevel)
 
 ## Enumeration Cases
 
