@@ -22,6 +22,7 @@ class PlayerControlView: UIControl {
     private(set) var optionsMenu: PlayerControlOptionsView!
 
     private let config: KinescopeControlPanelConfiguration
+    private var timeIndicatorWidthConstraint = NSLayoutConstraint()
 
     weak var output: PlayerControlOutput?
 
@@ -79,6 +80,11 @@ extension PlayerControlView: PlayerControlInput {
     func hideTimeline(_ isHidden: Bool) {
         timeline.isHidden = isHidden
         timeIndicator.isHidden = isHidden
+    }
+
+    func updateIndicatorWidth(with duration: TimeInterval) {
+        timeIndicatorWidthConstraint.constant = timeIndicator.getIndicatorWidth(with: duration)
+        layoutIfNeeded()
     }
 
 }
@@ -141,6 +147,7 @@ private extension PlayerControlView {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
 
+        timeIndicatorWidthConstraint = timeIndicator.widthAnchor.constraint(equalToConstant: timeIndicator.getIndicatorWidth(with: 0))
         timeIndicator.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         timeIndicator.setContentHuggingPriority(.defaultHigh, for: .horizontal)
 
@@ -151,12 +158,13 @@ private extension PlayerControlView {
         optionsMenu.setContentHuggingPriority(.defaultHigh, for: .horizontal)
 
         NSLayoutConstraint.activate([
-            timeIndicator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            timeIndicator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: config.timeIndicator.leftPadding),
             timeIndicator.centerYAnchor.constraint(equalTo: centerYAnchor),
-            timeline.leadingAnchor.constraint(equalTo: timeIndicator.trailingAnchor, constant: 16),
+            timeIndicatorWidthConstraint,
+            timeline.leadingAnchor.constraint(equalTo: timeIndicator.trailingAnchor, constant: config.timeIndicator.rightPadding),
             timeline.topAnchor.constraint(equalTo: topAnchor),
             timeline.bottomAnchor.constraint(equalTo: bottomAnchor),
-            timeline.trailingAnchor.constraint(equalTo: optionsMenu.leadingAnchor, constant: -16),
+            timeline.trailingAnchor.constraint(equalTo: optionsMenu.leadingAnchor, constant: -8),
             optionsMenu.centerYAnchor.constraint(equalTo: centerYAnchor),
             optionsMenu.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
         ])

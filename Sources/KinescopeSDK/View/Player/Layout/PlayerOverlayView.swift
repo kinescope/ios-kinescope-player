@@ -19,6 +19,20 @@ class PlayerOverlayView: UIControl {
     private let config: KinescopePlayerOverlayConfiguration
     private weak var delegate: PlayerOverlayViewDelegate?
     private var isRewind = false
+    private var leftFrame: CGRect {
+        CGRect(x: .zero,
+               y: .zero,
+               width: contentView.bounds.width - contentView.center.x - 24.0,
+               height: contentView.bounds.height)
+    }
+
+    private var rightFrame: CGRect {
+        CGRect(x: contentView.center.x + 24.0,
+               y: .zero,
+               width: contentView.bounds.width - contentView.center.x + 24.0,
+               height: contentView.bounds.height)
+    }
+    
     var playPauseReplayState: PlayPauseReplayState = .play {
         didSet {
             playPauseImageView.isHidden = false
@@ -135,6 +149,15 @@ private extension PlayerOverlayView {
 
     @objc
     func tapAction(recognizer: UITapGestureRecognizer) {
+        if isAtEnd && rightFrame.contains(recognizer.location(in: contentView)) {
+            delegate?.didTap(isSelected: isSelected)
+            return
+        }
+
+        if isAtBeginning && leftFrame.contains(recognizer.location(in: contentView)) {
+            delegate?.didTap(isSelected: isSelected)
+            return
+        }
         previousTapLocation = lastTapLocation
         if activeTaps == 0 {
             tapDebouncer.handler = { [weak self] in
@@ -175,22 +198,8 @@ private extension PlayerOverlayView {
         }
         isRewind = true
 
-        let rightFrame = CGRect(x: contentView.center.x + 24.0,
-                                y: .zero,
-                                width: contentView.bounds.width - contentView.center.x + 24.0,
-                                height: contentView.bounds.height)
-
-        let leftFrame = CGRect(x: .zero,
-                               y: .zero,
-                               width: contentView.bounds.width - contentView.center.x - 24.0,
-                               height: contentView.bounds.height)
-
         if rightFrame.contains(lastTapLocation) {
             if let previousTapLocation = previousTapLocation, !rightFrame.contains(previousTapLocation) {
-                return
-            }
-            if isAtEnd {
-                singleTapAction()
                 return
             }
             delegate?.didFastForward(sec: config.fastForward.rawValue)
@@ -198,11 +207,6 @@ private extension PlayerOverlayView {
             animateZoomFade(for: fastForwardImageView)
         } else if leftFrame.contains(lastTapLocation) {
             if let previousTapLocation = previousTapLocation, !leftFrame.contains(previousTapLocation) {
-                return
-            }
-
-            if isAtBeginning {
-                singleTapAction()
                 return
             }
             delegate?.didFastBackward(sec: config.fastBackward.rawValue)
