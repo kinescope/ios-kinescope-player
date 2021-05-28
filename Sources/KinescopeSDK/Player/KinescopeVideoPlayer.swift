@@ -860,6 +860,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                 }
                 self.restoreView()
                 self.view?.set(title: video.title, subtitle: video.description)
+                self.view?.controlPanel?.updateIndicatorWidth(with: video.duration)
             })
             innerEventsHandler.enterfullscreen()
             dependencies.eventsCenter.post(event: .enterfullscreen, userInfo: nil)
