@@ -2,7 +2,7 @@
 
 # Configuring UI
 
-There are a bunch of opportunities to configure player appearance. Look `KinescopePlayerViewConfiguration` to find out all ooptions. 
+There are a bunch of opportunities to configure player appearance. Look `KinescopePlayerViewConfiguration` to find out all options. 
 
 This struct is used in `KinescopePlayerView` `setLayout(with:)` method.
 
@@ -25,7 +25,7 @@ playerView.setLayout(with: .init(gravity: .resizeAspect, controlPanel: controlPa
 
 SDK provides `KinescopePreviewView` with video title, description, duration, banner and play image.
 
-You ca create it like this:
+You can create it like this:
 
 ```swift
 let preview = KinescopePreviewView(config: .default, delegate: self)
