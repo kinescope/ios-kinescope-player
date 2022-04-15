@@ -79,7 +79,7 @@ Use logger like this:
 Kinescope.shared.logger.log(message: "Bad Request", level: KinescopeLoggerLevel.network)
 ```
 
-or 
+or
 
 ```swift
 Kinescope.shared.logger.log(error: NSError(), level: KinescopeLoggerLevel.network)
@@ -95,13 +95,25 @@ Just add KinescopeSDK to your `Podfile` like this
 pod 'KinescopeSDK' ~> 0.1
 ```
 
+If you have any issues with method above, than you can specify git repo like this
+
+```
+ pod 'KinescopeSDK', :git => 'https://github.com/kinescope/ios-kinescope-player.git'
+```
+
+Also you can specify concrete branch or tag if you want
+
+```
+ pod 'KinescopeSDK', :git => 'https://github.com/kinescope/ios-kinescope-player.git', :branch => 'master'
+```
+
 ## Changelog
 
 All notable changes to this project will be documented in [this file](./CHANGELOG.md).
 
 ## Issues
 
-For issues, file directly in the [main repo](https://github.com/surfstudio/ios-kinescope-sdk).
+For issues, file directly in the [main repo](https://github.com/kinescope/ios-kinescope-player).
 
 ## Contribute
 
