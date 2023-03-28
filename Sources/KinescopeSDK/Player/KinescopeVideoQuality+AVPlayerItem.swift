@@ -38,7 +38,8 @@ fileprivate extension KinescopeVideoQuality {
     }
 
     func makeExactItem(from asset: KinescopeVideoAsset) -> AVPlayerItem? {
-        guard let url = URL(string: asset.url) else {
+        guard let urlString = asset.url,
+                let url = URL(string: urlString) else {
             return nil
         }
 
@@ -47,8 +48,8 @@ fileprivate extension KinescopeVideoQuality {
 
     func makeExactItem(from asset: KinescopeVideoAsset,
                        subtitles: KinescopeVideoSubtitle) -> AVPlayerItem? {
-        guard
-            let url = URL(string: asset.url)
+        guard let urlString = asset.url,
+                let url = URL(string: urlString)
         else {
             return nil
         }
