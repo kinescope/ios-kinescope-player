@@ -21,11 +21,11 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  KinescopeSDK: 0e32c16a8005fc08901dac4ba2c0da820b6fe497
+  KinescopeSDK: cf9a88913bab22ef14c732ece567993863b4ba00
   Kingfisher: e71c6fac2aebb1262888cabc2cb13d313362a48f
   ReactiveDataDisplayManager: 0ff30e94f5c9785e4f366ca5e09bef00eb6a8ba8
   SwiftProtobuf: 4e16842b83c6fda06b10fac50d73b3f1fce8ab7b
 
 PODFILE CHECKSUM: 16301e56b578a66ff683d6aae023c456365e17e9
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.10.2
