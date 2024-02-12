@@ -34,7 +34,10 @@ final class RequestBuilder {
         return self
     }
 
-    func add(token: String) -> RequestBuilder {
+    func add(token: String?) -> RequestBuilder {
+        guard !(token?.isEmpty ?? true) else {
+            return self
+        }
         if self.headers != nil {
             self.headers?["Authorization"] = "Bearer \(token)"
         } else {
