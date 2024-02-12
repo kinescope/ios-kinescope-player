@@ -30,7 +30,7 @@ public struct KinescopeFullscreenConfiguration {
 public extension KinescopeFullscreenConfiguration {
 
     static func preferred(for video: KinescopeVideo?) -> KinescopeFullscreenConfiguration {
-        guard let asset = video?.assets.first else {
+        guard let asset = video?.assets?.first else {
             return landscape
         }
 

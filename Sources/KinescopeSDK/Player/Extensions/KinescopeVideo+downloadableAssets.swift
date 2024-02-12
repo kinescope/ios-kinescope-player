@@ -10,7 +10,7 @@ import AVFoundation
 extension KinescopeVideo {
 
     var downloadableAssets: [KinescopeVideoAsset] {
-        return assets.filter { isDownloadableFormat(filetype: $0.filetype) }
+        return assets?.filter { isDownloadableFormat(filetype: $0.filetype) } ?? []
     }
 
     private func isDownloadableFormat(filetype: String) -> Bool {

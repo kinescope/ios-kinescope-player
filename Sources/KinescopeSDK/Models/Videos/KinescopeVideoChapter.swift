@@ -1,3 +1,3 @@
 public struct KinescopeVideoChapter: Codable {
-    public let items: [KinescopeVideoChapterItem]
+    public let items: [KinescopeVideoChapterItem]?
 }

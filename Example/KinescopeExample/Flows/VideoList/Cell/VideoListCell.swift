@@ -64,7 +64,7 @@ extension VideoListCell: ConfigurableItem {
     func configure(with model: Model) {
 
         playerView.previewView.contentMode = .scaleAspectFit
-        playerView.previewView.kf.setImage(with: URL(string: model.poster?.md ?? ""))
+        playerView.previewView.kf.setImage(with: URL(string: model.poster?.url ?? ""))
         player = KinescopeVideoPlayer(config: .init(videoId: model.id, looped: true))
         player?.attach(view: playerView)
     }

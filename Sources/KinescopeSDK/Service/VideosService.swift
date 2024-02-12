@@ -66,11 +66,11 @@ final class VideosNetworkService: VideosService {
 
             do {
 
-                let request = try RequestBuilder(path: self.config.endpoint + "/videos/\(id)", method: .get)
-                    .add(token: self.config.apiKey)
+                let request = try RequestBuilder(path: "https://kinescope.io/\(id).json", method: .get)
+                    .add(referer: self.config.referer)
                     .build(body: EmptyRequest())
 
-                self.transport.perform(request: request, completion: completion)
+                self.transport.performFetch(request: request, completion: completion)
             } catch let error {
                 DispatchQueue.main.async {
                     completion(.failure(error))

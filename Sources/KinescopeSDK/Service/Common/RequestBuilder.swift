@@ -46,6 +46,15 @@ final class RequestBuilder {
         return self
     }
 
+    func add(referer: String) -> RequestBuilder {
+        if self.headers != nil {
+            self.headers?["Referer"] = referer
+        } else {
+            self.headers = ["Referer": referer]
+        }
+        return self
+    }
+
     func add(parameters: [String: String]) -> RequestBuilder {
         self.parameters = parameters
         return self

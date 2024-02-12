@@ -186,11 +186,11 @@ private extension KinescopeVideoPlayer {
     func makePlayerOptions(from video: KinescopeVideo) -> [KinescopePlayerOption] {
         var options: [KinescopePlayerOption] = [.airPlay, .settings, .fullscreen, .more]
 
-        if !video.assets.isEmpty {
+        if !(video.assets?.isEmpty ?? true) {
             options.insert(.download, at: 1)
         }
 
-        if !video.additionalMaterials.isEmpty {
+        if !(video.additionalMaterials?.isEmpty ?? true) {
             options.insert(.attachments, at: 0)
         }
 
@@ -198,7 +198,7 @@ private extension KinescopeVideoPlayer {
             options.insert(.pip, at: options.count - 2)
         }
 
-        if !video.subtitles.isEmpty {
+        if !(video.subtitles?.isEmpty ?? true) {
             options.insert(.subtitles, at: 0)
         }
 
@@ -351,9 +351,9 @@ private extension KinescopeVideoPlayer {
 
                 let height = String(format: "%.0f", size.height)
 
-                let qualities = video.assets
+                let qualities = video.assets?
                     .compactMap { $0.quality }
-                    .filter { $0.hasPrefix(height) }
+                    .filter { $0.hasPrefix(height) } ?? []
 
                 let expectedQuality: String?
                 if frameRate > 30.0 {
@@ -576,7 +576,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didShowQuality() -> [String] {
-        return video?.assets
+        return video?.assets?
             .compactMap { $0.quality }
             .filter { $0 != "original" } ?? []
     }
@@ -599,7 +599,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         }
 
         let videoQuality: KinescopeVideoQuality
-        if let asset = video.assets.first(where: { $0.quality == quality }) {
+        if let asset = video.assets?.first(where: { $0.quality == quality }) {
             if let path = dependencies.assetDownloader.getLocation(by: asset.id) {
                 videoQuality = .downloaded(url: path)
             } else {
@@ -621,7 +621,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
     func didSelectAttachment(with index: Int) {
         guard
-            let attachment = video?.additionalMaterials[safe: index]
+            let attachment = video?.additionalMaterials?[safe: index]
         else {
             return
         }
@@ -631,7 +631,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didSelectAsset(with index: Int) {
-        guard let asset = video?.assets[safe: index] else {
+        guard let asset = video?.assets?[safe: index] else {
             return
         }
         dependencies.assetDownloader.enqueueDownload(asset: asset)
@@ -642,7 +642,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     func didSelectDownloadAll(for title: String) {
         switch SideMenu.DescriptionTitle.getType(by: title) {
         case .attachments:
-            video?.additionalMaterials.forEach {
+            video?.additionalMaterials?.forEach {
                 dependencies.attachmentDownloader.enqueueDownload(attachment: $0)
                 Kinescope.shared.logger?.log(message: "Start downloading attachment: \($0.title)",
                                              level: KinescopeLoggerLevel.player)
@@ -659,7 +659,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didShowSubtitles() -> [String] {
-        return video?.subtitles.compactMap { $0.title } ?? []
+        return video?.subtitles?.compactMap { $0.title } ?? []
     }
 
     func didSelect(subtitles: String) {
@@ -673,13 +673,13 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
         if isManualQuality {
             guard
-                let asset = video.assets.first(where: { $0.quality == currentQuality })
+                let asset = video.assets?.first(where: { $0.quality == currentQuality })
             else {
                 return
             }
 
             let videoQuality: KinescopeVideoQuality
-            if let selectedSubtitles = video.subtitles.first(where: { $0.title == subtitles }) {
+            if let selectedSubtitles = video.subtitles?.first(where: { $0.title == subtitles }) {
                 videoQuality = .exactWithSubtitles(asset: asset, subtitle: selectedSubtitles)
             } else {
                 videoQuality = .exact(asset: asset)
@@ -694,7 +694,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                 return
             }
 
-            if let selectedSubtitles = video.subtitles.first(where: { $0.title == subtitles }) {
+            if let selectedSubtitles = video.subtitles?.first(where: { $0.title == subtitles }) {
                 let locale = Locale(identifier: selectedSubtitles.language)
                 let options = AVMediaSelectionGroup.mediaSelectionOptions(from: group.options,
                                                                           with: locale)
@@ -706,7 +706,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
         self.strategy.player.currentItem?.textStyleRules = textStyleRules
 
-        let isOn = video.subtitles.contains { $0.title == subtitles }
+        let isOn = video.subtitles?.contains { $0.title == subtitles } ?? false
         view?.controlPanel?.set(subtitleOn: isOn)
         Kinescope.shared.logger?.log(message: "Select subtitles: \(subtitles)",
                                      level: KinescopeLoggerLevel.player)
