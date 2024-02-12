@@ -20,14 +20,16 @@ This framework can help you include customizable video player into your mobile a
 
 First of all, init SDK with apiKey somewhere at startup of your app
 
-```
+```swift
 Kinescope.shared.setConfig(.init(apiKey: "your api key"))
 ```
 
 From now you can use most of API through SDK
 
+**Note** You can leave apiKey empty if you are handle your video collection on backend and can provide `videoId` to the SDK.
+
 For example, to get list of videos just call
-```
+```swift
 Kinescope.shared.inspector.list(request: .init(page: 1),
                                 onSuccess: { result in
 
@@ -41,20 +43,20 @@ Kinescope.shared.inspector.list(request: .init(page: 1),
 
 Than init player instance
 
-```
+```swift
 let player = KinescopePlayer(videoId: "some video id")
 ```
 
 Add player view somewhere in your layout
 
-```
+```swift
 let playerView = KinescopePlayerView()
 view.addSubview(playerView)
 ```
 
 Connect player and playerView together
 
-```
+```swift
 player.attach(view: playerView)
 ```
 
