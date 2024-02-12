@@ -59,23 +59,50 @@ final class VideosNetworkService: VideosService {
     func getVideo(by id: String, completion: @escaping (Result<KinescopeVideo, Error>) -> Void) {
         DispatchQueue.global(qos: .utility).async { [weak self] in
             guard
-                let self = self
+                let self
             else {
                 return
             }
-
-            do {
-
-                let request = try RequestBuilder(path: "https://kinescope.io/\(id).json", method: .get)
-                    .add(referer: self.config.referer)
-                    .build(body: EmptyRequest())
-
-                self.transport.performFetch(request: request, completion: completion)
-            } catch let error {
-                DispatchQueue.main.async {
-                    completion(.failure(error))
-                }
+            
+            if let apiKey =  self.config.apiKey {
+                self.getVideoFromApi(by: id, using: apiKey, completion: completion)
+            } else {
+                self.getVideoFromJson(by: id, using: self.config.referer, completion: completion)
             }
         }
     }
+}
+
+// MARK: - Private Methods
+
+private extension VideosNetworkService {
+
+    func getVideoFromApi(by id: String, using apiKey: String, completion: @escaping (Result<KinescopeVideo, Error>) -> Void) {
+        do {
+            let request = try RequestBuilder(path: self.config.endpoint + "/videos/\(id)", method: .get)
+                .add(token: apiKey)
+                .build(body: EmptyRequest())
+
+            transport.perform(request: request, completion: completion)
+        } catch let error {
+            DispatchQueue.main.async {
+                completion(.failure(error))
+            }
+        }
+    }
+
+    func getVideoFromJson(by id: String, using referer: String, completion: @escaping (Result<KinescopeVideo, Error>) -> Void) {
+        do {
+            let request = try RequestBuilder(path: "https://kinescope.io/\(id).json", method: .get)
+                .add(referer: referer)
+                .build(body: EmptyRequest())
+
+            transport.performFetch(request: request, completion: completion)
+        } catch let error {
+            DispatchQueue.main.async {
+                completion(.failure(error))
+            }
+        }
+    }
+
 }
