@@ -21,27 +21,23 @@ enum ConfigStorage {
 
     // MARK: - Public Methods
 
-    static func read() -> [User] {
-        var users: [User] = []
-
-        let semaphore = DispatchSemaphore(value: 0)
-
+    static func read(completion: @escaping ([User]) -> Void) {
         DispatchQueue.global(qos: .utility).async {
             guard
                 let path = Bundle.main.path(forResource: "KinescopeConfig", ofType: "plist"),
                 let data = FileManager.default.contents(atPath: path),
                 let config = try? PropertyListDecoder().decode(Config.self, from: data)
             else {
+                DispatchQueue.main.async {
+                    completion([])
+                }
                 return
             }
 
-            users = config.users
-
-            semaphore.signal()
+            // execute completion on main thread
+            DispatchQueue.main.async {
+                completion(config.users)
+            }
         }
-
-        semaphore.wait()
-
-        return users
     }
 }

@@ -32,6 +32,17 @@ final class AuthSelectorController: UIViewController {
         loadUsers()
     }
 
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        guard
+            let destination = segue.destination as? VideoViewController,
+            let id = sender as? String
+        else {
+            return
+        }
+
+        destination.videoId = id
+    }
 }
 
 // MARK: - Private Methods
@@ -39,17 +50,18 @@ final class AuthSelectorController: UIViewController {
 private extension AuthSelectorController {
 
     func loadUsers() {
+        ConfigStorage.read { [weak self] users in
+            self?.emptyView.isHidden = !users.isEmpty
+            if users.isEmpty {
+                self?.proceedAsGuest()
 
-        let users = ConfigStorage.read()
-
-        fillAdapter(with: users)
-
-        emptyView.isHidden = !users.isEmpty
-
+            } else {
+                self?.fillAdapter(with: users)
+            }
+        }
     }
 
     func fillAdapter(with users: [User]) {
-
         adapter.clearCellGenerators()
 
         let generators = users.map(makeGenerator(from:))
@@ -70,7 +82,6 @@ private extension AuthSelectorController {
     }
 
     func onSelect(user: User) {
-
         /// Set apiKey
         Kinescope.shared.setConfig(.init(apiKey: user.apiKey))
 
@@ -83,4 +94,15 @@ private extension AuthSelectorController {
 
     }
 
+    func proceedAsGuest() {
+        /// Keep apiKey nil to show only public demo videos
+        Kinescope.shared.setConfig(.init(apiKey: nil))
+
+        /// Set logger
+        Kinescope.shared.set(logger: KinescopeDefaultLogger(),
+                             levels: KinescopeLoggerLevel.allCases)
+
+        /// Play public demo video
+        performSegue(withIdentifier: "toVideo", sender: "9L8KmbNuhQSxQofn5DR4Vg")
+    }
 }

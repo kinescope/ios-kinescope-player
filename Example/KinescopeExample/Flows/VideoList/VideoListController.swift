@@ -93,7 +93,7 @@ private extension VideoListController {
     func loadVideos(onComplete: @escaping (Bool) -> Void) {
         inspector.list(request: request,
                        onSuccess: { [weak self] response in
-                            guard let self = self else {
+                            guard let self else {
                                 return
                             }
 
