@@ -190,7 +190,7 @@ private extension KinescopeVideoPlayer {
             options.insert(.download, at: 1)
         }
 
-        if !(video.additionalMaterials?.isEmpty ?? true) {
+        if !(video.attachments?.isEmpty ?? true) {
             options.insert(.attachments, at: 0)
         }
 
@@ -582,7 +582,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didShowAttachments() -> [KinescopeVideoAdditionalMaterial]? {
-        return video?.additionalMaterials
+        return video?.attachments
     }
 
     func didShowAssets() -> [KinescopeVideoAsset]? {
@@ -621,7 +621,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
     func didSelectAttachment(with index: Int) {
         guard
-            let attachment = video?.additionalMaterials?[safe: index]
+            let attachment = video?.attachments?[safe: index]
         else {
             return
         }
@@ -642,7 +642,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     func didSelectDownloadAll(for title: String) {
         switch SideMenu.DescriptionTitle.getType(by: title) {
         case .attachments:
-            video?.additionalMaterials?.forEach {
+            video?.attachments?.forEach {
                 dependencies.attachmentDownloader.enqueueDownload(attachment: $0)
                 Kinescope.shared.logger?.log(message: "Start downloading attachment: \($0.title)",
                                              level: KinescopeLoggerLevel.player)

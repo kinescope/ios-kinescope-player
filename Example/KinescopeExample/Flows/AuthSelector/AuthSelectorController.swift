@@ -104,5 +104,7 @@ private extension AuthSelectorController {
 
         /// Play public demo video
         performSegue(withIdentifier: "toVideo", sender: "9L8KmbNuhQSxQofn5DR4Vg")
+        // Play video with drm (device only)
+//        performSegue(withIdentifier: "toVideo", sender: "200660125")
     }
 }
