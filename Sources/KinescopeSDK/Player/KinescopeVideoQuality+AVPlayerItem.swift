@@ -8,18 +8,15 @@
 import AVFoundation
 
 extension KinescopeVideoQuality {
-    
-    func makeItem(with assetLinksService: AssetLinksService) -> AVPlayerItem? {
+
+    var item: AVPlayerItem? {
         switch self {
         case .auto(let hlsLink):
             return makeAutoItem(from: hlsLink)
-        case .exact(let id, let asset):
-            return makeExactItem(from: assetLinksService.getAssetLink(by: id, asset: asset))
-        case .exactWithSubtitles(let id, let asset, let subtitles):
-                                    return makeExactItem(from: assetLinksService.getAssetLink(by: id, asset: asset),
-                                                         subtitles: subtitles)
         case .downloaded(let url):
             return makeDownloadedItem(from: url)
+        default:
+            return nil
         }
     }
 
@@ -38,6 +35,11 @@ fileprivate extension KinescopeVideoQuality {
         return AVPlayerItem(asset: asset)
     }
 
+    func makeDownloadedItem(from url: URL) -> AVPlayerItem? {
+        return AVPlayerItem(url: url)
+    }
+
+    @available(*, deprecated, message: "Changing of playerItem is not required. Switching between qualities is handling in HLS stream.")
     func makeExactItem(from asset: KinescopeVideoAssetLink) -> AVPlayerItem? {
         guard let url = URL(string: asset.link) else {
             return nil
@@ -46,6 +48,7 @@ fileprivate extension KinescopeVideoQuality {
         return AVPlayerItem(url: url)
     }
 
+    @available(*, deprecated, message: "Changing of playerItem is not required. Switching between qualities is handling in HLS stream.")
     func makeExactItem(from asset: KinescopeVideoAssetLink,
                        subtitles: KinescopeVideoSubtitle) -> AVPlayerItem? {
         guard let url = URL(string: asset.link)
@@ -109,10 +112,6 @@ fileprivate extension KinescopeVideoQuality {
         }
 
         return AVPlayerItem(asset: composition)
-    }
-
-    func makeDownloadedItem(from url: URL) -> AVPlayerItem? {
-        return AVPlayerItem(url: url)
     }
 
 }

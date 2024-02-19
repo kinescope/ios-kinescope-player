@@ -133,10 +133,6 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     }
 
     public func select(quality: KinescopeVideoQuality) {
-        guard let item = quality.makeItem(with: dependencies.assetDownloader.assetLinksService) else {
-            // Log here critical error
-            return
-        }
 
         switch quality {
         case .auto:
@@ -149,8 +145,13 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
         removeTracksObserver()
         removePlayerItemStatusObserver()
+        
+        if let item = quality.item {
+            strategy.bind(item: item)
+        }
 
-        strategy.bind(item: item)
+        // changing quality
+        strategy.player.currentItem?.preferredPeakBitRate = quality.preferredMaxBitRate
 
         addPlayerItemStatusObserver()
         addTracksObserver()
@@ -342,7 +343,7 @@ private extension KinescopeVideoPlayer {
 //            changeHandler: { [weak self] item, _ in
 //                guard
 //                    let self,
-//                    let video = self.video,
+//                    let video = video,
 //                    let size = item.tracks.first?.assetTrack?.naturalSize,
 //                    let frameRate = item.tracks.first?.assetTrack?.nominalFrameRate
 //                else {
@@ -502,9 +503,6 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         seek(to: time)
     }
 
-    func didSelect(option: KinescopePlayerOption) {
-    }
-
     func didFastForward() {
         guard
             let duration = strategy.player.currentItem?.duration.seconds
@@ -603,7 +601,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             if let path = dependencies.assetDownloader.getLocation(by: video.id) {
                 videoQuality = .downloaded(url: path)
             } else {
-                videoQuality = .exact(id: video.id, asset: asset)
+                videoQuality = .exact(asset: asset)
             }
         } else {
             videoQuality = .auto(hlsLink: video.hlsLink)
@@ -684,9 +682,9 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
             let videoQuality: KinescopeVideoQuality
             if let selectedSubtitles = video.subtitles?.first(where: { $0.title == subtitles }) {
-                videoQuality = .exactWithSubtitles(id: video.id, asset: asset, subtitle: selectedSubtitles)
+                videoQuality = .exactWithSubtitles(asset: asset, subtitle: selectedSubtitles)
             } else {
-                videoQuality = .exact(id: video.id, asset: asset)
+                videoQuality = .exact(asset: asset)
             }
 
             select(quality: videoQuality)

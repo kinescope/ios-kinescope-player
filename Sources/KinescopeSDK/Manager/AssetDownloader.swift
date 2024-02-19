@@ -18,11 +18,13 @@ class AssetDownloader: KinescopeAssetDownloadable {
     }
 
     // MARK: - Properties
-    
-    let assetLinksService: AssetLinksService
-    private var delegates: [KinescopeAssetDownloadableDelegate] = []
+
+
+    private let fileNamesStorage: KinescopeFileNamesStorage
+    private let assetLinksService: AssetLinksService
+
     private var fileService: FileService
-    private var fileNamesStorage: KinescopeFileNamesStorage
+    private var delegates: [KinescopeAssetDownloadableDelegate] = []
 
     // MARK: - Initialisation
 
@@ -38,7 +40,7 @@ class AssetDownloader: KinescopeAssetDownloadable {
     // MARK: - KinescopeDownloadable
 
     func enqueueDownload(video: KinescopeVideo, asset: KinescopeVideoAsset) {
-        // TODO: - Test on real link
+        // TODO: - Get downloading link from manifest
         let assetLink = assetLinksService.getAssetLink(by: video.id, asset: asset)
 
         if let url = URL(string: assetLink.link) {
