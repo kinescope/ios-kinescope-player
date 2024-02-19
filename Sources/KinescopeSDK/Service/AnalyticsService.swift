@@ -42,7 +42,6 @@ final class AnalyticsNetworkService: AnalyticsService {
             do {
 
                 let request = try RequestBuilder(path: "https://metrics.kinescope.io/player-native", method: .post)
-                    .add(token: self.config.apiKey)
                     .build(body: data)
 
                 self.transport.perform(request: request, completion: completion)
