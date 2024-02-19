@@ -28,7 +28,6 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private var playerStatusObserver: NSKeyValueObservation?
     private var itemStatusObserver: NSKeyValueObservation?
     private var timeControlStatusObserver: NSKeyValueObservation?
-    private var tracksObserver: NSKeyValueObservation?
 
     private var time: TimeInterval = 0 {
         didSet {
@@ -37,7 +36,6 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     }
     private var isSeeking = false
     private var isPreparingSeek = false
-    private var isManualQuality = false
     private var currentQuality = ""
     private var isPlaying = false
     private var isOverlayed = false
@@ -78,7 +76,6 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         self.removePlayerItemStatusObserver()
         self.removePlayerTimeControlStatusObserver()
         self.removePlayerStatusObserver()
-        self.removeTracksObserver()
 
         NotificationCenter.default.removeObserver(self)
     }
@@ -106,7 +103,6 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     public func stop() {
         self.strategy.pause()
         self.strategy.unbind()
-        self.removeTracksObserver()
         self.delegate?.playerDidStop()
     }
 
@@ -134,16 +130,8 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
     public func select(quality: KinescopeVideoQuality) {
 
-        switch quality {
-        case .auto:
-            isManualQuality = false
-        case .exact, .exactWithSubtitles, .downloaded:
-            isManualQuality = true
-        }
-
         savedTime = strategy.player.currentTime()
 
-        removeTracksObserver()
         removePlayerItemStatusObserver()
         
         if let item = quality.item {
@@ -154,7 +142,6 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         strategy.player.currentItem?.preferredPeakBitRate = quality.preferredMaxBitRate
 
         addPlayerItemStatusObserver()
-        addTracksObserver()
     }
 }
 
@@ -187,7 +174,7 @@ private extension KinescopeVideoPlayer {
     func makePlayerOptions(from video: KinescopeVideo) -> [KinescopePlayerOption] {
         var options: [KinescopePlayerOption] = [.airPlay, .settings, .fullscreen, .more]
 
-        if !(video.qualityMap?.isEmpty ?? true) {
+        if video.hasAssets {
             options.insert(.download, at: 1)
         }
 
@@ -334,55 +321,6 @@ private extension KinescopeVideoPlayer {
     func removePlayerTimeControlStatusObserver() {
         self.timeControlStatusObserver?.invalidate()
         self.timeControlStatusObserver = nil
-    }
-
-    func addTracksObserver() {
-//        self.tracksObserver = self.strategy.player.currentItem?.observe(
-//            \.tracks,
-//            options: [.new, .old],
-//            changeHandler: { [weak self] item, _ in
-//                guard
-//                    let self,
-//                    let video = video,
-//                    let size = item.tracks.first?.assetTrack?.naturalSize,
-//                    let frameRate = item.tracks.first?.assetTrack?.nominalFrameRate
-//                else {
-//                    return
-//                }
-//
-//                let height = String(format: "%.0f", size.height)
-//
-//                let qualities = video.qualityMap?
-//                    .compactMap { $0.height }
-//
-//                let expectedQuality: String? = qualities?.first
-//                // TODO: - Restore functionality
-////                if frameRate > 30.0 {
-////                    expectedQuality = qualities.first { $0.hasSuffix("60") }
-////                } else {
-////                    expectedQuality = qualities.first { $0.hasPrefix(height) && !$0.hasSuffix("60") }
-////                }
-//
-//                guard
-//                    let quality = expectedQuality
-//                else {
-//                    return
-//                }
-//
-//                self.view?.change(quality: quality, manualQuality: self.isManualQuality)
-//
-//                Kinescope.shared.logger?.log(
-//                    message: "AVPlayerItem.presentationSize – \(item.presentationSize)",
-//                    level: KinescopeLoggerLevel.player
-//                )
-//                self.delegate?.player(changedPresentationSizeTo: item.presentationSize)
-//            }
-//        )
-    }
-
-    func removeTracksObserver() {
-        self.tracksObserver?.invalidate()
-        self.tracksObserver = nil
     }
 
     func addNotofications() {
@@ -543,7 +481,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                 }
 
                 self.attach(view: miniView)
-                self.view?.change(quality: self.currentQuality, manualQuality: self.isManualQuality)
+                self.view?.change(quality: self.currentQuality)
                 self.restoreView()
             })
         } else {
@@ -566,17 +504,11 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                 }
 
                 self.view?.change(status: .readyToPlay)
-                self.view?.change(quality: self.currentQuality, manualQuality: self.isManualQuality)
+                self.view?.change(quality: self.currentQuality)
                 self.view?.overlay?.set(title: video.title, subtitle: video.description)
                 self.restoreView()
             })
         }
-    }
-
-    func didShowQuality() -> [String] {
-        // TODO: - check that working correctly
-        return video?.qualityMap?
-            .compactMap { $0.name } ?? []
     }
 
     func didShowAttachments() -> [KinescopeVideoAdditionalMaterial]? {
@@ -597,8 +529,8 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         }
 
         let videoQuality: KinescopeVideoQuality
-        if let asset = video.qualityMap?.first(where: { $0.name == quality }) {
-            if let path = dependencies.assetDownloader.getLocation(by: video.id) {
+        if let asset = video.firstQuality(by: quality) {
+            if let path = dependencies.assetDownloader.getLocation(by: video.id + asset.name) {
                 videoQuality = .downloaded(url: path)
             } else {
                 videoQuality = .exact(asset: asset)
@@ -673,37 +605,20 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             return
         }
 
-        if isManualQuality {
-            guard
-                let asset = video.qualityMap?.first(where: { $0.name == currentQuality })
-            else {
-                return
-            }
+        guard
+            let item = self.strategy.player.currentItem,
+            let group = item.asset.mediaSelectionGroup(forMediaCharacteristic: .legible)
+        else {
+            return
+        }
 
-            let videoQuality: KinescopeVideoQuality
-            if let selectedSubtitles = video.subtitles?.first(where: { $0.title == subtitles }) {
-                videoQuality = .exactWithSubtitles(asset: asset, subtitle: selectedSubtitles)
-            } else {
-                videoQuality = .exact(asset: asset)
-            }
-
-            select(quality: videoQuality)
+        if let selectedSubtitles = video.subtitles?.first(where: { $0.title == subtitles }) {
+            let locale = Locale(identifier: selectedSubtitles.language)
+            let options = AVMediaSelectionGroup.mediaSelectionOptions(from: group.options,
+                                                                      with: locale)
+            self.strategy.player.currentItem?.select(options.first, in: group)
         } else {
-            guard
-                let item = self.strategy.player.currentItem,
-                let group = item.asset.mediaSelectionGroup(forMediaCharacteristic: .legible)
-            else {
-                return
-            }
-
-            if let selectedSubtitles = video.subtitles?.first(where: { $0.title == subtitles }) {
-                let locale = Locale(identifier: selectedSubtitles.language)
-                let options = AVMediaSelectionGroup.mediaSelectionOptions(from: group.options,
-                                                                          with: locale)
-                self.strategy.player.currentItem?.select(options.first, in: group)
-            } else {
-                self.strategy.player.currentItem?.select(nil, in: group)
-            }
+            self.strategy.player.currentItem?.select(nil, in: group)
         }
 
         self.strategy.player.currentItem?.textStyleRules = textStyleRules

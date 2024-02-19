@@ -104,12 +104,8 @@ public class KinescopePlayerView: UIView {
         controlPanel?.set(options: options)
     }
 
-    func change(quality: String, manualQuality: Bool) {
-        if manualQuality {
-            set(quality: quality)
-        } else {
-            set(quality: L10n.Player.auto + " " + quality)
-        }
+    func change(quality: String) {
+        set(quality: quality.isEmpty ? L10n.Player.auto : quality)
     }
 
 }
@@ -236,13 +232,14 @@ private extension KinescopePlayerView {
         presentSideMenu(model: model)
     }
 
-    func handleDescriptionActions(for sideMenu: SideMenu, index: Int) {
+    func handleDescriptionActions(for sideMenu: SideMenu, title: String) {
         switch SideMenu.DescriptionTitle.getType(by: sideMenu.title) {
         case .attachments:
-            delegate?.didSelectAttachment(with: index)
+            // TODO: - restore
+//            delegate?.didSelectAttachment(with: index)
             sideMenuWillBeDismissed(sideMenu, withRoot: true)
         case .download:
-            delegate?.didSelectAsset(with: index)
+            delegate?.didSelect(quality: title)
             sideMenuWillBeDismissed(sideMenu, withRoot: true)
         case .none:
             return
@@ -251,10 +248,10 @@ private extension KinescopePlayerView {
     }
 
     func makeQualitySideMenuModel(with title: String) -> SideMenu.Model {
-        let qualities = delegate?.didShowQuality() ?? []
+        let qualities = delegate?.didShowAssets() ?? []
         var items = qualities.compactMap { quality -> SideMenu.Item in
-            let selected = self.selectedQuality.string.trimmingCharacters(in: .symbols) == quality
-            return .checkmark(title: .init(string: quality), selected: selected)
+            let selected = self.selectedQuality.string.trimmingCharacters(in: .symbols) == quality.name
+            return .checkmark(title: .init(string: quality.name), selected: selected)
         }
 
         let autoTitle = NSAttributedString(string: L10n.Player.auto)
@@ -533,8 +530,8 @@ extension KinescopePlayerView: SideMenuDelegate {
             handleDisclosureActions(for: title)
         case .checkmark(let title, _):
             handleCheckmarkActions(for: title, sideMenu: sideMenu)
-        case .description:
-            handleDescriptionActions(for: sideMenu, index: rowIndex)
+        case .description(let title, _):
+            handleDescriptionActions(for: sideMenu, title: title)
         }
     }
 

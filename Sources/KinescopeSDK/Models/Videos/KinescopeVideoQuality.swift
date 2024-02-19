@@ -30,7 +30,7 @@ public enum KinescopeVideoQuality {
     ///
     /// - parameter url: URL to asset file in device storage
     case downloaded(url: URL)
-    
+
     /// Max bitrate for quality
     /// - Returns: Zero when bitRate is not limited.
     var preferredMaxBitRate: Double {
