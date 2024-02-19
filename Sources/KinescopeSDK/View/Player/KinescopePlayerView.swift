@@ -384,7 +384,7 @@ private extension KinescopePlayerView {
 
     func addDebouncerHandler() {
         overlayDebouncer.handler = { [weak self] in
-            guard let self = self else {
+            guard let self else {
                 return
             }
             self.overlay?.isSelected = false

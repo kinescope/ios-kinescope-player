@@ -23,7 +23,7 @@ final class AssetLinksNetworkService: AssetLinksService {
     func getAssetLink(by id: String, completion: @escaping (Result<KinescopeVideoAssetLink, Error>) -> Void) {
         DispatchQueue.global(qos: .utility).async { [weak self] in
             guard
-                let self = self
+                let self
             else {
                 return
             }

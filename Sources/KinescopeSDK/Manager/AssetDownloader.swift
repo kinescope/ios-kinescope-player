@@ -39,7 +39,7 @@ class AssetDownloader: KinescopeAssetDownloadable {
 
     func enqueueDownload(asset: KinescopeVideoAsset) {
         assetLinksService.getAssetLink(by: asset.id) { [weak self] in
-            guard let self = self else {
+            guard let self else {
                 return
             }
             switch $0 {

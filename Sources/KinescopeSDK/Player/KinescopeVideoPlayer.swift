@@ -216,7 +216,7 @@ private extension KinescopeVideoPlayer {
 
         timeObserver = strategy.player.addPeriodicTimeObserver(forInterval: period,
                                                                queue: .main) { [weak self] time in
-            guard let self = self else {
+            guard let self else {
                 return
             }
 
@@ -281,7 +281,7 @@ private extension KinescopeVideoPlayer {
             options: [.new, .old],
             changeHandler: { [weak self] item, _ in
                 guard
-                    let self = self
+                    let self
                 else {
                     return
                 }
@@ -341,7 +341,7 @@ private extension KinescopeVideoPlayer {
             options: [.new, .old],
             changeHandler: { [weak self] item, _ in
                 guard
-                    let self = self,
+                    let self,
                     let video = self.video,
                     let size = item.tracks.first?.assetTrack?.naturalSize,
                     let frameRate = item.tracks.first?.assetTrack?.nominalFrameRate
@@ -538,7 +538,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
             rootVC?.dismiss(animated: true, completion: { [weak self] in
                 guard
-                    let self = self,
+                    let self,
                     let miniView = self.miniView
                 else {
                     return
@@ -561,7 +561,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             playerVC.modalPresentationCapturesStatusBarAppearance = true
             rootVC?.present(playerVC, animated: true, completion: { [weak self] in
                 guard
-                    let self = self,
+                    let self,
                     let video = self.video
                 else {
                     return

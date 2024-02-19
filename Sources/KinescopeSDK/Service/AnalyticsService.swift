@@ -34,7 +34,7 @@ final class AnalyticsNetworkService: AnalyticsService {
         }
         DispatchQueue.global(qos: .utility).async { [weak self] in
             guard
-                let self = self
+                let self
             else {
                 return
             }
