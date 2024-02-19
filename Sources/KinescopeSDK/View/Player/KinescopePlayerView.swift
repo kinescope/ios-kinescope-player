@@ -306,8 +306,10 @@ private extension KinescopePlayerView {
         bcf.countStyle = .file
 
         for material in materials {
-            let title = material.quality
-            let value = bcf.string(fromByteCount: Int64(material.fileSize))
+            let title = material.label
+            let value = material.name
+            // TODO: - how to get fileSize ?
+//            let value = bcf.string(fromByteCount: Int64(material.fileSize))
             items.append(.description(title: title, value: value))
         }
 

@@ -1,10 +1,6 @@
 import Foundation
 
-typealias AllVideosResponse = MetaResponse<[KinescopeVideo], KinescopeMetaData>
-
 protocol VideosService {
-    func getAll(request: KinescopeVideosRequest,
-                completion: @escaping (Result<AllVideosResponse, Error>) -> Void)
     func getVideo(by id: String,
                   completion: @escaping (Result<KinescopeVideo, Error>) -> Void)
 }
@@ -25,37 +21,6 @@ final class VideosNetworkService: VideosService {
 
     // MARK: - Public Methods
 
-    func getAll(request: KinescopeVideosRequest,
-                completion: @escaping (Result<AllVideosResponse, Error>) -> Void) {
-        DispatchQueue.global(qos: .utility).async { [weak self] in
-            guard
-                let self = self
-            else {
-                return
-            }
-
-            do {
-                let encoder = JSONEncoder()
-                encoder.keyEncodingStrategy = .convertToSnakeCase
-                let requestData = try encoder.encode(request)
-
-                let requestDictionary = try JSONSerialization.jsonObject(with: requestData) as? [String: Any] ?? [:]
-                let params = requestDictionary.compactMapValues { String(describing: $0) }
-
-                let request = try RequestBuilder(path: self.config.endpoint + "/videos", method: .get)
-                    .add(token: self.config.apiKey)
-                    .add(parameters: params)
-                    .build(body: EmptyRequest())
-
-                self.transport.perform(request: request, completion: completion)
-            } catch let error {
-                DispatchQueue.main.async {
-                    completion(.failure(error))
-                }
-            }
-        }
-    }
-
     func getVideo(by id: String, completion: @escaping (Result<KinescopeVideo, Error>) -> Void) {
         DispatchQueue.global(qos: .utility).async { [weak self] in
             guard
@@ -63,12 +28,8 @@ final class VideosNetworkService: VideosService {
             else {
                 return
             }
-            
-            if let apiKey =  self.config.apiKey {
-                self.getVideoFromApi(by: id, using: apiKey, completion: completion)
-            } else {
-                self.getVideoFromJson(by: id, using: self.config.referer, completion: completion)
-            }
+
+            self.getVideoFromJson(by: id, using: self.config.referer, completion: completion)
         }
     }
 }
@@ -77,23 +38,9 @@ final class VideosNetworkService: VideosService {
 
 private extension VideosNetworkService {
 
-    func getVideoFromApi(by id: String, using apiKey: String, completion: @escaping (Result<KinescopeVideo, Error>) -> Void) {
-        do {
-            let request = try RequestBuilder(path: self.config.endpoint + "/videos/\(id)", method: .get)
-                .add(token: apiKey)
-                .build(body: EmptyRequest())
-
-            transport.perform(request: request, completion: completion)
-        } catch let error {
-            DispatchQueue.main.async {
-                completion(.failure(error))
-            }
-        }
-    }
-
     func getVideoFromJson(by id: String, using referer: String, completion: @escaping (Result<KinescopeVideo, Error>) -> Void) {
         do {
-            let request = try RequestBuilder(path: "https://kinescope.io/\(id).json", method: .get)
+            let request = try RequestBuilder(path: "\(config.endpoint)\(id).json", method: .get)
                 .add(referer: referer)
                 .build(body: EmptyRequest())
 

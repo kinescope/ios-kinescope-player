@@ -9,7 +9,8 @@ final class VideoViewController: UIViewController {
 
     // MARK: - Private properties
 
-    var videoId = ""
+    // Change this id to your video id from dashboard. This one is free video for demo of SDK only.
+    private let videoId = "9L8KmbNuhQSxQofn5DR4Vg"
     private var player: KinescopePlayer?
 
     // MARK: - Lifecycle

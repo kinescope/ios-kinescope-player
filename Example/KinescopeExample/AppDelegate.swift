@@ -19,12 +19,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if #available(iOS 13.0, *) {
             window?.overrideUserInterfaceStyle = .light
         }
+        setupSDK()
         setupAudioSession()
         return true
     }
 
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
         return .allButUpsideDown
+    }
+    
+    private func setupSDK() {
+        Kinescope.shared.setConfig(.init())
     }
 
     private func setupAudioSession() {

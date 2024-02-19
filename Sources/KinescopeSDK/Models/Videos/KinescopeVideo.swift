@@ -16,7 +16,7 @@ public struct KinescopeVideo: Codable {
     public let status: String?
     public let progress: Int?
     public let duration: Double
-    public let assets: [KinescopeVideoAsset]?
+    public let qualityMap: [KinescopeVideoAsset]?
     public let chapters: KinescopeVideoChapter
     public let poster: KinescopeVideoPoster?
     public let attachments: [KinescopeVideoAdditionalMaterial]?

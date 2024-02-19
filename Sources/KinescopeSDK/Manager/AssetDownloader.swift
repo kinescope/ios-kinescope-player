@@ -18,10 +18,10 @@ class AssetDownloader: KinescopeAssetDownloadable {
     }
 
     // MARK: - Properties
-
+    
+    let assetLinksService: AssetLinksService
     private var delegates: [KinescopeAssetDownloadableDelegate] = []
     private var fileService: FileService
-    private let assetLinksService: AssetLinksService
     private var fileNamesStorage: KinescopeFileNamesStorage
 
     // MARK: - Initialisation
@@ -37,20 +37,15 @@ class AssetDownloader: KinescopeAssetDownloadable {
 
     // MARK: - KinescopeDownloadable
 
-    func enqueueDownload(asset: KinescopeVideoAsset) {
-        assetLinksService.getAssetLink(by: asset.id) { [weak self] in
-            guard let self else {
-                return
-            }
-            switch $0 {
-            case .success(let link):
-                if let url = URL(string: link.link) {
-                    self.fileService.enqueueDownload(fileId: asset.id, url: url)
-                    self.fileNamesStorage.saveFile(name: asset.originalName, id: asset.id)
-                }
-            case .failure(let error):
-                Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.network)
-            }
+    func enqueueDownload(video: KinescopeVideo, asset: KinescopeVideoAsset) {
+        // TODO: - Test on real link
+        let assetLink = assetLinksService.getAssetLink(by: video.id, asset: asset)
+
+        if let url = URL(string: assetLink.link) {
+            fileService.enqueueDownload(fileId: video.id, url: url)
+            fileNamesStorage.saveFile(name: asset.name, id: video.id)
+        } else {
+            Kinescope.shared.logger?.log(message: "", level: KinescopeLoggerLevel.network)
         }
     }
 

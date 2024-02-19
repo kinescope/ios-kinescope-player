@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="jIR-QG-q2o">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="DPB-hC-LdC">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -9,107 +9,6 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Navigation Controller-->
-        <scene sceneID="KTD-i9-eDn">
-            <objects>
-                <navigationController id="jIR-QG-q2o" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="PVj-dy-7Cx">
-                        <rect key="frame" x="0.0" y="48" width="414" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="Dq2-W5-ypg" kind="relationship" relationship="rootViewController" id="eoS-Uv-ggj"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="cH2-zV-csF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-2066" y="-93"/>
-        </scene>
-        <!--Auth Selector Controller-->
-        <scene sceneID="diD-rC-qAM">
-            <objects>
-                <viewController id="Dq2-W5-ypg" customClass="AuthSelectorController" customModule="KinescopeExample" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="G12-6b-wSS">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="vfF-sv-7ss">
-                                <rect key="frame" x="0.0" y="92" width="414" height="770"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            </tableView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ff2-Ay-2BF" customClass="EmptyView" customModule="KinescopeExample" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="92" width="414" height="770"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="text">
-                                        <string key="value">Seems that you forgot to add KinescopeConfig.plist or config is empty. Please, read KinescopeExample/Readme.md for more details.</string>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </view>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="APe-iv-Jiv"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="APe-iv-Jiv" firstAttribute="trailing" secondItem="vfF-sv-7ss" secondAttribute="trailing" id="4DA-Lh-iWi"/>
-                            <constraint firstItem="APe-iv-Jiv" firstAttribute="trailing" secondItem="Ff2-Ay-2BF" secondAttribute="trailing" id="9Dn-id-g1h"/>
-                            <constraint firstItem="APe-iv-Jiv" firstAttribute="bottom" secondItem="vfF-sv-7ss" secondAttribute="bottom" id="AUu-rV-bXD"/>
-                            <constraint firstItem="APe-iv-Jiv" firstAttribute="bottom" secondItem="Ff2-Ay-2BF" secondAttribute="bottom" id="BOx-2M-ayS"/>
-                            <constraint firstItem="Ff2-Ay-2BF" firstAttribute="top" secondItem="APe-iv-Jiv" secondAttribute="top" id="Hvj-Nk-m0B"/>
-                            <constraint firstItem="Ff2-Ay-2BF" firstAttribute="leading" secondItem="APe-iv-Jiv" secondAttribute="leading" id="eyD-XR-hQf"/>
-                            <constraint firstItem="vfF-sv-7ss" firstAttribute="top" secondItem="APe-iv-Jiv" secondAttribute="top" id="iA2-Gl-aa5"/>
-                            <constraint firstItem="vfF-sv-7ss" firstAttribute="leading" secondItem="APe-iv-Jiv" secondAttribute="leading" id="iEr-71-Rsf"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" id="cCa-mU-wuP"/>
-                    <connections>
-                        <outlet property="emptyView" destination="Ff2-Ay-2BF" id="STZ-Lg-csw"/>
-                        <outlet property="tableView" destination="vfF-sv-7ss" id="jhD-sS-vJx"/>
-                        <segue destination="QTb-d7-Rhh" kind="show" identifier="toVideos" id="3Pd-MQ-L3e"/>
-                        <segue destination="DPB-hC-LdC" kind="show" identifier="toVideo" id="mhU-np-jo0"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="SN2-cr-X6f" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-1077" y="-93"/>
-        </scene>
-        <!--Video List Controller-->
-        <scene sceneID="WBO-Gk-QJI">
-            <objects>
-                <viewController id="QTb-d7-Rhh" customClass="VideoListController" customModule="KinescopeExample" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="olC-PR-ahI">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Qzz-t2-KHe">
-                                <rect key="frame" x="0.0" y="92" width="414" height="770"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            </tableView>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="OP4-E5-go6">
-                                <rect key="frame" x="197" y="467" width="20" height="20"/>
-                            </activityIndicatorView>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="oh4-E8-NGc"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="oh4-E8-NGc" firstAttribute="trailing" secondItem="Qzz-t2-KHe" secondAttribute="trailing" id="3HY-yO-9Ng"/>
-                            <constraint firstItem="Qzz-t2-KHe" firstAttribute="top" secondItem="oh4-E8-NGc" secondAttribute="top" id="Au5-0x-96Q"/>
-                            <constraint firstItem="OP4-E5-go6" firstAttribute="centerX" secondItem="oh4-E8-NGc" secondAttribute="centerX" id="OQ6-C6-uac"/>
-                            <constraint firstItem="Qzz-t2-KHe" firstAttribute="leading" secondItem="oh4-E8-NGc" secondAttribute="leading" id="Qnj-bR-PVk"/>
-                            <constraint firstItem="oh4-E8-NGc" firstAttribute="bottom" secondItem="Qzz-t2-KHe" secondAttribute="bottom" id="d0h-HQ-yKU"/>
-                            <constraint firstItem="OP4-E5-go6" firstAttribute="centerY" secondItem="oh4-E8-NGc" secondAttribute="centerY" id="uMV-5x-CMP"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" id="KHD-hL-5Sd"/>
-                    <connections>
-                        <outlet property="activityIndicator" destination="OP4-E5-go6" id="0kR-Ks-3JR"/>
-                        <outlet property="tableView" destination="Qzz-t2-KHe" id="GML-wt-xob"/>
-                        <segue destination="DPB-hC-LdC" kind="show" identifier="toVideo" id="gNe-Vy-3bc"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="CtD-2X-T69" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-143" y="-93"/>
-        </scene>
         <!--Video View Controller-->
         <scene sceneID="pQM-gT-YEK">
             <objects>
@@ -119,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Mt-Oj-buA" customClass="KinescopePlayerView" customModule="KinescopeSDK">
-                                <rect key="frame" x="0.0" y="92" width="414" height="400"/>
+                                <rect key="frame" x="0.0" y="255" width="414" height="400"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="400" id="C1n-q6-hl7"/>
@@ -131,7 +30,7 @@
                         <constraints>
                             <constraint firstItem="GgO-Ol-gXU" firstAttribute="trailing" secondItem="0Mt-Oj-buA" secondAttribute="trailing" id="2NM-Xr-JMK"/>
                             <constraint firstItem="0Mt-Oj-buA" firstAttribute="leading" secondItem="GgO-Ol-gXU" secondAttribute="leading" id="LjU-VV-QKJ"/>
-                            <constraint firstItem="GgO-Ol-gXU" firstAttribute="top" secondItem="0Mt-Oj-buA" secondAttribute="top" id="Wmo-Wl-sTw"/>
+                            <constraint firstItem="0Mt-Oj-buA" firstAttribute="centerY" secondItem="GgO-Ol-gXU" secondAttribute="centerY" id="tzn-a4-PST"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Quj-GN-m8L"/>
@@ -141,12 +40,9 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="C0p-yZ-n2A" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="678" y="-848"/>
+            <point key="canvasLocation" x="-1696" y="-92"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="mhU-np-jo0"/>
-    </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

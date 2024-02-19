@@ -8,15 +8,11 @@
 /// Protocol managing inspectations of dashboard content like videos, projects etc
 public protocol KinescopeInspectable: class {
 
-    /// Entry for `GET` Video list
+    /// Entry for `GET` Video task
     ///
-    /// - parameter request: request info with sort order and requested page chunk
-    /// - parameter onSuccess: callback on success. Returns list of videos available with meta info about totalCount of videos
+    /// - parameter id: id of video to inspect
+    /// - parameter onSuccess: callback on success. Returns `KinescopeVideo` object aplicable for player.
     /// - parameter onError: callback on error.
-    func list(request: KinescopeVideosRequest,
-              onSuccess: @escaping (([KinescopeVideo], KinescopeMetaData)) -> Void,
-              onError: @escaping (KinescopeInspectError) -> Void)
-
     func video(id: String,
                onSuccess: @escaping (KinescopeVideo) -> Void,
                onError: @escaping (KinescopeInspectError) -> Void)

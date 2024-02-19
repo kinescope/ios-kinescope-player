@@ -133,7 +133,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     }
 
     public func select(quality: KinescopeVideoQuality) {
-        guard let item = quality.item else {
+        guard let item = quality.makeItem(with: dependencies.assetDownloader.assetLinksService) else {
             // Log here critical error
             return
         }
@@ -186,7 +186,7 @@ private extension KinescopeVideoPlayer {
     func makePlayerOptions(from video: KinescopeVideo) -> [KinescopePlayerOption] {
         var options: [KinescopePlayerOption] = [.airPlay, .settings, .fullscreen, .more]
 
-        if !(video.assets?.isEmpty ?? true) {
+        if !(video.qualityMap?.isEmpty ?? true) {
             options.insert(.download, at: 1)
         }
 
@@ -336,47 +336,47 @@ private extension KinescopeVideoPlayer {
     }
 
     func addTracksObserver() {
-        self.tracksObserver = self.strategy.player.currentItem?.observe(
-            \.tracks,
-            options: [.new, .old],
-            changeHandler: { [weak self] item, _ in
-                guard
-                    let self,
-                    let video = self.video,
-                    let size = item.tracks.first?.assetTrack?.naturalSize,
-                    let frameRate = item.tracks.first?.assetTrack?.nominalFrameRate
-                else {
-                    return
-                }
-
-                let height = String(format: "%.0f", size.height)
-
-                let qualities = video.assets?
-                    .compactMap { $0.quality }
-                    .filter { $0.hasPrefix(height) } ?? []
-
-                let expectedQuality: String?
-                if frameRate > 30.0 {
-                    expectedQuality = qualities.first { $0.hasSuffix("60") }
-                } else {
-                    expectedQuality = qualities.first { $0.hasPrefix(height) && !$0.hasSuffix("60") }
-                }
-
-                guard
-                    let quality = expectedQuality
-                else {
-                    return
-                }
-
-                self.view?.change(quality: quality, manualQuality: self.isManualQuality)
-
-                Kinescope.shared.logger?.log(
-                    message: "AVPlayerItem.presentationSize – \(item.presentationSize)",
-                    level: KinescopeLoggerLevel.player
-                )
-                self.delegate?.player(changedPresentationSizeTo: item.presentationSize)
-            }
-        )
+//        self.tracksObserver = self.strategy.player.currentItem?.observe(
+//            \.tracks,
+//            options: [.new, .old],
+//            changeHandler: { [weak self] item, _ in
+//                guard
+//                    let self,
+//                    let video = self.video,
+//                    let size = item.tracks.first?.assetTrack?.naturalSize,
+//                    let frameRate = item.tracks.first?.assetTrack?.nominalFrameRate
+//                else {
+//                    return
+//                }
+//
+//                let height = String(format: "%.0f", size.height)
+//
+//                let qualities = video.qualityMap?
+//                    .compactMap { $0.height }
+//
+//                let expectedQuality: String? = qualities?.first
+//                // TODO: - Restore functionality
+////                if frameRate > 30.0 {
+////                    expectedQuality = qualities.first { $0.hasSuffix("60") }
+////                } else {
+////                    expectedQuality = qualities.first { $0.hasPrefix(height) && !$0.hasSuffix("60") }
+////                }
+//
+//                guard
+//                    let quality = expectedQuality
+//                else {
+//                    return
+//                }
+//
+//                self.view?.change(quality: quality, manualQuality: self.isManualQuality)
+//
+//                Kinescope.shared.logger?.log(
+//                    message: "AVPlayerItem.presentationSize – \(item.presentationSize)",
+//                    level: KinescopeLoggerLevel.player
+//                )
+//                self.delegate?.player(changedPresentationSizeTo: item.presentationSize)
+//            }
+//        )
     }
 
     func removeTracksObserver() {
@@ -576,9 +576,9 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didShowQuality() -> [String] {
-        return video?.assets?
-            .compactMap { $0.quality }
-            .filter { $0 != "original" } ?? []
+        // TODO: - check that working correctly
+        return video?.qualityMap?
+            .compactMap { $0.name } ?? []
     }
 
     func didShowAttachments() -> [KinescopeVideoAdditionalMaterial]? {
@@ -599,11 +599,11 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         }
 
         let videoQuality: KinescopeVideoQuality
-        if let asset = video.assets?.first(where: { $0.quality == quality }) {
-            if let path = dependencies.assetDownloader.getLocation(by: asset.id) {
+        if let asset = video.qualityMap?.first(where: { $0.name == quality }) {
+            if let path = dependencies.assetDownloader.getLocation(by: video.id) {
                 videoQuality = .downloaded(url: path)
             } else {
-                videoQuality = .exact(asset: asset)
+                videoQuality = .exact(id: video.id, asset: asset)
             }
         } else {
             videoQuality = .auto(hlsLink: video.hlsLink)
@@ -631,26 +631,30 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didSelectAsset(with index: Int) {
-        guard let asset = video?.assets?[safe: index] else {
+        guard let video, let asset = video.qualityMap?[safe: index] else {
             return
         }
-        dependencies.assetDownloader.enqueueDownload(asset: asset)
-        Kinescope.shared.logger?.log(message: "Start downloading asset: \(asset.id + asset.originalName)",
+        dependencies.assetDownloader.enqueueDownload(video: video, asset: asset)
+        Kinescope.shared.logger?.log(message: "Start downloading asset: \(video.id + asset.name)",
                                      level: KinescopeLoggerLevel.player)
     }
 
     func didSelectDownloadAll(for title: String) {
+        guard let video else {
+            return
+        }
+
         switch SideMenu.DescriptionTitle.getType(by: title) {
         case .attachments:
-            video?.attachments?.forEach {
+            video.attachments?.forEach {
                 dependencies.attachmentDownloader.enqueueDownload(attachment: $0)
                 Kinescope.shared.logger?.log(message: "Start downloading attachment: \($0.title)",
                                              level: KinescopeLoggerLevel.player)
             }
         case .download:
-            video?.downloadableAssets.forEach {
-                dependencies.assetDownloader.enqueueDownload(asset: $0)
-                Kinescope.shared.logger?.log(message: "Start downloading asset: \($0.quality) - \($0.id)",
+            video.downloadableAssets.forEach {
+                dependencies.assetDownloader.enqueueDownload(video: video, asset: $0)
+                Kinescope.shared.logger?.log(message: "Start downloading asset: \($0.name) - \(video.id)",
                                              level: KinescopeLoggerLevel.player)
             }
         case .none:
@@ -673,16 +677,16 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
         if isManualQuality {
             guard
-                let asset = video.assets?.first(where: { $0.quality == currentQuality })
+                let asset = video.qualityMap?.first(where: { $0.name == currentQuality })
             else {
                 return
             }
 
             let videoQuality: KinescopeVideoQuality
             if let selectedSubtitles = video.subtitles?.first(where: { $0.title == subtitles }) {
-                videoQuality = .exactWithSubtitles(asset: asset, subtitle: selectedSubtitles)
+                videoQuality = .exactWithSubtitles(id: video.id, asset: asset, subtitle: selectedSubtitles)
             } else {
-                videoQuality = .exact(asset: asset)
+                videoQuality = .exact(id: video.id, asset: asset)
             }
 
             select(quality: videoQuality)

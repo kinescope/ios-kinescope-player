@@ -8,15 +8,16 @@
 import AVFoundation
 
 extension KinescopeVideoQuality {
-
-    var item: AVPlayerItem? {
+    
+    func makeItem(with assetLinksService: AssetLinksService) -> AVPlayerItem? {
         switch self {
         case .auto(let hlsLink):
             return makeAutoItem(from: hlsLink)
-        case .exact(let asset):
-            return makeExactItem(from: asset)
-        case .exactWithSubtitles(let asset, let subtitles):
-            return makeExactItem(from: asset, subtitles: subtitles)
+        case .exact(let id, let asset):
+            return makeExactItem(from: assetLinksService.getAssetLink(by: id, asset: asset))
+        case .exactWithSubtitles(let id, let asset, let subtitles):
+                                    return makeExactItem(from: assetLinksService.getAssetLink(by: id, asset: asset),
+                                                         subtitles: subtitles)
         case .downloaded(let url):
             return makeDownloadedItem(from: url)
         }
@@ -37,19 +38,17 @@ fileprivate extension KinescopeVideoQuality {
         return AVPlayerItem(asset: asset)
     }
 
-    func makeExactItem(from asset: KinescopeVideoAsset) -> AVPlayerItem? {
-        guard let urlString = asset.url,
-                let url = URL(string: urlString) else {
+    func makeExactItem(from asset: KinescopeVideoAssetLink) -> AVPlayerItem? {
+        guard let url = URL(string: asset.link) else {
             return nil
         }
 
         return AVPlayerItem(url: url)
     }
 
-    func makeExactItem(from asset: KinescopeVideoAsset,
+    func makeExactItem(from asset: KinescopeVideoAssetLink,
                        subtitles: KinescopeVideoSubtitle) -> AVPlayerItem? {
-        guard let urlString = asset.url,
-                let url = URL(string: urlString)
+        guard let url = URL(string: asset.link)
         else {
             return nil
         }

@@ -21,19 +21,6 @@ class Inspector: KinescopeInspectable {
 
     // MARK: - Methods
 
-    func list(request: KinescopeVideosRequest,
-              onSuccess: @escaping (([KinescopeVideo], KinescopeMetaData)) -> Void,
-              onError: @escaping (KinescopeInspectError) -> Void) {
-        videosService.getAll(request: request) { result in
-            switch result {
-            case .success(let response):
-                onSuccess((response.data, response.meta))
-            case .failure(let error):
-                onError(Inspector.parse(error: error))
-            }
-        }
-    }
-
     func video(id: String,
                onSuccess: @escaping (KinescopeVideo) -> Void,
                onError: @escaping (KinescopeInspectError) -> Void) {
