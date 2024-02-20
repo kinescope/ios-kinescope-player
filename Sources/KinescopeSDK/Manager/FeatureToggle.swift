@@ -12,4 +12,7 @@ enum FeatureToggle {
     /// Enable/Disable asset downloader quick menu action in player
     static let assetDownloaderEnabled = false
 
+    /// Enable/Disable playback speed setting in player sideMenu
+    static let playbackSpeedSettingEnabled = false
+
 }

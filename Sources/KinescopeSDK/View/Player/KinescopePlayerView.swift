@@ -217,16 +217,21 @@ private extension KinescopePlayerView {
     }
 
     func handleDisclosureActions(for title: String) {
-        let model: SideMenu.Model
+        let model: SideMenu.Model?
         switch SideMenu.Settings.getType(by: title) {
         case .playbackSpeed:
-            model = .init(title: title, isRoot: false, isDownloadable: false, items: [])
+            // TODO: - Feature.playbackSpeedSetting: create model with playback options
+            model = nil
         case .subtitles:
             model = makeSubtitlesSideMenuModel(with: title, root: false)
         case .quality:
             model = makeQualitySideMenuModel(with: title)
         case .none:
-            model = .init(title: title, isRoot: false, isDownloadable: false, items: [])
+            model = nil
+        }
+        
+        guard let model else {
+            return
         }
 
         presentSideMenu(model: model)
@@ -323,6 +328,7 @@ private extension KinescopePlayerView {
         case .subtitles:
             handleSubtitlesCheckmarkAction(for: title, sideMenu: sideMenu)
         case .playbackSpeed, .none:
+            // TODO: - Feature.playbackSpeedSetting: handle changes for playback
             break
         }
     }
@@ -460,8 +466,9 @@ extension KinescopePlayerView: PlayerControlOutput {
                                        isRoot: true,
                                        isDownloadable: false,
                                        items: [
-                                        .disclosure(title: L10n.Player.playbackSpeed,
-                                                    value: nil),
+                                        // TODO: - Feature.playbackSpeedSetting: add playback speed settings row in SideMenu
+//                                        .disclosure(title: L10n.Player.playbackSpeed,
+//                                                    value: nil),
                                         .disclosure(title: L10n.Player.subtitles,
                                                     value: selectedSubtitles),
                                         .disclosure(title: L10n.Player.videoQuality,
