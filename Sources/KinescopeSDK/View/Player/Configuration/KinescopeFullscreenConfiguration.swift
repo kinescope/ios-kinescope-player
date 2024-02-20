@@ -30,20 +30,11 @@ public struct KinescopeFullscreenConfiguration {
 public extension KinescopeFullscreenConfiguration {
 
     static func preferred(for video: KinescopeVideo?) -> KinescopeFullscreenConfiguration {
-        guard let asset = video?.qualityMap?.first else {
+        guard let resolution = video?.firstResolution else {
             return landscape
         }
-        
-        // TODO: - resolve issue with landscape/portrait resolution
 
-//        let resolution = asset.resolution.split(whereSeparator: { !$0.isHexDigit }).compactMap { Int($0) }
-//
-//        guard let width = resolution.first, let height = resolution.last else {
-//            return landscape
-//        }
-//
-//        return width > height ? .landscape : .portrait
-        return .landscape
+        return resolution.width > resolution.height ? .landscape : .portrait
     }
 
     static let landscape: KinescopeFullscreenConfiguration = .init(
