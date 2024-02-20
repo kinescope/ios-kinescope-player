@@ -40,7 +40,7 @@ class AssetDownloader: KinescopeAssetDownloadable {
     // MARK: - KinescopeDownloadable
 
     func enqueueDownload(video: KinescopeVideo, asset: KinescopeVideoAsset) {
-        // TODO: - Get downloading link from manifest
+        // TODO: - Feature.assetDownloader: Get downloading link from manifest
         let assetLink = assetLinksService.getAssetLink(by: video.id, asset: asset)
 
         if let url = URL(string: assetLink.link) {

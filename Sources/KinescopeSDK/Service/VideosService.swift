@@ -23,13 +23,7 @@ final class VideosNetworkService: VideosService {
 
     func getVideo(by id: String, completion: @escaping (Result<KinescopeVideo, Error>) -> Void) {
         DispatchQueue.global(qos: .utility).async { [weak self] in
-            guard
-                let self
-            else {
-                return
-            }
-
-            self.getVideoFromJson(by: id, using: self.config.referer, completion: completion)
+            self?.getVideoFromJson(by: id, completion: completion)
         }
     }
 }
@@ -38,10 +32,10 @@ final class VideosNetworkService: VideosService {
 
 private extension VideosNetworkService {
 
-    func getVideoFromJson(by id: String, using referer: String, completion: @escaping (Result<KinescopeVideo, Error>) -> Void) {
+    func getVideoFromJson(by id: String, completion: @escaping (Result<KinescopeVideo, Error>) -> Void) {
         do {
             let request = try RequestBuilder(path: "\(config.endpoint)\(id).json", method: .get)
-                .add(referer: referer)
+                .add(referer: config.referer)
                 .build(body: EmptyRequest())
 
             transport.performFetch(request: request, completion: completion)

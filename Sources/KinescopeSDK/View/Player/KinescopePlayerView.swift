@@ -306,7 +306,7 @@ private extension KinescopePlayerView {
         for material in materials {
             let title = material.label
             let value = material.name
-            // TODO: - how to get fileSize ?
+            // TODO: - Feature.assetDownloader: how to get fileSize ?
 //            let value = bcf.string(fromByteCount: Int64(material.fileSize))
             items.append(.description(id: title, 
                                       title: title,
@@ -555,3 +555,4 @@ extension KinescopePlayerView: ShadowOverlayDelegate {
     }
 
 }
+

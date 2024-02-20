@@ -33,18 +33,12 @@ final class AnalyticsNetworkService: AnalyticsService {
             return
         }
         DispatchQueue.global(qos: .utility).async { [weak self] in
-            guard
-                let self
-            else {
-                return
-            }
-
             do {
 
                 let request = try RequestBuilder(path: "https://metrics.kinescope.io/player-native", method: .post)
                     .build(body: data)
 
-                self.transport.perform(request: request, completion: completion)
+                self?.transport.perform(request: request, completion: completion)
             } catch let error {
                 DispatchQueue.main.async {
                     completion(.failure(error))

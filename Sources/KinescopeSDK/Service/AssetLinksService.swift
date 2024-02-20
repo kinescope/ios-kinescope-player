@@ -19,7 +19,7 @@ final class AssetLinksLocalService: AssetLinksService {
     // MARK: - Public Methods
     
     func getAssetLink(by id: String, asset: KinescopeVideoAsset) -> KinescopeVideoAssetLink {
-        // TODO: - replace with real downloadable link
+        // TODO: - Feature.assetDownloader: replace with real downloadable link
         KinescopeVideoAssetLink(link: "\(config.endpoint)\(id)/\(asset.name).mp4")
     }
 
