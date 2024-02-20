@@ -558,15 +558,6 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                                      level: KinescopeLoggerLevel.player)
     }
 
-    func didSelectAsset(with index: Int) {
-        guard let video, let asset = video.qualityMap?[safe: index] else {
-            return
-        }
-        dependencies.assetDownloader.enqueueDownload(video: video, asset: asset)
-        Kinescope.shared.logger?.log(message: "Start downloading asset: \(video.id + asset.name)",
-                                     level: KinescopeLoggerLevel.player)
-    }
-
     func didSelectDownloadAll(for title: String) {
         guard let video else {
             return

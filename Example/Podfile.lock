@@ -1,7 +1,9 @@
 PODS:
-  - KinescopeSDK (0.1):
+  - KinescopeSDK (0.2-beta):
+    - Pantomime (~> 0.1)
     - SwiftProtobuf (~> 1.0)
   - Kingfisher (6.2.1)
+  - Pantomime (0.1.3)
   - ReactiveDataDisplayManager (7.0.0)
   - SwiftProtobuf (1.16.0)
 
@@ -13,6 +15,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - Kingfisher
+    - Pantomime
     - ReactiveDataDisplayManager
     - SwiftProtobuf
 
@@ -21,8 +24,9 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  KinescopeSDK: cf9a88913bab22ef14c732ece567993863b4ba00
+  KinescopeSDK: 87f2131a5a7cdd20ebc9654ee32163410ea09da7
   Kingfisher: e71c6fac2aebb1262888cabc2cb13d313362a48f
+  Pantomime: 54370f70443f04fe07a3a333966f00c895fb87ab
   ReactiveDataDisplayManager: 0ff30e94f5c9785e4f366ca5e09bef00eb6a8ba8
   SwiftProtobuf: 4e16842b83c6fda06b10fac50d73b3f1fce8ab7b
 
