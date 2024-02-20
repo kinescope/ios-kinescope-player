@@ -174,7 +174,7 @@ private extension KinescopeVideoPlayer {
     func makePlayerOptions(from video: KinescopeVideo) -> [KinescopePlayerOption] {
         var options: [KinescopePlayerOption] = [.airPlay, .settings, .fullscreen, .more]
 
-        if video.hasAssets {
+        if FeatureToggle.assetDownloaderEnabled && video.hasAssets {
             options.insert(.download, at: 1)
         }
 
