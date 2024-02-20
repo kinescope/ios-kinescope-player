@@ -232,14 +232,13 @@ private extension KinescopePlayerView {
         presentSideMenu(model: model)
     }
 
-    func handleDescriptionActions(for sideMenu: SideMenu, title: String) {
+    func handleDescriptionActions(for sideMenu: SideMenu, id: String) {
         switch SideMenu.DescriptionTitle.getType(by: sideMenu.title) {
         case .attachments:
-            // TODO: - restore
-//            delegate?.didSelectAttachment(with: index)
+            delegate?.didSelectAttachment(with: id)
             sideMenuWillBeDismissed(sideMenu, withRoot: true)
         case .download:
-            delegate?.didSelect(quality: title)
+            delegate?.didSelect(quality: id)
             sideMenuWillBeDismissed(sideMenu, withRoot: true)
         case .none:
             return
@@ -286,7 +285,9 @@ private extension KinescopePlayerView {
         for (index, material) in materials.enumerated() {
             let title = String(index + 1) + ". " + material.title
             let value = bcf.string(fromByteCount: Int64(material.size))
-            items.append(.description(title: title, value: value))
+            items.append(.description(id: material.id,
+                                      title: title,
+                                      value: value))
         }
 
         return items
@@ -307,7 +308,9 @@ private extension KinescopePlayerView {
             let value = material.name
             // TODO: - how to get fileSize ?
 //            let value = bcf.string(fromByteCount: Int64(material.fileSize))
-            items.append(.description(title: title, value: value))
+            items.append(.description(id: title, 
+                                      title: title,
+                                      value: value))
         }
 
         return items
@@ -530,8 +533,8 @@ extension KinescopePlayerView: SideMenuDelegate {
             handleDisclosureActions(for: title)
         case .checkmark(let title, _):
             handleCheckmarkActions(for: title, sideMenu: sideMenu)
-        case .description(let title, _):
-            handleDescriptionActions(for: sideMenu, title: title)
+        case .description(let id, _, _):
+            handleDescriptionActions(for: sideMenu, id: id)
         }
     }
 

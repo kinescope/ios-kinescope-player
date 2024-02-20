@@ -178,7 +178,7 @@ private extension KinescopeVideoPlayer {
             options.insert(.download, at: 1)
         }
 
-        if !(video.attachments?.isEmpty ?? true) {
+        if video.hasAttachments {
             options.insert(.attachments, at: 0)
         }
 
@@ -186,7 +186,7 @@ private extension KinescopeVideoPlayer {
             options.insert(.pip, at: options.count - 2)
         }
 
-        if !(video.subtitles?.isEmpty ?? true) {
+        if video.hasSubtitles {
             options.insert(.subtitles, at: 0)
         }
 
@@ -549,10 +549,8 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         delegate?.player(changedQualityTo: quality)
     }
 
-    func didSelectAttachment(with index: Int) {
-        guard
-            let attachment = video?.attachments?[safe: index]
-        else {
+    func didSelectAttachment(with id: String) {
+        guard let attachment = video?.firstAttachment(by: id) else {
             return
         }
         dependencies.attachmentDownloader.enqueueDownload(attachment: attachment)
@@ -593,7 +591,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didShowSubtitles() -> [String] {
-        return video?.subtitles?.compactMap { $0.title } ?? []
+        return video?.allSubtitlesVariants ?? []
     }
 
     func didSelect(subtitles: String) {
@@ -612,7 +610,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             return
         }
 
-        if let selectedSubtitles = video.subtitles?.first(where: { $0.title == subtitles }) {
+        if let selectedSubtitles = video.firstSubtitle(by: subtitles) {
             let locale = Locale(identifier: selectedSubtitles.language)
             let options = AVMediaSelectionGroup.mediaSelectionOptions(from: group.options,
                                                                       with: locale)
@@ -623,7 +621,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
         self.strategy.player.currentItem?.textStyleRules = textStyleRules
 
-        let isOn = video.subtitles?.contains { $0.title == subtitles } ?? false
+        let isOn = video.hasSubtitle(with: subtitles)
         view?.controlPanel?.set(subtitleOn: isOn)
         Kinescope.shared.logger?.log(message: "Select subtitles: \(subtitles)",
                                      level: KinescopeLoggerLevel.player)

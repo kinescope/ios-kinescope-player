@@ -9,7 +9,7 @@ protocol KinescopePlayerViewDelegate: class {
     func didShowAttachments() -> [KinescopeVideoAdditionalMaterial]?
     func didShowAssets() -> [KinescopeVideoAsset]?
     func didSelect(quality: String)
-    func didSelectAttachment(with index: Int)
+    func didSelectAttachment(with id: String)
     func didSelectAsset(with index: Int)
     func didSelectDownloadAll(for title: String)
     func didShowSubtitles() -> [String]

@@ -59,7 +59,7 @@ final class SideMenu: UIView {
     enum Item {
         case disclosure(title: String, value: NSAttributedString?)
         case checkmark(title: NSAttributedString, selected: Bool = false)
-        case description(title: String, value: String)
+        case description(id: String, title: String, value: String)
     }
 
     struct Model {
@@ -123,7 +123,7 @@ extension SideMenu: UITableViewDataSource {
                                                             selected: selected,
                                                             config: config.item))
             return cell
-        case .description(let title, let value):
+        case .description(_, let title, let value):
             let cell = tableView.dequeueReusableCell(withIdentifier: DescriptionCell.description(),
                                                      for: indexPath)
             (cell as? DescriptionCell)?.configure(with: .init(title: title,
