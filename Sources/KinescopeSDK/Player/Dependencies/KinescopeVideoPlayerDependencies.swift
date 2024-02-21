@@ -6,7 +6,7 @@
 //
 
 struct KinescopeVideoPlayerDependencies: KinescopePlayerDependencies {
-
+    let drmFactory: DataProtectionHandlerFactory = Kinescope.shared.drmFactory
     let inspector: KinescopeInspectable = Kinescope.shared.inspector
     let assetDownloader: KinescopeAssetDownloadable = Kinescope.shared.assetDownloader
     let attachmentDownloader: KinescopeAttachmentDownloadable = Kinescope.shared.attachmentDownloader

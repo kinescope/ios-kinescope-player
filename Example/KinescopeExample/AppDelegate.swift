@@ -30,6 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     private func setupSDK() {
         Kinescope.shared.setConfig(.init())
+        Kinescope.shared.set(logger: KinescopeDefaultLogger(), levels: KinescopeLoggerLevel.allCases)
     }
 
     private func setupAudioSession() {

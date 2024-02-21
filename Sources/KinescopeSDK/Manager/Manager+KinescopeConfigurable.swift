@@ -13,6 +13,8 @@ extension Manager: KinescopeConfigurable {
 
     func setConfig(_ config: KinescopeConfig) {
         self.config = config
+        self.drmFactory = DefaultDataProtectionHandlerFactory(service: DataProtectionNetworkService(transport: Transport(),
+                                                                                                    config: config))
         self.assetDownloader = AssetDownloader(fileService: FileNetworkService(downloadIdentifier: "assets"),
                                                assetLinksService: AssetLinksLocalService(config: config))
         self.attachmentDownloader = AttachmentDownloader(fileService: FileNetworkService(downloadIdentifier: "attachments"))

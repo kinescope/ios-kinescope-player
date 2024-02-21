@@ -92,4 +92,35 @@ final class RequestBuilder {
 
         return urlRequest
     }
+
+    func build(body: Data) throws -> URLRequest {
+        guard
+            var urlComponents = URLComponents(string: path)
+        else {
+            throw RequestBuilderError.wrongPath
+        }
+
+        if let parameters = parameters {
+            urlComponents.queryItems = parameters.map { .init(name: $0.0, value: $0.1) }
+        }
+
+        guard
+            let url = urlComponents.url
+        else {
+            throw RequestBuilderError.wrongURL
+        }
+
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = method.rawValue
+
+        if let headers = headers {
+            headers.forEach { key, value in
+                urlRequest.addValue(value, forHTTPHeaderField: key)
+            }
+        }
+
+        urlRequest.httpBody = body
+
+        return urlRequest
+    }
 }

@@ -12,8 +12,10 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     }
 
     // MARK: - Private Properties
-
+    
+    private let config: KinescopePlayerConfig
     private let dependencies: KinescopePlayerDependencies
+
     private lazy var strategy: PlayingStrategy = {
         dependencies.provide(for: config)
     }()
@@ -43,8 +45,15 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private weak var miniView: KinescopePlayerView?
     private weak var delegate: KinescopeVideoPlayerDelegate?
 
-    private var video: KinescopeVideo?
-    private let config: KinescopePlayerConfig
+    private var drmHandler: DataProtectionHandler?
+    private var video: KinescopeVideo? {
+        didSet {
+            guard let video else {
+                return
+            }
+            drmHandler = dependencies.drmFactory.provide(for: video.id)
+        }
+    }
     private var options = [KinescopePlayerOption]()
 
     private var textStyleRules: [AVTextStyleRule]? {
@@ -134,7 +143,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
         removePlayerItemStatusObserver()
         
-        if let item = quality.item {
+        if let item = quality.makeItem(with: drmHandler) {
             strategy.bind(item: item)
         }
 
@@ -268,9 +277,7 @@ private extension KinescopeVideoPlayer {
             \.status,
             options: [.new, .old],
             changeHandler: { [weak self] item, _ in
-                guard
-                    let self
-                else {
+                guard let self else {
                     return
                 }
 

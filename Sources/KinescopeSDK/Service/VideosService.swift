@@ -11,6 +11,9 @@ final class VideosNetworkService: VideosService {
 
     private let transport: Transport
     private let config: KinescopeConfig
+    
+    private let executionQueue = DispatchQueue.global(qos: .utility)
+    private let errorQueue = DispatchQueue.main
 
     // MARK: - Lifecycle
 
@@ -22,7 +25,7 @@ final class VideosNetworkService: VideosService {
     // MARK: - Public Methods
 
     func getVideo(by id: String, completion: @escaping (Result<KinescopeVideo, Error>) -> Void) {
-        DispatchQueue.global(qos: .utility).async { [weak self] in
+        executionQueue.async { [weak self] in
             self?.getVideoFromJson(by: id, completion: completion)
         }
     }
@@ -40,7 +43,7 @@ private extension VideosNetworkService {
 
             transport.performFetch(request: request, completion: completion)
         } catch let error {
-            DispatchQueue.main.async {
+            errorQueue.async {
                 completion(.failure(error))
             }
         }

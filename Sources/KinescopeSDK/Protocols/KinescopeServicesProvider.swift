@@ -11,6 +11,9 @@ public protocol KinescopeServicesProvider {
 
     /// Config for sdk
     var config: KinescopeConfig! { get }
+    
+    /// Service managing data protection
+    var drmFactory: DataProtectionHandlerFactory! { get }
 
     /// Service managing downloading of assets
     var assetDownloader: KinescopeAssetDownloadable! { get }

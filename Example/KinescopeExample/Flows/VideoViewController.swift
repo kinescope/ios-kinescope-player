@@ -14,7 +14,7 @@ final class VideoViewController: UIViewController {
 #if targetEnvironment(simulator)
         "9L8KmbNuhQSxQofn5DR4Vg"
 #else
-        "200660125"
+        "b6a0ce69-3135-496d-8064-c8ed51ac4b2e"
 #endif
     }()
     private var player: KinescopePlayer?

@@ -5,11 +5,13 @@ final class Transport {
     // MARK: - Private Properties
 
     private let session: URLSession
+    private let completionQueue: DispatchQueue
 
     // MARK: - Lifecycle
 
-    init(session: URLSession = .init(configuration: .default)) {
+    init(session: URLSession = .init(configuration: .default), completionQueue: DispatchQueue = .main) {
         self.session = session
+        self.completionQueue = completionQueue
     }
 
     // MARK: - Public Methods
@@ -24,9 +26,9 @@ final class Transport {
     ///}
     ///```
     func perform<D: Codable, M: Codable>(request: URLRequest, completion: @escaping (Result<MetaResponse<D, M>, Error>) -> Void) {
-        session.dataTask(with: request) { data, response, error in
+        session.dataTask(with: request) { [weak self] data, response, error in
             if let error = error {
-                DispatchQueue.main.async {
+                self?.completionQueue.async {
                     completion(.failure(error))
                 }
             } else if let httpResponse = response as? HTTPURLResponse,
@@ -38,12 +40,12 @@ final class Transport {
                     decoder.keyDecodingStrategy = .convertFromSnakeCase
                     let response = try decoder.decode(MetaResponse<D, M>.self, from: responseData)
 
-                    DispatchQueue.main.async {
+                    self?.completionQueue.async {
                         completion(.success(response))
                     }
                 } catch let error {
                     Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.network)
-                    DispatchQueue.main.async {
+                    self?.completionQueue.async {
                         completion(.failure(error))
                     }
                 }
@@ -51,11 +53,11 @@ final class Transport {
                 do {
                     let error = try JSONDecoder().decode(ServerErrorWrapper.self, from: responseData)
 
-                    DispatchQueue.main.async {
+                    self?.completionQueue.async {
                         completion(.failure(error.error))
                     }
                 } catch let error {
-                    DispatchQueue.main.async {
+                    self?.completionQueue.async {
                         completion(.failure(error))
                     }
                 }
@@ -72,9 +74,9 @@ final class Transport {
     ///}
     ///```
     func perform<D: Codable>(request: URLRequest, completion: @escaping (Result<D, Error>) -> Void) {
-        session.dataTask(with: request) { data, response, error in
+        session.dataTask(with: request) { [weak self] data, response, error in
             if let error = error {
-                DispatchQueue.main.async {
+                self?.completionQueue.async {
                     completion(.failure(error))
                 }
             } else if let httpResponse = response as? HTTPURLResponse,
@@ -86,11 +88,11 @@ final class Transport {
                     decoder.keyDecodingStrategy = .convertFromSnakeCase
                     let response = try decoder.decode(Response<D>.self, from: responseData)
 
-                    DispatchQueue.main.async {
+                    self?.completionQueue.async {
                         completion(.success(response.data))
                     }
                 } catch let error {
-                    DispatchQueue.main.async {
+                    self?.completionQueue.async {
                         completion(.failure(error))
                     }
                 }
@@ -98,11 +100,38 @@ final class Transport {
                 do {
                     let error = try JSONDecoder().decode(ServerErrorWrapper.self, from: responseData)
 
-                    DispatchQueue.main.async {
+                    self?.completionQueue.async {
                         completion(.failure(error.error))
                     }
                 } catch let error {
-                    DispatchQueue.main.async {
+                    self?.completionQueue.async {
+                        completion(.failure(error))
+                    }
+                }
+            }
+        }.resume()
+    }
+    
+    /// Perform request with raw data response
+    func performRaw(request: URLRequest, completion: @escaping (Result<Data, Error>) -> Void) {
+        session.dataTask(with: request) { [weak self] data, response, error in
+            if let error = error {
+                self?.completionQueue.async {
+                    completion(.failure(error))
+                }
+            } else if let httpResponse = response as? HTTPURLResponse,
+               (200..<300).contains(httpResponse.statusCode),
+               let responseData = data {
+
+                do {
+                    let decoder = JSONDecoder()
+                    decoder.keyDecodingStrategy = .convertFromSnakeCase
+
+                    self?.completionQueue.async {
+                        completion(.success(responseData))
+                    }
+                } catch let error {
+                    self?.completionQueue.async {
                         completion(.failure(error))
                     }
                 }
@@ -119,9 +148,9 @@ final class Transport {
     ///}
     ///```
     func performFetch<D: Codable>(request: URLRequest, completion: @escaping (Result<D, Error>) -> Void) {
-        session.dataTask(with: request) { data, response, error in
+        session.dataTask(with: request) { [weak self] data, response, error in
             if let error = error {
-                DispatchQueue.main.async {
+                self?.completionQueue.async {
                     completion(.failure(error))
                 }
             } else if let httpResponse = response as? HTTPURLResponse,
@@ -133,11 +162,11 @@ final class Transport {
                     decoder.keyDecodingStrategy = .convertFromSnakeCase
                     let response = try decoder.decode(D.self, from: responseData)
 
-                    DispatchQueue.main.async {
+                    self?.completionQueue.async {
                         completion(.success(response))
                     }
                 } catch let error {
-                    DispatchQueue.main.async {
+                    self?.completionQueue.async {
                         completion(.failure(error))
                     }
                 }
@@ -145,11 +174,11 @@ final class Transport {
                 do {
                     let error = try JSONDecoder().decode(ServerErrorWrapper.self, from: responseData)
 
-                    DispatchQueue.main.async {
+                    self?.completionQueue.async {
                         completion(.failure(error.error))
                     }
                 } catch let error {
-                    DispatchQueue.main.async {
+                    self?.completionQueue.async {
                         completion(.failure(error))
                     }
                 }
