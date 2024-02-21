@@ -16,8 +16,11 @@ struct DefaultDataProtectionHandlerFactory: DataProtectionHandlerFactory {
     let service: DataProtectionService
 
     func provide(for videoId: String) -> DataProtectionHandler? {
-//        return DataProtectionKeySessionHandler(videoId: videoId, service: service)
-        return DataProtectionResourceDelegateHandler(videoId: videoId, service: service)
+        if #available(iOS 11, *) {
+            return DataProtectionKeySessionHandler(videoId: videoId, service: service)
+        } else {
+            return DataProtectionResourceDelegateHandler(videoId: videoId, service: service)
+        }
     }
 
 }

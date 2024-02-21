@@ -15,7 +15,9 @@ final class DataProtectionKeySessionHandler: NSObject, DataProtectionHandler {
     
     private let videoId: String
     private let service: DataProtectionService
-    private let session: AVContentKeySession = .init(keySystem: .fairPlayStreaming)
+    private lazy var session: AVContentKeySession = .init(keySystem: .fairPlayStreaming)
+
+    private let executionQueue = DispatchQueue(label: "io.kinescope.fairplay")
 
     // MARK: - Lifecycle
 
@@ -28,6 +30,7 @@ final class DataProtectionKeySessionHandler: NSObject, DataProtectionHandler {
     // MARK: - DataProtectionHandler
 
     func bind(with asset: AVURLAsset) {
+        session.setDelegate(self, queue: executionQueue)
         session.addContentKeyRecipient(asset)
     }
 

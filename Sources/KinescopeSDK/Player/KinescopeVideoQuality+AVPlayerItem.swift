@@ -32,8 +32,10 @@ fileprivate extension KinescopeVideoQuality {
         }
 
         let asset = AVURLAsset(url: url)
-
+        
+#if !targetEnvironment(simulator)
         dataProtectionHandler?.bind(with: asset)
+#endif
         return AVPlayerItem(asset: asset)
     }
 
