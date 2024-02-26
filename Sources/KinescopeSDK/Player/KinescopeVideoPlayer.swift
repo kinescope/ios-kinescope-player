@@ -17,6 +17,8 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
     private let kvoBag = KVOBag()
 
+    private lazy var notificationsBag = NotificationsBag(observer: self)
+
     private lazy var strategy: PlayingStrategy = {
         dependencies.provide(for: config)
     }()
@@ -81,8 +83,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     deinit {
         self.removePlaybackTimeObserver()
         self.kvoBag.removeAll()
-
-        NotificationCenter.default.removeObserver(self)
+        self.notificationsBag.removeAll()
     }
 
     // MARK: - KinescopePlayer
@@ -284,16 +285,12 @@ private extension KinescopeVideoPlayer {
     }
 
     func addNotofications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterForeground),
-                                               name: UIApplication.willEnterForegroundNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground),
-                                               name: UIApplication.didEnterBackgroundNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(changeOrientation),
-                                               name: UIDevice.orientationDidChangeNotification,
-                                               object: nil)
+        notificationsBag.addObserver(for: .appWillEnterForeground,
+                                     using: .init(selector: #selector(appWillEnterForeground)))
+        notificationsBag.addObserver(for: .appDidEnterBackground,
+                                     using: .init(selector: #selector(appDidEnterBackground)))
+        notificationsBag.addObserver(for: .deviceOrientationChanged,
+                                     using: .init(selector: #selector(changeOrientation)))
     }
 
     func seek(to seconds: TimeInterval) {
@@ -331,7 +328,7 @@ private extension KinescopeVideoPlayer {
         }
     }
 
-    @objc func appDidEnterForeground() {
+    @objc func appWillEnterForeground() {
         if !(view?.pipController?.isPictureInPictureActive ?? false) {
             view?.playerView.player = strategy.player
         }
