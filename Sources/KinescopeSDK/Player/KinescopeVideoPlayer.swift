@@ -29,8 +29,6 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private weak var view: KinescopePlayerView?
 
     private var timeObserver: Any?
-//    private var playerStatusObserver: NSKeyValueObservation?
-    private var itemStatusObserver: NSKeyValueObservation?
     private var timeControlStatusObserver: NSKeyValueObservation?
 
     private var time: TimeInterval = 0 {
@@ -84,7 +82,6 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
     deinit {
         self.removePlaybackTimeObserver()
-        self.removePlayerItemStatusObserver()
         self.removePlayerTimeControlStatusObserver()
 
         self.kvoBag.removeAll()
@@ -144,8 +141,8 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
         savedTime = strategy.player.currentTime()
 
-        removePlayerItemStatusObserver()
-        
+        kvoBag.removeObserver(for: .playerItemStatus)
+
         if let item = quality.makeItem(with: drmHandler) {
             strategy.bind(item: item)
         }
@@ -264,39 +261,18 @@ private extension KinescopeVideoPlayer {
     }
 
     func addPlayerItemStatusObserver() {
-        self.itemStatusObserver = self.strategy.player.currentItem?.observe(
-            \.status,
-            options: [.new, .old],
-            changeHandler: { [weak self] item, _ in
-                guard let self else {
-                    return
-                }
-
-                switch item.status {
-                case .readyToPlay:
-                    let seconds = self.savedTime.seconds
-                    if seconds > .zero {
-                        self.time = seconds
-                        self.savedTime = .zero
-                        self.seek(to: seconds)
-                    }
-                case .failed, .unknown:
-                    Kinescope.shared.logger?.log(message: "AVPlayerItem.error – \(String(describing: item.error))",
-                                                 level: KinescopeLoggerLevel.player)
-                default:
-                    break
-                }
-
-                Kinescope.shared.logger?.log(message: "AVPlayerItem.Status – \(item.status)",
-                                             level: KinescopeLoggerLevel.player)
-                self.delegate?.player(changedItemStatusTo: item.status)
+        let observerFactory = CurrentItemStatusObserver(player: strategy.player, delegate: delegate, readyToPlayAction: { [weak self] in
+            guard let self else {
+                return
             }
-        )
-    }
-
-    func removePlayerItemStatusObserver() {
-        self.itemStatusObserver?.invalidate()
-        self.itemStatusObserver = nil
+            let seconds = savedTime.seconds
+            if seconds > .zero {
+                time = seconds
+                savedTime = .zero
+                seek(to: seconds)
+            }
+        })
+        kvoBag.addObserver(for: .playerItemStatus, using: .init(wrappedFactory: observerFactory))
     }
 
     func addPlayerTimeControlStatusObserver() {

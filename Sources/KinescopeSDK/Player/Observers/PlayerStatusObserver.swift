@@ -14,7 +14,9 @@ final class PlayerStatusObserverFactory: KVOObserverFactory {
     private weak var view: KinescopePlayerView?
     private weak var delegate: KinescopeVideoPlayerDelegate?
 
-    init(player: AVPlayer?, view: KinescopePlayerView?, delegate: KinescopeVideoPlayerDelegate?) {
+    init(player: AVPlayer?, 
+         view: KinescopePlayerView?,
+         delegate: KinescopeVideoPlayerDelegate?) {
         self.player = player
         self.view = view
         self.delegate = delegate
