@@ -16,6 +16,8 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private let config: KinescopePlayerConfig
     private let dependencies: KinescopePlayerDependencies
 
+    private let kvoBag = KVOBag()
+
     private lazy var strategy: PlayingStrategy = {
         dependencies.provide(for: config)
     }()
@@ -27,7 +29,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private weak var view: KinescopePlayerView?
 
     private var timeObserver: Any?
-    private var playerStatusObserver: NSKeyValueObservation?
+//    private var playerStatusObserver: NSKeyValueObservation?
     private var itemStatusObserver: NSKeyValueObservation?
     private var timeControlStatusObserver: NSKeyValueObservation?
 
@@ -84,7 +86,8 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         self.removePlaybackTimeObserver()
         self.removePlayerItemStatusObserver()
         self.removePlayerTimeControlStatusObserver()
-        self.removePlayerStatusObserver()
+
+        self.kvoBag.removeAll()
 
         NotificationCenter.default.removeObserver(self)
     }
@@ -134,7 +137,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
         removePlaybackTimeObserver()
         removePlayerTimeControlStatusObserver()
-        removePlayerStatusObserver()
+        kvoBag.removeObserver(for: .playerStatus)
     }
 
     public func select(quality: KinescopeVideoQuality) {
@@ -254,22 +257,10 @@ private extension KinescopeVideoPlayer {
     }
 
     func addPlayerStatusObserver() {
-        self.playerStatusObserver = self.strategy.player.observe(
-            \.status,
-            options: [.new, .old],
-            changeHandler: { [weak self] item, _ in
-                self?.view?.change(status: item.status)
-
-                Kinescope.shared.logger?.log(message: "AVPlayer.Status – \(item.status)",
-                                             level: KinescopeLoggerLevel.player)
-                self?.delegate?.player(changedStatusTo: item.status)
-            }
-        )
-    }
-
-    func removePlayerStatusObserver() {
-        self.playerStatusObserver?.invalidate()
-        self.playerStatusObserver = nil
+        let observerFactory = PlayerStatusObserverFactory(player: strategy.player,
+                                                          view: view,
+                                                          delegate: delegate)
+        kvoBag.addObserver(for: .playerStatus, using: .init(wrappedFactory: observerFactory))
     }
 
     func addPlayerItemStatusObserver() {
