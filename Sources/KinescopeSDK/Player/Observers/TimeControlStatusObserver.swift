@@ -10,35 +10,29 @@ import AVFoundation
 
 final class TimeControlStatusObserver: KVOObserverFactory {
 
-    private weak var player: AVPlayer?
-    private weak var view: KinescopePlayerView?
-    private weak var delegate: KinescopeVideoPlayerDelegate?
+    private weak var playerBody: KinescopePlayerBody?
 
     private var timeControlStatusChanged: (AVPlayer.TimeControlStatus) -> Void
 
-    init(player: AVPlayer?,
-         view: KinescopePlayerView?,
-         delegate: KinescopeVideoPlayerDelegate?,
+    init(playerBody: KinescopePlayerBody,
          timeControlStatusChanged: @escaping (AVPlayer.TimeControlStatus) -> Void) {
-        self.player = player
-        self.view = view
-        self.delegate = delegate
+        self.playerBody = playerBody
         self.timeControlStatusChanged = timeControlStatusChanged
     }
 
     func provide() -> NSKeyValueObservation? {
-        player?.observe(
+        playerBody?.strategy.player.observe(
             \.timeControlStatus,
             options: [.new, .old],
             changeHandler: { [weak self] item, _ in
                 self?.timeControlStatusChanged(item.timeControlStatus)
-                self?.view?.change(timeControlStatus: item.timeControlStatus)
+                self?.playerBody?.view?.change(timeControlStatus: item.timeControlStatus)
 
                 Kinescope.shared.logger?.log(
                     message: "AVPlayer.TimeControlStatus – \(item.timeControlStatus.rawValue)",
                     level: KinescopeLoggerLevel.player
                 )
-                self?.delegate?.player(changedTimeControlStatusTo: item.timeControlStatus)
+                self?.playerBody?.delegate?.player(changedTimeControlStatusTo: item.timeControlStatus)
             }
         )
     }

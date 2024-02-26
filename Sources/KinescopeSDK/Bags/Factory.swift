@@ -9,5 +9,5 @@ import Foundation
 
 protocol Factory {
     associatedtype T
-    func provide() -> T
+    func provide() -> T?
 }

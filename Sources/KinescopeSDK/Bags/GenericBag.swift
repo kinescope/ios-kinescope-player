@@ -12,7 +12,7 @@ class GenericBag<T: Hashable, F: Factory>: Bag {
     typealias Key = T
     typealias ObserverFactory = F
 
-    private(set) var observers: [T: (ObserverFactory, ObserverFactory.T)] = [:]
+    private(set) var observers: [T: (factory: ObserverFactory, observer: ObserverFactory.T?)] = [:]
 
     func addObserver(for key: T, using factory: F) {
         let observer = factory.provide()

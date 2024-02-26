@@ -10,28 +10,22 @@ import AVFoundation
 
 final class PlayerStatusObserverFactory: KVOObserverFactory {
 
-    private weak var player: AVPlayer?
-    private weak var view: KinescopePlayerView?
-    private weak var delegate: KinescopeVideoPlayerDelegate?
+    private weak var playerBody: KinescopePlayerBody?
 
-    init(player: AVPlayer?, 
-         view: KinescopePlayerView?,
-         delegate: KinescopeVideoPlayerDelegate?) {
-        self.player = player
-        self.view = view
-        self.delegate = delegate
+    init(playerBody: KinescopePlayerBody) {
+        self.playerBody = playerBody
     }
 
     func provide() -> NSKeyValueObservation? {
-        player?.observe(
+        playerBody?.strategy.player.observe(
             \.status,
             options: [.new, .old],
             changeHandler: { [weak self] item, _ in
-                self?.view?.change(status: item.status)
+                self?.playerBody?.view?.change(status: item.status)
 
                 Kinescope.shared.logger?.log(message: "AVPlayer.Status – \(item.status)",
                                              level: KinescopeLoggerLevel.player)
-                self?.delegate?.player(changedStatusTo: item.status)
+                self?.playerBody?.delegate?.player(changedStatusTo: item.status)
             }
         )
     }

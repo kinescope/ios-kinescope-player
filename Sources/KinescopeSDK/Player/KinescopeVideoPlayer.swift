@@ -2,7 +2,7 @@ import AVFoundation
 import AVKit
 import UIKit
 
-public class KinescopeVideoPlayer: KinescopePlayer {
+public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody {
 
     public weak var pipDelegate: AVPictureInPictureControllerDelegate? {
         didSet {
@@ -19,7 +19,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
     private lazy var notificationsBag = NotificationsBag(observer: self)
 
-    private lazy var strategy: PlayingStrategy = {
+    private(set) lazy var strategy: PlayingStrategy = {
         dependencies.provide(for: config)
     }()
     private lazy var innerEventsHandler: InnerEventsHandler = {
@@ -27,9 +27,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         return InnerEventsProtoHandler(service: service)
     }()
 
-    private weak var view: KinescopePlayerView?
-
-    private var timeObserver: Any?
+    private(set) weak var view: KinescopePlayerView?
 
     private var time: TimeInterval = 0 {
         didSet {
@@ -43,7 +41,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private var isOverlayed = false
     private var savedTime: CMTime = .zero
     private weak var miniView: KinescopePlayerView?
-    private weak var delegate: KinescopeVideoPlayerDelegate?
+    private(set) weak var delegate: KinescopeVideoPlayerDelegate?
 
     private var drmHandler: DataProtectionHandler?
     private var video: KinescopeVideo? {
@@ -55,6 +53,9 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         }
     }
     private var options = [KinescopePlayerOption]()
+    
+    private var playbackObserverFactory: (any Factory)?
+    private var playbackObserver: Any?
 
     private var textStyleRules: [AVTextStyleRule]? {
         let pos = kCMTextMarkupAttribute_OrthogonalLinePositionPercentageRelativeToWritingDirection
@@ -205,61 +206,33 @@ private extension KinescopeVideoPlayer {
             return
         }
 
-        let timeScale = CMTimeScale(NSEC_PER_SEC)
-        let period = CMTimeMakeWithSeconds(0.01, preferredTimescale: timeScale)
-
-        timeObserver = strategy.player.addPeriodicTimeObserver(forInterval: period,
-                                                               queue: .main) { [weak self] time in
-            guard let self else {
+        playbackObserverFactory = PlaybackTimePeriodicObserver(period: CMTimeMakeWithSeconds(0.01,
+                                                                                      preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
+                                                        playerBody: self,
+                                                        secondsPlayed: { [weak self] updatedTime in
+            guard let self, !isSeeking, !isPreparingSeek else {
                 return
             }
 
-            /// Does not make sense without control panel and curremtItem
-            guard let controlPanel = self.view?.controlPanel,
-                  let currentItem = self.strategy.player.currentItem else {
-                return
-            }
-
-            let duration = currentItem.duration.seconds
-
-            if !self.isSeeking, !self.isPreparingSeek {
-                self.time = min(duration, time.seconds)
-            }
-
-            Kinescope.shared.logger?.log(message: "playback position changed to \(time) seconds", level: KinescopeLoggerLevel.player)
-            self.delegate?.player(playbackPositionMovedTo: time.seconds)
-
-            // Preload observation
-
-            let buferredTime = currentItem.loadedTimeRanges.first?.timeRangeValue.end.seconds ?? 0
-            Kinescope.shared.logger?.log(message: "playback buffered \(buferredTime) seconds", level: KinescopeLoggerLevel.player)
-            self.delegate?.player(playbackBufferMovedTo: time.seconds)
-
-            let bufferProgress = CGFloat(buferredTime / duration)
-
-            if !bufferProgress.isNaN {
-                controlPanel.setBufferred(progress: bufferProgress)
-            }
-        }
+            time = updatedTime
+        })
+        playbackObserver = playbackObserverFactory?.provide()
     }
 
     func removePlaybackTimeObserver() {
-        if let timeObserver = timeObserver {
+        if let timeObserver = playbackObserver {
             strategy.player.removeTimeObserver(timeObserver)
-            self.timeObserver = nil
+            self.playbackObserver = nil
         }
     }
 
     func addPlayerStatusObserver() {
-        let observerFactory = PlayerStatusObserverFactory(player: strategy.player,
-                                                          view: view,
-                                                          delegate: delegate)
+        let observerFactory = PlayerStatusObserverFactory(playerBody: self)
         kvoBag.addObserver(for: .playerStatus, using: .init(wrappedFactory: observerFactory))
     }
 
     func addPlayerItemStatusObserver() {
-        let observerFactory = CurrentItemStatusObserver(player: strategy.player, 
-                                                        delegate: delegate,
+        let observerFactory = CurrentItemStatusObserver(playerBody: self,
                                                         readyToPlayReceived: { [weak self] in
             guard let self else {
                 return
@@ -275,9 +248,7 @@ private extension KinescopeVideoPlayer {
     }
 
     func addPlayerTimeControlStatusObserver() {
-        let observerFactory = TimeControlStatusObserver(player: strategy.player,
-                                                        view: view,
-                                                        delegate: delegate,
+        let observerFactory = TimeControlStatusObserver(playerBody: self,
                                                         timeControlStatusChanged: { [weak self] status in
             self?.isPlaying = status == .playing
         })
