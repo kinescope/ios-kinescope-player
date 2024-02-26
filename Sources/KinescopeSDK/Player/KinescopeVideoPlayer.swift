@@ -2,7 +2,6 @@ import AVFoundation
 import AVKit
 import UIKit
 
-// swiftlint:disable file_length
 public class KinescopeVideoPlayer: KinescopePlayer {
 
     public weak var pipDelegate: AVPictureInPictureControllerDelegate? {
@@ -29,7 +28,6 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private weak var view: KinescopePlayerView?
 
     private var timeObserver: Any?
-    private var timeControlStatusObserver: NSKeyValueObservation?
 
     private var time: TimeInterval = 0 {
         didSet {
@@ -82,8 +80,6 @@ public class KinescopeVideoPlayer: KinescopePlayer {
 
     deinit {
         self.removePlaybackTimeObserver()
-        self.removePlayerTimeControlStatusObserver()
-
         self.kvoBag.removeAll()
 
         NotificationCenter.default.removeObserver(self)
@@ -133,7 +129,7 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         view.delegate = nil
 
         removePlaybackTimeObserver()
-        removePlayerTimeControlStatusObserver()
+        kvoBag.removeObserver(for: .playerTimeControlStatus)
         kvoBag.removeObserver(for: .playerStatus)
     }
 
@@ -261,7 +257,9 @@ private extension KinescopeVideoPlayer {
     }
 
     func addPlayerItemStatusObserver() {
-        let observerFactory = CurrentItemStatusObserver(player: strategy.player, delegate: delegate, readyToPlayAction: { [weak self] in
+        let observerFactory = CurrentItemStatusObserver(player: strategy.player, 
+                                                        delegate: delegate,
+                                                        readyToPlayReceived: { [weak self] in
             guard let self else {
                 return
             }
@@ -276,25 +274,13 @@ private extension KinescopeVideoPlayer {
     }
 
     func addPlayerTimeControlStatusObserver() {
-        self.timeControlStatusObserver = self.strategy.player.observe(
-            \.timeControlStatus,
-            options: [.new, .old],
-            changeHandler: { [weak self] item, _ in
-                self?.isPlaying = item.timeControlStatus == .playing
-                self?.view?.change(timeControlStatus: item.timeControlStatus)
-
-                Kinescope.shared.logger?.log(
-                    message: "AVPlayer.TimeControlStatus – \(item.timeControlStatus.rawValue)",
-                    level: KinescopeLoggerLevel.player
-                )
-                self?.delegate?.player(changedTimeControlStatusTo: item.timeControlStatus)
-            }
-        )
-    }
-
-    func removePlayerTimeControlStatusObserver() {
-        self.timeControlStatusObserver?.invalidate()
-        self.timeControlStatusObserver = nil
+        let observerFactory = TimeControlStatusObserver(player: strategy.player,
+                                                        view: view,
+                                                        delegate: delegate,
+                                                        timeControlStatusChanged: { [weak self] status in
+            self?.isPlaying = status == .playing
+        })
+        kvoBag.addObserver(for: .playerTimeControlStatus, using: .init(wrappedFactory: observerFactory))
     }
 
     func addNotofications() {
@@ -593,4 +579,3 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
 }
-// swiftlint:enable file_length

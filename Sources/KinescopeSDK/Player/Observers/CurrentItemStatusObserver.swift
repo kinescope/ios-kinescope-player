@@ -12,14 +12,15 @@ final class CurrentItemStatusObserver: KVOObserverFactory {
     
     private weak var player: AVPlayer?
     private weak var delegate: KinescopeVideoPlayerDelegate?
-    private var readyToPlayAction: () -> Void
+
+    private var readyToPlayReceived: () -> Void
 
     init(player: AVPlayer?,
          delegate: KinescopeVideoPlayerDelegate?,
-         readyToPlayAction: @escaping () -> Void) {
+         readyToPlayReceived: @escaping () -> Void) {
         self.player = player
         self.delegate = delegate
-        self.readyToPlayAction = readyToPlayAction
+        self.readyToPlayReceived = readyToPlayReceived
     }
 
     func provide() -> NSKeyValueObservation? {
@@ -33,7 +34,7 @@ final class CurrentItemStatusObserver: KVOObserverFactory {
 
                 switch item.status {
                 case .readyToPlay:
-                    readyToPlayAction()
+                    readyToPlayReceived()
                 case .failed, .unknown:
                     Kinescope.shared.logger?.log(message: "AVPlayerItem.error – \(String(describing: item.error))",
                                                  level: KinescopeLoggerLevel.player)
