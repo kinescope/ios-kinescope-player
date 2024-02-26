@@ -37,4 +37,8 @@ public protocol KinescopePlayer {
     /// Unbind player to view
     /// - Parameter view: view for unbinding
     func detach(view: KinescopePlayerView)
+
+    /// Set delegate object
+    /// - Parameter delegate: delegate for player events
+    func setDelegate(delegate: KinescopeVideoPlayerDelegate)
 }

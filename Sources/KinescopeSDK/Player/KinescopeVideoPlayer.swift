@@ -150,6 +150,10 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody {
 
         addPlayerItemStatusObserver()
     }
+
+    public func setDelegate(delegate: KinescopeVideoPlayerDelegate) {
+        self.delegate = delegate
+    }
 }
 
 // MARK: - Private
