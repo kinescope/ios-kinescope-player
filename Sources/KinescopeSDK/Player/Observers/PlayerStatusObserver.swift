@@ -23,7 +23,7 @@ final class PlayerStatusObserverFactory: KVOObserverFactory {
             changeHandler: { [weak self] item, _ in
                 self?.playerBody?.view?.change(status: item.status)
 
-                Kinescope.shared.logger?.log(message: "AVPlayer.Status – \(item.status)",
+                Kinescope.shared.logger?.log(message: "AVPlayer.Status – \(item.status.debugDescription)",
                                              level: KinescopeLoggerLevel.player)
                 self?.playerBody?.delegate?.player(changedStatusTo: item.status)
             }

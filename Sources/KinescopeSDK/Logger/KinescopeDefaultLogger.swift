@@ -8,7 +8,7 @@ public final class KinescopeDefaultLogger: KinescopeLogging {
         debugPrint("📺 \(level): \(message)")
     }
 
-    public func log(error: Error, level: KinescopeLoggingLevel) {
-        debugPrint("📺 \(level): \(error.localizedDescription)")
+    public func log(error: Error?, level: KinescopeLoggingLevel) {
+        debugPrint("📺 \(level): 🚨 \(error?.localizedDescription ?? "unknown error")")
     }
 }

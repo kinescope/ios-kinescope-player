@@ -29,7 +29,7 @@ final class TimeControlStatusObserver: KVOObserverFactory {
                 self?.playerBody?.view?.change(timeControlStatus: item.timeControlStatus)
 
                 Kinescope.shared.logger?.log(
-                    message: "AVPlayer.TimeControlStatus – \(item.timeControlStatus.rawValue)",
+                    message: "AVPlayer.TimeControlStatus – \(item.timeControlStatus.debugDescription)",
                     level: KinescopeLoggerLevel.player
                 )
                 self?.playerBody?.delegate?.player(changedTimeControlStatusTo: item.timeControlStatus)

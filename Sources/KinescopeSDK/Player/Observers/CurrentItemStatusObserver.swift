@@ -33,13 +33,13 @@ final class CurrentItemStatusObserver: KVOObserverFactory {
                 case .readyToPlay:
                     readyToPlayReceived()
                 case .failed, .unknown:
-                    Kinescope.shared.logger?.log(message: "AVPlayerItem.error – \(String(describing: item.error))",
+                    Kinescope.shared.logger?.log(error: item.error,
                                                  level: KinescopeLoggerLevel.player)
                 default:
                     break
                 }
 
-                Kinescope.shared.logger?.log(message: "AVPlayerItem.Status – \(item.status)",
+                Kinescope.shared.logger?.log(message: "AVPlayerItem.Status – \(item.status.debugDescription)",
                                              level: KinescopeLoggerLevel.player)
                 playerBody?.delegate?.player(changedItemStatusTo: item.status)
             }
