@@ -38,6 +38,8 @@ final class CurrentItemStatusObserver: KVOObserverFactory {
                 default:
                     break
                 }
+                
+                playerBody?.view?.change(itemStatus: item.status)
 
                 Kinescope.shared.logger?.log(message: "AVPlayerItem.Status – \(item.status.debugDescription)",
                                              level: KinescopeLoggerLevel.player)

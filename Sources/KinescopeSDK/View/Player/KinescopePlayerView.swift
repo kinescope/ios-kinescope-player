@@ -77,9 +77,24 @@ public class KinescopePlayerView: UIView {
         switch status {
         case .readyToPlay:
             overlay?.isHidden = false
-            progressView.showVideoProgress(isLoading: false)
-            previewView.isHidden = true
         case .failed, .unknown:
+            progressView.showVideoProgress(isLoading: false)
+            previewView.isHidden = false
+            // FIXME: Error handling
+            break
+        @unknown default:
+            break
+        }
+    }
+
+    func change(itemStatus: AVPlayerItem.Status) {
+        switch itemStatus {
+        case .readyToPlay:
+            overlay?.isHidden = false
+            stopLoader()
+        case .failed, .unknown:
+            progressView.showVideoProgress(isLoading: false)
+            previewView.isHidden = false
             // FIXME: Error handling
             break
         @unknown default:
@@ -93,6 +108,7 @@ public class KinescopePlayerView: UIView {
             controlPanel?.isHidden = false
             overlay?.isHidden = false
             overlay?.set(playing: true)
+            progressView.showVideoProgress(isLoading: false)
         case .paused, .waitingToPlayAtSpecifiedRate:
             overlay?.set(playing: false)
         @unknown default:
@@ -106,6 +122,14 @@ public class KinescopePlayerView: UIView {
 
     func change(quality: String) {
         set(quality: quality.isEmpty ? L10n.Player.auto : quality)
+    }
+
+    func set(preview: String?) {
+        if let preview, let previewService = config.previewService {
+            previewService.fetchPreview(for: preview, into: previewView)
+        } else {
+            previewView.image = nil
+        }
     }
 
 }

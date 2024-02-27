@@ -169,6 +169,7 @@ private extension KinescopeVideoPlayer {
             onSuccess: { [weak self] video in
                 self?.video = video
                 self?.select(quality: .auto(hlsLink: video.hlsLink))
+                self?.view?.set(preview: video.poster?.url)
                 self?.view?.overlay?.set(title: video.title, subtitle: video.description)
                 self?.view?.set(options: self?.makePlayerOptions(from: video) ?? [])
                 self?.delegate?.playerDidLoadVideo(error: nil)
