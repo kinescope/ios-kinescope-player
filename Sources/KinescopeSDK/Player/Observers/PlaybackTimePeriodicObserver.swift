@@ -33,14 +33,14 @@ final class PlaybackTimePeriodicObserver: Factory {
             
             /// Does not make sense without control panel and curremtItem
             guard let controlPanel = playerBody?.view?.controlPanel,
-                  let currentItem = playerBody?.strategy.player.currentItem else {
+                  let currentItem = playerBody?.strategy.player.currentItem,
+                  let duration = playerBody?.strategy.player.durationSeconds,
+                  let isLive = playerBody?.isLive else {
                 return
             }
-            
-            let duration = currentItem.duration.seconds
-            
-            secondsPlayed(min(duration, time.seconds))
-            
+
+            secondsPlayed(isLive ? duration : min(duration, time.seconds))
+
             Kinescope.shared.logger?.log(message: "playback position changed to \(time) seconds", level: KinescopeLoggerLevel.player)
             playerBody?.delegate?.player(playbackPositionMovedTo: time.seconds)
             

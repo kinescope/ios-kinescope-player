@@ -57,3 +57,26 @@ extension AVPlayer.TimeControlStatus {
     }
 
 }
+
+extension AVPlayer {
+
+    var hasFiniteDuration: Bool {
+        guard let duration = currentItem?.duration else {
+            return false
+        }
+
+        return !duration.flags.contains(.indefinite) && duration.flags.contains(.valid)
+    }
+
+    var durationSeconds: Double? {
+        if hasFiniteDuration {
+            return currentItem?.duration.seconds
+        } else {
+            guard let lastRange = currentItem?.seekableTimeRanges.last?.timeRangeValue else {
+                return 0
+            }
+            return lastRange.start.seconds + lastRange.duration.seconds
+        }
+    }
+
+}

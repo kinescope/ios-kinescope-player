@@ -8,6 +8,8 @@
 import Foundation
 
 protocol KinescopePlayerBody: AnyObject {
+    
+    var isLive: Bool { get }
 
     var strategy: PlayingStrategy { get }
 

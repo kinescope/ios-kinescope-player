@@ -34,6 +34,8 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody {
             updateTimeline()
         }
     }
+    private(set) var isLive = false
+
     private var isSeeking = false
     private var isPreparingSeek = false
     private var currentQuality = ""
@@ -49,6 +51,7 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody {
             guard let video else {
                 return
             }
+            isLive = video.type == .live
             drmHandler = dependencies.drmFactory.provide(for: video.id)
         }
     }
@@ -218,7 +221,7 @@ private extension KinescopeVideoPlayer {
             guard let self, !isSeeking, !isPreparingSeek else {
                 return
             }
-
+            
             time = updatedTime
         })
         playbackObserver = playbackObserverFactory?.provide()
@@ -270,9 +273,19 @@ private extension KinescopeVideoPlayer {
     }
 
     func seek(to seconds: TimeInterval) {
-        let duration = strategy.player.currentItem?.duration.seconds ?? .zero
+        let duration = strategy.player.durationSeconds ?? .zero
+        // end of timeline reached
         if seconds >= duration {
-            pause()
+            if strategy.player.hasFiniteDuration {
+                // stop playing vod
+                pause()
+            } else {
+                // continue live stream
+                isLive = true
+            }
+        } else {
+            // seek backward, so it is not live anymore
+            isLive = false
         }
         self.isSeeking = true
         let time = CMTime(seconds: seconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
@@ -322,7 +335,8 @@ private extension KinescopeVideoPlayer {
     }
 
     func updateTimeline() {
-        let duration = strategy.player.currentItem?.duration.seconds ?? .zero
+        let duration = strategy.player.durationSeconds ?? .zero
+
         let position = CGFloat(time / duration)
         if !position.isNaN {
             view?.controlPanel?.setTimeline(to: CGFloat(position))
@@ -339,8 +353,9 @@ private extension KinescopeVideoPlayer {
 extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
     func didPlay() {
-        let duration = strategy.player.currentItem?.duration.seconds ?? .zero
-        if time == duration {
+        let duration = strategy.player.durationSeconds ?? .zero
+        // Playing from start should not be available for live streams
+        if time == duration && strategy.player.hasFiniteDuration {
             time = .zero
             seek(to: time)
         }
@@ -355,7 +370,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     func didSeek(to position: Double) {
         isPreparingSeek = true
 
-        guard let duration = strategy.player.currentItem?.duration.seconds else {
+        guard let duration = strategy.player.durationSeconds else {
             return
         }
 
@@ -376,7 +391,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
     func didFastForward() {
         guard
-            let duration = strategy.player.currentItem?.duration.seconds
+            let duration = strategy.player.durationSeconds
         else {
             return
         }

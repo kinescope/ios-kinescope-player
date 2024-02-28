@@ -10,7 +10,7 @@ public struct KinescopeVideo: Codable {
     public let workspaceId: String?
     public let projectId: String
     public let folderId: String?
-    public let type: String?
+    public let type: KinescopeStreamType?
     public let title: String
     public let description: String
     public let status: String?
