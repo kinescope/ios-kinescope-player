@@ -1,4 +1,64 @@
-<!-- TODO describe player and player view customisation -->
+# PlayerView customisation
+
+All components of `KinescopePlayerView` is partially customisable. You can change colors, fonts, sizes using method `KinescopePlayerView.setLayout(with config: KinescopePlayerViewConfiguration)`. 
+
+All properties of `KinescopePlayerViewConfiguration` have default values included in SDK, so customisation is optional.
+
+## Configuration parameters
+
+### gravity
+
+`AVLayerVideoGravity` value defines how the video is displayed within a layer’s bounds rectangle. 
+
+Possible values are `resizeAspect`, `resizeAspectFill`, `resize` (default is `resizeAspect`).
+
+### previewService
+
+Implementation of service to load posters into imageView. 
+
+Set `nil` to disable previews.
+
+Default implementation is most simple background loader without any external library usage. 
+
+You can replace it with your favorite image loading library with caching and loading cancelation.
+
+### activityIndicator
+
+Custom indicator view used to indicate process of video downloading.
+
+Default implementation is using native `UIActivityIndicatorView` with white color and large style.
+
+### overlay
+
+Configuration of overlay with tapGesture to play/pause video.
+This including images, fonts and colors for 
+- fast forward and rewind buttons
+- play and pause buttons
+- video title
+- live indicator
+
+Set `nil` to hide overlay (usefull for videos collection with autoplaying).
+
+Default implementation could be checked in Example project.
+
+### controlPanel
+Configuration of control panel with timeline and time labels.
+
+Set `nil` to hide control panel.
+
+Default implementation could be checked in Example project.
+
+### sideMenu
+
+Configuration of side menu with setings.
+
+Default implementation could be checked in Example project.
+
+### shadowOverlay
+
+Configuration of shadow overlay beneath side menu.
+
+Default implementation could be checked in Example project.
 
 # KinescopeAssetDownloadable and AssetDownloader
 

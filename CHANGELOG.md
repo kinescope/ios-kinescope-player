@@ -6,3 +6,4 @@
 
 ### Added
 - implementation of FairPlayStreaming (DRM)
+- animating indicator for live streams
