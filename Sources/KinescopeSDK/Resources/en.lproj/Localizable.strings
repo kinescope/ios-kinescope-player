@@ -39,3 +39,4 @@
 "Player.hide" = "Hide";
 "Player.reset" = "Reset";
 "Player.options" = "Options";
+"Player.isLive" = "Live";

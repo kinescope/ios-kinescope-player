@@ -19,6 +19,7 @@ class PlayerOverlayView: UIControl {
     let fastForwardImageView = UIImageView()
     let fastBackwardImageView = UIImageView()
     let nameView: VideoNameView
+    let liveIndicator: LiveIndicatorView
     private let contentView = UIView()
     private let config: KinescopePlayerOverlayConfiguration
     private weak var delegate: PlayerOverlayViewDelegate?
@@ -34,6 +35,7 @@ class PlayerOverlayView: UIControl {
         self.config = config
         self.delegate = delegate
         self.nameView = VideoNameView(config: config.nameConfiguration)
+        self.liveIndicator = LiveIndicatorView(config: config.liveConfiguration)
         super.init(frame: .zero)
         self.setupInitialState()
     }
@@ -68,6 +70,15 @@ extension PlayerOverlayView: PlayerOverlayInput {
         self.isPlaying = playing
         playPauseImageView.image = playing ? config.pauseImage : config.playImage
     }
+
+    func set(live: Bool?) {
+        if let live {
+            liveIndicator.isHidden = false
+            liveIndicator.set(animated: live)
+        } else {
+            liveIndicator.isHidden = true
+        }
+    }
 }
 
 // MARK: - Private
@@ -87,6 +98,7 @@ private extension PlayerOverlayView {
         stretch(view: contentView)
 
         configureNameView()
+        configureLiveIndicator()
         configurePlayPauseImageView()
         configureFastForwardImageView()
         configureFastBackwardImageView()
@@ -115,6 +127,11 @@ private extension PlayerOverlayView {
     func configureNameView() {
         contentView.addSubview(nameView)
         contentView.topChildWithSafeArea(view: nameView)
+    }
+    
+    func configureLiveIndicator() {
+        contentView.addSubview(liveIndicator)
+        contentView.topTrailingChildWithSafeArea(view: liveIndicator)
     }
 
     func addGestureRecognizers() {

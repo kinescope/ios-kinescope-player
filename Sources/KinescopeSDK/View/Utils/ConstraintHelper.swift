@@ -113,6 +113,27 @@ extension UIView {
         ])
     }
 
+    func topTrailingChildWithSafeArea(view: UIView, padding: CGFloat = 16.0) {
+        let topAnchor: NSLayoutYAxisAnchor
+        let leadingAnchor: NSLayoutXAxisAnchor
+        let trailingAnchor: NSLayoutXAxisAnchor
+        if #available(iOS 11.0, *) {
+            topAnchor = safeAreaLayoutGuide.topAnchor
+            leadingAnchor = safeAreaLayoutGuide.leadingAnchor
+            trailingAnchor = safeAreaLayoutGuide.trailingAnchor
+        } else {
+            topAnchor = self.topAnchor
+            leadingAnchor = self.leadingAnchor
+            trailingAnchor = self.trailingAnchor
+        }
+
+        view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            view.topAnchor.constraint(equalTo: topAnchor, constant: padding),
+            view.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding)
+        ])
+    }
+
     func squareSize(with side: CGFloat) {
         translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

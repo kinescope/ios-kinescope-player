@@ -34,7 +34,11 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody {
             updateTimeline()
         }
     }
-    private(set) var isLive = false
+    private(set) var isLive = false {
+        didSet {
+            updateLiveIndicator()
+        }
+    }
 
     private var isSeeking = false
     private var isPreparingSeek = false
@@ -123,6 +127,7 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody {
         view.set(options: options)
         view.pipController?.delegate = pipDelegate
         updateTimeline()
+        updateLiveIndicator()
         observePlaybackTime()
         addPlayerTimeControlStatusObserver()
         addPlayerStatusObserver()
@@ -301,10 +306,8 @@ private extension KinescopeVideoPlayer {
 
     @objc
     func changeOrientation() {
-        guard
-            let view = view,
-            view.canBeFullScreen
-        else {
+        guard let view = view,
+              view.canBeFullScreen else {
             return
         }
 
@@ -343,6 +346,15 @@ private extension KinescopeVideoPlayer {
         }
         if !time.isNaN {
             view?.controlPanel?.setIndicator(to: time)
+        }
+    }
+
+    func updateLiveIndicator() {
+        switch video?.type {
+        case .live:
+            view?.overlay?.set(live: isLive)
+        case .none, .vod:
+            view?.overlay?.set(live: nil)
         }
     }
 
@@ -390,9 +402,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didFastForward() {
-        guard
-            let duration = strategy.player.durationSeconds
-        else {
+        guard let duration = strategy.player.durationSeconds else {
             return
         }
 
@@ -468,9 +478,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didSelect(quality: String) {
-        guard
-            let video = video
-        else {
+        guard let video = video else {
             Kinescope.shared.logger?.log(message: "Can't find video",
                                          level: KinescopeLoggerLevel.player)
             return
@@ -534,18 +542,14 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didSelect(subtitles: String) {
-        guard
-            let video = video
-        else {
+        guard let video = video else {
             Kinescope.shared.logger?.log(message: "Can't find video",
                                          level: KinescopeLoggerLevel.player)
             return
         }
 
-        guard
-            let item = self.strategy.player.currentItem,
-            let group = item.asset.mediaSelectionGroup(forMediaCharacteristic: .legible)
-        else {
+        guard let item = self.strategy.player.currentItem,
+                let group = item.asset.mediaSelectionGroup(forMediaCharacteristic: .legible) else {
             return
         }
 

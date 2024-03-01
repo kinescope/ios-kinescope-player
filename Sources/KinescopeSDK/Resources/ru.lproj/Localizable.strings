@@ -39,3 +39,4 @@
 "Player.hide" = "Скрыть";
 "Player.reset" = "Сбросить";
 "Player.options" = "Параметры";
+"Player.isLive" = "В эфире";
