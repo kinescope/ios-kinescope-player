@@ -7,6 +7,14 @@
 
 import AVFoundation
 
+extension AVPlayer {
+
+    var isReadyToPlay: Bool {
+        return currentItem?.status == .readyToPlay
+    }
+
+}
+
 extension AVPlayer.Status {
 
     var debugDescription: String {

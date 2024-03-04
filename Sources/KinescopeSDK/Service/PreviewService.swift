@@ -29,6 +29,7 @@ final class PreviewNetworkService: PreviewService {
             }
             let image = UIImage(data: data)
             self?.completionQueue.async {
+                imageView.contentMode = .scaleAspectFill
                 imageView.image = image
             }
         }

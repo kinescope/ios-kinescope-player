@@ -101,7 +101,10 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody {
     }
 
     public func play() {
-        if video != nil {
+        if let video {
+            if !strategy.player.isReadyToPlay {
+                select(quality: .auto(hlsLink: video.hlsLink))
+            }
             self.strategy.play()
             self.delegate?.playerDidPlay()
         } else {
@@ -176,7 +179,6 @@ private extension KinescopeVideoPlayer {
             id: config.videoId,
             onSuccess: { [weak self] video in
                 self?.video = video
-                self?.select(quality: .auto(hlsLink: video.hlsLink))
                 self?.view?.set(preview: video.poster?.url)
                 self?.view?.overlay?.set(title: video.title, subtitle: video.description)
                 self?.view?.set(options: self?.makePlayerOptions(from: video) ?? [])

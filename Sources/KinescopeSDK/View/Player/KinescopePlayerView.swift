@@ -68,9 +68,9 @@ public class KinescopePlayerView: UIView {
         progressView.showVideoProgress(isLoading: true)
     }
 
-    func stopLoader() {
+    func stopLoader(withPreview: Bool = true) {
         progressView.showVideoProgress(isLoading: false)
-        previewView.isHidden = true
+        previewView.isHidden = withPreview
     }
 
     func change(status: AVPlayer.Status) {
@@ -78,8 +78,7 @@ public class KinescopePlayerView: UIView {
         case .readyToPlay:
             overlay?.isHidden = false
         case .failed, .unknown:
-            progressView.showVideoProgress(isLoading: false)
-            previewView.isHidden = false
+            stopLoader(withPreview: false)
             // FIXME: Error handling
             break
         @unknown default:
@@ -93,8 +92,7 @@ public class KinescopePlayerView: UIView {
             overlay?.isHidden = false
             stopLoader()
         case .failed, .unknown:
-            progressView.showVideoProgress(isLoading: false)
-            previewView.isHidden = false
+            stopLoader(withPreview: false)
             // FIXME: Error handling
             break
         @unknown default:
