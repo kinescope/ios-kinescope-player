@@ -426,13 +426,11 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didPresentFullscreen(from view: KinescopePlayerView) {
-        let rootVC = UIApplication.shared.keyWindow?.rootViewController
-
-        if rootVC?.presentedViewController is KinescopeFullscreenViewController {
+        if KinescopeFullscreenViewController.isPresented {
             isOverlayed = view.overlay?.isSelected ?? false
             detach(view: view)
-
-            rootVC?.dismiss(animated: true, completion: { [weak self] in
+            
+            KinescopeFullscreenViewController.dismiss { [weak self] in
                 guard
                     let self,
                     let miniView = self.miniView
@@ -443,31 +441,28 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                 self.attach(view: miniView)
                 self.view?.change(quality: self.currentQuality)
                 self.restoreView()
-            })
+            }
         } else {
             miniView = view
             isOverlayed = view.overlay?.isSelected ?? false
 
             detach(view: view)
+            
+            guard let video else {
+                return
+            }
 
-            let playerVC = KinescopeFullscreenViewController(player: self,
-                                                             config: .preferred(for: video))
-            playerVC.modalPresentationStyle = .overFullScreen
-            playerVC.modalTransitionStyle = .crossDissolve
-            playerVC.modalPresentationCapturesStatusBarAppearance = true
-            rootVC?.present(playerVC, animated: true, completion: { [weak self] in
-                guard
-                    let self,
-                    let video = self.video
-                else {
+            KinescopeFullscreenViewController.present(player: self,
+                                                      video: video) { [weak self] in
+                guard let video = self?.video else {
                     return
                 }
 
-                self.view?.change(status: .readyToPlay)
-                self.view?.change(quality: self.currentQuality)
-                self.view?.overlay?.set(title: video.title, subtitle: video.description)
-                self.restoreView()
-            })
+                self?.view?.change(status: .readyToPlay)
+                self?.view?.change(quality: self?.currentQuality ?? "")
+                self?.view?.overlay?.set(title: video.title, subtitle: video.description)
+                self?.restoreView()
+            }
         }
     }
 
