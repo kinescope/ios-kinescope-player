@@ -127,6 +127,7 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody {
         view.playerView.player = self.strategy.player
         view.delegate = self
         self.view = view
+        view.set(preview: video?.poster?.url)
         view.set(options: options)
         view.pipController?.delegate = pipDelegate
         updateTimeline()
