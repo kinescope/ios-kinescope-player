@@ -40,7 +40,7 @@ public struct KinescopeLiveIndicatorConfiguration {
 public extension KinescopeLiveIndicatorConfiguration {
     static let `default`: KinescopeLiveIndicatorConfiguration = .init(
         titleFont: .systemFont(ofSize: 14.0, weight: .medium),
-        titleColor: UIColor.white.withAlphaComponent(0.8),
+        titleColor: UIColor.white.withAlphaComponent(0.32),
         circleRadius: 4,
         onColor: UIColor(red: 0.94, green: 0.31, blue: 0.39, alpha: 1),
         offColor: UIColor.white.withAlphaComponent(0.32)
