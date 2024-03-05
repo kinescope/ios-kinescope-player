@@ -18,6 +18,9 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody {
     private let kvoBag = KVOBag()
 
     private lazy var notificationsBag = NotificationsBag(observer: self)
+    
+    @Repeating(executionQueue: .main, attemptsLimit: 10, intervalSeconds: 5)
+    private var playRepeater
 
     private(set) lazy var strategy: PlayingStrategy = {
         dependencies.provide(for: config)
@@ -85,6 +88,7 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody {
     init(config: KinescopePlayerConfig, dependencies: KinescopePlayerDependencies) {
         self.dependencies = dependencies
         self.config = config
+        playRepeater = .init(title: "play") { [weak self] in self?.play() }
         addNotofications()
     }
 
@@ -243,12 +247,14 @@ private extension KinescopeVideoPlayer {
     }
 
     func addPlayerStatusObserver() {
-        let observerFactory = PlayerStatusObserverFactory(playerBody: self)
+        let observerFactory = PlayerStatusObserver(playerBody: self, 
+                                                   repeater: $playRepeater)
         kvoBag.addObserver(for: .playerStatus, using: .init(wrappedFactory: observerFactory))
     }
 
     func addPlayerItemStatusObserver() {
-        let observerFactory = CurrentItemStatusObserver(playerBody: self,
+        let observerFactory = CurrentItemStatusObserver(playerBody: self, 
+                                                        repeater: $playRepeater,
                                                         readyToPlayReceived: { [weak self] in
             guard let self else {
                 return
@@ -374,7 +380,8 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             time = .zero
             seek(to: time)
         }
-
+        
+        self.$playRepeater.reset()
         self.play()
     }
 
@@ -459,7 +466,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                     return
                 }
 
-                self?.view?.change(status: .readyToPlay)
+                self?.view?.overlay?.isHidden = false
                 self?.view?.change(quality: self?.currentQuality ?? "")
                 self?.view?.overlay?.set(title: video.title, subtitle: video.description)
                 self?.restoreView()

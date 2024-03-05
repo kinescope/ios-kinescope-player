@@ -11,12 +11,15 @@ import AVFoundation
 final class CurrentItemStatusObserver: KVOObserverFactory {
     
     private weak var playerBody: KinescopePlayerBody?
+    private weak var repeater: Repeater?
 
     private var readyToPlayReceived: () -> Void
 
     init(playerBody: KinescopePlayerBody,
+         repeater: Repeater,
          readyToPlayReceived: @escaping () -> Void) {
         self.playerBody = playerBody
+        self.repeater = repeater
         self.readyToPlayReceived = readyToPlayReceived
     }
 
@@ -31,21 +34,47 @@ final class CurrentItemStatusObserver: KVOObserverFactory {
 
                 switch item.status {
                 case .readyToPlay:
-                    readyToPlayReceived()
+                    onSuccess()
                 case .failed, .unknown:
                     Kinescope.shared.logger?.log(error: item.error,
                                                  level: KinescopeLoggerLevel.player)
+                    onError()
                 default:
                     break
                 }
-                
-                playerBody?.view?.change(itemStatus: item.status)
 
                 Kinescope.shared.logger?.log(message: "AVPlayerItem.Status – \(item.status.debugDescription)",
                                              level: KinescopeLoggerLevel.player)
                 playerBody?.delegate?.player(changedItemStatusTo: item.status)
             }
         )
+    }
+
+}
+
+// MARK: - Private
+
+private extension CurrentItemStatusObserver {
+
+    func onSuccess() {
+        readyToPlayReceived()
+        playerBody?.view?.overlay?.isHidden = false
+    }
+
+    func onError() {
+        // TODO: - if playlist is empty then show live stream stub
+        // otherwise
+        tryRepeat()
+    }
+
+    func tryRepeat() {
+        switch repeater?.start() {
+        case .inProgress:
+            playerBody?.view?.startLoader()
+        case .limitReached, .none:
+            playerBody?.view?.stopLoader(withPreview: false)
+            // TODO: - show error stub with refresh button
+        }
     }
 
 }

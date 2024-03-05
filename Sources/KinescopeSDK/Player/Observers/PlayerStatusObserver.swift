@@ -8,12 +8,15 @@
 import Foundation
 import AVFoundation
 
-final class PlayerStatusObserverFactory: KVOObserverFactory {
+final class PlayerStatusObserver: KVOObserverFactory {
 
     private weak var playerBody: KinescopePlayerBody?
+    private weak var repeater: Repeater?
 
-    init(playerBody: KinescopePlayerBody) {
+    init(playerBody: KinescopePlayerBody,
+         repeater: Repeater) {
         self.playerBody = playerBody
+        self.repeater = repeater
     }
 
     func provide() -> NSKeyValueObservation? {
@@ -21,13 +24,42 @@ final class PlayerStatusObserverFactory: KVOObserverFactory {
             \.status,
             options: [.new, .old],
             changeHandler: { [weak self] item, _ in
-                self?.playerBody?.view?.change(status: item.status)
+                switch item.status {
+                case .readyToPlay:
+                    self?.onSuccess()
+                case .failed, .unknown:
+                    self?.onError()
+                }
 
                 Kinescope.shared.logger?.log(message: "AVPlayer.Status – \(item.status.debugDescription)",
                                              level: KinescopeLoggerLevel.player)
                 self?.playerBody?.delegate?.player(changedStatusTo: item.status)
             }
         )
+    }
+
+}
+
+// MARK: - Private
+
+private extension PlayerStatusObserver {
+
+    func onSuccess() {
+        // do nothing
+    }
+
+    func onError() {
+        tryRepeat()
+    }
+
+    func tryRepeat() {
+        switch repeater?.start() {
+        case .inProgress:
+            playerBody?.view?.startLoader()
+        case .limitReached, .none:
+            playerBody?.view?.stopLoader(withPreview: false)
+            // TODO: - show error stub with refresh button
+        }
     }
 
 }
