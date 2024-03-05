@@ -54,13 +54,7 @@ public extension KinescopePlayerViewConfiguration {
                                                                    previewService: PreviewNetworkService(),
                                                                    activityIndicator: UIActivityIndicatorView(style: .whiteLarge),
                                                                    overlay: .default,
-                                                                   controlPanel: .init(tintColor: .gray,
-                                                                                       backgroundColor: .clear,
-                                                                                       preferedHeight: 40,
-                                                                                       hideOnPlayTimeout: 2,
-                                                                                       timeIndicator: .default,
-                                                                                       timeline: .default,
-                                                                                       optionsMenu: .default),
+                                                                   controlPanel: .default,
                                                                    sideMenu: .default,
                                                                    shadowOverlay: .default)
 

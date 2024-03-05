@@ -355,9 +355,9 @@ private extension KinescopeVideoPlayer {
     func updateLiveIndicator() {
         switch video?.type {
         case .live:
-            view?.overlay?.set(live: isLive)
+            view?.controlPanel?.set(live: isLive)
         case .none, .vod:
-            view?.overlay?.set(live: nil)
+            view?.controlPanel?.set(live: nil)
         }
     }
 
