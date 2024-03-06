@@ -58,6 +58,7 @@ private extension CurrentItemStatusObserver {
 
     func onSuccess() {
         readyToPlayReceived()
+        playerBody?.view?.stopLoader(withPreview: true)
         playerBody?.view?.announceSnack?.hideAnimated()
         playerBody?.view?.overlay?.isHidden = false
     }
