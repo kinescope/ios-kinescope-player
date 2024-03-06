@@ -18,10 +18,8 @@
 "Player.fullscreen" = "Full screen";
 "Player.exitFullscreen" = "Exit full screen";
 "Player.auto" = "Auto";
-"Player.error" = "Error";
 "Player.videoPlaybackFailed" = "Video playback failed";
 "Player.tryAgain" = "Please try again";
-"Player.refresh" = "Refresh";
 "Player.version" = "Version";
 "Player.chapters" = "Chapters";
 "Player.subtitles" = "Subtitles/CC";
@@ -47,3 +45,4 @@
 "Player.isLive" = "Live";
 "Player.refresh" = "Refresh";
 "Player.error" = "Player error";
+"Player.soon" = "It's starting soon";

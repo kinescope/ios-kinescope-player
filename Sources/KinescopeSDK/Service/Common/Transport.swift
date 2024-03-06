@@ -36,8 +36,7 @@ final class Transport {
                let responseData = data {
 
                 do {
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
+                    let decoder = JSONDecoder.default()
                     let response = try decoder.decode(MetaResponse<D, M>.self, from: responseData)
 
                     self?.completionQueue.async {
@@ -51,7 +50,7 @@ final class Transport {
                 }
             } else if let responseData = data {
                 do {
-                    let error = try JSONDecoder().decode(ServerErrorWrapper.self, from: responseData)
+                    let error = try JSONDecoder.default().decode(ServerErrorWrapper.self, from: responseData)
 
                     self?.completionQueue.async {
                         completion(.failure(error.error))
@@ -84,8 +83,7 @@ final class Transport {
                let responseData = data {
 
                 do {
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
+                    let decoder = JSONDecoder.default()
                     let response = try decoder.decode(Response<D>.self, from: responseData)
 
                     self?.completionQueue.async {
@@ -98,7 +96,7 @@ final class Transport {
                 }
             } else if let responseData = data {
                 do {
-                    let error = try JSONDecoder().decode(ServerErrorWrapper.self, from: responseData)
+                    let error = try JSONDecoder.default().decode(ServerErrorWrapper.self, from: responseData)
 
                     self?.completionQueue.async {
                         completion(.failure(error.error))
@@ -124,8 +122,7 @@ final class Transport {
                let responseData = data {
 
                 do {
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
+                    let decoder = JSONDecoder.default()
 
                     self?.completionQueue.async {
                         completion(.success(responseData))
@@ -158,8 +155,7 @@ final class Transport {
                let responseData = data {
 
                 do {
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
+                    let decoder = JSONDecoder.default()
                     let response = try decoder.decode(D.self, from: responseData)
 
                     self?.completionQueue.async {
@@ -172,7 +168,7 @@ final class Transport {
                 }
             } else if let responseData = data {
                 do {
-                    let error = try JSONDecoder().decode(ServerErrorWrapper.self, from: responseData)
+                    let error = try JSONDecoder.default().decode(ServerErrorWrapper.self, from: responseData)
 
                     self?.completionQueue.async {
                         completion(.failure(error.error))
@@ -184,6 +180,25 @@ final class Transport {
                 }
             }
         }.resume()
+    }
+
+}
+
+// MARK: - Defaults
+
+fileprivate extension JSONDecoder {
+    
+    static let dateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        return dateFormatter
+    }()
+
+    static func `default`() -> JSONDecoder {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .formatted(dateFormatter)
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return decoder
     }
 
 }

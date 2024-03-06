@@ -53,12 +53,12 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody {
     private(set) weak var delegate: KinescopeVideoPlayerDelegate?
 
     private var drmHandler: DataProtectionHandler?
-    private var video: KinescopeVideo? {
+    private(set) var video: KinescopeVideo? {
         didSet {
             guard let video else {
                 return
             }
-            isLive = video.type == .live
+            isLive = video.type == .live && strategy.player.isReadyToPlay
             drmHandler = dependencies.drmFactory.provide(for: video.id)
         }
     }
@@ -352,6 +352,8 @@ private extension KinescopeVideoPlayer {
         let position = CGFloat(time / duration)
         if !position.isNaN {
             view?.controlPanel?.setTimeline(to: CGFloat(position))
+        } else {
+            view?.controlPanel?.setTimeline(to: 0)
         }
         if !time.isNaN {
             view?.controlPanel?.setIndicator(to: time)

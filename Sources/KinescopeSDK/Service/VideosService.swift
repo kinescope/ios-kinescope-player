@@ -39,6 +39,7 @@ private extension VideosNetworkService {
         do {
             let request = try RequestBuilder(path: "\(config.endpoint)\(id).json", method: .get)
                 .add(referer: config.referer)
+                .add(parameters: ["sdk": "ios"])
                 .build(body: EmptyRequest())
 
             transport.performFetch(request: request, completion: completion)

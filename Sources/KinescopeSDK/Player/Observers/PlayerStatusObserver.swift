@@ -58,7 +58,9 @@ private extension PlayerStatusObserver {
             playerBody?.view?.startLoader()
         case .limitReached, .none:
             playerBody?.view?.stopLoader(withPreview: false)
-            playerBody?.view?.errorOverlay?.display(error: error)
+            if let error {
+                playerBody?.view?.errorOverlay?.display(error: error)
+            }
         }
     }
 

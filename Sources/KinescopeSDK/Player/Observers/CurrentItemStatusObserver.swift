@@ -58,13 +58,25 @@ private extension CurrentItemStatusObserver {
 
     func onSuccess() {
         readyToPlayReceived()
+        playerBody?.view?.announceSnack?.hideAnimated()
         playerBody?.view?.overlay?.isHidden = false
     }
 
     func onError(error: Error?) {
-        // TODO: - if playlist is empty then show live stream stub
-        // otherwise
-        tryRepeat(with: error)
+        // CoreMediaErrorDomain error -16190 means that live stream is not ready to play
+        if let error = error as NSError?, error.code == -16190 {
+            showLiveStub()
+            tryRepeat(with: nil)
+        } else {
+            tryRepeat(with: error)
+        }
+    }
+    
+    func showLiveStub() {
+        guard let video = playerBody?.video else {
+            return
+        }
+        playerBody?.view?.announceSnack?.display(startsAt: video.live?.startsAt)
     }
 
     func tryRepeat(with error: Error?) {
@@ -73,7 +85,9 @@ private extension CurrentItemStatusObserver {
             playerBody?.view?.startLoader()
         case .limitReached, .none:
             playerBody?.view?.stopLoader(withPreview: false)
-            playerBody?.view?.errorOverlay?.display(error: error)
+            if let error {
+                playerBody?.view?.errorOverlay?.display(error: error)
+            }
         }
     }
 

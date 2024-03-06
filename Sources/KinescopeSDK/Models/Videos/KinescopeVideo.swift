@@ -23,4 +23,5 @@ public struct KinescopeVideo: Codable {
     public let subtitles: [KinescopeVideoSubtitle]?
     public let hlsLink: String
     public let dash_link: String?
+    public let live: KinescopeStreamMeta?
 }

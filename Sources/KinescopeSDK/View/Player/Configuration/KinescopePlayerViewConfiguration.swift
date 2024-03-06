@@ -19,6 +19,7 @@ public struct KinescopePlayerViewConfiguration {
     let errorOverlay: KinescopeErrorConfiguration?
     let sideMenu: KinescopeSideMenuConfiguration
     let shadowOverlay: KinescopePlayerShadowOverlayConfiguration?
+    let announceSnack: KinescopeAnnounceConfiguration
 
     /// - parameter gravity: `AVLayerVideoGravity` value defines how the video is displayed within a layer’s bounds rectangle
     /// - parameter previewService: Implementation of service to load posters into imageView. Set `nil` to disable previews.
@@ -31,6 +32,7 @@ public struct KinescopePlayerViewConfiguration {
     /// Set `nil` to hide control panel
     /// - parameter sideMenu: Configuration of side menu with setings
     /// - parameter shadowOverlay: Configuration of shadow overlay beneath side menu
+    /// - parameter announceSnack: Configuration of snack bar to announce events.
     public init(gravity: AVLayerVideoGravity,
                 previewService: PreviewService?,
                 activityIndicator: KinescopeActivityIndicator,
@@ -38,7 +40,8 @@ public struct KinescopePlayerViewConfiguration {
                 controlPanel: KinescopeControlPanelConfiguration?,
                 errorOverlay: KinescopeErrorConfiguration?,
                 sideMenu: KinescopeSideMenuConfiguration,
-                shadowOverlay: KinescopePlayerShadowOverlayConfiguration?) {
+                shadowOverlay: KinescopePlayerShadowOverlayConfiguration?,
+                announceSnack: KinescopeAnnounceConfiguration) {
         self.gravity = gravity
         self.previewService = previewService
         self.activityIndicator = activityIndicator
@@ -47,6 +50,7 @@ public struct KinescopePlayerViewConfiguration {
         self.errorOverlay = errorOverlay
         self.sideMenu = sideMenu
         self.shadowOverlay = shadowOverlay
+        self.announceSnack = announceSnack
     }
 
 }
@@ -55,12 +59,16 @@ public struct KinescopePlayerViewConfiguration {
 
 public extension KinescopePlayerViewConfiguration {
 
-    static let `default`: KinescopePlayerViewConfiguration = .init(gravity: .resizeAspect,
-                                                                   previewService: PreviewNetworkService(),
-                                                                   activityIndicator: UIActivityIndicatorView(style: .whiteLarge),
-                                                                   overlay: .default,
-                                                                   controlPanel: .default, errorOverlay: .default,
-                                                                   sideMenu: .default,
-                                                                   shadowOverlay: .default)
+    static let `default`: KinescopePlayerViewConfiguration = .init(
+        gravity: .resizeAspect,
+        previewService: PreviewNetworkService(),
+        activityIndicator: UIActivityIndicatorView(style: .whiteLarge),
+        overlay: .default,
+        controlPanel: .default,
+        errorOverlay: .default,
+        sideMenu: .default,
+        shadowOverlay: .default,
+        announceSnack: .default
+    )
 
 }

@@ -18,10 +18,8 @@
 "Player.fullscreen" = "На весь екран";
 "Player.exitFullscreen" = "Вихід з повноекранного режиму";
 "Player.auto" = "Авто";
-"Player.error" = "Помилка";
 "Player.videoPlaybackFailed" = "Помилка програвання відео";
 "Player.tryAgain" = "Будь ласка, спробуйте ще раз";
-"Player.refresh" = "Оновити";
 "Player.version" = "Версія";
 "Player.chapters" = "Глави";
 "Player.subtitles" = "Субтитри/СС";
@@ -47,3 +45,4 @@
 "Player.isLive" = "В ефірі";
 "Player.refresh" = "Оновити";
 "Player.error" = "Помилка відтворення";
+"Player.soon" = "Скоро почнеться";

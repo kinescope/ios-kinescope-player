@@ -45,10 +45,9 @@ final class ErrorView: UIView {
 
 // MARK: - ErrorViewInput
 
-extension ErrorView {
-
-    func display(error: Error?) {
-        subtitleLabel.text = error?.localizedDescription
+extension ErrorView: ErrorViewInput {
+    func display(error: Error) {
+        subtitleLabel.text = error.localizedDescription
         superview?.bringSubviewToFront(self)
         showAnimated()
     }

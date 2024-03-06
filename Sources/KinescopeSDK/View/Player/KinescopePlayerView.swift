@@ -19,6 +19,7 @@ public class KinescopePlayerView: UIView {
     private(set) weak var controlPanel: PlayerControlView?
     private(set) weak var overlay: PlayerOverlayView?
     private(set) weak var errorOverlay: ErrorView?
+    private(set) weak var announceSnack: AnnounceView?
     private(set) var progressView: KinescopeActivityIndicator!
     private(set) var shadowOverlay: PlayerShadowOverlayView?
     private(set) var pipController: AVPictureInPictureController?
@@ -123,6 +124,7 @@ public extension KinescopePlayerView {
 
         configurePlayerView(with: config.gravity)
         configurePreviewView()
+        configureAnnounce(with: config.announceSnack)
 
         if let overlay = config.overlay {
             configureOverlay(with: overlay)
@@ -191,7 +193,6 @@ private extension KinescopePlayerView {
 
     func configureControlPanel(with config: KinescopeControlPanelConfiguration) {
         let controlPanel = PlayerControlView(config: config)
-        controlPanel.alpha = .zero
         addSubview(controlPanel)
         bottomChildWithSafeArea(view: controlPanel)
         controlPanel.isHidden = true
@@ -216,6 +217,15 @@ private extension KinescopePlayerView {
         stretch(view: overlay)
 
         self.errorOverlay = overlay
+    }
+
+    func configureAnnounce(with config: KinescopeAnnounceConfiguration) {
+        let snack = AnnounceView(config: config)
+        snack.isHidden = true
+        addSubview(snack)
+        bottomLeftChildWithSafeArea(view: snack, with: 16)
+
+        self.announceSnack = snack
     }
 
     func configureShadowOverlay(with config: KinescopePlayerShadowOverlayConfiguration) {
@@ -412,17 +422,13 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
         if isSelected {
             if !(controlPanel?.expanded ?? true) {
                 overlay?.isSelected = false
-                UIView.animate(withDuration: 0.3) {
-                    self.controlPanel?.alpha = 0.0
-                }
+                controlPanel?.hideAnimated()
             } else {
                 controlPanel?.expanded = false
             }
         } else {
             overlay?.isSelected = true
-            UIView.animate(withDuration: 0.3) {
-                self.controlPanel?.alpha = 1.0
-            }
+            controlPanel?.showAnimated()
             addDebouncerHandler()
         }
         overlayDebouncer.renewInterval()

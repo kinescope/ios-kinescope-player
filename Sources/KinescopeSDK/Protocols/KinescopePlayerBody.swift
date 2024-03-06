@@ -9,6 +9,8 @@ import Foundation
 
 protocol KinescopePlayerBody: AnyObject {
     
+    var video: KinescopeVideo? { get }
+
     var isLive: Bool { get }
 
     var strategy: PlayingStrategy { get }
