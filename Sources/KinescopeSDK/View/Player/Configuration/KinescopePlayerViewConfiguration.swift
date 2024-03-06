@@ -16,6 +16,7 @@ public struct KinescopePlayerViewConfiguration {
     let activityIndicator: KinescopeActivityIndicator
     let overlay: KinescopePlayerOverlayConfiguration?
     let controlPanel: KinescopeControlPanelConfiguration?
+    let errorOverlay: KinescopeErrorConfiguration?
     let sideMenu: KinescopeSideMenuConfiguration
     let shadowOverlay: KinescopePlayerShadowOverlayConfiguration?
 
@@ -26,6 +27,8 @@ public struct KinescopePlayerViewConfiguration {
     ///  Set `nil` to hide overlay (usefull for videos collection with autoplaying)
     /// - parameter controlPanel: Configuration of control panel with play/pause buttons and other controls
     /// Set `nil` to hide control panel
+    /// - parameter errorOverlay: Configuration for error view
+    /// Set `nil` to hide control panel
     /// - parameter sideMenu: Configuration of side menu with setings
     /// - parameter shadowOverlay: Configuration of shadow overlay beneath side menu
     public init(gravity: AVLayerVideoGravity,
@@ -33,6 +36,7 @@ public struct KinescopePlayerViewConfiguration {
                 activityIndicator: KinescopeActivityIndicator,
                 overlay: KinescopePlayerOverlayConfiguration?,
                 controlPanel: KinescopeControlPanelConfiguration?,
+                errorOverlay: KinescopeErrorConfiguration?,
                 sideMenu: KinescopeSideMenuConfiguration,
                 shadowOverlay: KinescopePlayerShadowOverlayConfiguration?) {
         self.gravity = gravity
@@ -40,6 +44,7 @@ public struct KinescopePlayerViewConfiguration {
         self.activityIndicator = activityIndicator
         self.overlay = overlay
         self.controlPanel = controlPanel
+        self.errorOverlay = errorOverlay
         self.sideMenu = sideMenu
         self.shadowOverlay = shadowOverlay
     }
@@ -54,7 +59,7 @@ public extension KinescopePlayerViewConfiguration {
                                                                    previewService: PreviewNetworkService(),
                                                                    activityIndicator: UIActivityIndicatorView(style: .whiteLarge),
                                                                    overlay: .default,
-                                                                   controlPanel: .default,
+                                                                   controlPanel: .default, errorOverlay: .default,
                                                                    sideMenu: .default,
                                                                    shadowOverlay: .default)
 

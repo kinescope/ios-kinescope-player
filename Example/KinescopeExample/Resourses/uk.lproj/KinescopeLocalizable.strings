@@ -45,3 +45,5 @@
 "Player.reset" = "Скинути";
 "Player.options" = "Параметри";
 "Player.isLive" = "В ефірі";
+"Player.refresh" = "Оновити";
+"Player.error" = "Помилка відтворення";

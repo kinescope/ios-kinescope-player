@@ -145,11 +145,6 @@ private extension PlayerControlView {
     }
 
     func setupConstraints() {
-
-        subviews.forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-        }
-
         timeIndicator.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         timeIndicator.setContentHuggingPriority(.defaultHigh, for: .horizontal)
 

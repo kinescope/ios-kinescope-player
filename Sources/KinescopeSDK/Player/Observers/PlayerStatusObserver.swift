@@ -28,7 +28,7 @@ final class PlayerStatusObserver: KVOObserverFactory {
                 case .readyToPlay:
                     self?.onSuccess()
                 case .failed, .unknown:
-                    self?.onError()
+                    self?.onError(error: item.error)
                 }
 
                 Kinescope.shared.logger?.log(message: "AVPlayer.Status – \(item.status.debugDescription)",
@@ -48,17 +48,17 @@ private extension PlayerStatusObserver {
         // do nothing
     }
 
-    func onError() {
-        tryRepeat()
+    func onError(error: Error?) {
+        tryRepeat(with: error)
     }
 
-    func tryRepeat() {
+    func tryRepeat(with error: Error?) {
         switch repeater?.start() {
         case .inProgress:
             playerBody?.view?.startLoader()
         case .limitReached, .none:
             playerBody?.view?.stopLoader(withPreview: false)
-            // TODO: - show error stub with refresh button
+            playerBody?.view?.errorOverlay?.display(error: error)
         }
     }
 

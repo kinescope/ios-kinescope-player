@@ -38,7 +38,7 @@ final class CurrentItemStatusObserver: KVOObserverFactory {
                 case .failed, .unknown:
                     Kinescope.shared.logger?.log(error: item.error,
                                                  level: KinescopeLoggerLevel.player)
-                    onError()
+                    onError(error: item.error)
                 default:
                     break
                 }
@@ -61,19 +61,19 @@ private extension CurrentItemStatusObserver {
         playerBody?.view?.overlay?.isHidden = false
     }
 
-    func onError() {
+    func onError(error: Error?) {
         // TODO: - if playlist is empty then show live stream stub
         // otherwise
-        tryRepeat()
+        tryRepeat(with: error)
     }
 
-    func tryRepeat() {
+    func tryRepeat(with error: Error?) {
         switch repeater?.start() {
         case .inProgress:
             playerBody?.view?.startLoader()
         case .limitReached, .none:
             playerBody?.view?.stopLoader(withPreview: false)
-            // TODO: - show error stub with refresh button
+            playerBody?.view?.errorOverlay?.display(error: error)
         }
     }
 

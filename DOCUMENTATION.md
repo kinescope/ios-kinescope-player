@@ -48,6 +48,13 @@ Set `nil` to hide control panel.
 
 Default implementation could be checked in Example project.
 
+### errorOverlay
+Configuration for error view with refresh button. Showing on broken livestreams or repeated failed attempts to play video.
+
+Set `nil` to hide control panel
+
+Default implementation could be checked in Example project.
+
 ### sideMenu
 
 Configuration of side menu with setings.

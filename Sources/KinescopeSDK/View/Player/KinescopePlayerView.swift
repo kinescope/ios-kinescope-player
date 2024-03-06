@@ -18,6 +18,7 @@ public class KinescopePlayerView: UIView {
     private(set) var playerView: PlayerView!
     private(set) weak var controlPanel: PlayerControlView?
     private(set) weak var overlay: PlayerOverlayView?
+    private(set) weak var errorOverlay: ErrorView?
     private(set) var progressView: KinescopeActivityIndicator!
     private(set) var shadowOverlay: PlayerShadowOverlayView?
     private(set) var pipController: AVPictureInPictureController?
@@ -135,6 +136,10 @@ public extension KinescopePlayerView {
             configureShadowOverlay(with: shadowOverlay)
         }
 
+        if let errorOverlay = config.errorOverlay {
+            configureError(with: errorOverlay)
+        }
+
         configureProgressView(with: config.activityIndicator)
         configurePip()
     }
@@ -202,6 +207,15 @@ private extension KinescopePlayerView {
         stretch(view: overlay)
 
         self.overlay = overlay
+    }
+
+    func configureError(with config: KinescopeErrorConfiguration) {
+        let overlay = ErrorView(config: config, delegate: self)
+        overlay.isHidden = true
+        addSubview(overlay)
+        stretch(view: overlay)
+
+        self.errorOverlay = overlay
     }
 
     func configureShadowOverlay(with config: KinescopePlayerShadowOverlayConfiguration) {
@@ -368,23 +382,14 @@ private extension KinescopePlayerView {
         guard let shadowOverlay = shadowOverlay else {
             return
         }
-        shadowOverlay.isHidden = false
-        UIView.animate(withDuration: 0.2,
-                       animations: {
-                        shadowOverlay.alpha = 1
-                       })
+        shadowOverlay.showAnimated()
     }
 
     func hideShadow() {
         guard let shadowOverlay = shadowOverlay else {
             return
         }
-        UIView.animate(withDuration: 0.2,
-                       animations: {
-                        shadowOverlay.alpha = 0
-                       }, completion: { _ in
-                        shadowOverlay.isHidden = false
-                       })
+        shadowOverlay.hideAnimated(with: { shadowOverlay.isHidden = false })
     }
 
     func addDebouncerHandler() {
@@ -393,11 +398,7 @@ private extension KinescopePlayerView {
                 return
             }
             self.overlay?.isSelected = false
-            UIView.animate(withDuration: 0.3, animations: {
-                self.controlPanel?.alpha = 0.0
-            }, completion: { _ in
-                self.controlPanel?.expanded = false
-            })
+            self.controlPanel?.hideAnimated(with: { self.controlPanel?.expanded = false })
         }
     }
 
@@ -446,6 +447,14 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
     func didFastBackward() {
         overlayDebouncer.renewInterval()
         delegate?.didFastBackward()
+    }
+}
+
+// MARK: - ErrorViewOutput
+
+extension KinescopePlayerView: ErrorViewOutput {
+    func didRerty() {
+        didPlay()
     }
 }
 
