@@ -7,6 +7,8 @@
 
 protocol FocusableItem: class {
 
+    var uuid: String { get }
+
     var isFocused: Bool { get set }
 
     func focusUpdated(isFocused: Bool)

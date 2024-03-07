@@ -11,10 +11,18 @@ class Manager: KinescopeServicesProvider {
 
     // MARK: - Properties
 
-    var config: KinescopeConfig?
+    var config: KinescopeConfig!
 
-    var downloader: KinescopeDownloadable!
+    var assetDownloader: KinescopeAssetDownloadable!
+
+    var videoDownloader: KinescopeVideoDownloadable!
+
+    var attachmentDownloader: KinescopeAttachmentDownloadable!
 
     var inspector: KinescopeInspectable!
+
+    var logger: KinescopeLogging?
+
+    var eventsCenter: KinescopeEventsCenter!
 
 }

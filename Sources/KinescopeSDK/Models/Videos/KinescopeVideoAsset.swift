@@ -8,5 +8,5 @@ public struct KinescopeVideoAsset: Codable {
     public let resolution: String
     public let createdAt: String
     public let updatedAt: String?
-    public let url: String
+    public let url: String?
 }

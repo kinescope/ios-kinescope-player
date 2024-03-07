@@ -74,6 +74,10 @@ private extension AuthSelectorController {
         /// Set apiKey
         Kinescope.shared.setConfig(.init(apiKey: user.apiKey))
 
+        /// Set logger
+        Kinescope.shared.set(logger: KinescopeDefaultLogger(),
+                             levels: KinescopeLoggerLevel.allCases)
+
         /// Push to next
         performSegue(withIdentifier: "toVideos", sender: nil)
 

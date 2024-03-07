@@ -42,6 +42,7 @@ final class Transport {
                         completion(.success(response))
                     }
                 } catch let error {
+                    Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.network)
                     DispatchQueue.main.async {
                         completion(.failure(error))
                     }

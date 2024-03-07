@@ -18,6 +18,7 @@ final class VideoListController: UIViewController {
         didSet {
             // Needs to make last cell focusable
             tableView.contentInset.bottom = 200
+            tableView.estimatedRowHeight = 200
         }
     }
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
@@ -37,7 +38,7 @@ final class VideoListController: UIViewController {
     private weak var paginatableInput: PaginatableInput?
 
     private lazy var inspector: KinescopeInspectable = Kinescope.shared.inspector
-    private var request = KinescopeVideosRequest(page: 1, perPage: 2)
+    private var request = KinescopeVideosRequest(page: 1)
     private var totalCount = 0
 
     // MARK: - UIViewController
@@ -46,6 +47,11 @@ final class VideoListController: UIViewController {
         super.viewDidLoad()
         title = "Your videos"
         loadFirstPage()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        focusInput?.clearFocus()
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

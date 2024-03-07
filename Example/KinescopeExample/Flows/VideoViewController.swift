@@ -10,21 +10,34 @@ final class VideoViewController: UIViewController {
     // MARK: - Private properties
 
     var videoId = ""
-    private var player: KinescopeVideoPlayer?
+    private var player: KinescopePlayer?
 
     // MARK: - Lifecycle
+
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        playerView.set(videoGravity: .resizeAspect)
-        player = KinescopeVideoPlayer(videoId: videoId)
+        navigationController?.delegate = self
+
+        playerView.setLayout(with: .default)
+
+        PipManager.shared.closePipIfNeeded(with: videoId)
+
+        player = KinescopeVideoPlayer(config: .init(videoId: videoId))
         player?.attach(view: playerView)
         player?.play()
+        playerView.showOverlay(true)
+        player?.pipDelegate = PipManager.shared
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        player?.stop()
+}
+
+extension VideoViewController: UINavigationControllerDelegate {
+    func navigationControllerSupportedInterfaceOrientations(_ navigationController: UINavigationController) -> UIInterfaceOrientationMask {
+        return self.supportedInterfaceOrientations
     }
 }
