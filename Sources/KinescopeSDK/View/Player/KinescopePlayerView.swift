@@ -104,12 +104,8 @@ public class KinescopePlayerView: UIView {
         controlPanel?.set(options: options)
     }
 
-    func change(quality: String, manualQuality: Bool) {
-        if manualQuality {
-            set(quality: quality)
-        } else {
-            set(quality: L10n.Player.auto + " " + quality)
-        }
+    func change(quality: String) {
+        set(quality: quality.isEmpty ? L10n.Player.auto : quality)
     }
 
 }
@@ -221,28 +217,33 @@ private extension KinescopePlayerView {
     }
 
     func handleDisclosureActions(for title: String) {
-        let model: SideMenu.Model
+        let model: SideMenu.Model?
         switch SideMenu.Settings.getType(by: title) {
         case .playbackSpeed:
-            model = .init(title: title, isRoot: false, isDownloadable: false, items: [])
+            // TODO: - Feature.playbackSpeedSetting: create model with playback options
+            model = nil
         case .subtitles:
             model = makeSubtitlesSideMenuModel(with: title, root: false)
         case .quality:
             model = makeQualitySideMenuModel(with: title)
         case .none:
-            model = .init(title: title, isRoot: false, isDownloadable: false, items: [])
+            model = nil
+        }
+        
+        guard let model else {
+            return
         }
 
         presentSideMenu(model: model)
     }
 
-    func handleDescriptionActions(for sideMenu: SideMenu, index: Int) {
+    func handleDescriptionActions(for sideMenu: SideMenu, id: String) {
         switch SideMenu.DescriptionTitle.getType(by: sideMenu.title) {
         case .attachments:
-            delegate?.didSelectAttachment(with: index)
+            delegate?.didSelectAttachment(with: id)
             sideMenuWillBeDismissed(sideMenu, withRoot: true)
         case .download:
-            delegate?.didSelectAsset(with: index)
+            delegate?.didSelect(quality: id)
             sideMenuWillBeDismissed(sideMenu, withRoot: true)
         case .none:
             return
@@ -251,10 +252,10 @@ private extension KinescopePlayerView {
     }
 
     func makeQualitySideMenuModel(with title: String) -> SideMenu.Model {
-        let qualities = delegate?.didShowQuality() ?? []
+        let qualities = delegate?.didShowAssets() ?? []
         var items = qualities.compactMap { quality -> SideMenu.Item in
-            let selected = self.selectedQuality.string.trimmingCharacters(in: .symbols) == quality
-            return .checkmark(title: .init(string: quality), selected: selected)
+            let selected = self.selectedQuality.string.trimmingCharacters(in: .symbols) == quality.name
+            return .checkmark(title: .init(string: quality.name), selected: selected)
         }
 
         let autoTitle = NSAttributedString(string: L10n.Player.auto)
@@ -289,7 +290,9 @@ private extension KinescopePlayerView {
         for (index, material) in materials.enumerated() {
             let title = String(index + 1) + ". " + material.title
             let value = bcf.string(fromByteCount: Int64(material.size))
-            items.append(.description(title: title, value: value))
+            items.append(.description(id: material.id,
+                                      title: title,
+                                      value: value))
         }
 
         return items
@@ -306,9 +309,13 @@ private extension KinescopePlayerView {
         bcf.countStyle = .file
 
         for material in materials {
-            let title = material.quality
-            let value = bcf.string(fromByteCount: Int64(material.fileSize))
-            items.append(.description(title: title, value: value))
+            let title = material.label
+            let value = material.name
+            // TODO: - Feature.assetDownloader: how to get fileSize ?
+//            let value = bcf.string(fromByteCount: Int64(material.fileSize))
+            items.append(.description(id: title, 
+                                      title: title,
+                                      value: value))
         }
 
         return items
@@ -321,6 +328,7 @@ private extension KinescopePlayerView {
         case .subtitles:
             handleSubtitlesCheckmarkAction(for: title, sideMenu: sideMenu)
         case .playbackSpeed, .none:
+            // TODO: - Feature.playbackSpeedSetting: handle changes for playback
             break
         }
     }
@@ -384,7 +392,7 @@ private extension KinescopePlayerView {
 
     func addDebouncerHandler() {
         overlayDebouncer.handler = { [weak self] in
-            guard let self = self else {
+            guard let self else {
                 return
             }
             self.overlay?.isSelected = false
@@ -458,8 +466,9 @@ extension KinescopePlayerView: PlayerControlOutput {
                                        isRoot: true,
                                        isDownloadable: false,
                                        items: [
-                                        .disclosure(title: L10n.Player.playbackSpeed,
-                                                    value: nil),
+                                        // TODO: - Feature.playbackSpeedSetting: add playback speed settings row in SideMenu
+//                                        .disclosure(title: L10n.Player.playbackSpeed,
+//                                                    value: nil),
                                         .disclosure(title: L10n.Player.subtitles,
                                                     value: selectedSubtitles),
                                         .disclosure(title: L10n.Player.videoQuality,
@@ -531,8 +540,8 @@ extension KinescopePlayerView: SideMenuDelegate {
             handleDisclosureActions(for: title)
         case .checkmark(let title, _):
             handleCheckmarkActions(for: title, sideMenu: sideMenu)
-        case .description:
-            handleDescriptionActions(for: sideMenu, index: rowIndex)
+        case .description(let id, _, _):
+            handleDescriptionActions(for: sideMenu, id: id)
         }
     }
 
@@ -553,3 +562,4 @@ extension KinescopePlayerView: ShadowOverlayDelegate {
     }
 
 }
+

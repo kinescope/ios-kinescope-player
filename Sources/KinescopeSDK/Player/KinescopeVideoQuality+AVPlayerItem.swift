@@ -9,16 +9,14 @@ import AVFoundation
 
 extension KinescopeVideoQuality {
 
-    var item: AVPlayerItem? {
+    func makeItem(with dataProtectionHandler: DataProtectionHandler?) -> AVPlayerItem? {
         switch self {
         case .auto(let hlsLink):
-            return makeAutoItem(from: hlsLink)
-        case .exact(let asset):
-            return makeExactItem(from: asset)
-        case .exactWithSubtitles(let asset, let subtitles):
-            return makeExactItem(from: asset, subtitles: subtitles)
+            return makeAutoItem(from: hlsLink, with: dataProtectionHandler)
         case .downloaded(let url):
             return makeDownloadedItem(from: url)
+        default:
+            return nil
         }
     }
 
@@ -28,28 +26,36 @@ extension KinescopeVideoQuality {
 
 fileprivate extension KinescopeVideoQuality {
 
-    func makeAutoItem(from hlsLink: String) -> AVPlayerItem? {
+    func makeAutoItem(from hlsLink: String, with dataProtectionHandler: DataProtectionHandler?) -> AVPlayerItem? {
         guard let url = URL(string: hlsLink) else {
             return nil
         }
 
-        let asset = AVAsset(url: url)
+        let asset = AVURLAsset(url: url)
+        
+#if !targetEnvironment(simulator)
+        dataProtectionHandler?.bind(with: asset)
+#endif
         return AVPlayerItem(asset: asset)
     }
 
-    func makeExactItem(from asset: KinescopeVideoAsset) -> AVPlayerItem? {
-        guard let urlString = asset.url,
-                let url = URL(string: urlString) else {
+    func makeDownloadedItem(from url: URL) -> AVPlayerItem? {
+        return AVPlayerItem(url: url)
+    }
+
+    @available(*, deprecated, message: "Changing of playerItem is not required. Switching between qualities is handling in HLS stream.")
+    func makeExactItem(from asset: KinescopeVideoAssetLink) -> AVPlayerItem? {
+        guard let url = URL(string: asset.link) else {
             return nil
         }
 
         return AVPlayerItem(url: url)
     }
 
-    func makeExactItem(from asset: KinescopeVideoAsset,
+    @available(*, deprecated, message: "Changing of playerItem is not required. Switching between qualities is handling in HLS stream.")
+    func makeExactItem(from asset: KinescopeVideoAssetLink,
                        subtitles: KinescopeVideoSubtitle) -> AVPlayerItem? {
-        guard let urlString = asset.url,
-                let url = URL(string: urlString)
+        guard let url = URL(string: asset.link)
         else {
             return nil
         }
@@ -110,10 +116,6 @@ fileprivate extension KinescopeVideoQuality {
         }
 
         return AVPlayerItem(asset: composition)
-    }
-
-    func makeDownloadedItem(from url: URL) -> AVPlayerItem? {
-        return AVPlayerItem(url: url)
     }
 
 }

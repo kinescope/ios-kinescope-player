@@ -12,8 +12,9 @@ public protocol KinescopeAssetDownloadable: class {
 
     /// Request downloadable link for asset and start downloading
     ///
+    /// - parameter video: Video model for concrete video
     /// - parameter asset: Asset model for concrete video quality
-    func enqueueDownload(asset: KinescopeVideoAsset)
+    func enqueueDownload(video: KinescopeVideo, asset: KinescopeVideoAsset)
 
     /// Pause downloading of asset
     ///

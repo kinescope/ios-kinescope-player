@@ -7,6 +7,7 @@
 
 /// Facade for dependencies
 protocol KinescopePlayerDependencies: PlayingStrategyProvider {
+    var drmFactory: DataProtectionHandlerFactory { get }
     var inspector: KinescopeInspectable { get }
     var assetDownloader: KinescopeAssetDownloadable { get }
     var attachmentDownloader: KinescopeAttachmentDownloadable { get }

@@ -10,12 +10,15 @@ import AVFoundation
 extension KinescopeVideo {
 
     var downloadableAssets: [KinescopeVideoAsset] {
-        return assets.filter { isDownloadableFormat(filetype: $0.filetype) }
+        return qualityMap?.sorted(by: { $0.height > $1.height }) ?? []
     }
 
-    private func isDownloadableFormat(filetype: String) -> Bool {
-        let formats = ["mp4"]
-        return formats.contains(filetype)
+    var hasAssets: Bool {
+        !downloadableAssets.isEmpty
+    }
+
+    func firstQuality(by name: String) -> KinescopeVideoAsset? {
+        downloadableAssets.first(where: { $0.name == name })
     }
 
 }

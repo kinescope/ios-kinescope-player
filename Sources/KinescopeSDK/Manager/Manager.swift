@@ -12,6 +12,8 @@ class Manager: KinescopeServicesProvider {
     // MARK: - Properties
 
     var config: KinescopeConfig!
+    
+    var drmFactory: DataProtectionHandlerFactory!
 
     var assetDownloader: KinescopeAssetDownloadable!
 

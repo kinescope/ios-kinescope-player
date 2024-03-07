@@ -1,6 +1,8 @@
 public enum KinescopeLoggerLevel: KinescopeLoggingLevel, Equatable, CaseIterable {
     /// Network logs
     case network
+    /// DRM protection logs
+    case drm
     /// Player logs
     case player
     /// Player logs

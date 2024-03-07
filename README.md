@@ -18,43 +18,30 @@ This framework can help you include customizable video player into your mobile a
 
 ## Usage
 
-First of all, init SDK with apiKey somewhere at startup of your app
+First of all, init SDK somewhere at startup of your app
 
-```
-Kinescope.shared.setConfig(.init(apiKey: "your api key"))
-```
-
-From now you can use most of API through SDK
-
-For example, to get list of videos just call
-```
-Kinescope.shared.inspector.list(request: .init(page: 1),
-                                onSuccess: { result in
-
-                                  let videos = result.0
-                                  // save video models somewhere
-
-                                  let metaData = result.1
-                                  // check metadata
-                                })
+```swift
+Kinescope.shared.setConfig(.init())
 ```
 
-Than init player instance
+From now you can play any video or livestream from your dashboard.
 
-```
+Just init player instance with videoId
+
+```swift
 let player = KinescopePlayer(videoId: "some video id")
 ```
 
 Add player view somewhere in your layout
 
-```
+```swift
 let playerView = KinescopePlayerView()
 view.addSubview(playerView)
 ```
 
 Connect player and playerView together
 
-```
+```swift
 player.attach(view: playerView)
 ```
 
@@ -92,7 +79,7 @@ Also SDK has opportunity to use custom logger. Just use protocols `KinescopeLogg
 Just add KinescopeSDK to your `Podfile` like this
 
 ```
-pod 'KinescopeSDK' ~> 0.1
+pod 'KinescopeSDK' ~> 0.2
 ```
 
 If you have any issues with method above, than you can specify git repo like this
@@ -119,7 +106,7 @@ For issues, file directly in the [main repo](https://github.com/kinescope/ios-ki
 
 If you would like to contribute to the package (e.g. by improving the documentation, solving a bug or adding a cool new feature), please review our [contribution guide](CONTRIBUTING.md) first and send us your pull request.
 
-You PRs are always welcome.
+Your PRs are always welcome.
 
 ## How to reach us
 

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = "KinescopeSDK"
-  s.version = "0.1"
+  s.version = "0.2-beta"
   s.summary = "Library to help you include Kinescope player into your mobile iOS application"
   s.homepage = "https://github.com/kinescope/ios-kinescope-player"
   s.license = "MIT"
@@ -13,6 +13,7 @@ Pod::Spec.new do |s|
   s.swift_version = '5.0'
 
   s.dependency 'SwiftProtobuf', '~> 1.0'
+  s.dependency 'M3U8Kit', '~> 1.0'
 
   s.resource_bundles = { 'KinescopeSDK' => ['Sources/KinescopeSDK/Resources/*.xcassets', 'Sources/KinescopeSDK/Resources/*.lproj/*.strings'] }
 end
