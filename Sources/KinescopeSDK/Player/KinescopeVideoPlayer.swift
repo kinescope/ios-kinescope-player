@@ -4,6 +4,10 @@ import UIKit
 
 public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody {
 
+    private enum Constants {
+        static let periodicIntervalInSeconds: TimeInterval = 0.01
+    }
+
     public weak var pipDelegate: AVPictureInPictureControllerDelegate? {
         didSet {
             view?.pipController?.delegate = pipDelegate
@@ -37,6 +41,10 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody {
             updateTimeline()
         }
     }
+
+    @ApproxTimeInterval(step: Constants.periodicIntervalInSeconds)
+    private var cachedDuration: TimeInterval = .nan
+
     private(set) var isLive = false {
         didSet {
             updateLiveIndicator()
@@ -226,7 +234,7 @@ private extension KinescopeVideoPlayer {
             return
         }
 
-        playbackObserverFactory = PlaybackTimePeriodicObserver(period: CMTimeMakeWithSeconds(0.01,
+        playbackObserverFactory = PlaybackTimePeriodicObserver(period: CMTimeMakeWithSeconds(Constants.periodicIntervalInSeconds,
                                                                                       preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
                                                         playerBody: self,
                                                         secondsPlayed: { [weak self] updatedTime in
@@ -348,9 +356,17 @@ private extension KinescopeVideoPlayer {
     }
 
     func updateTimeline() {
-        let duration = strategy.player.durationSeconds ?? .zero
+        cachedDuration = strategy.player.durationSeconds ?? .zero
 
-        let position = CGFloat(time / duration)
+        let position: CGFloat = {
+            guard !strategy.player.hasFiniteDuration,
+                    !isLive else {
+                return CGFloat(time / cachedDuration)
+            }
+
+            return CGFloat(time / $cachedDuration)
+        }()
+
         if !position.isNaN {
             view?.controlPanel?.setTimeline(to: CGFloat(position))
         } else {
