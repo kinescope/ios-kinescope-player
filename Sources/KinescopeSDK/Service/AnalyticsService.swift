@@ -8,7 +8,7 @@
 import Foundation
 
 protocol AnalyticsService {
-    func send(event: Analytics_Native, completion: @escaping (Result<Int, Error>) -> Void)
+    func send(event: Analytics_Native)
 }
 
 final class AnalyticsNetworkService: AnalyticsService {
@@ -19,7 +19,6 @@ final class AnalyticsNetworkService: AnalyticsService {
     private let config: KinescopeConfig
 
     private let executionQueue = DispatchQueue.global(qos: .utility)
-    private let errorQueue = DispatchQueue.main
 
     // MARK: - Lifecycle
 
@@ -30,7 +29,7 @@ final class AnalyticsNetworkService: AnalyticsService {
 
     // MARK: - Public Methods
 
-    func send(event: Analytics_Native, completion: @escaping (Result<Int, Error>) -> Void) {
+    func send(event: Analytics_Native) {
         guard let data = try? event.serializedData() else {
             Kinescope.shared.logger?.log(message: "Could not serialize event", level: KinescopeLoggerLevel.network)
             return
@@ -41,11 +40,16 @@ final class AnalyticsNetworkService: AnalyticsService {
                 let request = try RequestBuilder(path: "https://metrics.kinescope.io/player-native", method: .post)
                     .build(body: data)
 
-                self?.transport.perform(request: request, completion: completion)
+                self?.transport.performRaw(request: request, completion: { result in
+                    switch result {
+                    case .success:
+                        Kinescope.shared.logger?.log(message: "Analytic event sended successfully.", level: KinescopeLoggerLevel.analytics)
+                    case .failure(let error):
+                        Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.analytics)
+                    }
+                })
             } catch let error {
-                self?.errorQueue.async {
-                    completion(.failure(error))
-                }
+                Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.analytics)
             }
         }
     }
