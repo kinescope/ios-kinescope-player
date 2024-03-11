@@ -256,7 +256,7 @@ private extension KinescopeVideoPlayer {
         let observerFactory = CurrentItemStatusObserver(playerBody: self, 
                                                         repeater: $playRepeater,
                                                         readyToPlayReceived: { [weak self] in
-            guard let self else {
+            guard let self, let video else {
                 return
             }
             let seconds = savedTime.seconds
@@ -265,6 +265,7 @@ private extension KinescopeVideoPlayer {
                 savedTime = .zero
                 seek(to: seconds)
             }
+            isLive = video.type == .live && strategy.player.isReadyToPlay
         })
         kvoBag.addObserver(for: .playerItemStatus, using: .init(wrappedFactory: observerFactory))
     }
