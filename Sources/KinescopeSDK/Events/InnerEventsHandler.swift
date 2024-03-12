@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol InnerEventsHandler {
+public protocol InnerEventsHandler {
     func send(event: InnerProtoEvent, value: Float)
 }
 

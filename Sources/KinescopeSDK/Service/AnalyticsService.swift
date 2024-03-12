@@ -43,7 +43,7 @@ final class AnalyticsNetworkService: AnalyticsService {
                 self?.transport.performRaw(request: request, completion: { result in
                     switch result {
                     case .success:
-                        Kinescope.shared.logger?.log(message: "Analytic event sended successfully.", level: KinescopeLoggerLevel.analytics)
+                        Kinescope.shared.logger?.log(message: "Analytic event '\(event.event)' sended successfully.", level: KinescopeLoggerLevel.analytics)
                     case .failure(let error):
                         Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.analytics)
                     }

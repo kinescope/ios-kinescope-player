@@ -8,6 +8,7 @@
 import Foundation
 
 protocol InnerEventsDataInputs {
+    var videoInput: VideoAnalyticInput { get }
     var sessionInput: SessionAnalyticInput { get }
     var playbackInput: PlaybackAnalyticInput { get }
 }
@@ -27,18 +28,22 @@ final class InMemoryInnerEventsDataStorage: InnerEventsDataStorage {
 
     // MARK: - Init
 
-    init(video: VideoAnalyticDataFactory, player: PlayerAnalyticDataFactory, device: DeviceAnalyticDataFactory, session: SessionAnalyticDataFactory, playback: PlaybackAnalyticDataFactory) {
-        self.video = video
-        self.player = player
-        self.device = device
-        self.session = session
-        self.playback = playback
+    init() {
+        self.video = .init()
+        self.player = .init()
+        self.device = .init()
+        self.session = .init()
+        self.playback = .init()
     }
 }
 
 // MARK: - InnerEventsDataInputs
 
 extension InMemoryInnerEventsDataStorage: InnerEventsDataInputs {
+    var videoInput: VideoAnalyticInput {
+        return video
+    }
+
     var sessionInput: SessionAnalyticInput {
         return session
     }

@@ -7,6 +7,10 @@
 
 import Foundation
 
+protocol VideoAnalyticInput {
+    func setVideo(_ video: KinescopeVideo)
+}
+
 final class VideoAnalyticDataFactory: Factory {
     typealias T = Analytics_Video
     
@@ -24,5 +28,13 @@ final class VideoAnalyticDataFactory: Factory {
         result.source = video.hlsLink
         result.duration = UInt32(video.duration)
         return result
+    }
+}
+
+// MARK: - VideoAnalyticInput
+
+extension VideoAnalyticDataFactory: VideoAnalyticInput {
+    func setVideo(_ video: KinescopeVideo) {
+        self.video = video
     }
 }

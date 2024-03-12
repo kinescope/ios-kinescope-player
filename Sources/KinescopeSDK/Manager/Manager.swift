@@ -23,8 +23,8 @@ class Manager: KinescopeServicesProvider {
 
     var inspector: KinescopeInspectable!
 
-    var logger: KinescopeLogging?
+    var analyticFactory: (any KinescopeAnalyticHandlerFactory)!
 
-    var eventsCenter: KinescopeEventsCenter!
+    var logger: KinescopeLogging?
 
 }

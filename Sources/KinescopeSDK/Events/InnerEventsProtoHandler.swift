@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum InnerProtoEvent: String {
+public enum InnerProtoEvent: String {
     case playback
     case play
     case pause
