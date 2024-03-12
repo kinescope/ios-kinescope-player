@@ -297,6 +297,8 @@ private extension KinescopeVideoPlayer {
                                      using: .init(selector: #selector(appDidEnterBackground)))
         notificationsBag.addObserver(for: .deviceOrientationChanged,
                                      using: .init(selector: #selector(changeOrientation)))
+        notificationsBag.addObserver(for: .itemDidPlayToEnd,
+                                     using: .init(selector: #selector(itemDidPlayToEnd)))
     }
     
     func configureAnalytic() {
@@ -358,6 +360,10 @@ private extension KinescopeVideoPlayer {
         if !(view?.pipController?.isPictureInPictureActive ?? false) {
             view?.playerView.player = nil
         }
+    }
+
+    @objc func itemDidPlayToEnd() {
+        analytic?.send(event: .end)
     }
 
     func restoreView() {
