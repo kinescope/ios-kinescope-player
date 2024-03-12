@@ -13,7 +13,14 @@ final class PlayerAnalyticDataFactory: Factory {
     // MARK: - Properties
     
     private let type = "iOS SDK"
-    private let bundle = Bundle(for: KinescopeVideoPlayer.self)
+
+    private let bundle: Bundle = {
+    #if SWIFT_PACKAGE
+    return Bundle.module
+    #else
+    return Bundle(for: KinescopeVideoPlayer.self)
+    #endif
+    }()
     private lazy var currentVersion = bundle.infoDictionary?["CFBundleShortVersionString"] as? String ?? "unknown"
 
     // MARK: - Methods
