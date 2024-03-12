@@ -15,7 +15,7 @@ final class DeviceAnalyticDataFactory: Factory {
     private let device = UIDevice.current
     private let screenBounds = UIScreen.main.nativeBounds
     
-    // MARK: - Methods
+    // MARK: - Factory
 
     func provide() -> T? {
         var result = T()

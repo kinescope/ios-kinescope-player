@@ -28,20 +28,14 @@ class InnerEventsProtoHandler {
     // MARK: - Properties
 
     private let service: AnalyticsService
-
-    private var video = Analytics_Video()
-    private var player = Analytics_Player()
-    private var device = Analytics_Device()
-    private var session = Analytics_Session()
-    private var playback = Analytics_Playback()
+    private let dataStorage: InnerEventsDataStorage
 
     // MARK: - Init
 
-    init(service: AnalyticsService) {
+    init(service: AnalyticsService, dataStorage: InnerEventsDataStorage) {
         self.service = service
+        self.dataStorage = dataStorage
     }
-    
-    // TODO: - add protocol to gather video, player, device, session and playback data
 }
 
 // MARK: - InnerEventsHandler
@@ -60,11 +54,11 @@ private extension InnerEventsProtoHandler {
         return Analytics_Native.with {
             $0.event = event.rawValue
             $0.value = value
-            $0.video = video
-            $0.player = player
-            $0.device = device
-            $0.session = session
-            $0.playback = playback
+            $0.video = dataStorage.video.provide() ?? .init()
+            $0.player = dataStorage.player.provide() ?? .init()
+            $0.device = dataStorage.device.provide() ?? .init()
+            $0.session = dataStorage.session.provide() ?? .init()
+            $0.playback = dataStorage.playback.provide() ?? .init()
             $0.eventTime = .init()
             return
         }

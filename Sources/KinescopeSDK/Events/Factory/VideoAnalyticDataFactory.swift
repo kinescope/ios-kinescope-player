@@ -14,7 +14,7 @@ final class VideoAnalyticDataFactory: Factory {
     
     private var video: KinescopeVideo?
 
-    // MARK: - Methods
+    // MARK: - Factory
 
     func provide() -> T? {
         guard let video else {

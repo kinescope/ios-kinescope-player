@@ -7,16 +7,21 @@
 
 import Foundation
 
+protocol SessionAnalyticInput {
+    func refreshViewId()
+    func setWatchedDuration(_ duration: Double)
+}
+
 final class SessionAnalyticDataFactory: Factory {
     typealias T = Analytics_Session
     
     // MARK: - Properties
     
-    // TODO: - keep one playerId for screen with many views
     private let playerId = UUID().uuidString
-    private let viewId = UUID().uuidString
+    private var viewId = UUID().uuidString
+    private var watchedDuration: Double?
 
-    // MARK: - Methods
+    // MARK: - Factory
 
     func provide() -> T? {
         var result = T()
@@ -27,8 +32,21 @@ final class SessionAnalyticDataFactory: Factory {
             result.viewID = viewID
         }
         result.type = Analytics_SessionType.online
-        // TODO: - add watched duration
-//        result.watchedDuration = ??
+        if let watchedDuration {
+            result.watchedDuration = UInt32(watchedDuration)
+        }
         return result
+    }
+}
+
+// MARK: - SessionAnalyticInput
+
+extension SessionAnalyticDataFactory: SessionAnalyticInput {
+    func refreshViewId() {
+        viewId = UUID().uuidString
+    }
+    
+    func setWatchedDuration(_ duration: Double) {
+        watchedDuration = duration
     }
 }

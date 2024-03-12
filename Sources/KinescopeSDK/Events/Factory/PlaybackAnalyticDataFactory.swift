@@ -7,6 +7,12 @@
 
 import AVFoundation
 
+protocol PlaybackAnalyticInput {
+    func setPlayer(_ player: AVPlayer)
+    func setQualityProvider(_ provider: QualitySelectionProvider)
+    func setFullscreenStateProvider(_ provider: FullscreenStateProvider)
+}
+
 final class PlaybackAnalyticDataFactory: Factory {
     typealias T = Analytics_Playback
     
@@ -15,6 +21,8 @@ final class PlaybackAnalyticDataFactory: Factory {
     private weak var player: AVPlayer?
     private weak var qualityProvider: QualitySelectionProvider?
     private weak var fullscreenStateProvider: FullscreenStateProvider?
+    
+    // MARK: - Factory
 
     func provide() -> T? {
         guard let player else {
@@ -41,5 +49,21 @@ final class PlaybackAnalyticDataFactory: Factory {
         }
 
         return result
+    }
+}
+
+// MARK: - PlaybackAnalyticInput
+
+extension PlaybackAnalyticDataFactory: PlaybackAnalyticInput {
+    func setPlayer(_ player: AVPlayer) {
+        self.player = player
+    }
+    
+    func setQualityProvider(_ provider: any QualitySelectionProvider) {
+        self.qualityProvider = provider
+    }
+    
+    func setFullscreenStateProvider(_ provider: any FullscreenStateProvider) {
+        self.fullscreenStateProvider = provider
     }
 }

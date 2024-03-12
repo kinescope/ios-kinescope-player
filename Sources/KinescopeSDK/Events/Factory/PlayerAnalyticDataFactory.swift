@@ -23,7 +23,7 @@ final class PlayerAnalyticDataFactory: Factory {
     }()
     private lazy var currentVersion = bundle.infoDictionary?["CFBundleShortVersionString"] as? String ?? "unknown"
 
-    // MARK: - Methods
+    // MARK: - Factory
 
     func provide() -> T? {
         var result = T()
