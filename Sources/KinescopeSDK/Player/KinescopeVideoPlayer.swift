@@ -200,7 +200,7 @@ private extension KinescopeVideoPlayer {
                 self?.view?.overlay?.set(title: video.title, subtitle: video.description)
                 self?.view?.set(options: self?.makePlayerOptions(from: video) ?? [])
                 self?.delegate?.playerDidLoadVideo(error: nil)
-                self?.play()
+                self?.didPlay()
             },
             onError: { [weak self] error in
                 self?.view?.stopLoader()
