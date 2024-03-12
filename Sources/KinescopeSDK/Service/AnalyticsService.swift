@@ -31,7 +31,7 @@ final class AnalyticsNetworkService: AnalyticsService {
 
     func send(event: Analytics_Native) {
         guard let data = try? event.serializedData() else {
-            Kinescope.shared.logger?.log(message: "Could not serialize event", level: KinescopeLoggerLevel.network)
+            Kinescope.shared.logger?.log(message: "Could not serialize event", level: KinescopeLoggerLevel.analytics)
             return
         }
         executionQueue.async { [weak self] in

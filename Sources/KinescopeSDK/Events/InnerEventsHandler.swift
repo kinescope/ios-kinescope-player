@@ -8,17 +8,13 @@
 import Foundation
 
 protocol InnerEventsHandler {
-    func playback(sec: TimeInterval)
-    func play()
-    func pause()
-    func end()
-    func replay()
-    func buffer(sec: TimeInterval)
-    func seek()
-    func rate(_ rate: Float)
-    func view()
-    func enterfullscreen()
-    func exitfullscreen()
-    func qualitychanged(_ quality: String)
-    func autoqualitychanged(_ quality: String)
+    func send(event: InnerProtoEvent, value: Float)
+}
+
+// MARK: - Defaults
+
+extension InnerEventsHandler {
+    func send(event: InnerProtoEvent) {
+        send(event: event, value: 0)
+    }
 }

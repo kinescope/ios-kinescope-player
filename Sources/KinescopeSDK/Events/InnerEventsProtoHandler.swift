@@ -28,11 +28,12 @@ class InnerEventsProtoHandler {
     // MARK: - Properties
 
     private let service: AnalyticsService
-    private let video = Analytics_Video()
-    private let player = Analytics_Player()
-    private let device = Analytics_Device()
-    private let session = Analytics_Session()
-    private let playback = Analytics_Playback()
+
+    private var video = Analytics_Video()
+    private var player = Analytics_Player()
+    private var device = Analytics_Device()
+    private var session = Analytics_Session()
+    private var playback = Analytics_Playback()
 
     // MARK: - Init
 
@@ -46,67 +47,14 @@ class InnerEventsProtoHandler {
 // MARK: - InnerEventsHandler
 
 extension InnerEventsProtoHandler: InnerEventsHandler {
-    
-    func playback(sec: TimeInterval) {
-        send(event: .playback, value: 0)
-    }
-
-    func play() {
-        send(event: .play, value: 0)
-    }
-
-    func pause() {
-        send(event: .pause, value: 0)
-    }
-
-    func end() {
-        send(event: .end, value: 0)
-    }
-
-    func replay() {
-        send(event: .replay, value: 0)
-    }
-
-    func buffer(sec: TimeInterval) {
-        send(event: .buffering, value: 0)
-    }
-
-    func seek() {
-        send(event: .seek, value: 0)
-    }
-
-    func rate(_ rate: Float) {
-        send(event: .rate, value: 0)
-    }
-
-    func view() {
-        send(event: .view, value: 0)
-    }
-
-    func enterfullscreen() {
-        send(event: .enterfullscreen, value: 0)
-    }
-
-    func exitfullscreen() {
-        send(event: .exitfullscreen, value: 0)
-    }
-
-    func qualitychanged(_ quality: String) {
-        send(event: .qualitychanged, value: 0)
-    }
-
-    func autoqualitychanged(_ quality: String) {
-        send(event: .autoqualitychanged, value: 0)
+    func send(event: InnerProtoEvent, value: Float) {
+        service.send(event: build(event: event, value: value))
     }
 }
 
 // MARK: - Private
 
 private extension InnerEventsProtoHandler {
-
-    func send(event: InnerProtoEvent, value: Float) {
-        service.send(event: build(event: event, value: value))
-    }
 
     func build(event: InnerProtoEvent, value: Float) -> Analytics_Native {
         return Analytics_Native.with {

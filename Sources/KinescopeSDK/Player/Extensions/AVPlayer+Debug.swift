@@ -88,3 +88,11 @@ extension AVPlayer {
     }
 
 }
+
+extension AVPlayerItem {
+
+    var buferredSeconds: Double {
+        loadedTimeRanges.first?.timeRangeValue.end.seconds ?? 0
+    }
+
+}

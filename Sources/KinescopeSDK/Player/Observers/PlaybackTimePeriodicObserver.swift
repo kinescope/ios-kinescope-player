@@ -46,7 +46,7 @@ final class PlaybackTimePeriodicObserver: Factory {
             
             // Preload observation
             
-            let buferredTime = currentItem.loadedTimeRanges.first?.timeRangeValue.end.seconds ?? 0
+            let buferredTime = currentItem.buferredSeconds
             Kinescope.shared.logger?.log(message: "playback buffered \(buferredTime) seconds", level: KinescopeLoggerLevel.player)
             playerBody?.delegate?.player(playbackBufferMovedTo: time.seconds)
             
