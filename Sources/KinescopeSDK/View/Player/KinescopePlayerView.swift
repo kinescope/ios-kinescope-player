@@ -67,12 +67,14 @@ public class KinescopePlayerView: UIView {
 
     func startLoader() {
         overlay?.isHidden = true
+        previewView.alpha = 1
         previewView.isHidden = false
         progressView.showVideoProgress(isLoading: true)
     }
 
     func stopLoader(withPreview: Bool = true) {
         progressView.showVideoProgress(isLoading: false)
+        previewView.alpha = withPreview ? 0 : 1
         previewView.isHidden = withPreview
         overlay?.isHidden = false
     }

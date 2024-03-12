@@ -501,14 +501,14 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
             KinescopeFullscreenViewController.present(player: self,
                                                       video: video) { [weak self] in
-                guard let video = self?.video else {
+                guard let self else {
                     return
                 }
 
-                self?.view?.overlay?.isHidden = false
-                self?.view?.change(quality: self?.currentQuality ?? "")
-                self?.view?.overlay?.set(title: video.title, subtitle: video.description)
-                self?.restoreView()
+                view.change(quality: currentQuality)
+                view.overlay?.set(title: video.title, subtitle: video.description)
+                view.stopLoader(withPreview: strategy.player.isReadyToPlay)
+                restoreView()
             }
         }
     }
