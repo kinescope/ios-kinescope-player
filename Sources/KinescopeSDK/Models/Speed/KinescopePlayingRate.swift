@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum KinescopePlayerSpeed: Float, CaseIterable {
+public enum KinescopePlayingRate: Float, CaseIterable {
     case oneQuarter = 0.25
     case oneHalf = 0.5
     case threeQuaters = 0.75

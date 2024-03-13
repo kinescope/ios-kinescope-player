@@ -20,7 +20,9 @@ protocol PlayingStrategy {
     func unbind()
 
     /// Start playing of video
-    func play()
+    ///  - parameter rate: The rate at which to play the item.
+    ///  Allowed values are between 0.0 and 2.0.
+    func play(with rate: Float)
 
     /// Pause playing of video
     func pause()
@@ -28,8 +30,8 @@ protocol PlayingStrategy {
 
 extension PlayingStrategy {
 
-    func play() {
-        player.play()
+    func play(with rate: Float) {
+        player.rate = rate
     }
 
     func pause() {

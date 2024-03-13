@@ -31,7 +31,8 @@ public class KinescopePlayerView: UIView {
 
     private var selectedQuality = NSAttributedString(string: L10n.Player.auto)
     private var selectedSubtitles = NSAttributedString(string: L10n.Player.off)
-    private var selectedSpeed = NSAttributedString(string: L10n.Player.normal)
+
+    private var playingRateProvider: SideMenuItemsProvider?
 
     private lazy var overlayDebouncer = Debouncer(timeInterval: overlay?.duration ?? 0.0)
 
@@ -69,14 +70,12 @@ public class KinescopePlayerView: UIView {
 
     func startLoader() {
         overlay?.isHidden = true
-        previewView.alpha = 1
         previewView.isHidden = false
         progressView.showVideoProgress(isLoading: true)
     }
 
     func stopLoader(withPreview: Bool = true) {
         progressView.showVideoProgress(isLoading: false)
-        previewView.alpha = withPreview ? 0 : 1
         previewView.isHidden = withPreview
         overlay?.isHidden = false
     }
@@ -97,6 +96,10 @@ public class KinescopePlayerView: UIView {
 
     func set(options: [KinescopePlayerOption]) {
         controlPanel?.set(options: options)
+    }
+    
+    func bind(playingRateProvider: SideMenuItemsProvider) {
+        self.playingRateProvider = playingRateProvider
     }
 
     func change(quality: String) {
@@ -276,13 +279,7 @@ private extension KinescopePlayerView {
     }
     
     func makeSpeedSideMenuModel(with title: String) -> SideMenu.Model {
-        let speedCases = KinescopePlayerSpeed.allCases
-        var items = speedCases.compactMap { speed -> SideMenu.Item in
-            let selected = self.selectedSpeed.string.trimmingCharacters(in: .symbols) == speed.title
-            return .checkmark(title: .init(string: speed.title), selected: selected)
-        }
-
-        return .init(title: title, isRoot: false, isDownloadable: false, items: items)
+        .init(title: title, isRoot: false, isDownloadable: false, items: playingRateProvider?.items ?? [])
     }
 
     func makeQualitySideMenuModel(with title: String) -> SideMenu.Model {
@@ -369,9 +366,8 @@ private extension KinescopePlayerView {
     }
     
     func handleSpeedCheckmarkAction(for title: NSAttributedString, sideMenu: SideMenu) {
-        delegate?.didSelect(rate: KinescopePlayerSpeed.from(string: title.string).rawValue)
+        delegate?.didSelect(rate: KinescopePlayingRate.from(string: title.string).rawValue)
         sideMenuWillBeDismissed(sideMenu, withRoot: true)
-        set(speed: title.string)
     }
 
     func handleQualityCheckmarkAction(for title: NSAttributedString, sideMenu: SideMenu) {
@@ -386,11 +382,14 @@ private extension KinescopePlayerView {
         set(subtitles: title.string)
     }
     
-    func set(speed: String) {
+    func formatValue(_ value: String?) -> NSAttributedString {
+        guard let value else {
+            return NSAttributedString()
+        }
         let color = config.sideMenu.item.valueColor
         let font = config.sideMenu.item.valueFont
         let attributes: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: color]
-        selectedSpeed = speed.attributedStringWithAssetIconIfNeeded(attributes: attributes)
+        return value.attributedStringWithAssetIconIfNeeded(attributes: attributes)
     }
 
     func set(quality: String) {
@@ -506,7 +505,7 @@ extension KinescopePlayerView: PlayerControlOutput {
                                        isDownloadable: false,
                                        items: [
                                         .disclosure(title: L10n.Player.playbackSpeed,
-                                                    value: selectedSpeed),
+                                                    value: formatValue(playingRateProvider?.selectedTitle)),
                                         .disclosure(title: L10n.Player.subtitles,
                                                     value: selectedSubtitles),
                                         .disclosure(title: L10n.Player.videoQuality,

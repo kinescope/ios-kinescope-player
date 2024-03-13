@@ -2,7 +2,7 @@ import AVFoundation
 import AVKit
 import UIKit
 
-public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, QualitySelectionProvider, FullscreenStateProvider {
+public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, QualitySelectionProvider, FullscreenStateProvider, PlayingRateSource {
 
     private enum Constants {
         static let periodicIntervalInSeconds: TimeInterval = 0.01
@@ -64,6 +64,7 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Quality
     private var drmHandler: DataProtectionHandler?
 
     private(set) var isFullScreenModeActive = false
+    private(set) var currentRate: KinescopePlayingRate = .normal
     private(set) var currentQuality = ""
     private(set) var video: KinescopeVideo? {
         didSet {
@@ -133,7 +134,7 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Quality
             if !strategy.player.isReadyToPlay {
                 select(quality: .auto(hlsLink: video.hlsLink))
             }
-            self.strategy.play()
+            self.strategy.play(with: currentRate.rawValue)
             self.delegate?.playerDidPlay()
         } else {
             self.load()
@@ -153,6 +154,8 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Quality
 
     public func attach(view: KinescopePlayerView) {
         analyticStorage.sessionInput.refreshViewId()
+        
+        view.bind(playingRateProvider: PlayingRateProvider(rateSource: self))
 
         view.playerView.player = self.strategy.player
         view.delegate = self
@@ -558,6 +561,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didSelect(rate: Float) {
+        currentRate = .init(rawValue: rate) ?? .normal
         strategy.player.rate = rate
         analytic?.send(event: .rate)
     }
