@@ -2,7 +2,7 @@ import AVFoundation
 import AVKit
 import UIKit
 
-public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, FullscreenStateProvider, PlayingRateSource, VideoQualitySource {
+public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, FullscreenStateProvider, PlayingRateSource, VideoQualitySource, SubtitlesSource {
 
     private enum Constants {
         static let periodicIntervalInSeconds: TimeInterval = 0.01
@@ -66,6 +66,7 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
     private(set) var isFullScreenModeActive = false
     private(set) var currentRate: KinescopePlayingRate = .normal
     private(set) var currentQuality = L10n.Player.auto
+    private(set) var currentSubtitles: String?
 
     private(set) var video: KinescopeVideo? {
         didSet {
@@ -111,6 +112,10 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
 
     var availableAssets: [KinescopeVideoAsset] {
         video?.downloadableAssets ?? []
+    }
+
+    var availableSubtitles: [String] {
+        video?.allSubtitlesVariants ?? []
     }
 
     // MARK: - Lifecycle
@@ -161,8 +166,8 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
         analyticStorage.sessionInput.refreshViewId()
         
         view.bind(playingRateProvider: PlayingRateProvider(rateSource: self),
-                  videoQualityProvider: VideoQualityProvider(source: self)
-        )
+                  videoQualityProvider: VideoQualityProvider(source: self),
+                  subtitlesProvider: SubtitlesProvider(source: self))
 
         view.playerView.player = self.strategy.player
         view.delegate = self
@@ -627,10 +632,6 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         case .none:
             break
         }
-    }
-
-    func didShowSubtitles() -> [String] {
-        return video?.allSubtitlesVariants ?? []
     }
 
     func didSelect(subtitles: String) {

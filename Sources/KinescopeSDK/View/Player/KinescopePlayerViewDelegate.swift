@@ -11,6 +11,5 @@ protocol KinescopePlayerViewDelegate: class {
     func didSelect(quality: String)
     func didSelectAttachment(with id: String)
     func didSelectDownloadAll(for title: String)
-    func didShowSubtitles() -> [String]
     func didSelect(subtitles: String)
 }
