@@ -44,6 +44,15 @@ final class SessionAnalyticDataFactory: Factory {
     func isWatchingMoreThen(threshold: TimeInterval) -> Bool {
         return watchedDuration ?? 0 > threshold
     }
+
+    func isWatchingIn(interval: TimeInterval) -> Bool {
+        guard let watchedDuration else {
+            return false
+        }
+        let reminder = watchedDuration.truncatingRemainder(dividingBy: interval)
+        // check that reminder in range close to 0
+        return reminder <= 0.01
+    }
 }
 
 // MARK: - SessionAnalyticInput

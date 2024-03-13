@@ -7,6 +7,8 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Quality
     private enum Constants {
         static let periodicIntervalInSeconds: TimeInterval = 0.01
         static let viewThreshold: TimeInterval = 5
+        static let minPlaybackThreshold: TimeInterval = 5
+        static let maxPlaybackThreshold: TimeInterval = 60
     }
 
     public weak var pipDelegate: AVPictureInPictureControllerDelegate? {
@@ -75,6 +77,15 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Quality
             analytic?.reset()
         }
     }
+
+    private var playbackThreshold: TimeInterval {
+        guard let duration = video?.duration, duration > 0 else {
+            return Constants.minPlaybackThreshold
+        }
+        let threshold = duration * 0.02
+        return threshold < Constants.maxPlaybackThreshold ? threshold : Constants.maxPlaybackThreshold
+    }
+
     private var options = [KinescopePlayerOption]()
     
     private var playbackObserverFactory: (any Factory)?
@@ -256,6 +267,9 @@ private extension KinescopeVideoPlayer {
             
             if analyticStorage.session.isWatchingMoreThen(threshold: Constants.viewThreshold) {
                 analytic?.sendOnce(event: .view)
+            }
+            if analyticStorage.session.isWatchingIn(interval: playbackThreshold) {
+                analytic?.send(event: .playback)
             }
         })
         playbackObserver = playbackObserverFactory?.provide()
