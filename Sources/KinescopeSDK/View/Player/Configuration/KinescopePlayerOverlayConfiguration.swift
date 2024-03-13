@@ -21,7 +21,8 @@ public struct KinescopePlayerOverlayConfiguration {
     /// - parameter playImage: Image showing If video started after tapping on overlay
     /// - parameter pauseImage: Image showing If video paused after tapping on overlay
     /// - parameter backgroundColor: Background color of overlay
-    /// - parameter animationDuration: Duration of overlay appear animation in seconds
+    /// - parameter duration: Duration of overlay appear animation in seconds
+    /// - parameter nameConfiguration: Appearence preferences for title and subtitle above video
     public init(playImage: UIImage,
                 pauseImage: UIImage,
                 fastForwardImage: UIImage,

@@ -10,7 +10,7 @@ public struct KinescopeVideo: Codable {
     public let workspaceId: String?
     public let projectId: String
     public let folderId: String?
-    public let type: String?
+    public let type: KinescopeStreamType?
     public let title: String
     public let description: String
     public let status: String?
@@ -23,4 +23,5 @@ public struct KinescopeVideo: Codable {
     public let subtitles: [KinescopeVideoSubtitle]?
     public let hlsLink: String
     public let dash_link: String?
+    public let live: KinescopeStreamMeta?
 }

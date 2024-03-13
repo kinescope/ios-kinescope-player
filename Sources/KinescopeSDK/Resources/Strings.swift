@@ -14,6 +14,8 @@ import Foundation
 internal enum L10n {
 
     enum Player {
+        /// Soon
+        internal static let soon = L10n.tr("Localizable", "Player.soon")
         /// Play
         internal static let play = L10n.tr("Localizable", "Player.play")
         /// Pause

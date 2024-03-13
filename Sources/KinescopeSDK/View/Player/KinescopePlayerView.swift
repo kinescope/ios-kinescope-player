@@ -18,6 +18,8 @@ public class KinescopePlayerView: UIView {
     private(set) var playerView: PlayerView!
     private(set) weak var controlPanel: PlayerControlView?
     private(set) weak var overlay: PlayerOverlayView?
+    private(set) weak var errorOverlay: ErrorView?
+    private(set) weak var announceSnack: AnnounceView?
     private(set) var progressView: KinescopeActivityIndicator!
     private(set) var shadowOverlay: PlayerShadowOverlayView?
     private(set) var pipController: AVPictureInPictureController?
@@ -64,27 +66,15 @@ public class KinescopePlayerView: UIView {
     // MARK: - Internal Methods
 
     func startLoader() {
+        overlay?.isHidden = true
         previewView.isHidden = false
         progressView.showVideoProgress(isLoading: true)
     }
 
-    func stopLoader() {
+    func stopLoader(withPreview: Bool = true) {
         progressView.showVideoProgress(isLoading: false)
-        previewView.isHidden = true
-    }
-
-    func change(status: AVPlayer.Status) {
-        switch status {
-        case .readyToPlay:
-            overlay?.isHidden = false
-            progressView.showVideoProgress(isLoading: false)
-            previewView.isHidden = true
-        case .failed, .unknown:
-            // FIXME: Error handling
-            break
-        @unknown default:
-            break
-        }
+        previewView.isHidden = withPreview
+        overlay?.isHidden = false
     }
 
     func change(timeControlStatus: AVPlayer.TimeControlStatus) {
@@ -93,6 +83,7 @@ public class KinescopePlayerView: UIView {
             controlPanel?.isHidden = false
             overlay?.isHidden = false
             overlay?.set(playing: true)
+            progressView.showVideoProgress(isLoading: false)
         case .paused, .waitingToPlayAtSpecifiedRate:
             overlay?.set(playing: false)
         @unknown default:
@@ -106,6 +97,14 @@ public class KinescopePlayerView: UIView {
 
     func change(quality: String) {
         set(quality: quality.isEmpty ? L10n.Player.auto : quality)
+    }
+
+    func set(preview: String?) {
+        if let preview, let previewService = config.previewService {
+            previewService.fetchPreview(for: preview, into: previewView)
+        } else {
+            previewView.image = nil
+        }
     }
 
 }
@@ -125,6 +124,7 @@ public extension KinescopePlayerView {
 
         configurePlayerView(with: config.gravity)
         configurePreviewView()
+        configureAnnounce(with: config.announceSnack)
 
         if let overlay = config.overlay {
             configureOverlay(with: overlay)
@@ -136,6 +136,10 @@ public extension KinescopePlayerView {
 
         if let shadowOverlay = config.shadowOverlay {
             configureShadowOverlay(with: shadowOverlay)
+        }
+
+        if let errorOverlay = config.errorOverlay {
+            configureError(with: errorOverlay)
         }
 
         configureProgressView(with: config.activityIndicator)
@@ -189,7 +193,6 @@ private extension KinescopePlayerView {
 
     func configureControlPanel(with config: KinescopeControlPanelConfiguration) {
         let controlPanel = PlayerControlView(config: config)
-        controlPanel.alpha = .zero
         addSubview(controlPanel)
         bottomChildWithSafeArea(view: controlPanel)
         controlPanel.isHidden = true
@@ -205,6 +208,24 @@ private extension KinescopePlayerView {
         stretch(view: overlay)
 
         self.overlay = overlay
+    }
+
+    func configureError(with config: KinescopeErrorConfiguration) {
+        let overlay = ErrorView(config: config, delegate: self)
+        overlay.isHidden = true
+        addSubview(overlay)
+        stretch(view: overlay)
+
+        self.errorOverlay = overlay
+    }
+
+    func configureAnnounce(with config: KinescopeAnnounceConfiguration) {
+        let snack = AnnounceView(config: config)
+        snack.isHidden = true
+        addSubview(snack)
+        bottomLeftChildWithSafeArea(view: snack, with: 16)
+
+        self.announceSnack = snack
     }
 
     func configureShadowOverlay(with config: KinescopePlayerShadowOverlayConfiguration) {
@@ -371,23 +392,14 @@ private extension KinescopePlayerView {
         guard let shadowOverlay = shadowOverlay else {
             return
         }
-        shadowOverlay.isHidden = false
-        UIView.animate(withDuration: 0.2,
-                       animations: {
-                        shadowOverlay.alpha = 1
-                       })
+        shadowOverlay.showAnimated()
     }
 
     func hideShadow() {
         guard let shadowOverlay = shadowOverlay else {
             return
         }
-        UIView.animate(withDuration: 0.2,
-                       animations: {
-                        shadowOverlay.alpha = 0
-                       }, completion: { _ in
-                        shadowOverlay.isHidden = false
-                       })
+        shadowOverlay.hideAnimated(with: { shadowOverlay.isHidden = false })
     }
 
     func addDebouncerHandler() {
@@ -396,11 +408,7 @@ private extension KinescopePlayerView {
                 return
             }
             self.overlay?.isSelected = false
-            UIView.animate(withDuration: 0.3, animations: {
-                self.controlPanel?.alpha = 0.0
-            }, completion: { _ in
-                self.controlPanel?.expanded = false
-            })
+            self.controlPanel?.hideAnimated(with: { self.controlPanel?.expanded = false })
         }
     }
 
@@ -414,17 +422,13 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
         if isSelected {
             if !(controlPanel?.expanded ?? true) {
                 overlay?.isSelected = false
-                UIView.animate(withDuration: 0.3) {
-                    self.controlPanel?.alpha = 0.0
-                }
+                controlPanel?.hideAnimated()
             } else {
                 controlPanel?.expanded = false
             }
         } else {
             overlay?.isSelected = true
-            UIView.animate(withDuration: 0.3) {
-                self.controlPanel?.alpha = 1.0
-            }
+            controlPanel?.showAnimated()
             addDebouncerHandler()
         }
         overlayDebouncer.renewInterval()
@@ -449,6 +453,14 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
     func didFastBackward() {
         overlayDebouncer.renewInterval()
         delegate?.didFastBackward()
+    }
+}
+
+// MARK: - ErrorViewOutput
+
+extension KinescopePlayerView: ErrorViewOutput {
+    func didRerty() {
+        didPlay()
     }
 }
 

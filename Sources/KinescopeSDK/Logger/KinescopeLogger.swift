@@ -20,7 +20,7 @@ final class KinescopeLogger: KinescopeLogging {
         }
     }
 
-    public func log(error: Error, level: KinescopeLoggingLevel) {
+    public func log(error: Error?, level: KinescopeLoggingLevel) {
         handle(level: level) { [weak self] in
             self?.logger.log(error: error, level: level)
         }

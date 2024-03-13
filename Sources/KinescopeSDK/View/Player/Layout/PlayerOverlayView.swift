@@ -11,14 +11,14 @@ protocol PlayerOverlayInput: VideoNameInput {
     func set(playing: Bool)
 }
 
-class PlayerOverlayView: UIControl {
+final class PlayerOverlayView: UIControl {
 
     // MARK: - Properties
 
-    let playPauseImageView = UIImageView()
-    let fastForwardImageView = UIImageView()
-    let fastBackwardImageView = UIImageView()
-    let nameView: VideoNameView
+    private let playPauseImageView = UIImageView()
+    private let fastForwardImageView = UIImageView()
+    private let fastBackwardImageView = UIImageView()
+    private let nameView: VideoNameView
     private let contentView = UIView()
     private let config: KinescopePlayerOverlayConfiguration
     private weak var delegate: PlayerOverlayViewDelegate?

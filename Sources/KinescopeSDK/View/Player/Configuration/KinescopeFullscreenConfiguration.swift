@@ -29,12 +29,20 @@ public struct KinescopeFullscreenConfiguration {
 
 public extension KinescopeFullscreenConfiguration {
 
-    static func preferred(for video: KinescopeVideo?) -> KinescopeFullscreenConfiguration {
-        guard let resolution = video?.firstResolution else {
-            return landscape
-        }
+    static func preferred(for video: KinescopeVideo?, completion: @escaping (KinescopeFullscreenConfiguration) -> Void) {
 
-        return resolution.width > resolution.height ? .landscape : .portrait
+        DispatchQueue.global(qos: .userInitiated).async {
+            guard let resolution = video?.firstResolution else {
+                DispatchQueue.main.async {
+                    completion(landscape)
+                }
+                return
+            }
+            
+            DispatchQueue.main.async {
+                completion(resolution.width > resolution.height ? landscape : portrait)
+            }
+        }
     }
 
     static let landscape: KinescopeFullscreenConfiguration = .init(

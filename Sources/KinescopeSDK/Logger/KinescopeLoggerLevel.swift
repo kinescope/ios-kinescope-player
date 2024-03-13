@@ -5,6 +5,8 @@ public enum KinescopeLoggerLevel: KinescopeLoggingLevel, Equatable, CaseIterable
     case drm
     /// Player logs
     case player
+    /// Repeater logs
+    case repeater
     /// Player logs
     case storage
 

@@ -37,7 +37,6 @@ final class VideoViewController: UIViewController {
         player = KinescopeVideoPlayer(config: .init(videoId: videoId))
         player?.attach(view: playerView)
         player?.play()
-        playerView.showOverlay(true)
         player?.pipDelegate = PipManager.shared
     }
 

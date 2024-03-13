@@ -8,14 +8,17 @@
 
 import UIKit
 
-protocol PlayerControlInput: TimelineInput, TimeIndicatorInput, PlayerControlOptionsInput { }
+protocol PlayerControlInput: TimelineInput, TimeIndicatorInput, PlayerControlOptionsInput { 
+    func set(live: Bool?)
+}
 
 protocol PlayerControlOutput: TimelineOutput {
     func didSelect(option: KinescopePlayerOption)
 }
 
 class PlayerControlView: UIControl {
-
+    
+    private(set) var liveIndicator: LiveIndicatorView!
     private(set) var timeIndicator: TimeIndicatorView!
     private(set) var timeline: TimelineView!
     private(set) var optionsMenu: PlayerControlOptionsView!
@@ -54,6 +57,17 @@ class PlayerControlView: UIControl {
 // MARK: - PlayerControlInput
 
 extension PlayerControlView: PlayerControlInput {
+    
+    func set(live: Bool?) {
+        if let live {
+            timeIndicator.isHidden = true
+            liveIndicator.isHidden = false
+            liveIndicator.set(animated: live)
+        } else {
+            liveIndicator.isHidden = true
+            timeIndicator.isHidden = false
+        }
+    }
 
     func setTimeline(to position: CGFloat) {
         timeline.setTimeline(to: position)
@@ -116,12 +130,13 @@ private extension PlayerControlView {
         // configure control panel
 
         backgroundColor = config.backgroundColor
-
+        
+        liveIndicator = LiveIndicatorView(config: config.liveIndicator)
         timeIndicator = TimeIndicatorView(config: config.timeIndicator)
         timeline = TimelineView(config: config.timeline)
         optionsMenu = PlayerControlOptionsView(config: config.optionsMenu)
 
-        addSubviews(timeIndicator, timeline, optionsMenu)
+        addSubviews(liveIndicator, timeIndicator, timeline, optionsMenu)
 
         setupConstraints()
 
@@ -130,11 +145,6 @@ private extension PlayerControlView {
     }
 
     func setupConstraints() {
-
-        subviews.forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-        }
-
         timeIndicator.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         timeIndicator.setContentHuggingPriority(.defaultHigh, for: .horizontal)
 
@@ -145,6 +155,8 @@ private extension PlayerControlView {
         optionsMenu.setContentHuggingPriority(.defaultHigh, for: .horizontal)
 
         NSLayoutConstraint.activate([
+            liveIndicator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            liveIndicator.centerYAnchor.constraint(equalTo: centerYAnchor),
             timeIndicator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             timeIndicator.centerYAnchor.constraint(equalTo: centerYAnchor),
             timeline.leadingAnchor.constraint(equalTo: timeIndicator.trailingAnchor, constant: 16),

@@ -15,6 +15,7 @@ public struct KinescopeControlPanelConfiguration {
     let preferedHeight: CGFloat
     let hideOnPlayTimeout: TimeInterval?
     let timeIndicator: KinescopePlayerTimeindicatorConfiguration
+    let liveIndicator: KinescopeLiveIndicatorConfiguration
     let timeline: KinescopePlayerTimelineConfiguration
     let optionsMenu: KinescopePlayerOptionsConfiguration
 
@@ -24,6 +25,7 @@ public struct KinescopeControlPanelConfiguration {
     /// - parameter hideOnPlayTimeout: Can hide control panel when video is playing some time.
     /// Require value in seconds. Do not use big values.
     /// Set `nil` to keep control panel always visible.
+    /// - parameter timeIndicator: Appearence preferences for live indicator
     /// - parameter timeIndicator: Appearance of current tme indicator
     /// - parameter timeline: Appearance of timeline
     /// - parameter options: Appearance of expandable options menu
@@ -31,6 +33,7 @@ public struct KinescopeControlPanelConfiguration {
                 backgroundColor: UIColor,
                 preferedHeight: CGFloat,
                 hideOnPlayTimeout: TimeInterval?,
+                liveIndicator: KinescopeLiveIndicatorConfiguration,
                 timeIndicator: KinescopePlayerTimeindicatorConfiguration,
                 timeline: KinescopePlayerTimelineConfiguration,
                 optionsMenu: KinescopePlayerOptionsConfiguration) {
@@ -38,8 +41,26 @@ public struct KinescopeControlPanelConfiguration {
         self.backgroundColor = backgroundColor
         self.preferedHeight = preferedHeight
         self.hideOnPlayTimeout = hideOnPlayTimeout
+        self.liveIndicator = liveIndicator
         self.timeIndicator = timeIndicator
         self.timeline = timeline
         self.optionsMenu = optionsMenu
     }
+}
+
+// MARK: - Defaults
+
+public extension KinescopeControlPanelConfiguration {
+
+    static let `default`: KinescopeControlPanelConfiguration = .init(
+        tintColor: .gray,
+        backgroundColor: .clear,
+        preferedHeight: 40,
+        hideOnPlayTimeout: 2,
+        liveIndicator: .default,
+        timeIndicator: .default,
+        timeline: .default,
+        optionsMenu: .default
+    )
+
 }

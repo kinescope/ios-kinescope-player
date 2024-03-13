@@ -2,8 +2,11 @@ import AVFoundation
 import AVKit
 import UIKit
 
-// swiftlint:disable file_length
-public class KinescopeVideoPlayer: KinescopePlayer {
+public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody {
+
+    private enum Constants {
+        static let periodicIntervalInSeconds: TimeInterval = 0.01
+    }
 
     public weak var pipDelegate: AVPictureInPictureControllerDelegate? {
         didSet {
@@ -16,7 +19,14 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private let config: KinescopePlayerConfig
     private let dependencies: KinescopePlayerDependencies
 
-    private lazy var strategy: PlayingStrategy = {
+    private let kvoBag = KVOBag()
+
+    private lazy var notificationsBag = NotificationsBag(observer: self)
+    
+    @Repeating(executionQueue: .main, attemptsLimit: 10, intervalSeconds: 5)
+    private var playRepeater
+
+    private(set) lazy var strategy: PlayingStrategy = {
         dependencies.provide(for: config)
     }()
     private lazy var innerEventsHandler: InnerEventsHandler = {
@@ -24,18 +34,23 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         return InnerEventsProtoHandler(service: service)
     }()
 
-    private weak var view: KinescopePlayerView?
-
-    private var timeObserver: Any?
-    private var playerStatusObserver: NSKeyValueObservation?
-    private var itemStatusObserver: NSKeyValueObservation?
-    private var timeControlStatusObserver: NSKeyValueObservation?
+    private(set) weak var view: KinescopePlayerView?
 
     private var time: TimeInterval = 0 {
         didSet {
             updateTimeline()
         }
     }
+
+    @ApproxTimeInterval(step: Constants.periodicIntervalInSeconds)
+    private var cachedDuration: TimeInterval = .nan
+
+    private(set) var isLive = false {
+        didSet {
+            updateLiveIndicator()
+        }
+    }
+
     private var isSeeking = false
     private var isPreparingSeek = false
     private var currentQuality = ""
@@ -43,18 +58,22 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     private var isOverlayed = false
     private var savedTime: CMTime = .zero
     private weak var miniView: KinescopePlayerView?
-    private weak var delegate: KinescopeVideoPlayerDelegate?
+    private(set) weak var delegate: KinescopeVideoPlayerDelegate?
 
     private var drmHandler: DataProtectionHandler?
-    private var video: KinescopeVideo? {
+    private(set) var video: KinescopeVideo? {
         didSet {
             guard let video else {
                 return
             }
+            isLive = video.type == .live && strategy.player.isReadyToPlay
             drmHandler = dependencies.drmFactory.provide(for: video.id)
         }
     }
     private var options = [KinescopePlayerOption]()
+    
+    private var playbackObserverFactory: (any Factory)?
+    private var playbackObserver: Any?
 
     private var textStyleRules: [AVTextStyleRule]? {
         let pos = kCMTextMarkupAttribute_OrthogonalLinePositionPercentageRelativeToWritingDirection
@@ -77,16 +96,14 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     init(config: KinescopePlayerConfig, dependencies: KinescopePlayerDependencies) {
         self.dependencies = dependencies
         self.config = config
+        playRepeater = .init(title: "play") { [weak self] in self?.play() }
         addNotofications()
     }
 
     deinit {
         self.removePlaybackTimeObserver()
-        self.removePlayerItemStatusObserver()
-        self.removePlayerTimeControlStatusObserver()
-        self.removePlayerStatusObserver()
-
-        NotificationCenter.default.removeObserver(self)
+        self.kvoBag.removeAll()
+        self.notificationsBag.removeAll()
     }
 
     // MARK: - KinescopePlayer
@@ -96,7 +113,10 @@ public class KinescopeVideoPlayer: KinescopePlayer {
     }
 
     public func play() {
-        if video != nil {
+        if let video {
+            if !strategy.player.isReadyToPlay {
+                select(quality: .auto(hlsLink: video.hlsLink))
+            }
             self.strategy.play()
             self.delegate?.playerDidPlay()
         } else {
@@ -119,9 +139,11 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         view.playerView.player = self.strategy.player
         view.delegate = self
         self.view = view
+        view.set(preview: video?.poster?.url)
         view.set(options: options)
         view.pipController?.delegate = pipDelegate
         updateTimeline()
+        updateLiveIndicator()
         observePlaybackTime()
         addPlayerTimeControlStatusObserver()
         addPlayerStatusObserver()
@@ -133,16 +155,16 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         view.delegate = nil
 
         removePlaybackTimeObserver()
-        removePlayerTimeControlStatusObserver()
-        removePlayerStatusObserver()
+        kvoBag.removeObserver(for: .playerTimeControlStatus)
+        kvoBag.removeObserver(for: .playerStatus)
     }
 
     public func select(quality: KinescopeVideoQuality) {
 
         savedTime = strategy.player.currentTime()
 
-        removePlayerItemStatusObserver()
-        
+        kvoBag.removeObserver(for: .playerItemStatus)
+
         if let item = quality.makeItem(with: drmHandler) {
             strategy.bind(item: item)
         }
@@ -151,6 +173,10 @@ public class KinescopeVideoPlayer: KinescopePlayer {
         strategy.player.currentItem?.preferredPeakBitRate = quality.preferredMaxBitRate
 
         addPlayerItemStatusObserver()
+    }
+
+    public func setDelegate(delegate: KinescopeVideoPlayerDelegate) {
+        self.delegate = delegate
     }
 }
 
@@ -166,7 +192,7 @@ private extension KinescopeVideoPlayer {
             id: config.videoId,
             onSuccess: { [weak self] video in
                 self?.video = video
-                self?.select(quality: .auto(hlsLink: video.hlsLink))
+                self?.view?.set(preview: video.poster?.url)
                 self?.view?.overlay?.set(title: video.title, subtitle: video.description)
                 self?.view?.set(options: self?.makePlayerOptions(from: video) ?? [])
                 self?.delegate?.playerDidLoadVideo(error: nil)
@@ -208,145 +234,81 @@ private extension KinescopeVideoPlayer {
             return
         }
 
-        let timeScale = CMTimeScale(NSEC_PER_SEC)
-        let period = CMTimeMakeWithSeconds(0.01, preferredTimescale: timeScale)
-
-        timeObserver = strategy.player.addPeriodicTimeObserver(forInterval: period,
-                                                               queue: .main) { [weak self] time in
-            guard let self else {
+        playbackObserverFactory = PlaybackTimePeriodicObserver(period: CMTimeMakeWithSeconds(Constants.periodicIntervalInSeconds,
+                                                                                      preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
+                                                        playerBody: self,
+                                                        secondsPlayed: { [weak self] updatedTime in
+            guard let self, !isSeeking, !isPreparingSeek else {
                 return
             }
-
-            /// Does not make sense without control panel and curremtItem
-            guard let controlPanel = self.view?.controlPanel,
-                  let currentItem = self.strategy.player.currentItem else {
-                return
-            }
-
-            let duration = currentItem.duration.seconds
-
-            if !self.isSeeking, !self.isPreparingSeek {
-                self.time = min(duration, time.seconds)
-            }
-
-            Kinescope.shared.logger?.log(message: "playback position changed to \(time) seconds", level: KinescopeLoggerLevel.player)
-            self.delegate?.player(playbackPositionMovedTo: time.seconds)
-
-            // Preload observation
-
-            let buferredTime = currentItem.loadedTimeRanges.first?.timeRangeValue.end.seconds ?? 0
-            Kinescope.shared.logger?.log(message: "playback buffered \(buferredTime) seconds", level: KinescopeLoggerLevel.player)
-            self.delegate?.player(playbackBufferMovedTo: time.seconds)
-
-            let bufferProgress = CGFloat(buferredTime / duration)
-
-            if !bufferProgress.isNaN {
-                controlPanel.setBufferred(progress: bufferProgress)
-            }
-        }
+            
+            time = updatedTime
+        })
+        playbackObserver = playbackObserverFactory?.provide()
     }
 
     func removePlaybackTimeObserver() {
-        if let timeObserver = timeObserver {
+        if let timeObserver = playbackObserver {
             strategy.player.removeTimeObserver(timeObserver)
-            self.timeObserver = nil
+            self.playbackObserver = nil
         }
     }
 
     func addPlayerStatusObserver() {
-        self.playerStatusObserver = self.strategy.player.observe(
-            \.status,
-            options: [.new, .old],
-            changeHandler: { [weak self] item, _ in
-                self?.view?.change(status: item.status)
-
-                Kinescope.shared.logger?.log(message: "AVPlayer.Status – \(item.status)",
-                                             level: KinescopeLoggerLevel.player)
-                self?.delegate?.player(changedStatusTo: item.status)
-            }
-        )
-    }
-
-    func removePlayerStatusObserver() {
-        self.playerStatusObserver?.invalidate()
-        self.playerStatusObserver = nil
+        let observerFactory = PlayerStatusObserver(playerBody: self, 
+                                                   repeater: $playRepeater)
+        kvoBag.addObserver(for: .playerStatus, using: .init(wrappedFactory: observerFactory))
     }
 
     func addPlayerItemStatusObserver() {
-        self.itemStatusObserver = self.strategy.player.currentItem?.observe(
-            \.status,
-            options: [.new, .old],
-            changeHandler: { [weak self] item, _ in
-                guard let self else {
-                    return
-                }
-
-                switch item.status {
-                case .readyToPlay:
-                    let seconds = self.savedTime.seconds
-                    if seconds > .zero {
-                        self.time = seconds
-                        self.savedTime = .zero
-                        self.seek(to: seconds)
-                    }
-                case .failed, .unknown:
-                    Kinescope.shared.logger?.log(message: "AVPlayerItem.error – \(String(describing: item.error))",
-                                                 level: KinescopeLoggerLevel.player)
-                default:
-                    break
-                }
-
-                Kinescope.shared.logger?.log(message: "AVPlayerItem.Status – \(item.status)",
-                                             level: KinescopeLoggerLevel.player)
-                self.delegate?.player(changedItemStatusTo: item.status)
+        let observerFactory = CurrentItemStatusObserver(playerBody: self, 
+                                                        repeater: $playRepeater,
+                                                        readyToPlayReceived: { [weak self] in
+            guard let self, let video else {
+                return
             }
-        )
-    }
-
-    func removePlayerItemStatusObserver() {
-        self.itemStatusObserver?.invalidate()
-        self.itemStatusObserver = nil
+            let seconds = savedTime.seconds
+            if seconds > .zero {
+                time = seconds
+                savedTime = .zero
+                seek(to: seconds)
+            }
+            isLive = video.type == .live && strategy.player.isReadyToPlay
+        })
+        kvoBag.addObserver(for: .playerItemStatus, using: .init(wrappedFactory: observerFactory))
     }
 
     func addPlayerTimeControlStatusObserver() {
-        self.timeControlStatusObserver = self.strategy.player.observe(
-            \.timeControlStatus,
-            options: [.new, .old],
-            changeHandler: { [weak self] item, _ in
-                self?.isPlaying = item.timeControlStatus == .playing
-                self?.view?.change(timeControlStatus: item.timeControlStatus)
-
-                Kinescope.shared.logger?.log(
-                    message: "AVPlayer.TimeControlStatus – \(item.timeControlStatus.rawValue)",
-                    level: KinescopeLoggerLevel.player
-                )
-                self?.delegate?.player(changedTimeControlStatusTo: item.timeControlStatus)
-            }
-        )
-    }
-
-    func removePlayerTimeControlStatusObserver() {
-        self.timeControlStatusObserver?.invalidate()
-        self.timeControlStatusObserver = nil
+        let observerFactory = TimeControlStatusObserver(playerBody: self,
+                                                        timeControlStatusChanged: { [weak self] status in
+            self?.isPlaying = status == .playing
+        })
+        kvoBag.addObserver(for: .playerTimeControlStatus, using: .init(wrappedFactory: observerFactory))
     }
 
     func addNotofications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterForeground),
-                                               name: UIApplication.willEnterForegroundNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(appDidEnterBackground),
-                                               name: UIApplication.didEnterBackgroundNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(changeOrientation),
-                                               name: UIDevice.orientationDidChangeNotification,
-                                               object: nil)
+        notificationsBag.addObserver(for: .appWillEnterForeground,
+                                     using: .init(selector: #selector(appWillEnterForeground)))
+        notificationsBag.addObserver(for: .appDidEnterBackground,
+                                     using: .init(selector: #selector(appDidEnterBackground)))
+        notificationsBag.addObserver(for: .deviceOrientationChanged,
+                                     using: .init(selector: #selector(changeOrientation)))
     }
 
     func seek(to seconds: TimeInterval) {
-        let duration = strategy.player.currentItem?.duration.seconds ?? .zero
+        let duration = strategy.player.durationSeconds ?? .zero
+        // end of timeline reached
         if seconds >= duration {
-            pause()
+            if strategy.player.hasFiniteDuration {
+                // stop playing vod
+                pause()
+            } else {
+                // continue live stream
+                isLive = true
+            }
+        } else {
+            // seek backward, so it is not live anymore
+            isLive = false
         }
         self.isSeeking = true
         let time = CMTime(seconds: seconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
@@ -362,10 +324,8 @@ private extension KinescopeVideoPlayer {
 
     @objc
     func changeOrientation() {
-        guard
-            let view = view,
-            view.canBeFullScreen
-        else {
+        guard let view = view,
+              view.canBeFullScreen else {
             return
         }
 
@@ -378,7 +338,7 @@ private extension KinescopeVideoPlayer {
         }
     }
 
-    @objc func appDidEnterForeground() {
+    @objc func appWillEnterForeground() {
         if !(view?.pipController?.isPictureInPictureActive ?? false) {
             view?.playerView.player = strategy.player
         }
@@ -396,13 +356,33 @@ private extension KinescopeVideoPlayer {
     }
 
     func updateTimeline() {
-        let duration = strategy.player.currentItem?.duration.seconds ?? .zero
-        let position = CGFloat(time / duration)
+        cachedDuration = strategy.player.durationSeconds ?? .zero
+
+        let position: CGFloat = {
+            guard !strategy.player.hasFiniteDuration,
+                    !isLive else {
+                return CGFloat(time / cachedDuration)
+            }
+
+            return CGFloat(time / $cachedDuration)
+        }()
+
         if !position.isNaN {
             view?.controlPanel?.setTimeline(to: CGFloat(position))
+        } else {
+            view?.controlPanel?.setTimeline(to: 0)
         }
         if !time.isNaN {
             view?.controlPanel?.setIndicator(to: time)
+        }
+    }
+
+    func updateLiveIndicator() {
+        switch video?.type {
+        case .live:
+            view?.controlPanel?.set(live: isLive)
+        case .none, .vod:
+            view?.controlPanel?.set(live: nil)
         }
     }
 
@@ -413,12 +393,14 @@ private extension KinescopeVideoPlayer {
 extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
     func didPlay() {
-        let duration = strategy.player.currentItem?.duration.seconds ?? .zero
-        if time == duration {
+        let duration = strategy.player.durationSeconds ?? .zero
+        // Playing from start should not be available for live streams
+        if time == duration && strategy.player.hasFiniteDuration {
             time = .zero
             seek(to: time)
         }
-
+        
+        self.$playRepeater.reset()
         self.play()
     }
 
@@ -429,7 +411,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     func didSeek(to position: Double) {
         isPreparingSeek = true
 
-        guard let duration = strategy.player.currentItem?.duration.seconds else {
+        guard let duration = strategy.player.durationSeconds else {
             return
         }
 
@@ -449,9 +431,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didFastForward() {
-        guard
-            let duration = strategy.player.currentItem?.duration.seconds
-        else {
+        guard let duration = strategy.player.durationSeconds else {
             return
         }
 
@@ -473,13 +453,11 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didPresentFullscreen(from view: KinescopePlayerView) {
-        let rootVC = UIApplication.shared.keyWindow?.rootViewController
-
-        if rootVC?.presentedViewController is KinescopeFullscreenViewController {
+        if KinescopeFullscreenViewController.isPresented {
             isOverlayed = view.overlay?.isSelected ?? false
             detach(view: view)
-
-            rootVC?.dismiss(animated: true, completion: { [weak self] in
+            
+            KinescopeFullscreenViewController.dismiss { [weak self] in
                 guard
                     let self,
                     let miniView = self.miniView
@@ -490,31 +468,28 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                 self.attach(view: miniView)
                 self.view?.change(quality: self.currentQuality)
                 self.restoreView()
-            })
+            }
         } else {
             miniView = view
             isOverlayed = view.overlay?.isSelected ?? false
 
             detach(view: view)
+            
+            guard let video else {
+                return
+            }
 
-            let playerVC = KinescopeFullscreenViewController(player: self,
-                                                             config: .preferred(for: video))
-            playerVC.modalPresentationStyle = .overFullScreen
-            playerVC.modalTransitionStyle = .crossDissolve
-            playerVC.modalPresentationCapturesStatusBarAppearance = true
-            rootVC?.present(playerVC, animated: true, completion: { [weak self] in
-                guard
-                    let self,
-                    let video = self.video
-                else {
+            KinescopeFullscreenViewController.present(player: self,
+                                                      video: video) { [weak self] in
+                guard let video = self?.video else {
                     return
                 }
 
-                self.view?.change(status: .readyToPlay)
-                self.view?.change(quality: self.currentQuality)
-                self.view?.overlay?.set(title: video.title, subtitle: video.description)
-                self.restoreView()
-            })
+                self?.view?.overlay?.isHidden = false
+                self?.view?.change(quality: self?.currentQuality ?? "")
+                self?.view?.overlay?.set(title: video.title, subtitle: video.description)
+                self?.restoreView()
+            }
         }
     }
 
@@ -527,9 +502,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didSelect(quality: String) {
-        guard
-            let video = video
-        else {
+        guard let video = video else {
             Kinescope.shared.logger?.log(message: "Can't find video",
                                          level: KinescopeLoggerLevel.player)
             return
@@ -593,18 +566,14 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
     func didSelect(subtitles: String) {
-        guard
-            let video = video
-        else {
+        guard let video = video else {
             Kinescope.shared.logger?.log(message: "Can't find video",
                                          level: KinescopeLoggerLevel.player)
             return
         }
 
-        guard
-            let item = self.strategy.player.currentItem,
-            let group = item.asset.mediaSelectionGroup(forMediaCharacteristic: .legible)
-        else {
+        guard let item = self.strategy.player.currentItem,
+                let group = item.asset.mediaSelectionGroup(forMediaCharacteristic: .legible) else {
             return
         }
 
@@ -626,4 +595,3 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
     }
 
 }
-// swiftlint:enable file_length

@@ -74,6 +74,36 @@ final public class KinescopeFullscreenViewController: UIViewController {
     }
 }
 
+// MARK: - Present/dismiss helper
+
+extension KinescopeFullscreenViewController {
+    
+    private static var rootVC: UIViewController? {
+        UIApplication.shared.keyWindow?.rootViewController
+    }
+
+    static var isPresented: Bool {
+        rootVC?.presentedViewController is Self
+    }
+
+    static func dismiss(with completion: @escaping () -> Void) {
+        rootVC?.dismiss(animated: true, completion: completion)
+    }
+
+    static func present(player: KinescopePlayer,
+                        video: KinescopeVideo,
+                        with completion: @escaping () -> Void) {
+        KinescopeFullscreenConfiguration.preferred(for: video) { configuration in
+            let playerVC = KinescopeFullscreenViewController(player: player,
+                                                             config: configuration)
+            playerVC.modalPresentationStyle = .overFullScreen
+            playerVC.modalTransitionStyle = .crossDissolve
+            playerVC.modalPresentationCapturesStatusBarAppearance = true
+            rootVC?.present(playerVC, animated: true, completion: completion)
+        }
+    }
+}
+
 // MARK: - Private
 
 private extension KinescopeFullscreenViewController {

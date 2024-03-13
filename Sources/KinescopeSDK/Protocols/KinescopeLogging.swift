@@ -18,5 +18,5 @@ public protocol KinescopeLogging {
     /// - Parameters:
     ///   - error: error type
     ///   - type: type of logging
-    func log(error: Error, level: KinescopeLoggingLevel)
+    func log(error: Error?, level: KinescopeLoggingLevel)
 }

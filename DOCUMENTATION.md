@@ -1,4 +1,71 @@
-<!-- TODO describe player and player view customisation -->
+# PlayerView customisation
+
+All components of `KinescopePlayerView` is partially customisable. You can change colors, fonts, sizes using method `KinescopePlayerView.setLayout(with config: KinescopePlayerViewConfiguration)`. 
+
+All properties of `KinescopePlayerViewConfiguration` have default values included in SDK, so customisation is optional.
+
+## Configuration parameters
+
+### gravity
+
+`AVLayerVideoGravity` value defines how the video is displayed within a layer’s bounds rectangle. 
+
+Possible values are `resizeAspect`, `resizeAspectFill`, `resize` (default is `resizeAspect`).
+
+### previewService
+
+Implementation of service to load posters into imageView. 
+
+Set `nil` to disable previews.
+
+Default implementation is most simple background loader without any external library usage. 
+
+You can replace it with your favorite image loading library with caching and loading cancelation.
+
+### activityIndicator
+
+Custom indicator view used to indicate process of video downloading.
+
+Default implementation is using native `UIActivityIndicatorView` with white color and large style.
+
+### overlay
+
+Configuration of overlay with tapGesture to play/pause video.
+This including images, fonts and colors for 
+- fast forward and rewind buttons
+- play and pause buttons
+- video title
+- live indicator
+
+Set `nil` to hide overlay (usefull for videos collection with autoplaying).
+
+Default implementation could be checked in Example project.
+
+### controlPanel
+Configuration of control panel with timeline and time labels.
+
+Set `nil` to hide control panel.
+
+Default implementation could be checked in Example project.
+
+### errorOverlay
+Configuration for error view with refresh button. Showing on broken livestreams or repeated failed attempts to play video.
+
+Set `nil` to hide control panel
+
+Default implementation could be checked in Example project.
+
+### sideMenu
+
+Configuration of side menu with setings.
+
+Default implementation could be checked in Example project.
+
+### shadowOverlay
+
+Configuration of shadow overlay beneath side menu.
+
+Default implementation could be checked in Example project.
 
 # KinescopeAssetDownloadable and AssetDownloader
 
@@ -66,6 +133,14 @@ AirPlay lets you share video from Apple devices direct to Apple TV, speakers and
 
 Playing DRM protected content is supported by KinescopeSDK out of the box. Decoding of AVAsset with FairPlayStreaming  including communication with keyServer is implemented in KinescopePlayer,. You can always change keyServer from `KinescopeConfig` if you've setup custom environment, but you will be able to play any content from kinescope.io dashboard without any changes.
 
+# Live Streams
+
+KinescopePlayerView supports live streams. It has live indicator and announce view with information of planned time of start.
+
 # Localization
 
 To add new localization to strings from SDK, add in your project file "KinescopeLocalizable.strings", file should located in main bundle(it is important to multi-modules projects), copy all content from Localizable.strings file, which is located in KinescopeSDK and add new languages or change values of existing ones. 
+
+# Error Handling
+
+KinescopePlayerView has inbox error handling logic and retry-mechanism. If video is not available or some error occured player will try to retry failed operation 10 times with 5 seconds delay between each attempt. If all attempts failed player will show error overlay with refresh button. 
