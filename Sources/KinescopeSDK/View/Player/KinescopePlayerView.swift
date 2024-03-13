@@ -31,6 +31,8 @@ public class KinescopePlayerView: UIView {
 
     private var selectedQuality = NSAttributedString(string: L10n.Player.auto)
     private var selectedSubtitles = NSAttributedString(string: L10n.Player.off)
+    private var selectedSpeed = NSAttributedString(string: L10n.Player.normal)
+
     private lazy var overlayDebouncer = Debouncer(timeInterval: overlay?.duration ?? 0.0)
 
     // MARK: - Internal Properties
@@ -243,8 +245,7 @@ private extension KinescopePlayerView {
         let model: SideMenu.Model?
         switch SideMenu.Settings.getType(by: title) {
         case .playbackSpeed:
-            // TODO: - Feature.playbackSpeedSetting: create model with playback options
-            model = nil
+            model = makeSpeedSideMenuModel(with: title)
         case .subtitles:
             model = makeSubtitlesSideMenuModel(with: title, root: false)
         case .quality:
@@ -272,6 +273,16 @@ private extension KinescopePlayerView {
             return
         }
 
+    }
+    
+    func makeSpeedSideMenuModel(with title: String) -> SideMenu.Model {
+        let speedCases = KinescopePlayerSpeed.allCases
+        var items = speedCases.compactMap { speed -> SideMenu.Item in
+            let selected = self.selectedSpeed.string.trimmingCharacters(in: .symbols) == speed.title
+            return .checkmark(title: .init(string: speed.title), selected: selected)
+        }
+
+        return .init(title: title, isRoot: false, isDownloadable: false, items: items)
     }
 
     func makeQualitySideMenuModel(with title: String) -> SideMenu.Model {
@@ -350,10 +361,17 @@ private extension KinescopePlayerView {
             handleQualityCheckmarkAction(for: title, sideMenu: sideMenu)
         case .subtitles:
             handleSubtitlesCheckmarkAction(for: title, sideMenu: sideMenu)
-        case .playbackSpeed, .none:
-            // TODO: - Feature.playbackSpeedSetting: handle changes for playback
+        case .playbackSpeed:
+            handleSpeedCheckmarkAction(for: title, sideMenu: sideMenu)
+        case .none:
             break
         }
+    }
+    
+    func handleSpeedCheckmarkAction(for title: NSAttributedString, sideMenu: SideMenu) {
+        delegate?.didSelect(rate: KinescopePlayerSpeed.from(string: title.string).rawValue)
+        sideMenuWillBeDismissed(sideMenu, withRoot: true)
+        set(speed: title.string)
     }
 
     func handleQualityCheckmarkAction(for title: NSAttributedString, sideMenu: SideMenu) {
@@ -366,6 +384,13 @@ private extension KinescopePlayerView {
         delegate?.didSelect(subtitles: title.string)
         sideMenuWillBeDismissed(sideMenu, withRoot: true)
         set(subtitles: title.string)
+    }
+    
+    func set(speed: String) {
+        let color = config.sideMenu.item.valueColor
+        let font = config.sideMenu.item.valueFont
+        let attributes: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: color]
+        selectedSpeed = speed.attributedStringWithAssetIconIfNeeded(attributes: attributes)
     }
 
     func set(quality: String) {
@@ -480,9 +505,8 @@ extension KinescopePlayerView: PlayerControlOutput {
                                        isRoot: true,
                                        isDownloadable: false,
                                        items: [
-                                        // TODO: - Feature.playbackSpeedSetting: add playback speed settings row in SideMenu
-//                                        .disclosure(title: L10n.Player.playbackSpeed,
-//                                                    value: nil),
+                                        .disclosure(title: L10n.Player.playbackSpeed,
+                                                    value: selectedSpeed),
                                         .disclosure(title: L10n.Player.subtitles,
                                                     value: selectedSubtitles),
                                         .disclosure(title: L10n.Player.videoQuality,

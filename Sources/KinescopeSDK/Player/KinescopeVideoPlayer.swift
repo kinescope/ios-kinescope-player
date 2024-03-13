@@ -555,6 +555,11 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         return video?.downloadableAssets
     }
 
+    func didSelect(rate: Float) {
+        strategy.player.rate = rate
+        analytic?.send(event: .rate)
+    }
+
     func didSelect(quality: String) {
         guard let video = video else {
             Kinescope.shared.logger?.log(message: "Can't find video",
