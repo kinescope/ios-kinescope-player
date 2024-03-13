@@ -2,7 +2,7 @@ import AVFoundation
 import AVKit
 import UIKit
 
-public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, QualitySelectionProvider, FullscreenStateProvider, PlayingRateSource {
+public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, FullscreenStateProvider, PlayingRateSource, VideoQualitySource {
 
     private enum Constants {
         static let periodicIntervalInSeconds: TimeInterval = 0.01
@@ -65,7 +65,8 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Quality
 
     private(set) var isFullScreenModeActive = false
     private(set) var currentRate: KinescopePlayingRate = .normal
-    private(set) var currentQuality = ""
+    private(set) var currentQuality = L10n.Player.auto
+
     private(set) var video: KinescopeVideo? {
         didSet {
             guard let video else {
@@ -106,6 +107,10 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Quality
         }
 
         return [rule]
+    }
+
+    var availableAssets: [KinescopeVideoAsset] {
+        video?.downloadableAssets ?? []
     }
 
     // MARK: - Lifecycle
@@ -155,7 +160,9 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Quality
     public func attach(view: KinescopePlayerView) {
         analyticStorage.sessionInput.refreshViewId()
         
-        view.bind(playingRateProvider: PlayingRateProvider(rateSource: self))
+        view.bind(playingRateProvider: PlayingRateProvider(rateSource: self),
+                  videoQualityProvider: VideoQualityProvider(source: self)
+        )
 
         view.playerView.player = self.strategy.player
         view.delegate = self
@@ -523,7 +530,6 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                 }
 
                 self.attach(view: miniView)
-                self.view?.change(quality: self.currentQuality)
                 self.restoreView()
             }
         } else {
@@ -544,7 +550,6 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                     return
                 }
 
-                view.change(quality: currentQuality)
                 view.overlay?.set(title: video.title, subtitle: video.description)
                 view.stopLoader(withPreview: strategy.player.isReadyToPlay)
                 restoreView()
@@ -554,10 +559,6 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
     func didShowAttachments() -> [KinescopeVideoAdditionalMaterial]? {
         return video?.attachments
-    }
-
-    func didShowAssets() -> [KinescopeVideoAsset]? {
-        return video?.downloadableAssets
     }
 
     func didSelect(rate: Float) {
