@@ -70,6 +70,7 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Quality
             isLive = video.type == .live && strategy.player.isReadyToPlay
             drmHandler = dependencies.drmFactory.provide(for: video.id)
             analyticStorage.videoInput.setVideo(video)
+            analyticStorage.sessionInput.resetWatchedDuration()
         }
     }
     private var options = [KinescopePlayerOption]()
@@ -242,6 +243,8 @@ private extension KinescopeVideoPlayer {
                                                                                       preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
                                                         playerBody: self,
                                                         secondsPlayed: { [weak self] updatedTime in
+            self?.analyticStorage.sessionInput.incrementWatchedDuration(by: Constants.periodicIntervalInSeconds)
+
             guard let self, !isSeeking, !isPreparingSeek else {
                 return
             }

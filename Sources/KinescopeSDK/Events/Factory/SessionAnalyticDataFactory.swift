@@ -9,7 +9,8 @@ import Foundation
 
 protocol SessionAnalyticInput {
     func refreshViewId()
-    func setWatchedDuration(_ duration: Double)
+    func resetWatchedDuration()
+    func incrementWatchedDuration(by step: TimeInterval)
 }
 
 final class SessionAnalyticDataFactory: Factory {
@@ -19,7 +20,7 @@ final class SessionAnalyticDataFactory: Factory {
     
     private let playerId = UUID().uuidString
     private var viewId = UUID().uuidString
-    private var watchedDuration: Double?
+    private var watchedDuration: TimeInterval?
 
     // MARK: - Factory
 
@@ -46,7 +47,11 @@ extension SessionAnalyticDataFactory: SessionAnalyticInput {
         viewId = UUID().uuidString
     }
     
-    func setWatchedDuration(_ duration: Double) {
-        watchedDuration = duration
+    func resetWatchedDuration() {
+        watchedDuration = 0
+    }
+
+    func incrementWatchedDuration(by step: TimeInterval) {
+        watchedDuration? += step
     }
 }
