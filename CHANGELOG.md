@@ -10,3 +10,4 @@
 - automatic retry mechanism for video loading
 - error state with refresh button
 - live stream announce view
+- collecting of analytic events with playback data for Kinescope dashboard
