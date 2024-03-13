@@ -252,25 +252,29 @@ private extension KinescopeVideoPlayer {
             return
         }
 
-        playbackObserverFactory = PlaybackTimePeriodicObserver(period: CMTimeMakeWithSeconds(Constants.periodicIntervalInSeconds,
-                                                                                      preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
-                                                        playerBody: self,
-                                                        secondsPlayed: { [weak self] updatedTime in
+        playbackObserverFactory = PlaybackTimePeriodicObserver(
+            period: CMTimeMakeWithSeconds(Constants.periodicIntervalInSeconds,
+                                          preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
+            playerBody: self,
+            secondsPlayed: { [weak self] updatedTime in
 
-            guard let self, !isSeeking, !isPreparingSeek else {
-                return
-            }
-            
-            analyticStorage.sessionInput.incrementWatchedDuration(by: Constants.periodicIntervalInSeconds)
+                guard let self, !isSeeking, !isPreparingSeek else {
+                    return
+                }
 
-            time = updatedTime
-            
-            if analyticStorage.session.isWatchingMoreThen(threshold: Constants.viewThreshold) {
-                analytic?.sendOnce(event: .view)
-            }
-            if analyticStorage.session.isWatchingIn(interval: playbackThreshold) {
-                analytic?.send(event: .playback)
-            }
+                analyticStorage.sessionInput.incrementWatchedDuration(by: Constants.periodicIntervalInSeconds)
+
+                time = updatedTime
+
+                if analyticStorage.session.isWatchingMoreThen(threshold: Constants.viewThreshold) {
+                    analytic?.sendOnce(event: .view)
+                }
+                if analyticStorage.session.isWatchingIn(interval: playbackThreshold) {
+                    analytic?.send(event: .playback)
+                }
+                if strategy.player.isBuffering {
+                    analytic?.send(event: .buffering)
+                }
         })
         playbackObserver = playbackObserverFactory?.provide()
     }
