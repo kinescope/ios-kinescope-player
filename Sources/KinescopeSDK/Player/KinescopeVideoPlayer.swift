@@ -6,6 +6,7 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Quality
 
     private enum Constants {
         static let periodicIntervalInSeconds: TimeInterval = 0.01
+        static let viewThreshold: TimeInterval = 5
     }
 
     public weak var pipDelegate: AVPictureInPictureControllerDelegate? {
@@ -71,6 +72,7 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Quality
             drmHandler = dependencies.drmFactory.provide(for: video.id)
             analyticStorage.videoInput.setVideo(video)
             analyticStorage.sessionInput.resetWatchedDuration()
+            analytic?.reset()
         }
     }
     private var options = [KinescopePlayerOption]()
@@ -243,13 +245,18 @@ private extension KinescopeVideoPlayer {
                                                                                       preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
                                                         playerBody: self,
                                                         secondsPlayed: { [weak self] updatedTime in
-            self?.analyticStorage.sessionInput.incrementWatchedDuration(by: Constants.periodicIntervalInSeconds)
 
             guard let self, !isSeeking, !isPreparingSeek else {
                 return
             }
             
+            analyticStorage.sessionInput.incrementWatchedDuration(by: Constants.periodicIntervalInSeconds)
+
             time = updatedTime
+            
+            if analyticStorage.session.isWatchingMoreThen(threshold: Constants.viewThreshold) {
+                analytic?.sendOnce(event: .view)
+            }
         })
         playbackObserver = playbackObserverFactory?.provide()
     }

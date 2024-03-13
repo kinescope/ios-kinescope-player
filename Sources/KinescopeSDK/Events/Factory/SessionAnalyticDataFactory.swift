@@ -38,6 +38,12 @@ final class SessionAnalyticDataFactory: Factory {
         }
         return result
     }
+
+    // MARK: - Other Methods
+
+    func isWatchingMoreThen(threshold: TimeInterval) -> Bool {
+        return watchedDuration ?? 0 > threshold
+    }
 }
 
 // MARK: - SessionAnalyticInput

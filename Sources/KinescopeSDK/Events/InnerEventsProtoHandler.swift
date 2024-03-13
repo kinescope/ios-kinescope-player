@@ -30,6 +30,8 @@ class InnerEventsProtoHandler {
     private let service: AnalyticsService
     private let dataStorage: InnerEventsDataStorage
 
+    private var oneTimeEventsSet = Set<InnerProtoEvent>()
+
     // MARK: - Init
 
     init(service: AnalyticsService, dataStorage: InnerEventsDataStorage) {
@@ -43,6 +45,18 @@ class InnerEventsProtoHandler {
 extension InnerEventsProtoHandler: InnerEventsHandler {
     func send(event: InnerProtoEvent, value: Float) {
         service.send(event: build(event: event, value: value))
+    }
+
+    func sendOnce(event: InnerProtoEvent, value: Float) {
+        guard !oneTimeEventsSet.contains(event) else {
+            return
+        }
+        oneTimeEventsSet.insert(event)
+        send(event: event, value: value)
+    }
+
+    func reset() {
+        oneTimeEventsSet.removeAll()
     }
 }
 

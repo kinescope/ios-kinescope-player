@@ -8,7 +8,9 @@
 import Foundation
 
 public protocol InnerEventsHandler {
+    func sendOnce(event: InnerProtoEvent, value: Float)
     func send(event: InnerProtoEvent, value: Float)
+    func reset()
 }
 
 // MARK: - Defaults
@@ -16,5 +18,9 @@ public protocol InnerEventsHandler {
 extension InnerEventsHandler {
     func send(event: InnerProtoEvent) {
         send(event: event, value: 0)
+    }
+
+    func sendOnce(event: InnerProtoEvent) {
+        sendOnce(event: event, value: 0)
     }
 }
