@@ -460,6 +460,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         if time == duration && strategy.player.hasFiniteDuration {
             time = .zero
             seek(to: time)
+            analytic?.send(event: .replay)
         }
         
         analytic?.send(event: .play)
