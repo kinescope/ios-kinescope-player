@@ -3,7 +3,7 @@ PODS:
     - M3U8Kit (~> 1.0)
     - SwiftProtobuf (~> 1.0)
   - M3U8Kit (1.0.2)
-  - SwiftProtobuf (1.16.0)
+  - SwiftProtobuf (1.25.2)
 
 DEPENDENCIES:
   - KinescopeSDK (from `../`)
@@ -20,8 +20,8 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   KinescopeSDK: ef225e81056222f5f8e133c63bea6a7a3633c5d2
   M3U8Kit: 6a0d55ba2e62e146f34f53276d7c3aa78ed4fc00
-  SwiftProtobuf: 4e16842b83c6fda06b10fac50d73b3f1fce8ab7b
+  SwiftProtobuf: 407a385e97fd206c4fbe880cc84123989167e0d1
 
-PODFILE CHECKSUM: 0c6d03d0cb7ade5ae3a7bfafccab79b6b739f516
+PODFILE CHECKSUM: 81778327466b8ac5b3f02e6d88b3affa564e84eb
 
 COCOAPODS: 1.10.2
