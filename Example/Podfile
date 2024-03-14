@@ -7,8 +7,6 @@ target 'KinescopeExample' do
   # Comment the next line if you don't want to use dynamic frameworks
 
   # Pods for KinescopeExample
-  pod 'ReactiveDataDisplayManager', '~> 7.0.0-beta'
-  pod 'Kingfisher', '~> 6.2.1'
   pod 'KinescopeSDK', :path => '../'
 
 end
