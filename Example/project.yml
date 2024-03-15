@@ -24,7 +24,7 @@ targets:
         path: KinescopeExample/Application/Info.plist
         properties:
           UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait, UIInterfaceOrientationPortraitUpsideDown, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
-          UILaunchStoryboardName: LaunchScreen
+          UILaunchStoryboardName: Launch Screen
           UIMainStoryboardFile: Main
           CFBundleName: Kinescope
           CFBundleShortVersionString: $(MARKETING_VERSION)
