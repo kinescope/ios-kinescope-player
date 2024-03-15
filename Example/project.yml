@@ -29,6 +29,7 @@ targets:
           CFBundleName: Kinescope
           CFBundleShortVersionString: $(MARKETING_VERSION)
           CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+          UIBackgroundModes: ["audio"]
       settings:
         base:
           PRODUCT_BUNDLE_IDENTIFIER: io.kinescope.example
