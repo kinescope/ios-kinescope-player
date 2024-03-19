@@ -13,8 +13,8 @@ enum NotificationSubKey {
     case appWillEnterForeground
     case appDidEnterBackground
     case deviceOrientationChanged
-    case itemPlaybackStaled
-    
+    case itemDidPlayToEnd
+
     var notificationName: NSNotification.Name {
         switch self {
         case .appWillEnterForeground:
@@ -23,8 +23,8 @@ enum NotificationSubKey {
             return UIApplication.didEnterBackgroundNotification
         case .deviceOrientationChanged:
             return UIDevice.orientationDidChangeNotification
-        case .itemPlaybackStaled:
-            return AVPlayerItem.playbackStalledNotification
+        case .itemDidPlayToEnd:
+            return AVPlayerItem.didPlayToEndTimeNotification
         }
     }
 

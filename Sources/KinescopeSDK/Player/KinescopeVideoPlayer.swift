@@ -2,10 +2,13 @@ import AVFoundation
 import AVKit
 import UIKit
 
-public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody {
+public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, FullscreenStateProvider, PlayingRateSource, VideoQualitySource, SubtitlesSource {
 
     private enum Constants {
         static let periodicIntervalInSeconds: TimeInterval = 0.01
+        static let viewThreshold: TimeInterval = 5
+        static let minPlaybackThreshold: TimeInterval = 5
+        static let maxPlaybackThreshold: TimeInterval = 60
     }
 
     public weak var pipDelegate: AVPictureInPictureControllerDelegate? {
@@ -18,6 +21,9 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody {
     
     private let config: KinescopePlayerConfig
     private let dependencies: KinescopePlayerDependencies
+    
+    private var analyticStorage: InnerEventsDataStorage & InnerEventsDataInputs = InMemoryInnerEventsDataStorage()
+    private lazy var analytic: InnerEventsHandler? = Kinescope.analytic?.provide(with: analyticStorage)
 
     private let kvoBag = KVOBag()
 
@@ -28,10 +34,6 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody {
 
     private(set) lazy var strategy: PlayingStrategy = {
         dependencies.provide(for: config)
-    }()
-    private lazy var innerEventsHandler: InnerEventsHandler = {
-        let service = AnalyticsNetworkService(transport: Transport(), config: Kinescope.shared.config)
-        return InnerEventsProtoHandler(service: service)
     }()
 
     private(set) weak var view: KinescopePlayerView?
@@ -53,7 +55,6 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody {
 
     private var isSeeking = false
     private var isPreparingSeek = false
-    private var currentQuality = ""
     private var isPlaying = false
     private var isOverlayed = false
     private var savedTime: CMTime = .zero
@@ -61,6 +62,12 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody {
     private(set) weak var delegate: KinescopeVideoPlayerDelegate?
 
     private var drmHandler: DataProtectionHandler?
+
+    private(set) var isFullScreenModeActive = false
+    private(set) var currentRate: KinescopePlayingRate = .normal
+    private(set) var currentQuality = L10n.Player.auto
+    private(set) var currentSubtitles: String?
+
     private(set) var video: KinescopeVideo? {
         didSet {
             guard let video else {
@@ -68,8 +75,20 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody {
             }
             isLive = video.type == .live && strategy.player.isReadyToPlay
             drmHandler = dependencies.drmFactory.provide(for: video.id)
+            analyticStorage.videoInput.setVideo(video)
+            analyticStorage.sessionInput.resetWatchedDuration()
+            analytic?.reset()
         }
     }
+
+    private var playbackThreshold: TimeInterval {
+        guard let duration = video?.duration, duration > 0 else {
+            return Constants.minPlaybackThreshold
+        }
+        let threshold = duration * 0.02
+        return threshold < Constants.maxPlaybackThreshold ? threshold : Constants.maxPlaybackThreshold
+    }
+
     private var options = [KinescopePlayerOption]()
     
     private var playbackObserverFactory: (any Factory)?
@@ -89,6 +108,14 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody {
         }
 
         return [rule]
+    }
+
+    var availableAssets: [KinescopeVideoAsset] {
+        video?.downloadableAssets ?? []
+    }
+
+    var availableSubtitles: [String] {
+        video?.allSubtitlesVariants ?? []
     }
 
     // MARK: - Lifecycle
@@ -117,7 +144,7 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody {
             if !strategy.player.isReadyToPlay {
                 select(quality: .auto(hlsLink: video.hlsLink))
             }
-            self.strategy.play()
+            self.strategy.play(with: currentRate.rawValue)
             self.delegate?.playerDidPlay()
         } else {
             self.load()
@@ -136,10 +163,18 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody {
     }
 
     public func attach(view: KinescopePlayerView) {
+        analyticStorage.sessionInput.refreshViewId()
+        
+        view.bind(playingRateProvider: PlayingRateProvider(rateSource: self),
+                  videoQualityProvider: VideoQualityProvider(source: self),
+                  subtitlesProvider: SubtitlesProvider(source: self))
+
         view.playerView.player = self.strategy.player
         view.delegate = self
         self.view = view
-        view.set(preview: video?.poster?.url)
+        if !strategy.player.isReadyToPlay {
+            view.set(preview: video?.poster?.url)
+        }
         view.set(options: options)
         view.pipController?.delegate = pipDelegate
         updateTimeline()
@@ -196,10 +231,11 @@ private extension KinescopeVideoPlayer {
                 self?.view?.overlay?.set(title: video.title, subtitle: video.description)
                 self?.view?.set(options: self?.makePlayerOptions(from: video) ?? [])
                 self?.delegate?.playerDidLoadVideo(error: nil)
-                self?.play()
+                self?.didPlay()
             },
             onError: { [weak self] error in
                 self?.view?.stopLoader()
+                self?.view?.errorOverlay?.display(error: error)
                 self?.delegate?.playerDidLoadVideo(error: error)
                 Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.network)
             }
@@ -234,15 +270,29 @@ private extension KinescopeVideoPlayer {
             return
         }
 
-        playbackObserverFactory = PlaybackTimePeriodicObserver(period: CMTimeMakeWithSeconds(Constants.periodicIntervalInSeconds,
-                                                                                      preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
-                                                        playerBody: self,
-                                                        secondsPlayed: { [weak self] updatedTime in
-            guard let self, !isSeeking, !isPreparingSeek else {
-                return
-            }
-            
-            time = updatedTime
+        playbackObserverFactory = PlaybackTimePeriodicObserver(
+            period: CMTimeMakeWithSeconds(Constants.periodicIntervalInSeconds,
+                                          preferredTimescale: CMTimeScale(NSEC_PER_SEC)),
+            playerBody: self,
+            secondsPlayed: { [weak self] updatedTime in
+
+                guard let self, !isSeeking, !isPreparingSeek else {
+                    return
+                }
+
+                analyticStorage.sessionInput.incrementWatchedDuration(by: Constants.periodicIntervalInSeconds)
+
+                time = updatedTime
+
+                if analyticStorage.session.isWatchingMoreThen(threshold: Constants.viewThreshold) {
+                    analytic?.sendOnce(event: .view)
+                }
+                if analyticStorage.session.isWatchingIn(interval: playbackThreshold) {
+                    analytic?.send(event: .playback)
+                }
+                if strategy.player.isBuffering {
+                    analytic?.send(event: .buffering)
+                }
         })
         playbackObserver = playbackObserverFactory?.provide()
     }
@@ -293,6 +343,14 @@ private extension KinescopeVideoPlayer {
                                      using: .init(selector: #selector(appDidEnterBackground)))
         notificationsBag.addObserver(for: .deviceOrientationChanged,
                                      using: .init(selector: #selector(changeOrientation)))
+        notificationsBag.addObserver(for: .itemDidPlayToEnd,
+                                     using: .init(selector: #selector(itemDidPlayToEnd)))
+    }
+    
+    func configureAnalytic() {
+        analyticStorage.playbackInput.setPlayer(strategy.player)
+        analyticStorage.playbackInput.setQualityProvider(self)
+        analyticStorage.playbackInput.setFullscreenStateProvider(self)
     }
 
     func seek(to seconds: TimeInterval) {
@@ -350,6 +408,10 @@ private extension KinescopeVideoPlayer {
         }
     }
 
+    @objc func itemDidPlayToEnd() {
+        analytic?.send(event: .end)
+    }
+
     func restoreView() {
         view?.showOverlay(isOverlayed)
         isPlaying ? play() : pause()
@@ -398,13 +460,17 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         if time == duration && strategy.player.hasFiniteDuration {
             time = .zero
             seek(to: time)
+            analytic?.send(event: .replay)
         }
         
+        analytic?.send(event: .play)
+
         self.$playRepeater.reset()
         self.play()
     }
 
     func didPause() {
+        analytic?.send(event: .pause)
         self.pause()
     }
 
@@ -427,6 +493,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         isPreparingSeek = false
         Kinescope.shared.logger?.log(message: "timeline change to time: \(time) confirmed",
                                      level: KinescopeLoggerLevel.player)
+        analytic?.send(event: .seek)
         seek(to: time)
     }
 
@@ -438,6 +505,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         Kinescope.shared.logger?.log(message: "fast forward +15s", level: KinescopeLoggerLevel.player)
 
         time = min(duration, time + 15)
+        analytic?.send(event: .seek)
         seek(to: time)
 
         delegate?.player(didFastForwardTo: time)
@@ -447,6 +515,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         Kinescope.shared.logger?.log(message: "fast backward -15s", level: KinescopeLoggerLevel.player)
 
         time = max(time - 15.0, .zero)
+        analytic?.send(event: .seek)
         seek(to: time)
 
         delegate?.player(didFastBackwardTo: time)
@@ -457,6 +526,8 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             isOverlayed = view.overlay?.isSelected ?? false
             detach(view: view)
             
+            analytic?.send(event: .exitfullscreen)
+
             KinescopeFullscreenViewController.dismiss { [weak self] in
                 guard
                     let self,
@@ -466,7 +537,6 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                 }
 
                 self.attach(view: miniView)
-                self.view?.change(quality: self.currentQuality)
                 self.restoreView()
             }
         } else {
@@ -475,20 +545,21 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
             detach(view: view)
             
+            analytic?.send(event: .enterfullscreen)
+
             guard let video else {
                 return
             }
 
             KinescopeFullscreenViewController.present(player: self,
                                                       video: video) { [weak self] in
-                guard let video = self?.video else {
+                guard let self else {
                     return
                 }
 
-                self?.view?.overlay?.isHidden = false
-                self?.view?.change(quality: self?.currentQuality ?? "")
-                self?.view?.overlay?.set(title: video.title, subtitle: video.description)
-                self?.restoreView()
+                view.overlay?.set(title: video.title, subtitle: video.description)
+                view.stopLoader(withPreview: strategy.player.isReadyToPlay)
+                restoreView()
             }
         }
     }
@@ -497,8 +568,10 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         return video?.attachments
     }
 
-    func didShowAssets() -> [KinescopeVideoAsset]? {
-        return video?.downloadableAssets
+    func didSelect(rate: Float) {
+        currentRate = .init(rawValue: rate) ?? .normal
+        strategy.player.rate = rate
+        analytic?.send(event: .rate)
     }
 
     func didSelect(quality: String) {
@@ -520,6 +593,8 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         }
 
         currentQuality = quality
+        
+        analytic?.send(event: .qualitychanged)
 
         select(quality: videoQuality)
 
@@ -559,10 +634,6 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         case .none:
             break
         }
-    }
-
-    func didShowSubtitles() -> [String] {
-        return video?.allSubtitlesVariants ?? []
     }
 
     func didSelect(subtitles: String) {

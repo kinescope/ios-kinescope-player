@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum InnerProtoEvent: String {
+public enum InnerProtoEvent: String {
     case playback
     case play
     case pause
@@ -23,100 +23,56 @@ enum InnerProtoEvent: String {
     case autoqualitychanged
 }
 
-class InnerEventsProtoHandler: InnerEventsHandler {
+class InnerEventsProtoHandler {
 
     // MARK: - Properties
 
     private let service: AnalyticsService
-    private let video = Analytics_Video()
-    private let player = Analytics_Player()
-    private let device = Analytics_Device()
-    private let session = Analytics_Session()
-    private let playback = Analytics_Playback()
+    private let dataStorage: InnerEventsDataStorage
+
+    private var oneTimeEventsSet = Set<InnerProtoEvent>()
 
     // MARK: - Init
 
-    init(service: AnalyticsService) {
+    init(service: AnalyticsService, dataStorage: InnerEventsDataStorage) {
         self.service = service
+        self.dataStorage = dataStorage
+    }
+}
+
+// MARK: - InnerEventsHandler
+
+extension InnerEventsProtoHandler: InnerEventsHandler {
+    func send(event: InnerProtoEvent, value: Float) {
+        service.send(event: build(event: event, value: value))
     }
 
-    // MARK: - Internal Methods
-
-    // MARK: - InnerEventsHandler
-
-    func playback(sec: TimeInterval) {
-        
+    func sendOnce(event: InnerProtoEvent, value: Float) {
+        guard !oneTimeEventsSet.contains(event) else {
+            return
+        }
+        oneTimeEventsSet.insert(event)
+        send(event: event, value: value)
     }
 
-    func play() {
-        
+    func reset() {
+        oneTimeEventsSet.removeAll()
     }
-
-    func pause() {
-
-    }
-
-    func end() {
-
-    }
-
-    func replay() {
-
-    }
-
-    func buffer(sec: TimeInterval) {
-
-    }
-
-    func seek() {
-
-    }
-
-    func rate(_ rate: Float) {
-
-    }
-
-    func view() {
-
-    }
-
-    func enterfullscreen() {
-
-    }
-
-    func exitfullscreen() {
-
-    }
-
-    func qualitychanged(_ quality: String) {
-
-    }
-
-    func autoqualitychanged(_ quality: String) {
-
-    }
-    
 }
 
 // MARK: - Private
 
 private extension InnerEventsProtoHandler {
 
-    func send(event: InnerProtoEvent, value: Float) {
-        service.send(event: build(event: event, value: value)) { _ in
-            
-        }
-    }
-
     func build(event: InnerProtoEvent, value: Float) -> Analytics_Native {
         return Analytics_Native.with {
             $0.event = event.rawValue
             $0.value = value
-            $0.video = video
-            $0.player = player
-            $0.device = device
-            $0.session = session
-            $0.playback = playback
+            $0.video = dataStorage.video.provide() ?? .init()
+            $0.player = dataStorage.player.provide() ?? .init()
+            $0.device = dataStorage.device.provide() ?? .init()
+            $0.session = dataStorage.session.provide() ?? .init()
+            $0.playback = dataStorage.playback.provide() ?? .init()
             $0.eventTime = .init()
             return
         }

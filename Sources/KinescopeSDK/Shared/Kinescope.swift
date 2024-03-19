@@ -16,4 +16,7 @@ public enum Kinescope {
     /// Singleton entry to kinescope services
     public static let shared: SharedManager = Manager()
 
+    static var analytic: KinescopeAnalyticHandlerFactory? {
+        return (shared as? Manager)?.analyticFactory
+    }
 }

@@ -7,10 +7,9 @@ protocol KinescopePlayerViewDelegate: class {
     func didFastBackward()
     func didPresentFullscreen(from view: KinescopePlayerView)
     func didShowAttachments() -> [KinescopeVideoAdditionalMaterial]?
-    func didShowAssets() -> [KinescopeVideoAsset]?
+    func didSelect(rate: Float)
     func didSelect(quality: String)
     func didSelectAttachment(with id: String)
     func didSelectDownloadAll(for title: String)
-    func didShowSubtitles() -> [String]
     func didSelect(subtitles: String)
 }

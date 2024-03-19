@@ -9,20 +9,25 @@ final class VideoViewController: UIViewController {
 
     // MARK: - Private properties
 
-    // Change this id to your video id from dashboard. This one is free video for demo of SDK only.
-    private let videoId: String = {
-#if targetEnvironment(simulator)
-        "9L8KmbNuhQSxQofn5DR4Vg"
-#else
-        "b6a0ce69-3135-496d-8064-c8ed51ac4b2e"
-#endif
-    }()
     private var player: KinescopePlayer?
 
-    // MARK: - Lifecycle
+    // MARK: - Public Properties
+
+    var videoId: String = ""
+
+    // MARK: - Appearance
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
+    }
+    
+    // MARK: - Lifecycle
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let videoId = sender as? String else {
+            return
+        }
+        self.videoId = videoId
     }
 
     override func viewDidLoad() {
@@ -38,6 +43,7 @@ final class VideoViewController: UIViewController {
         player?.attach(view: playerView)
         player?.play()
         player?.pipDelegate = PipManager.shared
+
     }
 
 }

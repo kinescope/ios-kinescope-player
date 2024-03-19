@@ -9,6 +9,8 @@ public enum KinescopeLoggerLevel: KinescopeLoggingLevel, Equatable, CaseIterable
     case repeater
     /// Player logs
     case storage
+    /// Analytics logs
+    case analytics
 
     // MARK: - KinescopeLoggingType
 

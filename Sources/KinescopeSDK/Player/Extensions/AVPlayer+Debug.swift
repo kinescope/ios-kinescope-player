@@ -87,4 +87,19 @@ extension AVPlayer {
         }
     }
 
+    var isBuffering: Bool {
+        guard let currentItem else {
+            return false
+        }
+        return !currentItem.isPlaybackLikelyToKeepUp && currentItem.isPlaybackBufferEmpty
+    }
+
+}
+
+extension AVPlayerItem {
+
+    var buferredSeconds: Double {
+        loadedTimeRanges.first?.timeRangeValue.end.seconds ?? 0
+    }
+
 }

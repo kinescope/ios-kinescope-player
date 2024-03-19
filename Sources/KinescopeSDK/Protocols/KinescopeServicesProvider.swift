@@ -27,7 +27,4 @@ public protocol KinescopeServicesProvider {
     /// Service managing logging process
     var logger: KinescopeLogging? { get }
 
-    /// Events center
-    var eventsCenter: KinescopeEventsCenter! { get }
-
 }
