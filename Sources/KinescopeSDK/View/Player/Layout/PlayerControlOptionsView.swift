@@ -105,20 +105,23 @@ private extension PlayerControlOptionsView {
         stretch(view: stackView)
     }
 
-    func createButton(from option: KinescopePlayerOption) -> UIButton {
-        if option == .airPlay {
-            let button = AirPlayOptionButton()
+    func createButton(from option: KinescopePlayerOption) -> UIView {
+        switch option {
+        case .airPlay:
+            let button = AirPlayOptionControl()
+            button.tintColor = config.normalColor
             button.squareSize(with: config.iconSize)
             return button
+        default:
+            let button = OptionButton(option: option)
+
+            button.tintColor = config.highlightedColor
+            button.squareSize(with: config.iconSize)
+
+            button.addTarget(nil, action: #selector(buttonTapped(sender:)), for: .touchUpInside)
+
+            return button
         }
-        let button = OptionButton(option: option)
-
-        button.tintColor = config.highlightedColor
-        button.squareSize(with: config.iconSize)
-
-        button.addTarget(nil, action: #selector(buttonTapped(sender:)), for: .touchUpInside)
-
-        return button
     }
 
     func fillStack(with options: [KinescopePlayerOption], expanded: Bool) {
