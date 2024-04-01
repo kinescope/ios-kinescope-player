@@ -12,5 +12,5 @@ protocol KinescopePlayerViewDelegate: class {
     func didSelectAttachment(with id: String)
     func didSelectDownloadAll(for title: String)
     func didSelect(subtitles: String)
-    func didSelect(option: AnyHashable)
+    func didSelect(option: AnyHashable, optionView: UIView)
 }

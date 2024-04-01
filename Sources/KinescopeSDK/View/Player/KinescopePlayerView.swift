@@ -497,7 +497,7 @@ extension KinescopePlayerView: PlayerControlOutput {
             let isPipActive = pipController?.isPictureInPictureActive ?? false
             isPipActive ? pipController?.stopPictureInPicture() : pipController?.startPictureInPicture()
         case .custom(let id, _):
-            delegate?.didSelect(option: id)
+            delegate?.didSelect(option: id, optionView: controlPanel?.getCustomOptionView(by: id) ?? self)
         default:
             break
         }

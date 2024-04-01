@@ -39,7 +39,7 @@ public protocol KinescopeVideoPlayerDelegate: class {
     /// Triggered on quality change
     func player(changedQualityTo quality: String)
     /// Triggered on custom option button selected in options menu
-    func player(didSelectCustomOptionWith optionId: AnyHashable)
+    func player(didSelectCustomOptionWith optionId: AnyHashable, anchoredAt view: UIView)
 }
 
 public extension KinescopeVideoPlayerDelegate {

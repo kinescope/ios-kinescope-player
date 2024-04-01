@@ -13,6 +13,11 @@ public struct KinescopePlayerConfig {
 
     /// If value is `true` show video in infinite loop.
     public let looped: Bool
+    
+    /// Default link to share video and play it on web.
+    public var shareLink: URL? {
+        URL(string: "https://kinescope.io/\(videoId)")
+    }
 
     /// - parameter videoId: Id of concrete video. For example from [GET Videos list](https://documenter.getpostman.com/view/10589901/TVCcXpNM)
     /// - parameter looped: If value is `true` show video in infinite loop. By default is `false`

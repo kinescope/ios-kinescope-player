@@ -9,6 +9,8 @@ import UIKit
 
 protocol PlayerControlOptionsInput {
 
+    func getCustomOptionView(by id: AnyHashable) -> UIView?
+
     /// Set available options
     ///
     /// - parameter options: Set of option
@@ -37,6 +39,8 @@ class PlayerControlOptionsView: UIControl {
     private let config: KinescopePlayerOptionsConfiguration
     private(set) var options: [KinescopePlayerOption] = []
     private var isSubtitleOn = false
+    
+    private var customOptionsTagMap: [AnyHashable: Int] = [:]
 
     weak var output: PlayerControlOptionsOutput?
 
@@ -65,6 +69,12 @@ class PlayerControlOptionsView: UIControl {
 // MARK: - Input
 
 extension PlayerControlOptionsView: PlayerControlOptionsInput {
+
+    func getCustomOptionView(by id: AnyHashable) -> UIView? {
+        let buttonTag = customOptionsTagMap[id]
+        return stackView.arrangedSubviews
+            .first(where: { $0.tag == buttonTag })
+    }
 
     func set(options: [KinescopePlayerOption]) {
         self.options = options
@@ -105,16 +115,22 @@ private extension PlayerControlOptionsView {
         stretch(view: stackView)
     }
 
-    func createButton(from option: KinescopePlayerOption) -> UIView {
+    func createButton(from option: KinescopePlayerOption, at index: Int) -> UIView {
         switch option {
         case .airPlay:
             let button = AirPlayOptionControl()
             button.tintColor = config.normalColor
             button.squareSize(with: config.iconSize)
+            button.tag = index
             return button
         default:
             let button = OptionButton(option: option)
 
+            if let optionId = option.optionId {
+                customOptionsTagMap[optionId] = index
+            }
+            
+            button.tag = index
             button.tintColor = config.highlightedColor
             button.squareSize(with: config.iconSize)
 
@@ -136,7 +152,10 @@ private extension PlayerControlOptionsView {
             : Array(options.dropFirst(options.count - 2))
 
         filteredOptions
-            .map(createButton(from:))
+            .enumerated()
+            .map { index, option in
+                createButton(from: option, at: index)
+            }
             .forEach { [weak self] button in
                 self?.stackView.addArrangedSubview(button)
             }

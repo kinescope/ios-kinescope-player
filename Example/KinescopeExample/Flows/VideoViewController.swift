@@ -2,6 +2,12 @@ import UIKit
 import KinescopeSDK
 
 final class VideoViewController: UIViewController {
+    
+    // MARK: - Nested Types
+
+    private enum CustomPlayerOption: String {
+        case share
+    }
 
     // MARK: - IBOutlets
 
@@ -43,7 +49,7 @@ final class VideoViewController: UIViewController {
 
         if #available(iOS 13.0, *) {
             if let shareIcon = UIImage(systemName: "square.and.arrow.up")?.withRenderingMode(.alwaysTemplate) {
-                player?.addCustomPlayerOption(with: "Share", and: shareIcon)
+                player?.addCustomPlayerOption(with: CustomPlayerOption.share, and: shareIcon)
             }
         }
         player?.disableOptions([.airPlay])
@@ -65,8 +71,21 @@ extension VideoViewController: UINavigationControllerDelegate {
 
 extension VideoViewController: KinescopeVideoPlayerDelegate {
 
-    func player(didSelectCustomOptionWith optionId: AnyHashable) {
-        debugPrint("KINCO: player didSelectCustomOption \(optionId)")
+    func player(didSelectCustomOptionWith optionId: AnyHashable, anchoredAt view: UIView) {
+        guard let option = optionId as? CustomPlayerOption else {
+            return
+        }
+
+        switch option {
+        case .share:
+            let items = [player?.config.shareLink]
+            let activityViewController = UIActivityViewController(activityItems: items as [Any], 
+                                                                  applicationActivities: nil)
+            let presentationController = activityViewController.presentationController as? UIPopoverPresentationController
+            presentationController?.sourceView = view
+            presentationController?.permittedArrowDirections = .down
+            present(activityViewController, animated: true)
+        }
     }
 
 }

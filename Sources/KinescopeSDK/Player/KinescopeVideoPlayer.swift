@@ -19,7 +19,7 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
 
     // MARK: - Private Properties
     
-    private let config: KinescopePlayerConfig
+    public let config: KinescopePlayerConfig
     private let dependencies: KinescopePlayerDependencies
     
     private var analyticStorage: InnerEventsDataStorage & InnerEventsDataInputs = InMemoryInnerEventsDataStorage()
@@ -675,8 +675,8 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                                      level: KinescopeLoggerLevel.player)
     }
 
-    func didSelect(option: AnyHashable) {
-        delegate?.player(didSelectCustomOptionWith: option)
+    func didSelect(option: AnyHashable, optionView: UIView) {
+        delegate?.player(didSelectCustomOptionWith: option, anchoredAt: optionView)
     }
 
 }

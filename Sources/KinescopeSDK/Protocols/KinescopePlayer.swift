@@ -9,6 +9,10 @@ import AVKit
 
 /// Control protocol for player
 public protocol KinescopePlayer {
+    
+    /// Current configuration of player.
+    /// Contains `videoId` and playing strategy.
+    var config: KinescopePlayerConfig { get }
 
     /// Delegate of Picture in Picture controller
     var pipDelegate: AVPictureInPictureControllerDelegate? { get set }

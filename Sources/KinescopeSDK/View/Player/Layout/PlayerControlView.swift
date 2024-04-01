@@ -57,7 +57,11 @@ class PlayerControlView: UIControl {
 // MARK: - PlayerControlInput
 
 extension PlayerControlView: PlayerControlInput {
-    
+
+    func getCustomOptionView(by id: AnyHashable) -> UIView? {
+        optionsMenu.getCustomOptionView(by: id)
+    }
+
     func set(live: Bool?) {
         if let live {
             timeIndicator.isHidden = true
