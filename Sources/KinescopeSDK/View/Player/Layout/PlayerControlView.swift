@@ -100,8 +100,11 @@ extension PlayerControlView: PlayerControlOptionsOutput {
     }
 
     func didSelect(option: KinescopePlayerOption) {
-        if option == .more {
+        switch option {
+        case .more:
             self.expanded.toggle()
+        default:
+            break
         }
         output?.didSelect(option: option)
     }
