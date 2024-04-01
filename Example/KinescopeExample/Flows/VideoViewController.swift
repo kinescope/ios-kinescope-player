@@ -40,6 +40,15 @@ final class VideoViewController: UIViewController {
         PipManager.shared.closePipIfNeeded(with: videoId)
 
         player = KinescopeVideoPlayer(config: .init(videoId: videoId))
+
+        if #available(iOS 13.0, *) {
+            if let shareIcon = UIImage(systemName: "square.and.arrow.up")?.withRenderingMode(.alwaysTemplate) {
+                player?.addCustomPlayerOption(with: "Share", and: shareIcon)
+            }
+        }
+        player?.disableOptions([.airPlay])
+        
+        player?.setDelegate(delegate: self)
         player?.attach(view: playerView)
         player?.play()
         player?.pipDelegate = PipManager.shared
@@ -52,4 +61,12 @@ extension VideoViewController: UINavigationControllerDelegate {
     func navigationControllerSupportedInterfaceOrientations(_ navigationController: UINavigationController) -> UIInterfaceOrientationMask {
         return self.supportedInterfaceOrientations
     }
+}
+
+extension VideoViewController: KinescopeVideoPlayerDelegate {
+
+    func player(didSelectCustomOptionWith optionId: AnyHashable) {
+        debugPrint("KINCO: player didSelectCustomOption \(optionId)")
+    }
+
 }

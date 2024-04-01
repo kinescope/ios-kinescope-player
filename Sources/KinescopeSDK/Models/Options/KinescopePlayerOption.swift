@@ -28,9 +28,9 @@ public enum KinescopePlayerOption {
     case pip
     /// Custom option to perform any action
     /// - Parameters:
-    ///    - id: Uniq identifier to handle taps for buttons
-    ///    - icon: Image for option
-    case custom(id: String, icon: UIImage)
+    ///    - id: Uniq identifier to distinguish selection of different button. Maybe `String`, `Int`, `UUID` or other `Hashable`.
+    ///    - icon: Image to represent option in menu
+    case custom(id: AnyHashable, icon: UIImage)
 
     // MARK: - Appearance
 
@@ -69,6 +69,18 @@ public enum KinescopePlayerOption {
             return nil
         }
     }
+    
+    // MARK: - Id:
+
+    var optionId: AnyHashable? {
+        switch self {
+        case .custom(let id, _):
+            return id
+        default:
+            return nil
+        }
+    }
+
 }
 
 // MARK: - Equatable

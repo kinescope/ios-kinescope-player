@@ -38,6 +38,8 @@ public protocol KinescopeVideoPlayerDelegate: class {
     func player(didFastBackwardTo time: TimeInterval)
     /// Triggered on quality change
     func player(changedQualityTo quality: String)
+    /// Triggered on custom option button selected in options menu
+    func player(didSelectCustomOptionWith optionId: AnyHashable)
 }
 
 public extension KinescopeVideoPlayerDelegate {

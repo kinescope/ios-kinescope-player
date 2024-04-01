@@ -89,6 +89,8 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
         return threshold < Constants.maxPlaybackThreshold ? threshold : Constants.maxPlaybackThreshold
     }
 
+    private var customOptions = [KinescopePlayerOption]()
+    private var disabledOptions = [KinescopePlayerOption]()
     private var options = [KinescopePlayerOption]()
     
     private var playbackObserverFactory: (any Factory)?
@@ -213,6 +215,14 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
     public func setDelegate(delegate: KinescopeVideoPlayerDelegate) {
         self.delegate = delegate
     }
+
+    public func addCustomPlayerOption(with id: AnyHashable, and icon: UIImage) {
+        customOptions.append(.custom(id: id, icon: icon))
+    }
+
+    public func disableOptions(_ options: [KinescopePlayerOption]) {
+        disabledOptions = options
+    }
 }
 
 // MARK: - Private
@@ -260,7 +270,7 @@ private extension KinescopeVideoPlayer {
         if video.hasSubtitles {
             options.insert(.subtitles, at: 0)
         }
-
+        options = (customOptions + options).filter { !disabledOptions.contains($0) }
         self.options = options
         return options
     }
@@ -663,6 +673,10 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         view?.controlPanel?.set(subtitleOn: isOn)
         Kinescope.shared.logger?.log(message: "Select subtitles: \(subtitles)",
                                      level: KinescopeLoggerLevel.player)
+    }
+
+    func didSelect(option: AnyHashable) {
+        delegate?.player(didSelectCustomOptionWith: option)
     }
 
 }
