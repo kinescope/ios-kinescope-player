@@ -4,6 +4,53 @@ All components of `KinescopePlayerView` is partially customisable. You can chang
 
 All properties of `KinescopePlayerViewConfiguration` have default values included in SDK, so customisation is optional.
 
+## Managing of options menu
+
+Options menu is a set of buttons with different actions like AirPlay, Picture in Picture, etc. You can manage this menu by adding or removing some options.
+
+By default, options menu is collapsed, but you can show it by tapping on the options button with dots in the bottom right corner of the player view.
+
+### Custom options
+
+To add some custom option you can use method `addOption` with `KinescopePlayerOption` enum value.
+
+For example
+
+```swift
+if let shareIcon = UIImage(systemName: "square.and.arrow.up") {
+    player?.addCustomPlayerOption(with: CustomPlayerOption.share, 
+                                  and: shareIcon)
+}
+```
+
+To handle tap on custom option you should implement `KinescopePlayerDelegate` protocol and use method `player(didSelect option: KinescopePlayerOption)`.
+
+```swift
+func player(didSelectCustomOptionWith optionId: AnyHashable, anchoredAt view: UIView) {
+        guard let option = optionId as? CustomPlayerOption else {
+            return
+        }
+
+        switch option {
+        case .share:
+            // your code here
+        }
+    }
+```
+AnchoredView is button which were tapped. You can use it to show popover or action sheet. It's required on iPad applications.
+
+### Hide/disable options
+
+To hide some built-in options which you do not want you can use method `disableOptions` with array of options you want to hide. 
+
+For example, to hide AirPlay option use this code:
+```swift
+player?.disableOptions([.airPlay])
+```
+All built-in options are listed in `KinescopePlayerOption` enum.
+
+Using `disableOptions` also can disable custom option if id of this option is equal to previously added option.
+
 ## Configuration parameters
 
 ### gravity
