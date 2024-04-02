@@ -191,3 +191,19 @@ To add new localization to strings from SDK, add in your project file "Kinescope
 # Error Handling
 
 KinescopePlayerView has inbox error handling logic and retry-mechanism. If video is not available or some error occured player will try to retry failed operation 10 times with 5 seconds delay between each attempt. If all attempts failed player will show error overlay with refresh button. 
+
+# Analytics
+
+KinescopePlayer automaticaly send analytic events to Kinescope dashboard. You can get access to this events by implementing `KinescopeAnalyticsDelegate` protocol and set it like below
+
+```swift
+Kinescope.shared.setAnalytics(delegate: yourDelegate)
+```
+
+In delegate you can check all playback data which we sending to Kinescope dashboard.
+
+If you want to log only events without playback data, you can intercept them using `logger`.
+
+```swift
+Kinescope.shared.set(logger: KinescopeDefaultLogger(), levels: [KinescopeLoggerLevel.analytics])
+```
