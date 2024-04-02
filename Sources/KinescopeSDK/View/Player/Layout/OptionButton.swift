@@ -28,8 +28,8 @@ final class OptionButton: UIButton {
 private extension OptionButton {
 
     func setupInitialState() {
-        setImage(UIImage.image(named: option.rawValue), for: .normal)
-        setImage(UIImage.image(named: option.rawValue + "Selected"), for: .selected)
+        setImage(option.icon, for: .normal)
+        setImage(option.iconSelected, for: .selected)
     }
 
 }

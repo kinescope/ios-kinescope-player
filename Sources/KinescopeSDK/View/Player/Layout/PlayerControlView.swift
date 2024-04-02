@@ -57,7 +57,11 @@ class PlayerControlView: UIControl {
 // MARK: - PlayerControlInput
 
 extension PlayerControlView: PlayerControlInput {
-    
+
+    func getCustomOptionView(by id: AnyHashable) -> UIView? {
+        optionsMenu.getCustomOptionView(by: id)
+    }
+
     func set(live: Bool?) {
         if let live {
             timeIndicator.isHidden = true
@@ -100,8 +104,11 @@ extension PlayerControlView: PlayerControlOptionsOutput {
     }
 
     func didSelect(option: KinescopePlayerOption) {
-        if option == .more {
+        switch option {
+        case .more:
             self.expanded.toggle()
+        default:
+            break
         }
         output?.didSelect(option: option)
     }

@@ -9,6 +9,10 @@ import AVKit
 
 /// Control protocol for player
 public protocol KinescopePlayer {
+    
+    /// Current configuration of player.
+    /// Contains `videoId` and playing strategy.
+    var config: KinescopePlayerConfig { get }
 
     /// Delegate of Picture in Picture controller
     var pipDelegate: AVPictureInPictureControllerDelegate? { get set }
@@ -41,4 +45,15 @@ public protocol KinescopePlayer {
     /// Set delegate object
     /// - Parameter delegate: delegate for player events
     func setDelegate(delegate: KinescopeVideoPlayerDelegate)
+    
+    /// Add custom options to bottom menu
+    ///  - Parameters:
+    ///     - id: Uniq identifier of option
+    ///     - icon: Image to represent option in menu
+    func addCustomPlayerOption(with id: AnyHashable, and icon: UIImage)
+
+    /// Hides options from bottom menu
+    ///  - Parameters:
+    ///     - options: Array of options to ignore.
+    func disableOptions(_ options: [KinescopePlayerOption])
 }

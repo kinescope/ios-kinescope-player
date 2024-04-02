@@ -1,13 +1,14 @@
 //
-//  AirPlayOptionButton.swift
+//  AirPlayOptionControl.swift
 //  KinescopeSDK
 //
 //  Created by Никита Гагаринов on 13.04.2021.
 //
 
+import AVKit
 import MediaPlayer
 
-final class AirPlayOptionButton: UIButton {
+final class AirPlayOptionControl: UIControl {
 
     // MARK: - Initialization
 
@@ -33,14 +34,25 @@ final class AirPlayOptionButton: UIButton {
 
 // MARK: - Private Methods
 
-private extension AirPlayOptionButton {
+private extension AirPlayOptionControl {
 
     func setupInitialState() {
-        let volumeView = MPVolumeView()
-        volumeView.showsVolumeSlider = false
-        volumeView.setRouteButtonImage(UIImage.image(named: getImageName(for: volumeView)), for: .normal)
-        addSubview(volumeView)
-        stretch(view: volumeView)
+        let systemView: UIView
+        if #available(iOS 11.0, *) {
+            let routePickerView = AVRoutePickerView()
+            if #available(iOS 13.0, *) {
+                routePickerView.prioritizesVideoDevices = true
+            }
+            systemView = routePickerView
+        } else {
+            let volumeView = MPVolumeView(frame: .zero)
+            volumeView.showsVolumeSlider = false
+            volumeView.setRouteButtonImage(UIImage.image(named: getImageName(for: volumeView)), for: .normal)
+            systemView = volumeView
+        }
+
+        addSubview(systemView)
+        stretch(view: systemView)
     }
 
     func getImageName(for volumeView: MPVolumeView) -> String {
