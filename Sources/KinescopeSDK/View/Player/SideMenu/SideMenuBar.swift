@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol SideMenuBarDelegate: class {
+protocol SideMenuBarDelegate: AnyObject {
     func closeTapped()
     func backTapped()
     func downloadAllTapped(for title: String)

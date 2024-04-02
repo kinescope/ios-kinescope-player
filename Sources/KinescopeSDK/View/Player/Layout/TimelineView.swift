@@ -21,7 +21,7 @@ protocol TimelineInput {
     func setBufferred(progress: CGFloat)
 }
 
-protocol TimelineOutput: class {
+protocol TimelineOutput: AnyObject {
 
     /// Callback of user initiated timeline changes like circle dragging
     ///

@@ -4,27 +4,35 @@
 import PackageDescription
 
 let package = Package(
-    name: "Kinescope",
+    name: "KinescopeSDK",
+    defaultLocalization: "en",
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
-            name: "DangerDepsKinescope",
+            name: "KinescopeSDK",
             type: .dynamic,
-            targets: ["DangerDependencies"]),
+            targets: ["KinescopeSDK"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        .package(name: "danger-swift", url: "https://github.com/danger/swift.git", from: "3.3.0")
+        .package(url: "https://github.com/M3U8Kit/M3U8Parser.git", from: "1.1.0"),
+        .package(url: "https://github.com/apple/swift-protobuf.git", from: "1.26.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
-            name: "DangerDependencies",
+            name: "KinescopeSDK",
             dependencies: [
-                .product(name: "Danger", package: "danger-swift")
+                .product(name: "M3U8Parser", package: "M3U8Parser"),
+                .product(name: "SwiftProtobuf", package: "swift-protobuf")
             ],
-            path: "DangerKinescope",
-            sources: ["DangerKinescope.swift"])
+            path: "Sources/KinescopeSDK"),
+        .testTarget(
+            name: "KinescopeSDKTests",
+            dependencies: [
+                "KinescopeSDK"
+            ],
+            path: "Sources/KinescopeSDKTests")
     ]
 )

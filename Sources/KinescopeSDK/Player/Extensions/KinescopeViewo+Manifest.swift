@@ -5,7 +5,11 @@
 //  Created by Nikita Korobeinikov on 20.02.2024.
 //
 
+#if SWIFT_PACKAGE
+import M3U8Parser
+#else
 import M3U8Kit
+#endif
 
 extension KinescopeVideo {
 

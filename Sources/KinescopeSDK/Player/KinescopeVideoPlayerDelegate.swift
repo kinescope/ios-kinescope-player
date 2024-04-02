@@ -7,7 +7,7 @@
 
 import AVFoundation
 
-public protocol KinescopeVideoPlayerDelegate: class {
+public protocol KinescopeVideoPlayerDelegate: AnyObject {
     /// Triggered on successfull play action
     func playerDidPlay()
     /// Triggered on video load finish with error(error == nil means no error)
