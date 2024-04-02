@@ -76,6 +76,8 @@ Also SDK has opportunity to use custom logger. Just use protocols `KinescopeLogg
 
 ## Installation
 
+### Cocoapods
+
 Just add KinescopeSDK to your `Podfile` like this
 
 ```
@@ -92,6 +94,25 @@ Also you can specify concrete branch or tag if you want
 
 ```
  pod 'KinescopeSDK', :git => 'https://github.com/kinescope/ios-kinescope-player.git', :branch => 'master'
+```
+
+### SPM
+
+Just add KinescopeSDK as dependency for your package
+
+```swift
+dependencies: [
+        .package(url: "https://github.com/kinescope/ios-kinescope-player.git", exact: "0.2")
+    ],
+
+```
+
+and link your target with product
+
+```swift
+dependencies: [
+                .product(name: "KinescopeSDK", package: "ios-kinescope-player")
+]
 ```
 
 ## Changelog

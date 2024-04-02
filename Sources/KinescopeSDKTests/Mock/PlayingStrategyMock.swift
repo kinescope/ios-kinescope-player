@@ -31,7 +31,7 @@ final class PlayingStrategyMock: PlayingStrategy {
         unbindCalledCount += 1
     }
 
-    func play() {
+    func play(with rate: Float) {
         playCalledCount += 1
     }
 

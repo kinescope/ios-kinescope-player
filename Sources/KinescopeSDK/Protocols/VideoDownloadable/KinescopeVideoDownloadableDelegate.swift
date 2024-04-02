@@ -8,7 +8,7 @@
 import Foundation
 
 /// Delegate protocol to listen videos download process events
-public protocol KinescopeVideoDownloadableDelegate: class {
+public protocol KinescopeVideoDownloadableDelegate: AnyObject {
 
     /// Notify about progress state of downloading task
     ///

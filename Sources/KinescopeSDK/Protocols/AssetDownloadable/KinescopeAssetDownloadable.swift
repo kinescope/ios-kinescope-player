@@ -8,7 +8,7 @@
 import Foundation
 
 /// Control protocol managing downloading of assets(concrete quality)
-public protocol KinescopeAssetDownloadable: class {
+public protocol KinescopeAssetDownloadable: AnyObject {
 
     /// Request downloadable link for asset and start downloading
     ///

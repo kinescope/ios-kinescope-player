@@ -6,7 +6,7 @@
 //
 
 /// Protocol managing inspectations of dashboard content like videos, projects etc
-public protocol KinescopeInspectable: class {
+public protocol KinescopeInspectable: AnyObject {
 
     /// Entry for `GET` Video task
     ///

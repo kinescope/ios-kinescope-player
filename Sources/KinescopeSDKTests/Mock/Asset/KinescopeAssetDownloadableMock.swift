@@ -9,8 +9,7 @@ import Foundation
 @testable import KinescopeSDK
 
 final class KinescopeAssetDownloadableMock: KinescopeAssetDownloadable {
-
-    func enqueueDownload(asset: KinescopeVideoAsset) {
+    func enqueueDownload(video: KinescopeSDK.KinescopeVideo, asset: KinescopeSDK.KinescopeVideoAsset) {
     }
 
     func dequeueDownload(assetId: String) {

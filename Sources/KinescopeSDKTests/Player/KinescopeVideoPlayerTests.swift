@@ -30,7 +30,8 @@ final class KinescopeVideoPlayerTests: XCTestCase {
         let strategy = PlayingStrategyMock()
         let attachmentDownloader = KinescopeAttachmentDownloaderMock()
 
-        let dependencies = KinescopeVideoPlayerDependenciesMock(inspectorMock: inspector,
+        let dependencies = KinescopeVideoPlayerDependenciesMock(drmFactoryStub: .init(),
+                                                                inspectorMock: inspector,
                                                                 assetDownloaderMock: downloader,
                                                                 strategyMock: strategy,
                                                                 attachmentDownloaderMock: attachmentDownloader)

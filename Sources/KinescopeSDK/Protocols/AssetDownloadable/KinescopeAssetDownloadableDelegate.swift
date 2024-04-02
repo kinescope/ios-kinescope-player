@@ -8,7 +8,7 @@
 import Foundation
 
 /// Delegate protocol to listen assets download process events
-public protocol KinescopeAssetDownloadableDelegate: class {
+public protocol KinescopeAssetDownloadableDelegate: AnyObject {
 
     /// Notify about progress state of downloading task
     ///

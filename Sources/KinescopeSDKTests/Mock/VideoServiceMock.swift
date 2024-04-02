@@ -11,19 +11,9 @@ final class VideoServiceMock: VideosService {
 
     // MARK: - Properties
 
-    var allVideosMock: [Int: Result<AllVideosResponse, Error>] = [:]
     var singleVideoMock: [String: Result<KinescopeVideo, Error>] = [:]
 
     // MARK: - Methods
-
-    func getAll(request: KinescopeVideosRequest,
-                completion: @escaping (Result<AllVideosResponse, Error>) -> Void) {
-        if let result = allVideosMock[request.page] {
-            completion(result)
-        } else {
-            fatalError("Cannot find mock for getAll page \(request.page)")
-        }
-    }
 
     func getVideo(by id: String, completion: @escaping (Result<KinescopeVideo, Error>) -> Void) {
         if let result = singleVideoMock[id] {
