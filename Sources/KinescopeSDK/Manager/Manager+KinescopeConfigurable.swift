@@ -22,8 +22,15 @@ extension Manager: KinescopeConfigurable {
                                                assetService: AssetNetworkService())
         self.inspector = Inspector(videosService: VideosNetworkService(transport: Transport(),
                                                                        config: config))
-        self.analyticFactory = AnalyticHandler(service: AnalyticsNetworkService(transport: Transport(), config: config))
+        self.analyticFactory = AnalyticHandler(service: AnalyticsProxyService(wrappedServices: [
+            AnalyticsNetworkService(transport: Transport(), config: config),
+            AnalyticsLoggingService()
+        ]))
 
+    }
+    
+    func setAnalytics(delegate: any KinescopeAnalyticsDelegate) {
+        Kinescope.analyticDelegate = delegate
     }
 
     func set(logger: KinescopeLogging, levels: [KinescopeLoggingLevel]) {

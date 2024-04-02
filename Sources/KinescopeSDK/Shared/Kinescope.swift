@@ -19,4 +19,6 @@ public enum Kinescope {
     static var analytic: KinescopeAnalyticHandlerFactory? {
         return (shared as? Manager)?.analyticFactory
     }
+
+    static var analyticDelegate: KinescopeAnalyticsDelegate? = nil
 }

@@ -30,6 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     private func setupSDK() {
         Kinescope.shared.setConfig(.init())
+        Kinescope.shared.setAnalytics(delegate: self)
         Kinescope.shared.set(logger: KinescopeDefaultLogger(), levels: KinescopeLoggerLevel.allCases)
     }
 
@@ -47,6 +48,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } catch {
             Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.player)
         }
+    }
+
+}
+
+extension AppDelegate: KinescopeAnalyticsDelegate {
+
+    func didSendAnalytics(event: String, with data: String) {
+        debugPrint("Catched analytic event: \(event) with data \(data)")
     }
 
 }
