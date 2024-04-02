@@ -1,5 +1,8 @@
 ## 0.2
 
+### Introduced
+- Installation via SPM
+
 ### Removed
 - APIkey requirement
 - API calls including `videoList`
