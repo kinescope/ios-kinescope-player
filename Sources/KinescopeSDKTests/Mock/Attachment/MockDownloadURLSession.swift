@@ -44,7 +44,7 @@ final class MockDownloadURLSession: URLSession {
 
     var nextResult: MockResult = .success
     // task : isActive
-    private var tasks: [URLSessionTask: Bool] = [:]
+    private var tasksCache: [URLSessionTask: Bool] = [:]
     private var newDelegate: URLSessionDelegate?
 
     override var delegate: URLSessionDelegate? {
@@ -53,10 +53,11 @@ final class MockDownloadURLSession: URLSession {
 
     init(delegate: URLSessionDelegate?) {
         self.newDelegate = delegate
+        super.init()
     }
 
     override func getAllTasks(completionHandler: @escaping ([URLSessionTask]) -> Void) {
-        return completionHandler(Array(tasks.keys))
+        return completionHandler(Array(tasksCache.keys))
     }
 
     override func downloadTask(with url: URL) -> URLSessionDownloadTask {
@@ -65,24 +66,24 @@ final class MockDownloadURLSession: URLSession {
             case .resume(let result):
                 switch result {
                 case .success:
-                    self.tasks[task] = true
+                    self.tasksCache[task] = true
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                        guard self.tasks[task] ?? false else {
+                        guard self.tasksCache[task] ?? false else {
                             return
                         }
                         (self.delegate as? URLSessionDownloadDelegate)?.urlSession(self,
                                                                                    downloadTask: task,
                                                                                    didFinishDownloadingTo: url)
-                        self.tasks.removeValue(forKey: task)
+                        self.tasksCache.removeValue(forKey: task)
                     }
                 case .error:
                     let err = ServerErrorWrapper(error: .init(code: 1, message: "", detail: ""))
                     (self.delegate as? URLSessionDownloadDelegate)?.urlSession?(self, task: task, didCompleteWithError: err.error)
                 }
             case .cancel:
-                self.tasks.removeValue(forKey: task)
+                self.tasksCache.removeValue(forKey: task)
             case .suspend:
-                self.tasks[task] = false
+                self.tasksCache[task] = false
             }
         }
     }

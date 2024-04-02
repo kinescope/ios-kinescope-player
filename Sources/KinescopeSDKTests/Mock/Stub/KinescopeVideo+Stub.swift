@@ -11,20 +11,23 @@ extension KinescopeVideo {
 
     static func stub(id: String = "", hlsLink: String = "") -> KinescopeVideo {
         .init(id: id,
+              workspaceId: "",
               projectId: "",
-              version: 0,
+              folderId: "",
+              type: .vod,
               title: "",
               description: "",
               status: "",
               progress: 0,
               duration: 0,
-              assets: [],
+              qualityMap: [],
               chapters: .init(items: []),
-              poster: .init(id: "", original: "", md: "", sm: "", xs: ""),
-              additionalMaterials: [],
+              poster: .init(url: ""),
+              attachments: [],
               subtitles: [],
-              hlsLink: hlsLink)
-
+              hlsLink: hlsLink,
+              dash_link: "",
+              live: nil)
     }
 
 }

@@ -11,13 +11,13 @@ final class AssetLinksServiceMock: AssetLinksService {
 
     // MARK: - Properties
 
-    var linkMock: [String: Result<KinescopeVideoAssetLink, Error>] = [:]
+    var linkMock: [String: KinescopeVideoAssetLink] = [:]
 
     // MARK: - Methods
 
-    func getAssetLink(by id: String, completion: @escaping (Result<KinescopeVideoAssetLink, Error>) -> Void) {
+    func getAssetLink(by id: String, asset: KinescopeSDK.KinescopeVideoAsset) -> KinescopeSDK.KinescopeVideoAssetLink {
         if let result = linkMock[id] {
-            completion(result)
+            return result
         } else {
             fatalError("Cannot find mock for getAssetLink by \(id)")
         }

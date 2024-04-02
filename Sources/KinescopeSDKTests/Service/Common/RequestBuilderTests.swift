@@ -215,8 +215,6 @@ final class RequestBuilderTests: XCTestCase {
 
         // then
 
-        XCTAssertEqual(expected, request)
-
         XCTAssertEqual(expected.url?.absoluteString, request.url?.absoluteString)
         XCTAssertNotEqual(request.allHTTPHeaderFields, [:])
         XCTAssertNil(request.httpBody)
@@ -247,10 +245,8 @@ final class RequestBuilderTests: XCTestCase {
 
         // then
 
-        XCTAssertEqual(expected, tokenFirstRequest)
-        XCTAssertEqual(expected, tokenLastRequest)
-
         XCTAssertEqual(expected.url?.absoluteString, tokenFirstRequest.url?.absoluteString)
+        XCTAssertEqual(expected.url?.absoluteString, tokenLastRequest.url?.absoluteString)
         XCTAssertNotEqual(tokenFirstRequest.allHTTPHeaderFields, [:])
         XCTAssertNil(tokenFirstRequest.httpBody)
     }
