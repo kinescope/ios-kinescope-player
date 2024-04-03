@@ -139,6 +139,7 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
 
     public required convenience init(config: KinescopePlayerConfig) {
         self.init(config: config, dependencies: KinescopeVideoPlayerDependencies())
+        self.configureAnalytic()
     }
 
     public func play() {

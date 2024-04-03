@@ -1,16 +1,13 @@
 //
-//  AnalyticsService.swift
+//  AnalyticsNetworkService.swift
 //  KinescopeSDK
 //
-//  Created by Artemii Shabanov on 27.04.2021.
+//  Created by Nikita Korobeinikov on 02.04.2024.
 //
 
 import Foundation
 
-protocol AnalyticsService {
-    func send(event: Analytics_Native)
-}
-
+/// Implementation of ``AnalyticsService`` which will send analytic via network to kinescope dashboard
 final class AnalyticsNetworkService: AnalyticsService {
 
     // MARK: - Private Properties

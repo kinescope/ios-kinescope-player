@@ -17,3 +17,4 @@
 - collecting of analytic events with playback data for Kinescope dashboard
 - textField in example project to allow user to input videoId
 - ability to manage options menu on player view
+- ability to listen analytic events in `KinescopeAnalyticsDelegate`

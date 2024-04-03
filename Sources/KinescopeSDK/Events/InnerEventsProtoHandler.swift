@@ -73,7 +73,7 @@ private extension InnerEventsProtoHandler {
             $0.device = dataStorage.device.provide() ?? .init()
             $0.session = dataStorage.session.provide() ?? .init()
             $0.playback = dataStorage.playback.provide() ?? .init()
-            $0.eventTime = .init()
+            $0.eventTime = .init(date: Date())
             return
         }
     }
