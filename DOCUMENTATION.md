@@ -1,10 +1,31 @@
 # PlayerView customisation
 
+![Player Overview](doc_support/player.png)
+
 All components of `KinescopePlayerView` is partially customisable. You can change colors, fonts, sizes using method `KinescopePlayerView.setLayout(with config: KinescopePlayerViewConfiguration)`. 
 
-All properties of `KinescopePlayerViewConfiguration` have default values included in SDK, so customisation is optional.
+All properties of `KinescopePlayerViewConfiguration` have default values included in SDK, so customisation is optional. 
+
+You can easily edit these values using builders.
+For examle to change color of timeline in control panel you can use this code:
+```swift
+playerView.setLayout(with: .builder().setControlPanel(
+                .builder()
+                    .setTimeline(
+                        .builder()
+                            .setActiveColor(color)
+                            .build()
+                    )
+                    .build())
+)
+```
+or you can use predefined configurable configuration `accentTimeLineAndPlayButton` to change color of timeline and play button in control panel. 
+
+Using these builders you can change any property of `KinescopePlayerViewConfiguration` and apply it to player view. To learn about properties more you should read next chapters of this doc. 
 
 ## Managing of options menu
+
+![Player Options Menu](doc_support/options_menu.png)
 
 Options menu is a set of buttons with different actions like AirPlay, Picture in Picture, etc. You can manage this menu by adding or removing some options.
 
@@ -89,14 +110,34 @@ Set `nil` to hide overlay (usefull for videos collection with autoplaying).
 Default implementation could be checked in Example project.
 
 ### controlPanel
-Configuration of control panel with timeline and time labels.
+
+![Player Control Panel](doc_support/control_panel.png)
+
+Configuration of control panel with timeline, time labels and live indicator.
+
+You can modify textColor, fontSize, colors and sizes of control panel and it's components.
 
 Set `nil` to hide control panel.
 
 Default implementation could be checked in Example project.
 
+### announceView
+
+![Player Announce View](doc_support/announce_view.png)
+
+Configuration of announce view with information of planned time of start for live streams.
+
+Youc can modify textColor, fontSize and icon for announce view.
+
+Default implementation could be checked in Example project.
+
 ### errorOverlay
+
+![Player Error Overlay](doc_support/error_overlay.png)
+
 Configuration for error view with refresh button. Showing on broken livestreams or repeated failed attempts to play video.
+
+You can modify textColor, fontSize and backgroundColor of error overlay and it's components.
 
 Set `nil` to hide control panel
 
@@ -104,13 +145,17 @@ Default implementation could be checked in Example project.
 
 ### sideMenu
 
+![Player Side Menu](doc_support/side_menu.png)
+
 Configuration of side menu with setings.
+
+You can modify main side menu and items on secondary menu level.
 
 Default implementation could be checked in Example project.
 
 ### shadowOverlay
 
-Configuration of shadow overlay beneath side menu.
+Configuration of shadow overlay beneath side menu showing on fullscreen mode.
 
 Default implementation could be checked in Example project.
 
