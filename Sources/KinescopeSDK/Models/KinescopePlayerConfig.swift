@@ -5,6 +5,8 @@
 //  Created by Никита Коробейников on 29.03.2021.
 //
 
+import Foundation
+
 /// Configuration entity required to connect resource with player
 public struct KinescopePlayerConfig {
 

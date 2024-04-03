@@ -1,3 +1,5 @@
+import UIKit
+
 protocol KinescopePlayerViewDelegate: AnyObject {
     func didPlay()
     func didPause()
