@@ -51,6 +51,10 @@ public struct KinescopeControlPanelConfiguration {
 // MARK: - Defaults
 
 public extension KinescopeControlPanelConfiguration {
+    
+    static func builder() -> KinescopeControlPanelConfigurationBuilder {
+        .init(configuration: .default)
+    }
 
     static let `default`: KinescopeControlPanelConfiguration = .init(
         tintColor: .gray,

@@ -59,6 +59,10 @@ public struct KinescopePlayerViewConfiguration {
 
 public extension KinescopePlayerViewConfiguration {
     
+    static func builder() -> KinescopePlayerViewConfigurationBuilder {
+        .init(configuration: .default)
+    }
+
     static let `default`: KinescopePlayerViewConfiguration = .init(
         gravity: .resizeAspect,
         previewService: PreviewNetworkService(),
@@ -72,18 +76,18 @@ public extension KinescopePlayerViewConfiguration {
     )
 
     static func accentTimeLineAndPlayButton(with color: UIColor) -> Self {
-        KinescopePlayerViewConfigurationBuilder(configuration: .default)
+        .builder()
             .setControlPanel(
-                KinescopeControlPanelConfigurationBuilder(configuration: .default)
+                .builder()
                     .setTimeline(
-                        KinescopePlayerTimelineConfigurationBuilder(configuration: .default)
+                        .builder()
                             .setActiveColor(color)
                             .build()
                     )
                     .build()
             )
             .setOverlay(
-                KinescopePlayerOverlayConfigurationBuilder(configuration: .default)
+                .builder()
                     .setPlayBackgroundColor(color)
                     .build()
             )

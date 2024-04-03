@@ -54,6 +54,10 @@ public struct KinescopePlayerOverlayConfiguration {
 
 public extension KinescopePlayerOverlayConfiguration {
     
+    static func builder() -> KinescopePlayerOverlayConfigurationBuilder {
+        .init(configuration: .default)
+    }
+
     static let `default`: KinescopePlayerOverlayConfiguration = .init(
         playImage: UIImage.image(named: "play"),
         pauseImage: UIImage.image(named: "pause"),

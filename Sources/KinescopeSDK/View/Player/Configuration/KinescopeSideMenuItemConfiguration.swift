@@ -38,6 +38,11 @@ public struct KinescopeSideMenuItemConfiguration {
 // MARK: - Defaults
 
 public extension KinescopeSideMenuItemConfiguration {
+    
+    static func builder() -> KinescopeSideMenuItemConfigurationBuilder {
+        .init(configuration: .default)
+    }
+
     static let `default`: KinescopeSideMenuItemConfiguration = .init(
         titleFont: .systemFont(ofSize: 14.0, weight: .regular),
         titleColor: .white,

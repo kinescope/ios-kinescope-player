@@ -23,6 +23,10 @@ public struct KinescopePlayerShadowOverlayConfiguration {
 
 public extension KinescopePlayerShadowOverlayConfiguration {
     
+    static func builder() -> KinescopePlayerShadowOverlayConfigurationBuilder {
+        .init(configuration: .default)
+    }
+
     static let `default`: Self = .init(color: UIColor(red: 0.133,
                                                       green: 0.133,
                                                       blue: 0.133,

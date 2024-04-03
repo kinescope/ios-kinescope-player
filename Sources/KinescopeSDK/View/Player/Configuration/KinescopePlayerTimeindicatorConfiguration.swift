@@ -26,6 +26,10 @@ public struct KinescopePlayerTimeindicatorConfiguration {
 
 public extension KinescopePlayerTimeindicatorConfiguration {
     
+    static func builder() -> KinescopePlayerTimeindicatorConfigurationBuilder {
+        .init(configuration: .default)
+    }
+
     static let `default`: KinescopePlayerTimeindicatorConfiguration = .init(color: .white,
                                                                             fontSize: 14)
     

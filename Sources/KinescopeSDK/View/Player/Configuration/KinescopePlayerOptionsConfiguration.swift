@@ -30,6 +30,10 @@ public struct KinescopePlayerOptionsConfiguration {
 
 public extension KinescopePlayerOptionsConfiguration {
     
+    static func builder() -> KinescopePlayerOptionsConfigurationBuilder {
+        .init(configuration: .default)
+    }
+
     static let `default`: KinescopePlayerOptionsConfiguration = .init(
         normalColor: .white,
         highlightedColor: UIColor(red: 1,

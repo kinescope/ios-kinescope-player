@@ -38,6 +38,11 @@ public struct KinescopeLiveIndicatorConfiguration {
 // MARK: - Defaults
 
 public extension KinescopeLiveIndicatorConfiguration {
+
+    static func builder() -> KinescopeLiveIndicatorConfigurationBuilder {
+        .init(configuration: .default)
+    }
+
     static let `default`: KinescopeLiveIndicatorConfiguration = .init(
         titleFont: .systemFont(ofSize: 14.0, weight: .medium),
         titleColor: UIColor.white.withAlphaComponent(0.32),

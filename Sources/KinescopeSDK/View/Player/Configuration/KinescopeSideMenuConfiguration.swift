@@ -29,6 +29,11 @@ public struct KinescopeSideMenuConfiguration {
 // MARK: - Defaults
 
 public extension KinescopeSideMenuConfiguration {
+    
+    static func builder() -> KinescopeSideMenuConfigurationBuilder {
+        .init(configuration: .default)
+    }
+
     static let `default`: KinescopeSideMenuConfiguration = .init(
         backgroundColor: .init(red: 0.13, green: 0.13, blue: 0.13, alpha: 1),
         item: .default,

@@ -40,6 +40,10 @@ public struct KinescopeAnnounceConfiguration {
 // MARK: - Defaults
 
 public extension KinescopeAnnounceConfiguration {
+    
+    static func builder() -> KinescopeAnnounceConfigurationBuilder {
+        .init(configuration: .default)
+    }
 
     static let `default`: KinescopeAnnounceConfiguration = .init(
         image: UIImage.image(named: "announce"),

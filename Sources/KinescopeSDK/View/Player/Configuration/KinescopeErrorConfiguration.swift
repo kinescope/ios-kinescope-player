@@ -53,6 +53,10 @@ public struct KinescopeErrorConfiguration {
 // MARK: - Defaults
 
 public extension KinescopeErrorConfiguration {
+    
+    static func builder() -> KinescopeErrorConfigurationBuilder {
+        .init(configuration: .default)
+    }
 
     static let `default`: KinescopeErrorConfiguration = .init(
         image: UIImage.image(named: "warn"),

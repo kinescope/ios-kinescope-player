@@ -24,6 +24,11 @@ public struct KinescopeVideoNameConfiguration {
 // MARK: - Defaults
 
 public extension KinescopeVideoNameConfiguration {
+    
+    static func builder() -> KinescopeVideoNameConfigurationBuilder {
+        .init(configuration: .default)
+    }
+
     static let `default`: KinescopeVideoNameConfiguration = .init(
         titleFont: .systemFont(ofSize: 14.0, weight: .medium),
         titleColor: UIColor.white.withAlphaComponent(0.8),
@@ -61,7 +66,7 @@ public class KinescopeVideoNameConfigurationBuilder {
         self.subtitleFont = subtitleFont
         return self
     }
-    
+
     public func setSubtitleColor(_ subtitleColor: UIColor) -> Self {
         self.subtitleColor = subtitleColor
         return self
