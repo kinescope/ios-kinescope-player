@@ -35,3 +35,38 @@ public extension KinescopeSideMenuConfiguration {
         bar: .default
     )
 }
+
+// MARK: - Builder
+
+public class KinescopeSideMenuConfigurationBuilder {
+    private var backgroundColor: UIColor = .black
+    private var item: KinescopeSideMenuItemConfiguration = .default
+    private var bar: KinescopeSideMenuBarConfiguration = .default
+
+    public init(configuration: KinescopeSideMenuConfiguration = .default) {
+        self.backgroundColor = configuration.backgroundColor
+        self.item = configuration.item
+        self.bar = configuration.bar
+    }
+
+    public func setBackgroundColor(_ color: UIColor) -> Self {
+        self.backgroundColor = color
+        return self
+    }
+
+    public func setItem(_ item: KinescopeSideMenuItemConfiguration) -> Self {
+        self.item = item
+        return self
+    }
+
+    public func setBar(_ bar: KinescopeSideMenuBarConfiguration) -> Self {
+        self.bar = bar
+        return self
+    }
+
+    public func build() -> KinescopeSideMenuConfiguration {
+        .init(backgroundColor: backgroundColor,
+              item: item,
+              bar: bar)
+    }
+}

@@ -64,3 +64,78 @@ public extension KinescopeControlPanelConfiguration {
     )
 
 }
+
+// MARK: - Builder
+
+public class KinescopeControlPanelConfigurationBuilder {
+    private var tintColor: UIColor
+    private var backgroundColor: UIColor
+    private var preferedHeight: CGFloat
+    private var hideOnPlayTimeout: TimeInterval?
+    private var liveIndicator: KinescopeLiveIndicatorConfiguration
+    private var timeIndicator: KinescopePlayerTimeindicatorConfiguration
+    private var timeline: KinescopePlayerTimelineConfiguration
+    private var optionsMenu: KinescopePlayerOptionsConfiguration
+
+    public init(configuration: KinescopeControlPanelConfiguration = .default) {
+        self.tintColor = configuration.tintColor
+        self.backgroundColor = configuration.backgroundColor
+        self.preferedHeight = configuration.preferedHeight
+        self.hideOnPlayTimeout = configuration.hideOnPlayTimeout
+        self.liveIndicator = configuration.liveIndicator
+        self.timeIndicator = configuration.timeIndicator
+        self.timeline = configuration.timeline
+        self.optionsMenu = configuration.optionsMenu
+    }
+
+    public func setTintColor(_ color: UIColor) -> Self {
+        self.tintColor = color
+        return self
+    }
+
+    public func setBackgroundColor(_ color: UIColor) -> Self {
+        self.backgroundColor = color
+        return self
+    }
+
+    public func setPreferedHeight(_ height: CGFloat) -> Self {
+        self.preferedHeight = height
+        return self
+    }
+
+    public func setHideOnPlayTimeout(_ timeout: TimeInterval?) -> Self {
+        self.hideOnPlayTimeout = timeout
+        return self
+    }
+
+    public func setLiveIndicator(_ configuration: KinescopeLiveIndicatorConfiguration) -> Self {
+        self.liveIndicator = configuration
+        return self
+    }
+
+    public func setTimeIndicator(_ configuration: KinescopePlayerTimeindicatorConfiguration) -> Self {
+        self.timeIndicator = configuration
+        return self
+    }
+
+    public func setTimeline(_ configuration: KinescopePlayerTimelineConfiguration) -> Self {
+        self.timeline = configuration
+        return self
+    }
+
+    public func setOptionsMenu(_ configuration: KinescopePlayerOptionsConfiguration) -> Self {
+        self.optionsMenu = configuration
+        return self
+    }
+
+    public func build() -> KinescopeControlPanelConfiguration {
+        return .init(tintColor: tintColor,
+                     backgroundColor: backgroundColor,
+                     preferedHeight: preferedHeight,
+                     hideOnPlayTimeout: hideOnPlayTimeout,
+                     liveIndicator: liveIndicator,
+                     timeIndicator: timeIndicator,
+                     timeline: timeline,
+                     optionsMenu: optionsMenu)
+    }
+}

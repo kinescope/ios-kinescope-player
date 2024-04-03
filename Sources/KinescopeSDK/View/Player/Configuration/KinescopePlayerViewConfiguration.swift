@@ -10,7 +10,7 @@ import UIKit
 
 /// Appearance preferences of player view
 public struct KinescopePlayerViewConfiguration {
-
+    
     let gravity: AVLayerVideoGravity
     let previewService: PreviewService?
     let activityIndicator: KinescopeActivityIndicator
@@ -20,7 +20,7 @@ public struct KinescopePlayerViewConfiguration {
     let sideMenu: KinescopeSideMenuConfiguration
     let shadowOverlay: KinescopePlayerShadowOverlayConfiguration?
     let announceSnack: KinescopeAnnounceConfiguration
-
+    
     /// - parameter gravity: `AVLayerVideoGravity` value defines how the video is displayed within a layer’s bounds rectangle
     /// - parameter previewService: Implementation of service to load posters into imageView. Set `nil` to disable previews.
     /// - parameter activityIndicator: Custom indicator view used to indicate process of video downloading
@@ -52,13 +52,13 @@ public struct KinescopePlayerViewConfiguration {
         self.shadowOverlay = shadowOverlay
         self.announceSnack = announceSnack
     }
-
+    
 }
 
 // MARK: - Defaults
 
 public extension KinescopePlayerViewConfiguration {
-
+    
     static let `default`: KinescopePlayerViewConfiguration = .init(
         gravity: .resizeAspect,
         previewService: PreviewNetworkService(),
@@ -70,5 +70,91 @@ public extension KinescopePlayerViewConfiguration {
         shadowOverlay: .default,
         announceSnack: .default
     )
+    
+}
 
+// MARK: - Builder
+
+public class KinescopePlayerViewConfigurationBuilder {
+    
+    private var gravity: AVLayerVideoGravity
+    private var previewService: PreviewService?
+    private var activityIndicator: KinescopeActivityIndicator
+    private var overlay: KinescopePlayerOverlayConfiguration?
+    private var controlPanel: KinescopeControlPanelConfiguration?
+    private var errorOverlay: KinescopeErrorConfiguration?
+    private var sideMenu: KinescopeSideMenuConfiguration
+    private var shadowOverlay: KinescopePlayerShadowOverlayConfiguration?
+    private var announceSnack: KinescopeAnnounceConfiguration
+    
+    public init(configuration: KinescopePlayerViewConfiguration = .default) {
+        self.gravity = configuration.gravity
+        self.previewService = configuration.previewService
+        self.activityIndicator = configuration.activityIndicator
+        self.overlay = configuration.overlay
+        self.controlPanel = configuration.controlPanel
+        self.errorOverlay = configuration.errorOverlay
+        self.sideMenu = configuration.sideMenu
+        self.shadowOverlay = configuration.shadowOverlay
+        self.announceSnack = configuration.announceSnack
+    }
+    
+    public func setGravity(_ gravity: AVLayerVideoGravity) -> Self {
+        self.gravity = gravity
+        return self
+    }
+    
+    public func setPreviewService(_ previewService: PreviewService?) -> Self {
+        self.previewService = previewService
+        return self
+    }
+    
+    public func setActivityIndicator(_ activityIndicator: KinescopeActivityIndicator) -> Self {
+        self.activityIndicator = activityIndicator
+        return self
+    }
+    
+    public func setOverlay(_ overlay: KinescopePlayerOverlayConfiguration?) -> Self {
+        self.overlay = overlay
+        return self
+    }
+    
+    public func setControlPanel(_ controlPanel: KinescopeControlPanelConfiguration?) -> Self {
+        self.controlPanel = controlPanel
+        return self
+    }
+    
+    public func setErrorOverlay(_ errorOverlay: KinescopeErrorConfiguration?) -> Self {
+        self.errorOverlay = errorOverlay
+        return self
+    }
+    
+    public func setSideMenu(_ sideMenu: KinescopeSideMenuConfiguration) -> Self {
+        self.sideMenu = sideMenu
+        return self
+    }
+    
+    public func setShadowOverlay(_ shadowOverlay: KinescopePlayerShadowOverlayConfiguration?) -> Self {
+        self.shadowOverlay = shadowOverlay
+        return self
+    }
+    
+    public func setAnnounceSnack(_ announceSnack: KinescopeAnnounceConfiguration) -> Self {
+        self.announceSnack = announceSnack
+        return self
+    }
+    
+    public func build() -> KinescopePlayerViewConfiguration {
+        .init(
+            gravity: gravity,
+            previewService: previewService,
+            activityIndicator: activityIndicator,
+            overlay: overlay,
+            controlPanel: controlPanel,
+            errorOverlay: errorOverlay,
+            sideMenu: sideMenu,
+            shadowOverlay: shadowOverlay,
+            announceSnack: announceSnack
+        )
+    }
 }
