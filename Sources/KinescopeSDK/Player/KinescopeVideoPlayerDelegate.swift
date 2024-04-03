@@ -5,6 +5,7 @@
 //  Created by Artemii Shabanov on 22.04.2021.
 //
 
+import UIKit
 import AVFoundation
 
 public protocol KinescopeVideoPlayerDelegate: AnyObject {

@@ -15,6 +15,7 @@ final class PlayerOverlayView: UIControl {
 
     // MARK: - Properties
 
+    private let playBackgroundCircle = UIView()
     private let playPauseImageView = UIImageView()
     private let fastForwardImageView = UIImageView()
     private let fastBackwardImageView = UIImageView()
@@ -93,8 +94,13 @@ private extension PlayerOverlayView {
     }
 
     func configurePlayPauseImageView() {
+        playBackgroundCircle.layer.cornerRadius = config.playBackgroundRadius
+        playBackgroundCircle.backgroundColor = config.playBackgroundColor
         playPauseImageView.image = isPlaying ? config.pauseImage : config.playImage
-        contentView.addSubview(playPauseImageView)
+
+        contentView.addSubviews(playBackgroundCircle, playPauseImageView)
+        playBackgroundCircle.squareSize(with: config.playBackgroundRadius * 2)
+        contentView.centerChild(view: playBackgroundCircle)
         contentView.centerChild(view: playPauseImageView)
     }
 
