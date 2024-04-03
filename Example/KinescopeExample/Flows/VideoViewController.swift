@@ -41,7 +41,7 @@ final class VideoViewController: UIViewController {
 
         navigationController?.delegate = self
 
-        playerView.setLayout(with: .default)
+        playerView.setLayout(with: .accentTimeLineAndPlayButton(with: .orange))
 
         PipManager.shared.closePipIfNeeded(with: videoId)
 

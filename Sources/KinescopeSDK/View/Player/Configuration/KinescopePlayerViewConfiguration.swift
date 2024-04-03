@@ -70,7 +70,26 @@ public extension KinescopePlayerViewConfiguration {
         shadowOverlay: .default,
         announceSnack: .default
     )
-    
+
+    static func accentTimeLineAndPlayButton(with color: UIColor) -> Self {
+        KinescopePlayerViewConfigurationBuilder(configuration: .default)
+            .setControlPanel(
+                KinescopeControlPanelConfigurationBuilder(configuration: .default)
+                    .setTimeline(
+                        KinescopePlayerTimelineConfigurationBuilder(configuration: .default)
+                            .setActiveColor(color)
+                            .build()
+                    )
+                    .build()
+            )
+            .setOverlay(
+                KinescopePlayerOverlayConfigurationBuilder(configuration: .default)
+                    .setPlayBackgroundColor(color)
+                    .build()
+            )
+            .build()
+    }
+
 }
 
 // MARK: - Builder
