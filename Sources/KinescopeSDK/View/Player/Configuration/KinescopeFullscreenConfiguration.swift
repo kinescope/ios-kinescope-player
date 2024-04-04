@@ -18,7 +18,9 @@ public struct KinescopeFullscreenConfiguration {
     ///   - orientation: Preferred orientation of fullscreenController
     ///   - orientationMask: Supported orientations mask for fullscreenController
     ///   - backgroundColor: Color for background
-    public init(orientation: UIInterfaceOrientation, orientationMask: UIInterfaceOrientationMask, backgroundColor: UIColor) {
+    public init(orientation: UIInterfaceOrientation,
+                orientationMask: UIInterfaceOrientationMask,
+                backgroundColor: UIColor) {
         self.orientation = orientation
         self.orientationMask = orientationMask
         self.backgroundColor = backgroundColor

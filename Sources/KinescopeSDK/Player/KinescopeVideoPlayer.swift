@@ -563,7 +563,8 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             }
 
             KinescopeFullscreenViewController.present(player: self,
-                                                      video: video) { [weak self] in
+                                                      video: video,
+                                                      with: view.config) { [weak self] in
                 guard let self else {
                     return
                 }

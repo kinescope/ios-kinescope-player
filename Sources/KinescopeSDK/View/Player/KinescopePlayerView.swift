@@ -24,7 +24,7 @@ public class KinescopePlayerView: UIView {
     private(set) var shadowOverlay: PlayerShadowOverlayView?
     private(set) var pipController: AVPictureInPictureController?
 
-    private var config: KinescopePlayerViewConfiguration!
+    private(set) var config: KinescopePlayerViewConfiguration!
 
     /// One coordination for phones and other for pads
     private let sideMenuCoordinator = SideMenuSlideCoordinator()
