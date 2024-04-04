@@ -12,16 +12,12 @@ public struct KinescopeConfig {
     let endpoint: String
     /// Referer for direct loading of public videos from kinescope
     let referer: String
-    /// Key server
-    let keyServer: String
 
     /// - parameter endpoint: Root endpoint of kinescope video service
     /// - parameter referer: Referer for header
     public init(endpoint: String = "https://kinescope.io/",
-                referer: String = "https://kinescope.io/",
-                keyServer: String = "https://license.kinescope.io/v1/vod/") {
+                referer: String = "https://kinescope.io/") {
         self.endpoint = endpoint
         self.referer = referer
-        self.keyServer = keyServer
     }
 }

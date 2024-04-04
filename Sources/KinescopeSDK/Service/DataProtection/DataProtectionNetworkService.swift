@@ -12,27 +12,30 @@ final class DataProtectionNetworkService: DataProtectionService {
     // MARK: - Private Properties
 
     private let transport: Transport
-    private let config: KinescopeConfig
 
     private let executionQueue = DispatchQueue.global(qos: .utility)
     private let errorQueue = DispatchQueue.main
 
     // MARK: - Lifecycle
 
-    init(transport: Transport, config: KinescopeConfig) {
+    init(transport: Transport) {
         self.transport = transport
-        self.config = config
     }
 
     // MARK: - Public Methods
 
-    func getCert(for videoId: String, completion: @escaping (Result<Data, Error>) -> Void) {
+    func getCert(for video: KinescopeVideo, completion: @escaping (Result<Data, Error>) -> Void) {
+        guard let path = video.drm?.fairplay.certificateUrl,
+              let url = URL(string: path) else {
+            Kinescope.shared.logger?.log(message: "Could not get drm certificate endpoint", level: KinescopeLoggerLevel.drm)
+            return
+        }
+
         executionQueue.async { [weak self] in
             guard let self else {
                 return
             }
             do {
-                let url = URL(string: "\(config.keyServer)\(videoId)/certificate/fairplay")!
                 let data = try Data(contentsOf: url)
                 completion(.success(data))
             } catch let error {
@@ -43,13 +46,18 @@ final class DataProtectionNetworkService: DataProtectionService {
         }
     }
 
-    func getContentKey(for videoId: String, body: DataProtectionRequestBody, completion: @escaping (Result<DataProtectionResponse, Error>) -> Void) {
+    func getContentKey(for video: KinescopeVideo, body: DataProtectionRequestBody, completion: @escaping (Result<DataProtectionResponse, Error>) -> Void) {
+        guard let path = video.drm?.fairplay.licenseUrl else {
+            Kinescope.shared.logger?.log(message: "Could not get drm license endpoint", level: KinescopeLoggerLevel.drm)
+            return
+        }
+
         executionQueue.async { [weak self] in
             guard let self else {
                 return
             }
             do {
-                let request = try RequestBuilder(path: "\(config.keyServer)\(videoId)/acquire/fairplay",
+                let request = try RequestBuilder(path: path,
                                                  method: .post)
                     .build(body: body)
 

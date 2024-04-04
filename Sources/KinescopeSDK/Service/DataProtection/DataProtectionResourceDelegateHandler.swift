@@ -12,15 +12,15 @@ final class DataProtectionResourceDelegateHandler: NSObject, DataProtectionHandl
 
     // MARK: - Private Properties
 
-    private let videoId: String
+    private let video: KinescopeVideo
     private let service: DataProtectionService
 
     private let executionQueue = DispatchQueue(label: "io.kinescope.fairplay")
 
     // MARK: - Lifecycle
 
-    init(videoId: String, service: DataProtectionService) {
-        self.videoId = videoId
+    init(video: KinescopeVideo, service: DataProtectionService) {
+        self.video = video
         self.service = service
         super.init()
     }
@@ -45,7 +45,7 @@ extension DataProtectionResourceDelegateHandler: AVAssetResourceLoaderDelegate {
             return false
         }
 
-        service.getCert(for: videoId) { [weak self] result in
+        service.getCert(for: video) { [weak self] result in
             guard let self else {
                 return
             }
@@ -96,7 +96,7 @@ private extension DataProtectionResourceDelegateHandler {
             return
         }
 
-        service.getContentKey(for: videoId, body: .init(spc: spc)) { [weak self] result in
+        service.getContentKey(for: video, body: .init(spc: spc)) { [weak self] result in
             switch result {
             case .success(let response):
                 guard let ckcData = try? Data(base64Encoded: response.ckc) else {

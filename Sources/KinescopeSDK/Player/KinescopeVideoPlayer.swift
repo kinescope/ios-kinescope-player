@@ -74,7 +74,7 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
                 return
             }
             isLive = video.type == .live && strategy.player.isReadyToPlay
-            drmHandler = dependencies.drmFactory.provide(for: video.id)
+            drmHandler = dependencies.drmFactory.provide(for: video)
             analyticStorage.videoInput.setVideo(video)
             analyticStorage.sessionInput.resetWatchedDuration()
             analytic?.reset()
