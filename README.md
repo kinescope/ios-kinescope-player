@@ -1,6 +1,6 @@
 # Kinescope iOS SDK
 
-[![Pub Version](https://img.shields.io/badge/version-0.1-orange)](https://img.shields.io/badge/version-0.1-orange)
+![Pub Version](https://img.shields.io/badge/version-0.2.1-orange)
 
 This framework created to help you include [Kinescope](https://kinescope.io/) player into your mobile iOS application.
 
