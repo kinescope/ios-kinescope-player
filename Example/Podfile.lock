@@ -1,5 +1,5 @@
 PODS:
-  - KinescopeSDK (0.2-beta):
+  - KinescopeSDK (0.2.1):
     - M3U8Kit (~> 1.0)
     - SwiftProtobuf (= 1.26.0)
   - M3U8Kit (1.0.2)
@@ -18,7 +18,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  KinescopeSDK: bfa73f82c77d3b21dad41d83bab4109a2168ed26
+  KinescopeSDK: 46658fde8178bf17feec2c8b24ce2f74ea751be9
   M3U8Kit: 6a0d55ba2e62e146f34f53276d7c3aa78ed4fc00
   SwiftProtobuf: 5e8349171e7c2f88f5b9e683cb3cb79d1dc780b3
 
