@@ -16,17 +16,17 @@ final class VideoAnalyticDataFactory: Factory {
     
     // MARK: - Properties
     
-    private var video: KinescopeVideo?
+    private(set) var source: KinescopeVideo?
 
     // MARK: - Factory
 
     func provide() -> T? {
-        guard let video else {
+        guard let source else {
             return nil
         }
         var result = T()
-        result.source = video.hlsLink
-        result.duration = UInt32(video.duration)
+        result.source = source.hlsLink
+        result.duration = UInt32(source.duration)
         return result
     }
 }
@@ -35,6 +35,6 @@ final class VideoAnalyticDataFactory: Factory {
 
 extension VideoAnalyticDataFactory: VideoAnalyticInput {
     func setVideo(_ video: KinescopeVideo) {
-        self.video = video
+        self.source = video
     }
 }

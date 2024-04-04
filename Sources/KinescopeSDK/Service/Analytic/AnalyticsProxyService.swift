@@ -16,8 +16,8 @@ final class AnalyticsProxyService: AnalyticsService {
         self.wrappedServices = wrappedServices
     }
 
-    func send(event: Analytics_Native) {
-        wrappedServices.forEach { $0.send(event: event) }
+    func send(event: Analytics_Native, for video: KinescopeVideo) {
+        wrappedServices.forEach { $0.send(event: event, for: video) }
     }
 
 }

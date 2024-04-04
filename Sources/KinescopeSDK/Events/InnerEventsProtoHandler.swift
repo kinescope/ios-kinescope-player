@@ -44,7 +44,10 @@ class InnerEventsProtoHandler {
 
 extension InnerEventsProtoHandler: InnerEventsHandler {
     func send(event: InnerProtoEvent, value: Float) {
-        service.send(event: build(event: event, value: value))
+        guard let video = dataStorage.video.source else {
+            return
+        }
+        service.send(event: build(event: event, value: value), for: video)
     }
 
     func sendOnce(event: InnerProtoEvent, value: Float) {

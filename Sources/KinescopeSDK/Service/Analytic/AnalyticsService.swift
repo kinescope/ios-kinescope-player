@@ -8,5 +8,5 @@
 import Foundation
 
 protocol AnalyticsService {
-    func send(event: Analytics_Native)
+    func send(event: Analytics_Native, for video: KinescopeVideo)
 }
