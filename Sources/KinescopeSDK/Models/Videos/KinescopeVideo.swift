@@ -22,6 +22,31 @@ public struct KinescopeVideo: Codable {
     public let attachments: [KinescopeVideoAdditionalMaterial]?
     public let subtitles: [KinescopeVideoSubtitle]?
     public let hlsLink: String
-    public let dash_link: String?
+    public let dashLink: String?
     public let live: KinescopeStreamMeta?
+    public let analytic: KinescopeAnalyticEndpoints?
+    public let drm: KinescopeDRMData?
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case workspaceId
+        case projectId
+        case folderId
+        case type
+        case title
+        case description
+        case status
+        case progress
+        case duration
+        case qualityMap
+        case chapters
+        case poster
+        case attachments
+        case subtitles
+        case hlsLink
+        case dashLink
+        case live
+        case analytic = "sdk"
+        case drm
+    }
 }
