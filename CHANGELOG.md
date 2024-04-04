@@ -1,3 +1,16 @@
+## 0.2.1
+
+### Fixed bugs
+
+- always default player style in fullscreen mode (now it equal to style of mini-player)
+
+### Removed
+
+- hardcoded endpoint for analytics
+- hardcoded endpoint constructor for fairplay
+
+Now ths enpoints provided from server.
+
 ## 0.2
 
 ### Introduced

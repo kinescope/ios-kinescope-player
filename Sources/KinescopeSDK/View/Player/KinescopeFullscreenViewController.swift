@@ -17,12 +17,16 @@ final public class KinescopeFullscreenViewController: UIViewController {
     private var player: KinescopePlayer!
 
     private let config: KinescopeFullscreenConfiguration
+    private let playerViewConfig: KinescopePlayerViewConfiguration
 
     // MARK: - Init
 
-    public init(player: KinescopePlayer, config: KinescopeFullscreenConfiguration) {
+    public init(player: KinescopePlayer, 
+                config: KinescopeFullscreenConfiguration,
+                playerViewConfig: KinescopePlayerViewConfiguration) {
         self.player = player
         self.config = config
+        self.playerViewConfig = playerViewConfig
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -92,10 +96,12 @@ extension KinescopeFullscreenViewController {
 
     static func present(player: KinescopePlayer,
                         video: KinescopeVideo,
-                        with completion: @escaping () -> Void) {
+                        with playerViewConfig: KinescopePlayerViewConfiguration,
+                        and completion: @escaping () -> Void) {
         KinescopeFullscreenConfiguration.preferred(for: video) { configuration in
             let playerVC = KinescopeFullscreenViewController(player: player,
-                                                             config: configuration)
+                                                             config: configuration, 
+                                                             playerViewConfig: playerViewConfig)
             playerVC.modalPresentationStyle = .overFullScreen
             playerVC.modalTransitionStyle = .crossDissolve
             playerVC.modalPresentationCapturesStatusBarAppearance = true
@@ -113,7 +119,7 @@ private extension KinescopeFullscreenViewController {
         view.backgroundColor = config.backgroundColor
 
         let playerView = KinescopePlayerView()
-        playerView.setLayout(with: .default)
+        playerView.setLayout(with: playerViewConfig)
         view.addSubview(playerView)
         view.stretch(view: playerView)
 

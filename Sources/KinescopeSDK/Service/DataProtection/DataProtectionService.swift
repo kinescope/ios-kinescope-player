@@ -9,15 +9,15 @@ import Foundation
 
 /// Service to handle DRM related requests to key server.
 protocol DataProtectionService {
-    /// - parameter videoId: Kinescope Video identifier to get certificate for.
+    /// - parameter video: Kinescope Video to get certificate for.
     /// - parameter completion: Completion handler to be called with the result.
-    func getCert(for videoId: String,
+    func getCert(for video: KinescopeVideo,
                  completion: @escaping (Result<Data, Error>) -> Void)
 
-    /// - parameter videoId: Kinescope Video identifier to get content key for.
+    /// - parameter video: Kinescope Video to get content key for.
     /// - parameter body: Data protection request body provided by system.
     /// - parameter completion: Completion handler to be called with the result.
-    func getContentKey(for videoId: String,
+    func getContentKey(for video: KinescopeVideo,
                        body: DataProtectionRequestBody,
                        completion: @escaping (Result<DataProtectionResponse, Error>) -> Void)
 }

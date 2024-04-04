@@ -74,7 +74,7 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
                 return
             }
             isLive = video.type == .live && strategy.player.isReadyToPlay
-            drmHandler = dependencies.drmFactory.provide(for: video.id)
+            drmHandler = dependencies.drmFactory.provide(for: video)
             analyticStorage.videoInput.setVideo(video)
             analyticStorage.sessionInput.resetWatchedDuration()
             analytic?.reset()
@@ -563,7 +563,8 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             }
 
             KinescopeFullscreenViewController.present(player: self,
-                                                      video: video) { [weak self] in
+                                                      video: video,
+                                                      with: view.config) { [weak self] in
                 guard let self else {
                     return
                 }

@@ -26,7 +26,12 @@ final class AnalyticsNetworkService: AnalyticsService {
 
     // MARK: - Public Methods
 
-    func send(event: Analytics_Native) {
+    func send(event: Analytics_Native, for video: KinescopeVideo) {
+        guard let path = video.analytic?.metricUrl else {
+            Kinescope.shared.logger?.log(message: "Could not get analytic endpoint", level: KinescopeLoggerLevel.analytics)
+            return
+        }
+
         guard let data = try? event.serializedData() else {
             Kinescope.shared.logger?.log(message: "Could not serialize event", level: KinescopeLoggerLevel.analytics)
             return
@@ -34,7 +39,7 @@ final class AnalyticsNetworkService: AnalyticsService {
         executionQueue.async { [weak self] in
             do {
 
-                let request = try RequestBuilder(path: "https://metrics.kinescope.io/player-native", method: .post)
+                let request = try RequestBuilder(path: path, method: .post)
                     .build(body: data)
 
                 self?.transport.performRaw(request: request, completion: { result in

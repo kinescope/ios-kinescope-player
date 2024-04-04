@@ -13,7 +13,7 @@ final class DataProtectionKeySessionHandler: NSObject, DataProtectionHandler {
 
     // MARK: - Private Properties
     
-    private let videoId: String
+    private let video: KinescopeVideo
     private let service: DataProtectionService
     private lazy var session: AVContentKeySession = .init(keySystem: .fairPlayStreaming)
 
@@ -21,8 +21,8 @@ final class DataProtectionKeySessionHandler: NSObject, DataProtectionHandler {
 
     // MARK: - Lifecycle
 
-    init(videoId: String, service: DataProtectionService) {
-        self.videoId = videoId
+    init(video: KinescopeVideo, service: DataProtectionService) {
+        self.video = video
         self.service = service
         super.init()
     }
@@ -49,7 +49,7 @@ extension DataProtectionKeySessionHandler: AVContentKeySessionDelegate {
             return
         }
         
-        service.getCert(for: videoId) { [weak self] result in
+        service.getCert(for: video) { [weak self] result in
             guard let self else {
                 return
             }
@@ -96,7 +96,7 @@ private extension DataProtectionKeySessionHandler {
                 return
             }
 
-            guard let videoId = self?.videoId,
+            guard let videoId = self?.video,
                     let spc = spcData?.base64EncodedString() else {
                 self?.handleError(.cannotEncodeSPC, for: keyRequest)
                 return

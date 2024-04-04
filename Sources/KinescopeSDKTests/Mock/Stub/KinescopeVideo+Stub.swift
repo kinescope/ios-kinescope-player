@@ -8,7 +8,7 @@
 @testable import KinescopeSDK
 
 extension KinescopeVideo {
-
+    
     static func stub(id: String = "", hlsLink: String = "") -> KinescopeVideo {
         .init(id: id,
               workspaceId: "",
@@ -26,8 +26,10 @@ extension KinescopeVideo {
               attachments: [],
               subtitles: [],
               hlsLink: hlsLink,
-              dash_link: "",
-              live: nil)
+              dashLink: "",
+              live: nil,
+              analytic: nil,
+              drm: nil)
     }
 
 }

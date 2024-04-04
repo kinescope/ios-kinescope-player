@@ -8,7 +8,7 @@
 @testable import KinescopeSDK
 
 struct DataProtectionHandlerFactoryStub: DataProtectionHandlerFactory {
-    func provide(for videoId: String) -> (any DataProtectionHandler)? {
+    func provide(for video: KinescopeVideo) -> (any DataProtectionHandler)? {
         nil
     }
 }
