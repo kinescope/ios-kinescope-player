@@ -7,6 +7,29 @@
 
 import Foundation
 
+/// Parameters for repeating of failed requests
+public struct RepeatingMode {
+
+    let attempts: UInt
+    let interval: DispatchTimeInterval
+
+    /// Default repeating mode with 10 attempts and 5 seconds interval
+    public static let `default` = RepeatingMode(attempts: 10, interval: .seconds(5))
+
+    /// Repeating mode with infinite attempts and custom interval
+    public static func infinite(interval: DispatchTimeInterval) -> RepeatingMode {
+        return RepeatingMode(attempts: .max, interval: interval)
+    }
+
+    /// - Parameters:
+    ///  - attempts: Number of attempts to repeat
+    ///  - interval: Time interval between attempts
+    public init(attempts: UInt, interval: DispatchTimeInterval) {
+        self.attempts = attempts
+        self.interval = interval
+    }
+}
+
 enum RepeaterState {
     case inProgress
     case limitReached
@@ -31,8 +54,7 @@ final class DefaultRepeater: Repeater, ActionOwner {
     // MARK: - Properties
     
     private let executionQueue: DispatchQueue
-    private let attemptsLimit: UInt
-    private let intervalSeconds: TimeInterval
+    private let mode: RepeatingMode
 
     private var workItem: DispatchWorkItem?
     private var attempts: UInt = 0
@@ -42,17 +64,15 @@ final class DefaultRepeater: Repeater, ActionOwner {
     // MARK: - Calculated properties
 
     private var canRepeat: Bool {
-        return attempts < attemptsLimit
+        return attempts < mode.attempts
     }
 
     // MARK: - Init
 
     init(executionQueue: DispatchQueue,
-         attemptsLimit: UInt,
-         intervalSeconds: TimeInterval) {
+         mode: RepeatingMode) {
         self.executionQueue = executionQueue
-        self.attemptsLimit = attemptsLimit
-        self.intervalSeconds = intervalSeconds
+        self.mode = mode
     }
 
     // MARK: - Repeater
@@ -69,7 +89,7 @@ final class DefaultRepeater: Repeater, ActionOwner {
                                              level: KinescopeLoggerLevel.repeater)
                 action.action()
             }
-            executionQueue.asyncAfter(deadline: .now() + intervalSeconds, execute: workItem!)
+            executionQueue.asyncAfter(deadline: .now() + mode.interval, execute: workItem!)
             return .inProgress
         } else {
             return .limitReached
@@ -99,11 +119,9 @@ struct Repeating {
     }
 
     init(executionQueue: DispatchQueue,
-         attemptsLimit: UInt,
-         intervalSeconds: TimeInterval) {
+         mode: RepeatingMode) {
         self.repeater = DefaultRepeater(executionQueue: executionQueue,
-                                        attemptsLimit: attemptsLimit,
-                                        intervalSeconds: intervalSeconds)
+                                        mode: mode)
     }
 
 }

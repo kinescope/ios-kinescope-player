@@ -29,7 +29,7 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
 
     private lazy var notificationsBag = NotificationsBag(observer: self)
     
-    @Repeating(executionQueue: .main, attemptsLimit: 10, intervalSeconds: 5)
+    @Repeating(executionQueue: .main, mode: .default)
     private var playRepeater
 
     private(set) lazy var strategy: PlayingStrategy = {
@@ -122,8 +122,11 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
 
     // MARK: - Lifecycle
 
-    init(config: KinescopePlayerConfig, dependencies: KinescopePlayerDependencies) {
+    init(config: KinescopePlayerConfig, 
+         repeatingMode: RepeatingMode,
+         dependencies: KinescopePlayerDependencies) {
         self.dependencies = dependencies
+        self._playRepeater = Repeating(executionQueue: .main, mode: repeatingMode)
         self.config = config
         playRepeater = .init(title: "play") { [weak self] in self?.play() }
         addNotofications()
@@ -137,8 +140,10 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
 
     // MARK: - KinescopePlayer
 
-    public required convenience init(config: KinescopePlayerConfig) {
-        self.init(config: config, dependencies: KinescopeVideoPlayerDependencies())
+    public required convenience init(config: KinescopePlayerConfig, repeatingMode: RepeatingMode) {
+        self.init(config: config,
+                  repeatingMode: repeatingMode,
+                  dependencies: KinescopeVideoPlayerDependencies())
         self.configureAnalytic()
     }
 

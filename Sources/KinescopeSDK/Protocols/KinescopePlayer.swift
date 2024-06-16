@@ -18,7 +18,8 @@ public protocol KinescopePlayer {
     var pipDelegate: AVPictureInPictureControllerDelegate? { get set }
 
     /// - parameter config: player config
-    init(config: KinescopePlayerConfig)
+    /// - parameter repeatingMode: repeating mode for player
+    init(config: KinescopePlayerConfig, repeatingMode: RepeatingMode)
 
     /// Start playing of video
     func play()

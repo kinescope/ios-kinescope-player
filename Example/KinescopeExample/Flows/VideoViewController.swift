@@ -55,8 +55,11 @@ final class VideoViewController: UIViewController {
         }
 
         PipManager.shared.closePipIfNeeded(with: videoId)
+        
+        let repeatingMode: RepeatingMode = uiEnabled ? .default : .infinite(interval: .seconds(5))
 
-        player = KinescopeVideoPlayer(config: .init(videoId: videoId))
+        player = KinescopeVideoPlayer(config: .init(videoId: videoId),
+                                      repeatingMode: repeatingMode)
 
         if #available(iOS 13.0, *) {
             if let shareIcon = UIImage(systemName: "square.and.arrow.up")?.withRenderingMode(.alwaysTemplate) {
