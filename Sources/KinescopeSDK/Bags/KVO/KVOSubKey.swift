@@ -9,6 +9,7 @@ import Foundation
 
 enum KVOSubKey {
     case playerStatus
+    case playerItem
     case playerItemStatus
     case playerTimeControlStatus
 }

@@ -190,6 +190,8 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
         observePlaybackTime()
         addPlayerTimeControlStatusObserver()
         addPlayerStatusObserver()
+        addPlayerItemObserver()
+        addPlayerStatusObserver()
     }
 
     public func detach(view: KinescopePlayerView) {
@@ -206,16 +208,12 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
 
         savedTime = strategy.player.currentTime()
 
-        kvoBag.removeObserver(for: .playerItemStatus)
-
         if let item = quality.makeItem(with: drmHandler) {
             strategy.bind(item: item)
         }
 
         // changing quality
         strategy.player.currentItem?.preferredPeakBitRate = quality.preferredMaxBitRate
-
-        addPlayerItemStatusObserver()
     }
 
     public func setDelegate(delegate: KinescopeVideoPlayerDelegate) {
@@ -324,6 +322,17 @@ private extension KinescopeVideoPlayer {
         let observerFactory = PlayerStatusObserver(playerBody: self, 
                                                    repeater: $playRepeater)
         kvoBag.addObserver(for: .playerStatus, using: .init(wrappedFactory: observerFactory))
+    }
+    
+    func addPlayerItemObserver() {
+        let observerFactory = CurrentItemObserver(playerBody: self, currentItemChanged: {
+            [weak self] item in
+            self?.kvoBag.removeObserver(for: .playerItemStatus)
+            if let item {
+                self?.addPlayerItemStatusObserver()
+            }
+        })
+        kvoBag.addObserver(for: .playerItem, using: .init(wrappedFactory: observerFactory))
     }
 
     func addPlayerItemStatusObserver() {
