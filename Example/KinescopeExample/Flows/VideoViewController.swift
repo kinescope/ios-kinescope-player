@@ -20,6 +20,7 @@ final class VideoViewController: UIViewController {
     // MARK: - Public Properties
 
     var videoId: String = ""
+    var uiEnabled: Bool = true
 
     // MARK: - Appearance
 
@@ -41,7 +42,17 @@ final class VideoViewController: UIViewController {
 
         navigationController?.delegate = self
 
-        playerView.setLayout(with: .accentTimeLineAndPlayButton(with: .orange))
+        if uiEnabled {
+            playerView.setLayout(with: .accentTimeLineAndPlayButton(with: .orange))
+        } else {
+            playerView.setLayout(with: .builder()
+                .setGravity(.resizeAspect)
+                .setOverlay(nil)
+                .setControlPanel(nil)
+                .setShadowOverlay(nil)
+                .build()
+            )
+        }
 
         PipManager.shared.closePipIfNeeded(with: videoId)
 
@@ -53,7 +64,7 @@ final class VideoViewController: UIViewController {
             }
         }
         player?.disableOptions([.airPlay])
-        
+
         player?.setDelegate(delegate: self)
         player?.attach(view: playerView)
         player?.play()
