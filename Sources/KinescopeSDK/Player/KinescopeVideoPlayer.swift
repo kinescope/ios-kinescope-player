@@ -122,11 +122,10 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
 
     // MARK: - Lifecycle
 
-    init(config: KinescopePlayerConfig, 
-         repeatingMode: RepeatingMode,
+    init(config: KinescopePlayerConfig,
          dependencies: KinescopePlayerDependencies) {
         self.dependencies = dependencies
-        self._playRepeater = Repeating(executionQueue: .main, mode: repeatingMode)
+        self._playRepeater = Repeating(executionQueue: .main, mode: config.repeatingMode)
         self.config = config
         playRepeater = .init(title: "play") { [weak self] in self?.play() }
         addNotofications()
@@ -140,9 +139,8 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
 
     // MARK: - KinescopePlayer
 
-    public required convenience init(config: KinescopePlayerConfig, repeatingMode: RepeatingMode) {
+    public required convenience init(config: KinescopePlayerConfig) {
         self.init(config: config,
-                  repeatingMode: repeatingMode,
                   dependencies: KinescopeVideoPlayerDependencies())
         self.configureAnalytic()
     }
