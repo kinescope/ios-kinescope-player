@@ -326,11 +326,18 @@ private extension KinescopeVideoPlayer {
         let observerFactory = CurrentItemObserver(playerBody: self, currentItemChanged: {
             [weak self] item in
             self?.kvoBag.removeObserver(for: .playerItemStatus)
+            self?.kvoBag.removeObserver(for: .playerItemBufferEmpty)
             if let item {
                 self?.addPlayerItemStatusObserver()
+                self?.addPlayerItemBufferIsEmptyObserver()
             }
         })
         kvoBag.addObserver(for: .playerItem, using: .init(wrappedFactory: observerFactory))
+    }
+    
+    func addPlayerItemBufferIsEmptyObserver() {
+        let observerFactory = EmptyBufferObserver(playerBody: self, repeater: $playRepeater)
+        kvoBag.addObserver(for: .playerItemBufferEmpty, using: .init(wrappedFactory: observerFactory))
     }
 
     func addPlayerItemStatusObserver() {
@@ -368,6 +375,8 @@ private extension KinescopeVideoPlayer {
                                      using: .init(selector: #selector(changeOrientation)))
         notificationsBag.addObserver(for: .itemDidPlayToEnd,
                                      using: .init(selector: #selector(itemDidPlayToEnd)))
+        notificationsBag.addObserver(for: .itemFailedToPlayToEndTime,
+                                     using: .init(selector: #selector(itemFailedToPlayeToEndTime)))
     }
     
     func configureAnalytic() {
@@ -433,6 +442,11 @@ private extension KinescopeVideoPlayer {
 
     @objc func itemDidPlayToEnd() {
         analytic?.send(event: .end)
+    }
+
+    @objc func itemFailedToPlayeToEndTime(_ notification: Notification) {
+        let error = notification.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error
+        Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.player)
     }
 
     func restoreView() {
