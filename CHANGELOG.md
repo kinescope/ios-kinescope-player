@@ -1,3 +1,18 @@
+## 0.2.2
+
+### Added
+
+- Additional parameter for `KinescopePlayerConfig` to set up repeating attempts count for video loading
+
+### Changed
+
+- Indication of any pauses during playing of video with loading indicator
+
+### Fixed
+
+- Observation of preview/loading/playing status for player config with `looped` enabled
+- Restoration of playback after network or stream lost
+
 ## 0.2.1
 
 ### Fixed bugs

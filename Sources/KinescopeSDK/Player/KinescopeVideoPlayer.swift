@@ -29,7 +29,7 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
 
     private lazy var notificationsBag = NotificationsBag(observer: self)
     
-    @Repeating(executionQueue: .main, attemptsLimit: 10, intervalSeconds: 5)
+    @Repeating(executionQueue: .main, mode: .default)
     private var playRepeater
 
     private(set) lazy var strategy: PlayingStrategy = {
@@ -122,8 +122,10 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
 
     // MARK: - Lifecycle
 
-    init(config: KinescopePlayerConfig, dependencies: KinescopePlayerDependencies) {
+    init(config: KinescopePlayerConfig,
+         dependencies: KinescopePlayerDependencies) {
         self.dependencies = dependencies
+        self._playRepeater = Repeating(executionQueue: .main, mode: config.repeatingMode)
         self.config = config
         playRepeater = .init(title: "play") { [weak self] in self?.play() }
         addNotofications()
@@ -138,7 +140,8 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
     // MARK: - KinescopePlayer
 
     public required convenience init(config: KinescopePlayerConfig) {
-        self.init(config: config, dependencies: KinescopeVideoPlayerDependencies())
+        self.init(config: config,
+                  dependencies: KinescopeVideoPlayerDependencies())
         self.configureAnalytic()
     }
 
@@ -185,6 +188,8 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
         observePlaybackTime()
         addPlayerTimeControlStatusObserver()
         addPlayerStatusObserver()
+        addPlayerItemObserver()
+        addPlayerStatusObserver()
     }
 
     public func detach(view: KinescopePlayerView) {
@@ -201,16 +206,12 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
 
         savedTime = strategy.player.currentTime()
 
-        kvoBag.removeObserver(for: .playerItemStatus)
-
         if let item = quality.makeItem(with: drmHandler) {
             strategy.bind(item: item)
         }
 
         // changing quality
         strategy.player.currentItem?.preferredPeakBitRate = quality.preferredMaxBitRate
-
-        addPlayerItemStatusObserver()
     }
 
     public func setDelegate(delegate: KinescopeVideoPlayerDelegate) {
@@ -320,6 +321,24 @@ private extension KinescopeVideoPlayer {
                                                    repeater: $playRepeater)
         kvoBag.addObserver(for: .playerStatus, using: .init(wrappedFactory: observerFactory))
     }
+    
+    func addPlayerItemObserver() {
+        let observerFactory = CurrentItemObserver(playerBody: self, currentItemChanged: {
+            [weak self] item in
+            self?.kvoBag.removeObserver(for: .playerItemStatus)
+            self?.kvoBag.removeObserver(for: .playerItemBufferEmpty)
+            if let item {
+                self?.addPlayerItemStatusObserver()
+                self?.addPlayerItemBufferIsEmptyObserver()
+            }
+        })
+        kvoBag.addObserver(for: .playerItem, using: .init(wrappedFactory: observerFactory))
+    }
+    
+    func addPlayerItemBufferIsEmptyObserver() {
+        let observerFactory = EmptyBufferObserver(playerBody: self, repeater: $playRepeater)
+        kvoBag.addObserver(for: .playerItemBufferEmpty, using: .init(wrappedFactory: observerFactory))
+    }
 
     func addPlayerItemStatusObserver() {
         let observerFactory = CurrentItemStatusObserver(playerBody: self, 
@@ -356,6 +375,8 @@ private extension KinescopeVideoPlayer {
                                      using: .init(selector: #selector(changeOrientation)))
         notificationsBag.addObserver(for: .itemDidPlayToEnd,
                                      using: .init(selector: #selector(itemDidPlayToEnd)))
+        notificationsBag.addObserver(for: .itemFailedToPlayToEndTime,
+                                     using: .init(selector: #selector(itemFailedToPlayeToEndTime)))
     }
     
     func configureAnalytic() {
@@ -421,6 +442,11 @@ private extension KinescopeVideoPlayer {
 
     @objc func itemDidPlayToEnd() {
         analytic?.send(event: .end)
+    }
+
+    @objc func itemFailedToPlayeToEndTime(_ notification: Notification) {
+        let error = notification.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error
+        Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.player)
     }
 
     func restoreView() {

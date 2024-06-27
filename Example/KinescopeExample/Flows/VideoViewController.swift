@@ -20,6 +20,7 @@ final class VideoViewController: UIViewController {
     // MARK: - Public Properties
 
     var videoId: String = ""
+    var uiEnabled: Bool = true
 
     // MARK: - Appearance
 
@@ -41,11 +42,25 @@ final class VideoViewController: UIViewController {
 
         navigationController?.delegate = self
 
-        playerView.setLayout(with: .accentTimeLineAndPlayButton(with: .orange))
+        if uiEnabled {
+            playerView.setLayout(with: .accentTimeLineAndPlayButton(with: .orange))
+        } else {
+            playerView.setLayout(with: .builder()
+                .setGravity(.resizeAspect)
+                .setOverlay(nil)
+                .setControlPanel(nil)
+                .setShadowOverlay(nil)
+                .build()
+            )
+        }
 
         PipManager.shared.closePipIfNeeded(with: videoId)
+        
+        let repeatingMode: RepeatingMode = uiEnabled ? .default : .infinite(interval: .seconds(5))
 
-        player = KinescopeVideoPlayer(config: .init(videoId: videoId))
+        player = KinescopeVideoPlayer(config: .init(videoId: videoId,
+                                                    looped: !uiEnabled,
+                                                    repeatingMode: repeatingMode))
 
         if #available(iOS 13.0, *) {
             if let shareIcon = UIImage(systemName: "square.and.arrow.up")?.withRenderingMode(.alwaysTemplate) {
@@ -53,7 +68,7 @@ final class VideoViewController: UIViewController {
             }
         }
         player?.disableOptions([.airPlay])
-        
+
         player?.setDelegate(delegate: self)
         player?.attach(view: playerView)
         player?.play()

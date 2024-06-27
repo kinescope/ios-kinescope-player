@@ -12,6 +12,7 @@ final class EnterViewController: UIViewController {
     // MARK: - IBOutlets
 
     @IBOutlet weak var field: UITextField!
+    @IBOutlet weak var uiSwitch: UISwitch!
 
     // MARK: - Private properties
 
@@ -39,6 +40,7 @@ final class EnterViewController: UIViewController {
             return
         }
         destination.videoId = videoId
+        destination.uiEnabled = uiSwitch.isOn
     }
 
     // MARK: - Actions
