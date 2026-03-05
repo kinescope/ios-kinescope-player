@@ -97,7 +97,52 @@ extension DownloadedListViewController: UITableViewDataSource, UITableViewDelega
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         cell.textLabel?.text = videoIds[indexPath.row]
         cell.accessoryType = .disclosureIndicator
+        let deleteButton = makeDeleteButton(for: indexPath)
+        let stack = UIStackView(arrangedSubviews: [deleteButton, makeDisclosureView()])
+        stack.axis = .horizontal
+        stack.spacing = 8
+        stack.alignment = .center
+        cell.accessoryView = stack
         return cell
+    }
+
+    private func makeDeleteButton(for indexPath: IndexPath) -> UIButton {
+        let button = UIButton(type: .system)
+        if #available(iOS 13.0, *) {
+            button.setImage(UIImage(systemName: "trash"), for: .normal)
+        } else {
+            button.setTitle(NSLocalizedString("Delete", comment: ""), for: .normal)
+        }
+        button.tag = indexPath.row
+        button.addTarget(self, action: #selector(deleteButtonTapped(_:)), for: .touchUpInside)
+        return button
+    }
+
+    private func makeDisclosureView() -> UIView {
+        if #available(iOS 13.0, *) {
+            let config = UIImage.SymbolConfiguration(pointSize: 12, weight: .medium)
+            let imageView = UIImageView(image: UIImage(systemName: "chevron.right", withConfiguration: config))
+            imageView.tintColor = .tertiaryLabel
+            return imageView
+        }
+        return UIView()
+    }
+
+    @objc private func deleteButtonTapped(_ sender: UIButton) {
+        let row = sender.tag
+        guard row >= 0, row < videoIds.count else { return }
+        let videoId = videoIds[row]
+        let indexPath = IndexPath(row: row, section: 0)
+        let alert = UIAlertController(
+            title: NSLocalizedString("Delete", comment: ""),
+            message: NSLocalizedString("Remove this video from device?", comment: ""),
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel))
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Delete", comment: ""), style: .destructive) { [weak self] _ in
+            self?.deleteVideo(videoId: videoId, at: indexPath)
+        })
+        present(alert, animated: true)
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

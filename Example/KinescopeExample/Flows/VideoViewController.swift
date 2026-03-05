@@ -34,12 +34,14 @@ final class VideoViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if isMovingFromParent || isBeingDismissed {
-            player?.pause()
-            player?.stop()
-            if let view = playerView {
-                player?.detach(view: view)
-            }
-            player = nil
+            stopPlayerAndRelease()
+        }
+    }
+
+    override func willMove(toParent parent: UIViewController?) {
+        super.willMove(toParent: parent)
+        if parent == nil {
+            stopPlayerAndRelease()
         }
     }
 
@@ -95,7 +97,18 @@ final class VideoViewController: UIViewController {
     }
 
     deinit {
+        stopPlayerAndRelease()
         Kinescope.shared.videoDownloader.remove(delegate: self)
+    }
+
+    private func stopPlayerAndRelease() {
+        guard player != nil else { return }
+        player?.pause()
+        player?.stop()
+        if let view = playerView {
+            player?.detach(view: view)
+        }
+        player = nil
     }
 
     private func setupBarButtons() {
@@ -146,7 +159,8 @@ final class VideoViewController: UIViewController {
     private func updateBarButtons() {
         let downloaded = Kinescope.shared.videoDownloader.isDownloaded(videoId: videoId)
         downloadBarButtonItem?.isEnabled = !isDownloading
-        downloadBarButtonItem?.title = isDownloading ? nil : NSLocalizedString("Download", comment: "")
+        // Use non-empty title when downloading to avoid NavigationButtonBar constraint conflict (width == 0).
+        downloadBarButtonItem?.title = isDownloading ? " " : NSLocalizedString("Download", comment: "")
         var items: [UIBarButtonItem] = [downloadBarButtonItem!]
         if downloaded {
             items.append(deleteBarButtonItem!)

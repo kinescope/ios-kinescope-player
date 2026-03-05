@@ -41,9 +41,9 @@ fileprivate extension KinescopeVideoQuality {
 
     func makeDownloadedItem(from url: URL, with dataProtectionHandler: DataProtectionHandler?) -> AVPlayerItem? {
         let asset = AVURLAsset(url: url)
-#if !targetEnvironment(simulator)
-        dataProtectionHandler?.bind(with: asset)
-#endif
+        // Do not bind custom DRM handler for local (downloaded) playback.
+        // Content downloaded via AVAssetDownloadTask (movpkg in UserManagedAssets) has keys
+        // stored by the system; binding our handler causes CoreMediaError -12865 / FIGSANDBOX.
         return AVPlayerItem(asset: asset)
     }
 
