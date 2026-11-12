@@ -15,6 +15,9 @@ protocol KinescopePlayerBody: AnyObject {
 
     var strategy: PlayingStrategy { get }
 
+    /// False after the viewer pauses, so a retry must not start playback on its own.
+    var wantsPlayback: Bool { get }
+
     var view: KinescopePlayerView? { get }
 
     var delegate: KinescopeVideoPlayerDelegate? { get }

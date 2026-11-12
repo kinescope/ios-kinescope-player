@@ -57,10 +57,10 @@ public extension KinescopeControlPanelConfiguration {
     }
 
     static let `default`: KinescopeControlPanelConfiguration = .init(
-        tintColor: .gray,
+        tintColor: .white,
         backgroundColor: .clear,
-        preferedHeight: 40,
-        hideOnPlayTimeout: 2,
+        preferedHeight: 52,
+        hideOnPlayTimeout: 3,
         liveIndicator: .default,
         timeIndicator: .default,
         timeline: .default,

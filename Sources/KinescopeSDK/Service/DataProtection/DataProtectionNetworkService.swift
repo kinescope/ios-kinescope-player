@@ -28,6 +28,9 @@ final class DataProtectionNetworkService: DataProtectionService {
         guard let path = video.drm?.fairplay.certificateUrl,
               let url = URL(string: path) else {
             Kinescope.shared.logger?.log(message: "Could not get drm certificate endpoint", level: KinescopeLoggerLevel.drm)
+            errorQueue.async {
+                completion(.failure(KinescopeDataProtectionError.certificateRequetFailed(nil)))
+            }
             return
         }
 
@@ -49,6 +52,9 @@ final class DataProtectionNetworkService: DataProtectionService {
     func getContentKey(for video: KinescopeVideo, body: DataProtectionRequestBody, completion: @escaping (Result<DataProtectionResponse, Error>) -> Void) {
         guard let path = video.drm?.fairplay.licenseUrl else {
             Kinescope.shared.logger?.log(message: "Could not get drm license endpoint", level: KinescopeLoggerLevel.drm)
+            errorQueue.async {
+                completion(.failure(KinescopeDataProtectionError.contentKeyRequestFailed(nil)))
+            }
             return
         }
 

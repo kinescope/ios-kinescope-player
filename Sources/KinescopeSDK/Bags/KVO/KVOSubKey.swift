@@ -12,5 +12,6 @@ enum KVOSubKey {
     case playerItem
     case playerItemBufferEmpty
     case playerItemStatus
+    case playerItemPresentationSize
     case playerTimeControlStatus
 }

@@ -44,11 +44,11 @@ public extension KinescopeLiveIndicatorConfiguration {
     }
 
     static let `default`: KinescopeLiveIndicatorConfiguration = .init(
-        titleFont: .systemFont(ofSize: 14.0, weight: .medium),
-        titleColor: UIColor.white.withAlphaComponent(0.32),
+        titleFont: .systemFont(ofSize: 14.0, weight: .regular),
+        titleColor: .white,
         circleRadius: 4,
-        onColor: UIColor(red: 0.94, green: 0.31, blue: 0.39, alpha: 1),
-        offColor: UIColor.white.withAlphaComponent(0.32)
+        onColor: UIColor(red: 239.0 / 255.0, green: 79.0 / 255.0, blue: 99.0 / 255.0, alpha: 1),
+        offColor: UIColor.white.withAlphaComponent(82.0 / 255.0)
     )
 }
 

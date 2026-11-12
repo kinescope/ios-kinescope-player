@@ -15,7 +15,7 @@ final class VideoServiceMock: VideosService {
 
     // MARK: - Methods
 
-    func getVideo(by id: String, completion: @escaping (Result<KinescopeVideo, Error>) -> Void) {
+    func getVideo(by id: String, drmAuthToken: String?, completion: @escaping (Result<KinescopeVideo, Error>) -> Void) {
         if let result = singleVideoMock[id] {
             completion(result)
         } else {

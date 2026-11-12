@@ -41,6 +41,13 @@ public protocol KinescopeVideoPlayerDelegate: AnyObject {
     func player(changedQualityTo quality: String)
     /// Triggered on custom option button selected in options menu
     func player(didSelectCustomOptionWith optionId: AnyHashable, anchoredAt view: UIView)
+    /// Triggered when video played to the end
+    func playerDidFinishPlaying()
+    /// Triggered when playback is stuck in buffering for 15 seconds without progress.
+    /// Player pauses itself and shows error overlay with retry button.
+    func playerDidStall()
+    /// Triggered when user selected item in playlist menu. Host app should load selected video.
+    func player(didSelectPlaylistItem item: KinescopePlaylistItem)
 }
 
 public extension KinescopeVideoPlayerDelegate {
@@ -59,4 +66,8 @@ public extension KinescopeVideoPlayerDelegate {
     func player(didFastForwardTo time: TimeInterval) { }
     func player(didFastBackwardTo time: TimeInterval) { }
     func player(changedQualityTo quality: String) { }
+    func player(didSelectCustomOptionWith optionId: AnyHashable, anchoredAt view: UIView) { }
+    func playerDidFinishPlaying() { }
+    func playerDidStall() { }
+    func player(didSelectPlaylistItem item: KinescopePlaylistItem) { }
 }

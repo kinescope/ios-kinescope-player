@@ -22,15 +22,30 @@ final class PreviewNetworkService: PreviewService {
     // MARK: - Public Methods
 
     func fetchPreview(for url: String, into imageView: UIImageView) {
+        let mark = {
+            imageView.accessibilityIdentifier = url
+        }
+        if Thread.isMainThread {
+            mark()
+        } else {
+            completionQueue.async(execute: mark)
+        }
+
         executionQueue.async { [weak self] in
-            guard let url = URL(string: url),
-                    let data = try? Data(contentsOf: url) else {
-                return
+            let image: UIImage?
+            if let remote = URL(string: url),
+               let data = try? Data(contentsOf: remote) {
+                image = UIImage(data: data)
+            } else {
+                image = nil
             }
-            let image = UIImage(data: data)
+            let poster = image ?? .image(named: "defaultPoster")
             self?.completionQueue.async {
-                imageView.contentMode = .scaleAspectFill
-                imageView.image = image
+                guard imageView.accessibilityIdentifier == url else {
+                    return
+                }
+                imageView.contentMode = .scaleAspectFit
+                imageView.image = poster
             }
         }
     }

@@ -88,6 +88,61 @@ internal enum L10n {
         internal static let reset = L10n.tr("Localizable", "Player.reset")
         /// Options
         internal static let options = L10n.tr("Localizable", "Player.options")
+        /// %d s
+        internal static func seconds(_ p1: Int) -> String {
+            L10n.tr("Localizable", "Player.seconds", p1)
+        }
+        /// Playback stalled. Check your internet connection
+        internal static let playbackStalled = L10n.tr("Localizable", "Player.playbackStalled")
+        /// Audio
+        internal static let audio = L10n.tr("Localizable", "Player.audio")
+        /// Track %d
+        internal static func audioTrack(_ p1: Int) -> String {
+            L10n.tr("Localizable", "Player.audioTrack", p1)
+        }
+        /// Reset video scale
+        internal static let resetScale = L10n.tr("Localizable", "Player.resetScale")
+        /// Scale
+        internal static let scale = L10n.tr("Localizable", "Player.scale")
+        /// − 3%
+        internal static let scaleDecrease = L10n.tr("Localizable", "Player.scaleDecrease")
+        /// + 3%
+        internal static let scaleIncrease = L10n.tr("Localizable", "Player.scaleIncrease")
+        /// 100%
+        internal static let scaleReset = L10n.tr("Localizable", "Player.scaleReset")
+        /// %d videos
+        internal static func playlistCount(_ p1: Int) -> String {
+            L10n.tr("Localizable", "Player.playlistCount", p1)
+        }
+        /// Awaiting broadcast
+        internal static let liveAwaiting = L10n.tr("Localizable", "Player.liveAwaiting")
+        /// Live broadcast in %d min
+        internal static func liveInMinutes(_ p1: Int) -> String {
+            L10n.tr("Localizable", "Player.liveInMinutes", p1)
+        }
+        /// Live broadcast in %d hr
+        internal static func liveInHours(_ p1: Int) -> String {
+            L10n.tr("Localizable", "Player.liveInHours", p1)
+        }
+        /// Live broadcast in %d days
+        internal static func liveInDays(_ p1: Int) -> String {
+            L10n.tr("Localizable", "Player.liveInDays", p1)
+        }
+        internal static let subtitleLook = L10n.tr("Localizable", "Player.subtitleLook")
+        internal static let fontColor = L10n.tr("Localizable", "Player.fontColor")
+        internal static let fontSize = L10n.tr("Localizable", "Player.fontSize")
+        internal static let backgroundColor = L10n.tr("Localizable", "Player.backgroundColor")
+        internal static let backgroundOpacity = L10n.tr("Localizable", "Player.backgroundOpacity")
+        internal static let subtitleSearch = L10n.tr("Localizable", "Player.subtitleSearch")
+        internal static let colorWhite = L10n.tr("Localizable", "Player.colorWhite")
+        internal static let colorGreen = L10n.tr("Localizable", "Player.colorGreen")
+        internal static let colorCyan = L10n.tr("Localizable", "Player.colorCyan")
+        internal static let colorBlue = L10n.tr("Localizable", "Player.colorBlue")
+        internal static let colorMagenta = L10n.tr("Localizable", "Player.colorMagenta")
+        internal static let colorRed = L10n.tr("Localizable", "Player.colorRed")
+        internal static let colorBlack = L10n.tr("Localizable", "Player.colorBlack")
+        /// Double tap ± 10 sec
+        internal static let scrubHint = L10n.tr("Localizable", "Player.scrubHint")
     }
 
 }

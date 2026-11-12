@@ -25,10 +25,12 @@ final class PlayingStrategyMock: PlayingStrategy {
 
     func bind(item: AVPlayerItem) {
         bindItems.append(item)
+        player.replaceCurrentItem(with: item)
     }
 
     func unbind() {
         unbindCalledCount += 1
+        player.replaceCurrentItem(with: nil)
     }
 
     func play(with rate: Float) {

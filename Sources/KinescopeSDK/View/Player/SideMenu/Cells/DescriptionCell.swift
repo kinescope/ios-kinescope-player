@@ -76,7 +76,12 @@ private extension DescriptionCell {
         let valueLabel = UILabel()
 
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.numberOfLines = 1
+        titleLabel.lineBreakMode = .byTruncatingTail
+        titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         valueLabel.translatesAutoresizingMaskIntoConstraints = false
+        valueLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+        valueLabel.setContentHuggingPriority(.required, for: .horizontal)
 
         addSubview(titleLabel)
         addSubview(valueLabel)

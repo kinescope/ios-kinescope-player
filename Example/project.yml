@@ -1,8 +1,9 @@
 # Название проекта
 name: KinescopeExample
 options:
-  # Версия Xcode
+  # Версия Xcode. Формат проекта 14.0 (objectVersion 56): его открывает CocoaPods 1.10 и собирает Xcode 27.
   xcodeVersion: 12.4
+  projectFormat: xcode14_0
   # Создание пустых директорий
   generateEmptyDirectories: true
   # Создание групп
@@ -15,7 +16,7 @@ targets:
         - sdk: UIKit.framework
       type: application
       platform: iOS
-      deploymentTarget: 10.0
+      deploymentTarget: "15.0"
       scheme:
         configVariants: all
       sources:
@@ -25,7 +26,13 @@ targets:
         properties:
           UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait, UIInterfaceOrientationPortraitUpsideDown, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
           UILaunchStoryboardName: Launch Screen
-          UIMainStoryboardFile: Main
+          UIApplicationSceneManifest:
+            UIApplicationSupportsMultipleScenes: false
+            UISceneConfigurations:
+              UIWindowSceneSessionRoleApplication:
+                - UISceneConfigurationName: Default Configuration
+                  UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate
+                  UISceneStoryboardFile: Main
           CFBundleName: Kinescope
           CFBundleShortVersionString: $(MARKETING_VERSION)
           CFBundleVersion: $(CURRENT_PROJECT_VERSION)

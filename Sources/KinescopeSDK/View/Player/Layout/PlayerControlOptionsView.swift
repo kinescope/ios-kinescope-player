@@ -16,6 +16,8 @@ protocol PlayerControlOptionsInput {
     /// - parameter options: Set of option
     func set(options: [KinescopePlayerOption])
     func set(subtitleOn: Bool)
+    func set(fullscreenOn: Bool)
+    func set(settingsBadgeFor height: CGFloat)
 }
 
 protocol PlayerControlOptionsOutput: AnyObject {
@@ -34,11 +36,21 @@ protocol PlayerControlOptionsOutput: AnyObject {
 
 class PlayerControlOptionsView: UIControl {
 
-    private let stackView = UIStackView()
+    private enum Constants {
+        /// Wider than the 24 pt glyph so a tap next to the icon still hits the button.
+        static let buttonSide: CGFloat = 44
+    }
+
+    private let row = UIView()
+    private var buttons: [UIView] = []
+    private var buttonWidths: [NSLayoutConstraint] = []
 
     private let config: KinescopePlayerOptionsConfiguration
     private(set) var options: [KinescopePlayerOption] = []
     private var isSubtitleOn = false
+    private var isFullscreenOn = false
+    private var settingsIconName = "settings"
+    private var extraWidths: [NSLayoutConstraint] = []
     
     private var customOptionsTagMap: [AnyHashable: Int] = [:]
 
@@ -55,14 +67,15 @@ class PlayerControlOptionsView: UIControl {
     }
 
     override var intrinsicContentSize: CGSize {
-        .init(width: config.iconSize * 2, height: config.iconSize)
+        CGSize(width: laidOutWidth, height: Constants.buttonSide)
     }
 
-    var isExpanded: Bool = false {
-        didSet {
-            fillStack(with: options, expanded: isExpanded)
-        }
+    /// Width the strip occupies right now, including buttons that are still collapsed to zero.
+    var laidOutWidth: CGFloat {
+        buttonWidths.reduce(0) { $0 + $1.constant }
     }
+
+    var isExpanded: Bool = false
 
 }
 
@@ -72,8 +85,7 @@ extension PlayerControlOptionsView: PlayerControlOptionsInput {
 
     func getCustomOptionView(by id: AnyHashable) -> UIView? {
         let buttonTag = customOptionsTagMap[id]
-        return stackView.arrangedSubviews
-            .first(where: { $0.tag == buttonTag })
+        return buttons.first(where: { $0.tag == buttonTag })
     }
 
     func set(options: [KinescopePlayerOption]) {
@@ -85,12 +97,41 @@ extension PlayerControlOptionsView: PlayerControlOptionsInput {
 
     func set(subtitleOn: Bool) {
         self.isSubtitleOn = subtitleOn
+        button(for: .subtitles)?.isSelected = subtitleOn
+    }
 
-        let button = stackView.arrangedSubviews
-            .compactMap { $0 as? OptionButton }
-            .first { $0.option == .subtitles }
+    func set(fullscreenOn: Bool) {
+        self.isFullscreenOn = fullscreenOn
+        button(for: .fullscreen)?.isSelected = fullscreenOn
+    }
 
-        button?.isSelected = subtitleOn
+    /// Show HD / 4K badge on settings icon depending on playing video height.
+    func set(settingsBadgeFor height: CGFloat) {
+        let name: String
+        switch height {
+        case 2160...:
+            name = "settings4K"
+        case 720...:
+            // Same cutoff as the quality list: 720, 1080 and 1440 are HD.
+            name = "settingsHD"
+        default:
+            name = "settings"
+        }
+        settingsIconName = name
+        let image = UIImage.image(named: name).withRenderingMode(.alwaysOriginal)
+        button(for: .settings)?.setImage(image, for: .normal)
+        button(for: .settings)?.setImage(image, for: .highlighted)
+        button(for: .settings)?.setImage(image, for: .selected)
+    }
+
+    func setExtraWidths(revealed: Bool) {
+        let side = revealed ? Constants.buttonSide : 0
+        extraWidths.forEach { $0.constant = side }
+        invalidateIntrinsicContentSize()
+    }
+
+    func setExtraAlpha(revealed: Bool) {
+        extraWidths.forEach { ($0.firstItem as? UIView)?.alpha = revealed ? 1 : 0 }
     }
 
 }
@@ -105,24 +146,22 @@ private extension PlayerControlOptionsView {
     }
 
     func configureStack() {
-        stackView.axis = .horizontal
-        stackView.spacing = 8
-        stackView.alignment = .trailing
-        stackView.distribution = .fill
-        stackView.backgroundColor = .clear
-
-        addSubview(stackView)
-        stretch(view: stackView)
+        row.backgroundColor = .clear
+        row.clipsToBounds = true
+        addSubview(row)
+        stretch(view: row)
     }
 
-    func createButton(from option: KinescopePlayerOption, at index: Int) -> UIView {
+    func createButton(from option: KinescopePlayerOption,
+                      at index: Int,
+                      width: CGFloat = Constants.buttonSide) -> (UIView, NSLayoutConstraint) {
         switch option {
         case .airPlay:
             let button = AirPlayOptionControl()
             button.tintColor = config.normalColor
-            button.squareSize(with: config.iconSize)
+            button.clipsToBounds = true
             button.tag = index
-            return button
+            return (button, pin(button, width: width))
         default:
             let button = OptionButton(option: option)
 
@@ -132,11 +171,12 @@ private extension PlayerControlOptionsView {
             
             button.tag = index
             button.tintColor = config.normalColor
-            button.squareSize(with: config.iconSize)
+            button.clipsToBounds = true
+            // A nil target starts at the first responder. Custom Player becomes that
+            // responder for keyboard shortcuts, so the tap never reached this view.
+            button.addTarget(self, action: #selector(buttonTapped(sender:)), for: .touchUpInside)
 
-            button.addTarget(nil, action: #selector(buttonTapped(sender:)), for: .touchUpInside)
-
-            return button
+            return (button, pin(button, width: width))
         }
     }
 
@@ -147,27 +187,52 @@ private extension PlayerControlOptionsView {
 
         clearStack()
 
-        let filteredOptions = expanded
-            ? options
-            : Array(options.dropFirst(options.count - 2))
-
-        filteredOptions
-            .enumerated()
-            .map { index, option in
-                createButton(from: option, at: index)
+        let hiddenCount = expanded ? 0 : max(0, options.count - min(2, options.count))
+        var anchor = row.trailingAnchor
+        for (index, option) in options.enumerated().reversed() {
+            let collapsed = index < hiddenCount
+            let (button, width) = createButton(from: option, at: index, width: collapsed ? 0 : Constants.buttonSide)
+            button.alpha = collapsed ? 0 : 1
+            row.addSubview(button)
+            NSLayoutConstraint.activate([
+                button.trailingAnchor.constraint(equalTo: anchor),
+                button.centerYAnchor.constraint(equalTo: row.centerYAnchor),
+                button.heightAnchor.constraint(equalToConstant: Constants.buttonSide)
+            ])
+            if collapsed {
+                extraWidths.append(width)
             }
-            .forEach { [weak self] button in
-                self?.stackView.addArrangedSubview(button)
-            }
+            buttons.insert(button, at: 0)
+            buttonWidths.insert(width, at: 0)
+            anchor = button.leadingAnchor
+        }
 
         set(subtitleOn: isSubtitleOn)
+        set(fullscreenOn: isFullscreenOn)
+        let settingsImage = UIImage.image(named: settingsIconName).withRenderingMode(.alwaysOriginal)
+        button(for: .settings)?.setImage(settingsImage, for: .normal)
+        button(for: .settings)?.setImage(settingsImage, for: .selected)
+        invalidateIntrinsicContentSize()
+    }
+
+    func pin(_ button: UIView, width: CGFloat) -> NSLayoutConstraint {
+        button.translatesAutoresizingMaskIntoConstraints = false
+        let constraint = button.widthAnchor.constraint(equalToConstant: width)
+        constraint.isActive = true
+        return constraint
+    }
+
+    func button(for option: KinescopePlayerOption) -> OptionButton? {
+        buttons
+            .compactMap { $0 as? OptionButton }
+            .first { $0.option == option }
     }
 
     func clearStack() {
-        stackView.arrangedSubviews.forEach {
-            $0.removeFromSuperview()
-            stackView.removeArrangedSubview($0)
-        }
+        extraWidths.removeAll()
+        buttonWidths.removeAll()
+        buttons.forEach { $0.removeFromSuperview() }
+        buttons.removeAll()
     }
 
     @objc

@@ -2,6 +2,7 @@ import Foundation
 
 protocol VideosService {
     func getVideo(by id: String,
+                  drmAuthToken: String?,
                   completion: @escaping (Result<KinescopeVideo, Error>) -> Void)
 }
 
@@ -24,9 +25,11 @@ final class VideosNetworkService: VideosService {
 
     // MARK: - Public Methods
 
-    func getVideo(by id: String, completion: @escaping (Result<KinescopeVideo, Error>) -> Void) {
+    func getVideo(by id: String,
+                  drmAuthToken: String?,
+                  completion: @escaping (Result<KinescopeVideo, Error>) -> Void) {
         executionQueue.async { [weak self] in
-            self?.getVideoFromJson(by: id, completion: completion)
+            self?.getVideoFromJson(by: id, drmAuthToken: drmAuthToken, completion: completion)
         }
     }
 }
@@ -35,11 +38,18 @@ final class VideosNetworkService: VideosService {
 
 private extension VideosNetworkService {
 
-    func getVideoFromJson(by id: String, completion: @escaping (Result<KinescopeVideo, Error>) -> Void) {
+    func getVideoFromJson(by id: String,
+                          drmAuthToken: String?,
+                          completion: @escaping (Result<KinescopeVideo, Error>) -> Void) {
         do {
+            var parameters = ["sdk": "ios"]
+            if let drmAuthToken, !drmAuthToken.isEmpty {
+                parameters["drmauthtoken"] = drmAuthToken
+            }
+
             let request = try RequestBuilder(path: "\(config.endpoint)\(id).json", method: .get)
                 .add(referer: config.referer)
-                .add(parameters: ["sdk": "ios"])
+                .add(parameters: parameters)
                 .build(body: EmptyRequest())
 
             transport.performFetch(request: request, completion: completion)

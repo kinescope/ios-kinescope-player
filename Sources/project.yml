@@ -1,8 +1,9 @@
 # Название проекта
 name: KinescopeSDK
 options:
-  # Версия Xcode
+  # Версия Xcode. Формат проекта 14.0 (objectVersion 56): его открывает CocoaPods 1.10 и собирает Xcode 27.
   xcodeVersion: 12.4
+  projectFormat: xcode14_0
   # Создание пустых директорий
   generateEmptyDirectories: true
   # Создание групп
@@ -15,7 +16,7 @@ targets:
         - sdk: AVKit.framework
       type: framework
       platform: iOS
-      deploymentTarget: 10.0
+      deploymentTarget: "15.0"
       scheme:
         configVariants: all
         testTargets: [KinescopeSDKTests]
@@ -41,7 +42,7 @@ targets:
     KinescopeSDKTests:
       type: bundle.unit-test
       platform: iOS
-      deploymentTarget: 10.0
+      deploymentTarget: "15.0"
       scheme:
         configVariants: all
       sources: [KinescopeSDKTests]
@@ -50,7 +51,3 @@ targets:
         properties: []
       dependencies:
         - target: KinescopeSDK
-      settings:
-        configs:
-          Debug:
-            EXCLUDED_ARCHS[sdk=iphonesimulator*]: "arm64"

@@ -38,21 +38,51 @@ public enum KinescopeVideoQuality {
         case .auto, .downloaded:
             return 0
         case .exact(let asset), .exactWithSubtitles(let asset, _):
-            switch asset.name {
-            case "240p":
-                return 700000
-            case "360p":
-                return 1500000
-            case "480p":
-                return 2000000
-            case "720p":
-                return 4000000
-            case "1080p":
-                return 6000000
-            default:
-                return 0
-            }
+            return Self.peakBitRate(forHeight: asset.height, name: asset.name)
         }
+    }
+
+    /// Caps the picture size so the chosen rendition is the highest one still allowed.
+    var preferredMaximumResolution: CGSize {
+        switch self {
+        case .auto, .downloaded:
+            return .zero
+        case .exact(let asset), .exactWithSubtitles(let asset, _):
+            let side = CGFloat(Self.listedHeight(asset.height, name: asset.name))
+            guard side > 0 else {
+                return .zero
+            }
+            return CGSize(width: side * 16 / 9, height: side)
+        }
+    }
+
+    /// Peak just above the rung, so a 1080 selection can actually reach the 1080 variant.
+    private static func peakBitRate(forHeight height: Int, name: String) -> Double {
+        switch listedHeight(height, name: name) {
+        case 1..<300:
+            return 1_000_000
+        case 300..<420:
+            return 2_000_000
+        case 420..<600:
+            return 3_000_000
+        case 600..<900:
+            return 5_500_000
+        case 900..<1300:
+            return 9_000_000
+        case 1300..<1800:
+            return 14_000_000
+        case 1800...:
+            return 28_000_000
+        default:
+            return 0
+        }
+    }
+
+    private static func listedHeight(_ height: Int, name: String) -> Int {
+        if height > 0 {
+            return height
+        }
+        return Int(name.filter(\.isNumber)) ?? 0
     }
 
 }

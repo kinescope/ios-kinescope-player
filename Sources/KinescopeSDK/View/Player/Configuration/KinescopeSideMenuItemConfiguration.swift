@@ -44,9 +44,9 @@ public extension KinescopeSideMenuItemConfiguration {
     }
 
     static let `default`: KinescopeSideMenuItemConfiguration = .init(
-        titleFont: .systemFont(ofSize: 14.0, weight: .regular),
+        titleFont: KinescopeFont.regular(14),
         titleColor: .white,
-        valueFont: .systemFont(ofSize: 12.0),
+        valueFont: KinescopeFont.regular(12),
         valueColor: UIColor.white.withAlphaComponent(0.64),
         highlightedColor: UIColor.white.withAlphaComponent(0.08)
     )

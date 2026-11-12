@@ -90,7 +90,7 @@ final class LoggerTests: XCTestCase {
 
         // given
 
-        let expected = "\(KinescopeLoggerLevel.player): The operation couldn’t be completed. (KinescopeSDKTests.ErrorMock error 0.)"
+        let expected = "\(KinescopeLoggerLevel.player): \(ErrorMock.err.localizedDescription)"
         Kinescope.shared.set(logger: logger, levels: [KinescopeLoggerLevel.player])
 
         // when

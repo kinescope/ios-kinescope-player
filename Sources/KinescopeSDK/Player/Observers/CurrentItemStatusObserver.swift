@@ -35,11 +35,13 @@ final class CurrentItemStatusObserver: KVOObserverFactory {
                 switch item.status {
                 case .readyToPlay:
                     onSuccess()
-                case .failed, .unknown:
+                case .failed:
                     Kinescope.shared.logger?.log(error: item.error,
                                                  level: KinescopeLoggerLevel.player)
                     onError(error: item.error)
-                default:
+                case .unknown:
+                    break
+                @unknown default:
                     break
                 }
 
@@ -58,9 +60,17 @@ private extension CurrentItemStatusObserver {
 
     func onSuccess() {
         readyToPlayReceived()
-        playerBody?.view?.stopLoader(withPreview: true)
-        playerBody?.view?.announceSnack?.hideAnimated()
+        playerBody?.view?.hidePlaybackError()
+        let videoAlreadyPresented = playerBody?.view?.isVideoPresented ?? false
+        let awaiting = playerBody?.video?.live?.startsAt.map { $0 > Date() } ?? false
+        let keepCover = playerBody?.view?.keepsLiveCover == true && !videoAlreadyPresented && awaiting
+        playerBody?.view?.stopLoader(withPreview: videoAlreadyPresented)
         playerBody?.view?.overlay?.isHidden = false
+        if keepCover {
+            playerBody?.view?.showLiveAwaitingCover()
+        } else {
+            playerBody?.view?.announceSnack?.hideAnimated()
+        }
     }
 
     func onError(error: Error?) {
@@ -77,6 +87,7 @@ private extension CurrentItemStatusObserver {
         guard let video = playerBody?.video else {
             return
         }
+        playerBody?.view?.showLiveAwaitingCover()
         playerBody?.view?.announceSnack?.display(startsAt: video.live?.startsAt)
     }
 
@@ -87,7 +98,7 @@ private extension CurrentItemStatusObserver {
         case .limitReached, .none:
             playerBody?.view?.stopLoader(withPreview: false)
             if let error {
-                playerBody?.view?.errorOverlay?.display(error: error)
+                playerBody?.view?.displayPlaybackError(error)
             }
         }
     }

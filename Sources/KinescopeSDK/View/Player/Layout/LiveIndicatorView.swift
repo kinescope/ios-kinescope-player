@@ -40,16 +40,20 @@ final class LiveIndicatorView: UIView {
 extension LiveIndicatorView: LiveIndicatorInput {
 
     func set(animated: Bool) {
+        circleView.layer.removeAnimation(forKey: "pulse")
+        circleView.alpha = 1
         if animated {
-            let animation = CABasicAnimation(keyPath: "backgroundColor")
-            animation.fromValue = config.offColor.cgColor
-            animation.toValue = config.onColor.cgColor
-            animation.duration = 1
-            animation.autoreverses = true
-            animation.repeatCount = .infinity
-            circleView.layer.add(animation, forKey: "backgroundColor")
+            // Red dot while playback sits on the live edge. Opacity blink matches Android.
+            circleView.backgroundColor = config.onColor
+            let pulse = CABasicAnimation(keyPath: "opacity")
+            pulse.fromValue = 1
+            pulse.toValue = 0
+            pulse.duration = 0.8
+            pulse.autoreverses = true
+            pulse.repeatCount = .infinity
+            pulse.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            circleView.layer.add(pulse, forKey: "pulse")
         } else {
-            circleView.layer.removeAllAnimations()
             circleView.backgroundColor = config.offColor
         }
     }
@@ -75,7 +79,7 @@ private extension LiveIndicatorView {
 
     func configureTitleLabel() {
         titleLabel.font = config.titleFont
-        titleLabel.numberOfLines = 2
+        titleLabel.numberOfLines = 1
         titleLabel.textColor = config.titleColor
         titleLabel.text = L10n.Player.live
         stackView.addArrangedSubview(titleLabel)
@@ -83,6 +87,7 @@ private extension LiveIndicatorView {
 
     func configureCircle() {
         circleView.layer.cornerRadius = config.circleRadius
+        circleView.clipsToBounds = true
         circleView.backgroundColor = config.offColor
         circleView.squareSize(with: config.circleRadius * 2)
         stackView.addArrangedSubview(circleView)

@@ -26,6 +26,10 @@ public enum KinescopePlayerOption {
     case subtitles
     /// Option to enter in Picture in Picture mode, availalble only if device supported PiP 
     case pip
+    /// Option to open chapters list, available only if video has chapters
+    case chapters
+    /// Option to open playlist, available only if playlist was set to player
+    case playlist
     /// Custom option to perform any action
     /// - Parameters:
     ///    - id: Uniq identifier to distinguish selection of different button. Maybe `String`, `Int`, `UUID` or other `Hashable`.
@@ -52,6 +56,10 @@ public enum KinescopePlayerOption {
             return UIImage.image(named: "subtitles")
         case .pip:
             return UIImage.image(named: "pip")
+        case .chapters:
+            return UIImage.image(named: "chapters")
+        case .playlist:
+            return UIImage.image(named: "playlist")
         case .custom(_, let icon):
             return icon
         }
@@ -63,6 +71,8 @@ public enum KinescopePlayerOption {
             return UIImage.image(named: "subtitlesSelected")
         case .airPlay:
             return UIImage.image(named: "airPlayActive")
+        case .fullscreen:
+            return UIImage.image(named: "fullscreenExit")
         case .custom(_, let icon):
             return icon
         default:
@@ -104,6 +114,10 @@ extension KinescopePlayerOption: Equatable {
         case (.subtitles, .subtitles):
             return true
         case (.pip, .pip):
+            return true
+        case (.chapters, .chapters):
+            return true
+        case (.playlist, .playlist):
             return true
         case (.custom(let lId, _), .custom(let rId, _)):
             return lId == rId

@@ -19,4 +19,4 @@ This example shows how to use KinescopeSDK.
 
 ## License
 
-[MIT License](LICENSE)
+The SDK is available under either the [MIT License](../LICENSE) or the [Apache License 2.0](../LICENSE-APACHE), at your option.

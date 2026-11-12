@@ -20,6 +20,8 @@ public struct KinescopePlayerViewConfiguration {
     let sideMenu: KinescopeSideMenuConfiguration
     let shadowOverlay: KinescopePlayerShadowOverlayConfiguration?
     let announceSnack: KinescopeAnnounceConfiguration
+    /// System picture-in-picture. Shorts keep this off: the feed is the only surface.
+    let allowsPictureInPicture: Bool
     
     /// - parameter gravity: `AVLayerVideoGravity` value defines how the video is displayed within a layer’s bounds rectangle
     /// - parameter previewService: Implementation of service to load posters into imageView. Set `nil` to disable previews.
@@ -41,7 +43,8 @@ public struct KinescopePlayerViewConfiguration {
                 errorOverlay: KinescopeErrorConfiguration?,
                 sideMenu: KinescopeSideMenuConfiguration,
                 shadowOverlay: KinescopePlayerShadowOverlayConfiguration?,
-                announceSnack: KinescopeAnnounceConfiguration) {
+                announceSnack: KinescopeAnnounceConfiguration,
+                allowsPictureInPicture: Bool = true) {
         self.gravity = gravity
         self.previewService = previewService
         self.activityIndicator = activityIndicator
@@ -51,6 +54,7 @@ public struct KinescopePlayerViewConfiguration {
         self.sideMenu = sideMenu
         self.shadowOverlay = shadowOverlay
         self.announceSnack = announceSnack
+        self.allowsPictureInPicture = allowsPictureInPicture
     }
     
 }
@@ -66,13 +70,14 @@ public extension KinescopePlayerViewConfiguration {
     static let `default`: KinescopePlayerViewConfiguration = .init(
         gravity: .resizeAspect,
         previewService: PreviewNetworkService(),
-        activityIndicator: UIActivityIndicatorView(style: .whiteLarge),
+        activityIndicator: BufferingIndicatorView(),
         overlay: .default,
         controlPanel: .default,
         errorOverlay: .default,
         sideMenu: .default,
         shadowOverlay: .default,
-        announceSnack: .default
+        announceSnack: .default,
+        allowsPictureInPicture: true
     )
 
     static func accentTimeLineAndPlayButton(with color: UIColor) -> Self {
@@ -109,6 +114,7 @@ public class KinescopePlayerViewConfigurationBuilder {
     private var sideMenu: KinescopeSideMenuConfiguration
     private var shadowOverlay: KinescopePlayerShadowOverlayConfiguration?
     private var announceSnack: KinescopeAnnounceConfiguration
+    private var allowsPictureInPicture: Bool
     
     public init(configuration: KinescopePlayerViewConfiguration = .default) {
         self.gravity = configuration.gravity
@@ -120,6 +126,7 @@ public class KinescopePlayerViewConfigurationBuilder {
         self.sideMenu = configuration.sideMenu
         self.shadowOverlay = configuration.shadowOverlay
         self.announceSnack = configuration.announceSnack
+        self.allowsPictureInPicture = configuration.allowsPictureInPicture
     }
     
     public func setGravity(_ gravity: AVLayerVideoGravity) -> Self {
@@ -162,6 +169,11 @@ public class KinescopePlayerViewConfigurationBuilder {
         return self
     }
     
+    public func setPictureInPicture(_ enabled: Bool) -> Self {
+        allowsPictureInPicture = enabled
+        return self
+    }
+
     public func setAnnounceSnack(_ announceSnack: KinescopeAnnounceConfiguration) -> Self {
         self.announceSnack = announceSnack
         return self
@@ -177,7 +189,8 @@ public class KinescopePlayerViewConfigurationBuilder {
             errorOverlay: errorOverlay,
             sideMenu: sideMenu,
             shadowOverlay: shadowOverlay,
-            announceSnack: announceSnack
+            announceSnack: announceSnack,
+            allowsPictureInPicture: allowsPictureInPicture
         )
     }
 }

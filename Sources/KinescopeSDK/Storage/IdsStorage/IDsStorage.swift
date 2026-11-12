@@ -11,6 +11,8 @@ protocol IDsStorage {
     func save(id: String, by url: String)
     func contains(url: String) -> Bool
     func readID(by url: String) -> String?
+    /// Manifest URL to video id for downloads that have not finished yet.
+    func fetchAll() -> [String: String]
     @discardableResult
     func deleteID(by url: String) -> String?
 }

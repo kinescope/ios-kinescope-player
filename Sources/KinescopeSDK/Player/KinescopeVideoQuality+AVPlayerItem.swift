@@ -41,9 +41,11 @@ fileprivate extension KinescopeVideoQuality {
 
     func makeDownloadedItem(from url: URL, with dataProtectionHandler: DataProtectionHandler?) -> AVPlayerItem? {
         let asset = AVURLAsset(url: url)
-        // Do not bind custom DRM handler for local (downloaded) playback.
-        // Content downloaded via AVAssetDownloadTask (movpkg in UserManagedAssets) has keys
-        // stored by the system; binding our handler causes CoreMediaError -12865 / FIGSANDBOX.
+        // A saved FairPlay key is applied here. Clear downloads stay unbound:
+        // attaching a session without a stored key breaks local playback.
+        if let handler = dataProtectionHandler as? DataProtectionKeySessionHandler, handler.hasOfflineKey {
+            handler.bind(with: asset)
+        }
         return AVPlayerItem(asset: asset)
     }
 

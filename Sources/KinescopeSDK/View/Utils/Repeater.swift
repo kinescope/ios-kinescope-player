@@ -47,6 +47,8 @@ protocol ActionOwner {
 protocol Repeater: AnyObject {
     func start() -> RepeaterState
     func reset()
+    /// Cancels scheduled attempt if any
+    func cancel()
 }
 
 final class DefaultRepeater: Repeater, ActionOwner {
@@ -98,6 +100,14 @@ final class DefaultRepeater: Repeater, ActionOwner {
 
     func reset() {
         attempts = 0
+        // A scheduled attempt still holds its block. Leaving it queued lets a stale
+        // retry call play() while another bind is already in progress.
+        cancel()
+    }
+
+    func cancel() {
+        workItem?.cancel()
+        workItem = nil
     }
 
 }

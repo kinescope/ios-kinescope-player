@@ -53,13 +53,13 @@ public extension KinescopeSideMenuBarConfiguration {
     }
 
     static let `default`: KinescopeSideMenuBarConfiguration = .init(
-        titleFont: .systemFont(ofSize: 14, weight: .medium),
+        titleFont: KinescopeFont.bold(14),
         titleColor: .white,
-        downloadAllFont: .systemFont(ofSize: 12.0),
+        downloadAllFont: KinescopeFont.regular(14),
         downloadAllColor: UIColor.white.withAlphaComponent(0.64),
         downloadAllHighlightedColor: UIColor.white.withAlphaComponent(0.5),
         iconSize: 24,
-        preferedHeight: 40
+        preferedHeight: 48
     )
 }
 

@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import AVFoundation
 @testable import KinescopeSDK
 
 final class KinescopeVideoPlayerTests: XCTestCase {
@@ -98,6 +99,41 @@ final class KinescopeVideoPlayerTests: XCTestCase {
         XCTAssertEqual(strategy?.pauseCalledCount, 1)
         XCTAssertEqual(strategy?.unbindCalledCount, 1)
 
+    }
+
+    func testRepeatedPlayDoesNotBindAgain() {
+        inspector?.videoSuccessMock[Constants.videoId] = Constants.videoStub
+
+        player?.play()
+        player?.play()
+
+        XCTAssertEqual(inspector?.videoRequests.count, 1)
+        XCTAssertEqual(strategy?.bindItems.count, 1)
+        XCTAssertEqual(strategy?.playCalledCount, 2)
+    }
+
+    func testStopThenPlayBindsOnceMore() {
+        inspector?.videoSuccessMock[Constants.videoId] = Constants.videoStub
+
+        player?.play()
+        player?.stop()
+        player?.play()
+
+        XCTAssertEqual(strategy?.unbindCalledCount, 1)
+        XCTAssertEqual(strategy?.bindItems.count, 2)
+    }
+
+    func testLoopedRebindDoesNotRaise() {
+        let strategy = LoopedPlayingStrategy()
+        let first = AVPlayerItem(url: URL(string: "https://example.com/loop.m3u8")!)
+        let second = AVPlayerItem(url: URL(string: "https://example.com/loop.m3u8")!)
+
+        strategy.bind(item: first)
+        strategy.bind(item: second)
+        strategy.unbind()
+        strategy.bind(item: AVPlayerItem(url: URL(string: "https://example.com/other.m3u8")!))
+
+        XCTAssertNotNil(strategy.player)
     }
 
     func testSelectQualityDelegateToStrategy() {

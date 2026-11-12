@@ -1,138 +1,65 @@
 # Kinescope iOS SDK
 
-![Pub Version](https://img.shields.io/badge/version-0.2.2-orange)
+iOS SDK for [Kinescope](https://kinescope.io/) video: player, vertical Shorts feed, and offline HLS downloads with FairPlay, in one module. Deployment target is iOS 15. Distributed as git tags through CocoaPods (`:git` and `:tag`) and Swift Package Manager.
 
-This framework created to help you include [Kinescope](https://kinescope.io/) player into your mobile iOS application.
-
-<!-- TODO add logo here -->
-
-## About
-
-This framework can help you include customizable video player into your mobile application, organize offline playing of your videos.
-
-## Currently supported features
-
-- online and offline playing
-- fullscreen, minimal or picture in picture
-- customizable UI of player
-
-## Usage
-
-First of all, init SDK somewhere at startup of your app
-
-```swift
-Kinescope.shared.setConfig(.init())
+```ruby
+pod 'KinescopeSDK', :git => 'https://github.com/kinescope/ios-kinescope-player.git', :tag => '1.0.0'
 ```
 
-From now you can play any video or livestream from your dashboard.
+With CocoaPods, add a `post_install` block that sets `IPHONEOS_DEPLOYMENT_TARGET` to `15.0` for all pods (see [docs/installation.md](docs/installation.md)). Otherwise current Xcode rejects the `M3U8Kit` and `SwiftProtobuf` targets.
 
-Just init player instance with videoId
+CocoaPods Trunk stops accepting new versions on 2 December 2026. The short form `pod 'KinescopeSDK', '~> 1.0'` does not get later releases. See [docs/installation.md](docs/installation.md).
 
-```swift
-let player = KinescopePlayer(videoId: "some video id")
-```
+There is no tvOS target.
 
-Add player view somewhere in your layout
+---
 
-```swift
-let playerView = KinescopePlayerView()
-view.addSubview(playerView)
-```
+## Documentation
 
-Connect player and playerView together
+### Getting started
 
-```swift
-player.attach(view: playerView)
-```
+| Topic | File |
+|-------|------|
+| Features | [docs/features.md](docs/features.md) |
+| Installation | [docs/installation.md](docs/installation.md) |
+| Quick start | [docs/quick-start.md](docs/quick-start.md) |
+| Demo app | [docs/demo-app.md](docs/demo-app.md) |
 
-Enjoy.
+### Player
 
-All controls already included into `KinescopePlayerView` and can be hidden optionally.
-You can read full [documentation](./DOCUMENTATION.md) or find more examples in our [Example-project](/Example).  
+| Topic | File |
+|-------|------|
+| Player options | [docs/player-options.md](docs/player-options.md) |
+| Customization (poster, colours, custom button) | [docs/customization.md](docs/customization.md) |
+| Live | [docs/live.md](docs/live.md) |
+| Local / downloaded playback | [docs/local-playback.md](docs/local-playback.md) |
+| Fullscreen | [docs/fullscreen.md](docs/fullscreen.md) |
+| Picture-in-Picture | [docs/picture-in-picture.md](docs/picture-in-picture.md) |
+| Player chrome (seek bar, zoom, gestures) | [docs/player-chrome.md](docs/player-chrome.md) |
+| Settings menu (gear → Quality, Speed, Scale…) | [docs/settings-menu.md](docs/settings-menu.md) |
+| Subtitles and captions search | [docs/subtitles-and-settings.md](docs/subtitles-and-settings.md) |
+| Analytics | [docs/analytics.md](docs/analytics.md) |
 
-### Logger
+### Dashboard API
 
-For logging network request, player events or something else use `KinescopeDefaultLogger`.
+| Topic | File |
+|-------|------|
+| Video list and player templates | [docs/dashboard-api.md](docs/dashboard-api.md) |
 
-First step is set `KinescopeLoggerLevel` into configuration at application startup:
+### Offline
 
-```swift
-Kinescope.shared.set(logger: KinescopeDefaultLogger(), levels: [KinescopeLoggerLevel.network, KinescopeLoggerLevel.player])
-```
+| Topic | File |
+|-------|------|
+| HLS download, FairPlay keys, what stays online | [docs/offline-downloads.md](docs/offline-downloads.md) |
 
-Use logger like this:
+### Shorts (vertical feed)
 
-```swift
-Kinescope.shared.logger.log(message: "Bad Request", level: KinescopeLoggerLevel.network)
-```
+| Topic | File |
+|-------|------|
+| Open the feed (`KinescopeShortsViewController`) | [docs/demo-app.md](docs/demo-app.md) |
+| Look (`KinescopeShortsUIConfig`) | [docs/customization.md](docs/customization.md#shorts) |
+| Download a video from the feed | [docs/offline-downloads.md](docs/offline-downloads.md#download-a-short) |
 
-or
+### Changelog
 
-```swift
-Kinescope.shared.logger.log(error: NSError(), level: KinescopeLoggerLevel.network)
-```
-
-Also SDK has opportunity to use custom logger. Just use protocols `KinescopeLoggingLevel`, `KinescopeLogging`.
-
-## Installation
-
-### Cocoapods
-
-Just add KinescopeSDK to your `Podfile` like this
-
-```
-pod 'KinescopeSDK' ~> 0.2
-```
-
-If you have any issues with method above, than you can specify git repo like this
-
-```
- pod 'KinescopeSDK', :git => 'https://github.com/kinescope/ios-kinescope-player.git'
-```
-
-Also you can specify concrete branch or tag if you want
-
-```
- pod 'KinescopeSDK', :git => 'https://github.com/kinescope/ios-kinescope-player.git', :branch => 'master'
-```
-
-### SPM
-
-Just add KinescopeSDK as dependency for your package
-
-```swift
-dependencies: [
-        .package(url: "https://github.com/kinescope/ios-kinescope-player.git", exact: "0.2")
-    ],
-
-```
-
-and link your target with product
-
-```swift
-dependencies: [
-                .product(name: "KinescopeSDK", package: "ios-kinescope-player")
-]
-```
-
-## Changelog
-
-All notable changes to this project will be documented in [this file](./CHANGELOG.md).
-
-## Issues
-
-For issues, file directly in the [main repo](https://github.com/kinescope/ios-kinescope-player).
-
-## Contribute
-
-If you would like to contribute to the package (e.g. by improving the documentation, solving a bug or adding a cool new feature), please review our [contribution guide](CONTRIBUTING.md) first and send us your pull request.
-
-Your PRs are always welcome.
-
-## How to reach us
-
-<!-- TODO add some channel of communication  -->
-
-## License
-
-[MIT License](LICENSE)
+See [CHANGELOG.md](CHANGELOG.md).

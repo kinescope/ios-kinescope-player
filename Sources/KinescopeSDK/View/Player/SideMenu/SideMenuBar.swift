@@ -20,6 +20,7 @@ final class SideMenuBar: UIView {
         let title: String
         let isRoot: Bool
         let isDownloadable: Bool
+        let showsCloseButton: Bool
     }
 
     // MARK: - Views
@@ -35,6 +36,10 @@ final class SideMenuBar: UIView {
     private let model: Model
 
     weak var delegate: SideMenuBarDelegate?
+
+    func setDisplayedTitle(_ title: String) {
+        titleView.text = title
+    }
 
     // MARK: - Init
 
@@ -83,38 +88,50 @@ private extension SideMenuBar {
     func setupInitialState() {
 
         configureTitle()
-        configureCloseButton()
-
         titleView.translatesAutoresizingMaskIntoConstraints = false
+        if model.showsCloseButton {
+            configureCloseButton()
+        }
+
+        let titleTrailing = model.showsCloseButton
+            ? titleView.trailingAnchor.constraint(equalTo: closeButton.leadingAnchor, constant: -4)
+            : titleView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
 
         if model.isRoot {
             NSLayoutConstraint.activate([
                 titleView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-                titleView.trailingAnchor.constraint(equalTo: closeButton.leadingAnchor, constant: -4),
-                titleView.centerYAnchor.constraint(equalTo: centerYAnchor),
-                closeButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-                closeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8)
+                titleTrailing,
+                titleView.centerYAnchor.constraint(equalTo: centerYAnchor)
             ])
         } else {
             configureBackButton()
+            titleView.isUserInteractionEnabled = true
+            titleView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBackTapped)))
 
             NSLayoutConstraint.activate([
                 backButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-                backButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-                titleView.leadingAnchor.constraint(equalTo: backButton.trailingAnchor, constant: 4),
-                titleView.trailingAnchor.constraint(equalTo: closeButton.leadingAnchor, constant: -8),
-                titleView.centerYAnchor.constraint(equalTo: centerYAnchor),
+                backButton.leadingAnchor.constraint(equalTo: leadingAnchor),
+                titleView.leadingAnchor.constraint(equalTo: backButton.trailingAnchor),
+                titleTrailing,
+                titleView.centerYAnchor.constraint(equalTo: centerYAnchor)
+            ])
+        }
+
+        if model.showsCloseButton {
+            NSLayoutConstraint.activate([
                 closeButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-                closeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8)
+                closeButton.trailingAnchor.constraint(equalTo: trailingAnchor)
             ])
         }
 
         if model.isDownloadable {
             configureDownloadButton()
-
+            let downloadTrailing = model.showsCloseButton
+                ? downloadAllButton.trailingAnchor.constraint(equalTo: closeButton.leadingAnchor, constant: -4)
+                : downloadAllButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
             NSLayoutConstraint.activate([
-                downloadAllButton.centerYAnchor.constraint(equalTo: closeButton.centerYAnchor),
-                downloadAllButton.trailingAnchor.constraint(equalTo: closeButton.leadingAnchor, constant: -4)
+                downloadAllButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+                downloadTrailing
             ])
         }
 
@@ -132,27 +149,27 @@ private extension SideMenuBar {
     }
 
     func configureCloseButton() {
-        let button = UIButton()
-        button.setImage(.image(named: "close"), for: .normal)
-
-        addSubview(button)
-        button.squareSize(with: config.iconSize)
-
-        button.addTarget(nil, action: #selector(onCloseTapped), for: .touchUpInside)
-
+        let button = makeBarButton(imageName: "close", action: #selector(onCloseTapped))
         self.closeButton = button
     }
 
     func configureBackButton() {
-        let button = UIButton()
-        button.setImage(.image(named: "back"), for: .normal)
-
-        addSubview(button)
-        button.squareSize(with: config.iconSize)
-
-        button.addTarget(nil, action: #selector(onBackTapped), for: .touchUpInside)
-
+        let button = makeBarButton(imageName: "back", action: #selector(onBackTapped))
         self.backButton = button
+    }
+
+    /// Icon stays `iconSize`, but the control fills the bar so the tap lands beside the glyph too.
+    func makeBarButton(imageName: String, action: Selector) -> UIButton {
+        let button = UIButton()
+        button.setImage(.image(named: imageName), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(button)
+        NSLayoutConstraint.activate([
+            button.widthAnchor.constraint(equalToConstant: max(config.iconSize, 44)),
+            button.heightAnchor.constraint(equalTo: heightAnchor)
+        ])
+        button.addTarget(self, action: action, for: .touchUpInside)
+        return button
     }
 
     func configureDownloadButton() {
@@ -165,7 +182,7 @@ private extension SideMenuBar {
 
         addSubview(button)
         button.sizeToFit()
-        button.addTarget(nil, action: #selector(onDownloadAllTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(onDownloadAllTapped), for: .touchUpInside)
 
         self.downloadAllButton = button
     }

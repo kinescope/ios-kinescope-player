@@ -38,6 +38,10 @@ final class IDsUDStorage: IDsStorage {
         return dict[url]
     }
 
+    func fetchAll() -> [String: String] {
+        return getDict() ?? [:]
+    }
+
     @discardableResult
     func deleteID(by url: String) -> String? {
         guard var dict = getDict() else {

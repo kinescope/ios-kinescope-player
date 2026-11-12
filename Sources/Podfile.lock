@@ -7,15 +7,14 @@ DEPENDENCIES:
   - SwiftProtobuf (~> 1.0)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
-    - SwiftProtobuf
   trunk:
     - M3U8Kit
+    - SwiftProtobuf
 
 SPEC CHECKSUMS:
   M3U8Kit: 6a0d55ba2e62e146f34f53276d7c3aa78ed4fc00
   SwiftProtobuf: 4e16842b83c6fda06b10fac50d73b3f1fce8ab7b
 
-PODFILE CHECKSUM: a2fe72733d714251cc457b0b73f9a72963a52d5f
+PODFILE CHECKSUM: 10a10d2e31d812ea3ef0249da7398d19968736ad
 
 COCOAPODS: 1.10.2

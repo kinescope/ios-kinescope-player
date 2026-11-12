@@ -24,7 +24,14 @@ class Inspector: KinescopeInspectable {
     func video(id: String,
                onSuccess: @escaping (KinescopeVideo) -> Void,
                onError: @escaping (KinescopeInspectError) -> Void) {
-        videosService.getVideo(by: id) { result in
+        video(id: id, drmAuthToken: nil, onSuccess: onSuccess, onError: onError)
+    }
+
+    func video(id: String,
+               drmAuthToken: String?,
+               onSuccess: @escaping (KinescopeVideo) -> Void,
+               onError: @escaping (KinescopeInspectError) -> Void) {
+        videosService.getVideo(by: id, drmAuthToken: drmAuthToken) { result in
             switch result {
             case .success(let response):
                 onSuccess(response)
@@ -45,13 +52,19 @@ private extension Inspector {
         }
 
         switch serverError.code {
-        case 404:
+        case 404, 4040404:
             return .notFound
-        case 403:
+        case 403, 4030403:
             return .denied
         case ..<0:
             return .network
         default:
+            if serverError.code / 10_000 == 404 {
+                return .notFound
+            }
+            if serverError.code / 10_000 == 403 {
+                return .denied
+            }
             return .unknown(error)
         }
     }

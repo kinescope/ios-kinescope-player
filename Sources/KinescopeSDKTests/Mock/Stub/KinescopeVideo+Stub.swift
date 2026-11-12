@@ -9,11 +9,11 @@
 
 extension KinescopeVideo {
     
-    static func stub(id: String = "", hlsLink: String = "") -> KinescopeVideo {
+    static func stub(id: String = "", hlsLink: String = "", projectId: String = "", folderId: String? = nil) -> KinescopeVideo {
         .init(id: id,
-              workspaceId: "",
-              projectId: "",
-              folderId: "",
+              workspaceId: nil,
+              projectId: projectId,
+              folderId: folderId,
               type: .vod,
               title: "",
               description: "",

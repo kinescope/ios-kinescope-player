@@ -21,11 +21,21 @@ final class AnnounceView: UIView {
 
     private let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMMM d, h:mm a"
+        let isRussian = Locale.preferredLanguages.first?.hasPrefix("ru") ?? false
+        dateFormatter.dateFormat = isRussian ? "d MMMM, HH:mm" : "MMMM d, HH:mm"
+        if isRussian {
+            dateFormatter.locale = Locale(identifier: "ru_RU")
+        }
         return dateFormatter
     }()
 
     private let config: KinescopeAnnounceConfiguration
+    private var startsAt: Date?
+    private var countdownTimer: Timer?
+
+    deinit {
+        countdownTimer?.invalidate()
+    }
 
     // MARK: - Lifecycle
 
@@ -44,15 +54,71 @@ final class AnnounceView: UIView {
 
 extension AnnounceView: AnnounceViewInput {
     func display(startsAt: Date?) {
+        self.startsAt = startsAt
         if let startsAt {
             subtitleLabel.text = dateFormatter.string(from: startsAt)
         } else {
             subtitleLabel.text = ""
         }
+        updateCountdown()
+        scheduleCountdown()
         if isHidden {
             showAnimated()
         }
     }
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        if window == nil {
+            countdownTimer?.invalidate()
+            countdownTimer = nil
+        } else if startsAt != nil {
+            scheduleCountdown()
+        }
+    }
+}
+
+// MARK: - Countdown
+
+private extension AnnounceView {
+
+    func scheduleCountdown() {
+        countdownTimer?.invalidate()
+        countdownTimer = nil
+        guard startsAt != nil, window != nil else {
+            return
+        }
+        let timer = Timer(timeInterval: 15, repeats: true) { [weak self] _ in
+            self?.updateCountdown()
+        }
+        RunLoop.main.add(timer, forMode: .common)
+        countdownTimer = timer
+    }
+
+    func updateCountdown() {
+        titleLabel.text = Self.countdownTitle(to: startsAt)
+    }
+
+    static func countdownTitle(to startsAt: Date?, now: Date = Date()) -> String {
+        guard let startsAt else {
+            return L10n.Player.soon
+        }
+        let diff = startsAt.timeIntervalSince(now)
+        guard diff > 1 else {
+            return L10n.Player.liveAwaiting
+        }
+        let minutes = max(1, Int(diff / 60))
+        let hours = max(1, Int(diff / 3600))
+        let days = max(1, Int(diff / 86400))
+        if minutes <= 120 {
+            return L10n.Player.liveInMinutes(minutes)
+        } else if hours <= 48 {
+            return L10n.Player.liveInHours(hours)
+        } else {
+            return L10n.Player.liveInDays(days)
+        }
+    }
+
 }
 
 // MARK: - Private

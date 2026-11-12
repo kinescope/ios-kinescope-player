@@ -9,7 +9,7 @@ extension String {
 
         let attachment = NSTextAttachment()
         if hasPrefix("720") || hasPrefix("1080") || hasPrefix("1440") {
-            attachment.image = .image(named: "hd")
+            attachment.image = .image(named: "HD")
         } else if hasPrefix("2160") {
             attachment.image = .image(named: "uhd")
         } else {

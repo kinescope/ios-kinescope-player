@@ -7,6 +7,7 @@ protocol KinescopePlayerViewDelegate: AnyObject {
     func didConfirmSeek()
     func didFastForward()
     func didFastBackward()
+    func didTouchVideo()
     func didPresentFullscreen(from view: KinescopePlayerView)
     func didShowAttachments() -> [KinescopeVideoAdditionalMaterial]?
     func didSelect(rate: Float)
@@ -15,4 +16,9 @@ protocol KinescopePlayerViewDelegate: AnyObject {
     func didSelectDownloadAll(for title: String)
     func didSelect(subtitles: String)
     func didSelect(option: AnyHashable, optionView: UIView)
+    func didSelect(audioTrack index: Int)
+    func didSelect(playlistItem: KinescopePlaylistItem)
+    func didSeekToLive()
+    func didSeek(toTime seconds: TimeInterval)
+    func didUpdate(subtitleStyle: SubtitleStyle)
 }

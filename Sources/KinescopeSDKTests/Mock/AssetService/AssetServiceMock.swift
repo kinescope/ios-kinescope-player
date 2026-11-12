@@ -25,7 +25,7 @@ final class AssetServiceMock: AssetService {
 
     // MARK: - Methods
 
-    func enqueueDownload(assetId: String, url: URL) {
+    func enqueueDownload(assetId: String, url: URL, video _: KinescopeVideo?, minimumHeight _: Int?) {
         switch assetStates[assetId] {
         case .completed(let value):
             let baseURL = URL(fileURLWithPath: NSHomeDirectory())

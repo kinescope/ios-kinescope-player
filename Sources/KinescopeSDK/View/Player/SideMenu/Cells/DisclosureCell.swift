@@ -13,14 +13,23 @@ final class DisclosureCell: UITableViewCell {
     struct Model {
         let title: String
         let value: NSAttributedString?
+        let icon: UIImage?
         let config: KinescopeSideMenuItemConfiguration
+    }
+
+    private enum Constants {
+        static let inset: CGFloat = 16
+        static let leadingIconSize: CGFloat = 20
+        static let leadingIconGap: CGFloat = 12
     }
 
     // MARK: - Views
 
+    private weak var leadingIconView: UIImageView!
     private weak var titleLabel: UILabel!
     private weak var valueLabel: UILabel!
     private weak var iconView: UIImageView!
+    private var titleLeading: NSLayoutConstraint!
     private var model: Model?
 
     // MARK: - Initialization
@@ -59,6 +68,11 @@ final class DisclosureCell: UITableViewCell {
 
         titleLabel.text = model.title
         valueLabel.attributedText = model.value
+        leadingIconView.image = model.icon
+        leadingIconView.isHidden = model.icon == nil
+        titleLeading.constant = model.icon == nil
+            ? Constants.inset
+            : Constants.inset + Constants.leadingIconSize + Constants.leadingIconGap
     }
 
 }
@@ -77,25 +91,41 @@ private extension DisclosureCell {
 
     func setupLayout() {
 
+        let leadingIconView = UIImageView()
         let titleLabel = UILabel()
         let valueLabel = UILabel()
         let iconView = UIImageView(image: .image(named: "forward"))
 
-        addSubviews(titleLabel, valueLabel, iconView)
+        leadingIconView.contentMode = .scaleAspectFit
+        iconView.contentMode = .scaleAspectFit
+        valueLabel.textAlignment = .right
+        titleLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+
+        addSubviews(leadingIconView, titleLabel, valueLabel, iconView)
+
+        let titleLeading = titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.inset)
 
         NSLayoutConstraint.activate([
+            leadingIconView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.inset),
+            leadingIconView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            leadingIconView.widthAnchor.constraint(equalToConstant: Constants.leadingIconSize),
+            leadingIconView.heightAnchor.constraint(equalToConstant: Constants.leadingIconSize),
             titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            titleLeading,
             valueLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            valueLabel.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: 8),
-            valueLabel.trailingAnchor.constraint(equalTo: iconView.leadingAnchor, constant: -16),
-            iconView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-            iconView.centerYAnchor.constraint(equalTo: centerYAnchor)
+            valueLabel.leadingAnchor.constraint(greaterThanOrEqualTo: titleLabel.trailingAnchor, constant: 8),
+            valueLabel.trailingAnchor.constraint(equalTo: iconView.leadingAnchor, constant: -4),
+            iconView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+            iconView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            iconView.widthAnchor.constraint(equalToConstant: 6),
+            iconView.heightAnchor.constraint(equalToConstant: 10)
         ])
 
+        self.leadingIconView = leadingIconView
         self.titleLabel = titleLabel
         self.valueLabel = valueLabel
         self.iconView = iconView
+        self.titleLeading = titleLeading
 
     }
 

@@ -11,6 +11,13 @@ protocol PlayingStrategy {
 
     var player: AVPlayer { get }
 
+    /// `true` when an item is already bound and still usable.
+    /// A preparing item counts: `isReadyToPlay == false` does not mean the queue is empty.
+    var hasBoundItem: Bool { get }
+
+    /// `true` if strategy restarts item by itself when it reaches the end
+    var isLooping: Bool { get }
+
     /// Set AVPlayerItem to `Player`
     ///
     /// - parameter item: AVPlayerItem with resource to play
@@ -26,9 +33,26 @@ protocol PlayingStrategy {
 
     /// Pause playing of video
     func pause()
+
+    /// Let current item play to the end without restarting it
+    func stopLooping()
+
+    /// Allow strategy to restart items by itself again
+    func startLooping()
 }
 
 extension PlayingStrategy {
+
+    var hasBoundItem: Bool {
+        guard let item = player.currentItem else {
+            return false
+        }
+        return item.status != .failed
+    }
+
+    var isLooping: Bool {
+        false
+    }
 
     func play(with rate: Float) {
         player.rate = rate
@@ -37,5 +61,9 @@ extension PlayingStrategy {
     func pause() {
         player.pause()
     }
+
+    func stopLooping() { }
+
+    func startLooping() { }
 
 }

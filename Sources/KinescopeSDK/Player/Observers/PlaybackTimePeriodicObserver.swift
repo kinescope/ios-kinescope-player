@@ -31,24 +31,31 @@ final class PlaybackTimePeriodicObserver: Factory {
                 return
             }
             
-            /// Does not make sense without control panel and curremtItem
-            guard let controlPanel = playerBody?.view?.controlPanel,
-                  let currentItem = playerBody?.strategy.player.currentItem,
-                  let duration = playerBody?.strategy.player.durationSeconds,
-                  let isLive = playerBody?.isLive else {
+            guard let currentItem = playerBody?.strategy.player.currentItem else {
                 return
             }
 
-            secondsPlayed(isLive ? duration : min(duration, time.seconds))
+            let duration = playerBody?.strategy.player.durationSeconds
+            let isLive = playerBody?.isLive ?? false
+            let played: TimeInterval = {
+                guard let duration, duration.isFinite, duration > 0 else {
+                    return time.seconds
+                }
+                return isLive ? duration : min(duration, time.seconds)
+            }()
+            secondsPlayed(played)
 
-            Kinescope.shared.logger?.log(message: "playback position changed to \(time) seconds", level: KinescopeLoggerLevel.player)
             playerBody?.delegate?.player(playbackPositionMovedTo: time.seconds)
+
+            guard let controlPanel = playerBody?.view?.controlPanel,
+                  let duration, duration.isFinite, duration > 0 else {
+                return
+            }
             
             // Preload observation
             
             let buferredTime = currentItem.buferredSeconds
-            Kinescope.shared.logger?.log(message: "playback buffered \(buferredTime) seconds", level: KinescopeLoggerLevel.player)
-            playerBody?.delegate?.player(playbackBufferMovedTo: time.seconds)
+            playerBody?.delegate?.player(playbackBufferMovedTo: buferredTime)
             
             let bufferProgress = CGFloat(buferredTime / duration)
             

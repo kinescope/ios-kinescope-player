@@ -31,9 +31,9 @@ public extension KinescopeVideoNameConfiguration {
 
     static let `default`: KinescopeVideoNameConfiguration = .init(
         titleFont: .systemFont(ofSize: 14.0, weight: .medium),
-        titleColor: UIColor.white.withAlphaComponent(0.8),
+        titleColor: .white,
         subtitleFont: .systemFont(ofSize: 12.0),
-        subtitleColor: UIColor.white.withAlphaComponent(0.8)
+        subtitleColor: UIColor.white.withAlphaComponent(0.64)
     )
 }
 

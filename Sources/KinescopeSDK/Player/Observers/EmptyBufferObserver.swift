@@ -25,7 +25,7 @@ final class EmptyBufferObserver: KVOObserverFactory {
             options: [.new, .old],
             changeHandler: { [weak self] item, value in
                 let isBufferEmpty = value.newValue ?? item.isPlaybackBufferEmpty
-                if isBufferEmpty {
+                if isBufferEmpty, self?.playerBody?.wantsPlayback == true {
                     self?.repeater?.start()
                 }
 

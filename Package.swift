@@ -6,6 +6,9 @@ import PackageDescription
 let package = Package(
     name: "KinescopeSDK",
     defaultLocalization: "en",
+    platforms: [
+        .iOS("15.0")
+    ],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
@@ -27,7 +30,13 @@ let package = Package(
                 .product(name: "M3U8Parser", package: "M3U8Parser"),
                 .product(name: "SwiftProtobuf", package: "swift-protobuf")
             ],
-            path: "Sources/KinescopeSDK"),
+            path: "Sources/KinescopeSDK",
+            resources: [
+                .process("Resources/Fonts"),
+                .process("Resources/Assets.xcassets"),
+                .process("Resources/en.lproj"),
+                .process("Resources/ru.lproj")
+            ]),
         .testTarget(
             name: "KinescopeSDKTests",
             dependencies: [

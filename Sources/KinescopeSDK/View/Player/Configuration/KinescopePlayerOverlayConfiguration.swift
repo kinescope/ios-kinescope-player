@@ -63,10 +63,10 @@ public extension KinescopePlayerOverlayConfiguration {
         pauseImage: UIImage.image(named: "pause"),
         fastForwardImage: UIImage.image(named: "fastForward"),
         fastBackwardImage: UIImage.image(named: "fastBackward"),
-        playBackgroundRadius: 48,
-        playBackgroundColor: UIColor(red: 0.38, green: 0.38, blue: 0.988, alpha: 1),
-        backgroundColor: UIColor.black.withAlphaComponent(0.3),
-        duration: 5.0,
+        playBackgroundRadius: 36,
+        playBackgroundColor: UIColor(red: 0.38, green: 0.38, blue: 0.988, alpha: 0.64),
+        backgroundColor: UIColor.black.withAlphaComponent(0.75),
+        duration: 3.0,
         nameConfiguration: .default
     )
     
