@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = "KinescopeSDK"
-  s.version = "1.0.0"
+  s.version = "1.0.2"
   s.summary = "Library to help you include Kinescope player into your mobile iOS application"
   s.homepage = "https://github.com/kinescope/ios-kinescope-player"
   s.license = { :type => "MIT OR Apache-2.0", :file => "LICENSE" }

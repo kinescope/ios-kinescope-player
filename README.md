@@ -3,7 +3,7 @@
 iOS SDK for [Kinescope](https://kinescope.io/) video: player, vertical Shorts feed, and offline HLS downloads with FairPlay, in one module. Deployment target is iOS 15. Distributed as git tags through CocoaPods (`:git` and `:tag`) and Swift Package Manager.
 
 ```ruby
-pod 'KinescopeSDK', :git => 'https://github.com/kinescope/ios-kinescope-player.git', :tag => '1.0.0'
+pod 'KinescopeSDK', :git => 'https://github.com/kinescope/ios-kinescope-player.git', :tag => '1.0.2'
 ```
 
 With CocoaPods, add a `post_install` block that sets `IPHONEOS_DEPLOYMENT_TARGET` to `15.0` for all pods (see [docs/installation.md](docs/installation.md)). Otherwise current Xcode rejects the `M3U8Kit` and `SwiftProtobuf` targets.

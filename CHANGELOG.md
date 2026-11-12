@@ -1,3 +1,9 @@
+## 1.0.2
+
+### Fixed
+
+- Swift Package Manager resolution: `M3U8Parser` is pinned to the 1.1.x line. Version 1.2.0 renamed the package to `M3U8Kit`, so `1.0.0` cannot be resolved through SPM. Use `1.0.2` for SPM.
+
 ## 1.0.0
 
 ### Added

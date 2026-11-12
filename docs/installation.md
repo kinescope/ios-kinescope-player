@@ -13,7 +13,7 @@ platform :ios, '15.0'
 use_frameworks!
 
 target 'YourApp' do
-  pod 'KinescopeSDK', :git => 'https://github.com/kinescope/ios-kinescope-player.git', :tag => '1.0.0'
+  pod 'KinescopeSDK', :git => 'https://github.com/kinescope/ios-kinescope-player.git', :tag => '1.0.2'
 end
 ```
 
@@ -41,7 +41,7 @@ end
 
 ## Swift Package Manager
 
-In Xcode, add the package `https://github.com/kinescope/ios-kinescope-player.git` with `Exact Version` `1.0.0`, then add the `KinescopeSDK` product to the app target. The package lives at the repository root (`Package.swift`, tools 5.3, iOS 15). It builds the whole SDK: the player, Shorts, and offline downloads.
+In Xcode, add the package `https://github.com/kinescope/ios-kinescope-player.git` with `Exact Version` `1.0.2`, then add the `KinescopeSDK` product to the app target. The package lives at the repository root (`Package.swift`, tools 5.3, iOS 15). It builds the whole SDK: the player, Shorts, and offline downloads.
 
 ## App setup
 
