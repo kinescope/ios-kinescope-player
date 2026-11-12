@@ -18,7 +18,8 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        .package(url: "https://github.com/M3U8Kit/M3U8Parser.git", from: "1.1.0"),
+        // 1.2.0 renamed the package and product to M3U8Kit, so stay on the 1.1.x line that ships M3U8Parser.
+        .package(url: "https://github.com/M3U8Kit/M3U8Parser.git", "1.1.0"..<"1.2.0"),
         .package(url: "https://github.com/apple/swift-protobuf.git", from: "1.26.0")
     ],
     targets: [
