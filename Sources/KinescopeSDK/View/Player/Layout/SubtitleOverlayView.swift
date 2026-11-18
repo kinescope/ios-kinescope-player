@@ -6,6 +6,7 @@ final class SubtitleOverlayView: UIView {
     var onTap: (() -> Void)?
 
     private let label = PaddingLabel(insets: UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8))
+    private var bottomConstraint: NSLayoutConstraint?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -22,13 +23,30 @@ final class SubtitleOverlayView: UIView {
         label.isHidden = true
         addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
+        let bottom = label.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -16)
+        bottomConstraint = bottom
         NSLayoutConstraint.activate([
             label.centerXAnchor.constraint(equalTo: centerXAnchor),
-            label.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -64),
+            bottom,
             label.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: 12),
             label.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -12),
             label.widthAnchor.constraint(lessThanOrEqualToConstant: 280)
         ])
+    }
+
+    /// `inset` is the distance from the safe-area bottom. Larger while the seek bar is on screen.
+    func setBottomInset(_ inset: CGFloat, animated: Bool) {
+        let constant = -inset
+        guard let bottomConstraint, abs(bottomConstraint.constant - constant) > 0.5 else {
+            return
+        }
+        bottomConstraint.constant = constant
+        let updates = { self.layoutIfNeeded() }
+        guard animated else {
+            updates()
+            return
+        }
+        UIView.animate(withDuration: 0.2, animations: updates)
     }
 
     required init?(coder: NSCoder) {

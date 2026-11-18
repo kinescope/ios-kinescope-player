@@ -9,6 +9,8 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
         static let viewThreshold: TimeInterval = 5
         static let minPlaybackThreshold: TimeInterval = 5
         static let maxPlaybackThreshold: TimeInterval = 60
+        /// Nearest keyframe within a second. An exact seek on HLS often never finishes.
+        static let seekTolerance = CMTime(seconds: 1, preferredTimescale: 600)
     }
 
     public weak var pipDelegate: AVPictureInPictureControllerDelegate? {
@@ -93,6 +95,8 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
     }
 
     private var isSeeking = false
+    /// Ignores the completion of a seek that a newer one already replaced.
+    private var seekGeneration = 0
     private var isPreparingSeek = false
     /// When user seeks before duration is available, store position (0-1) and apply in didConfirmSeek.
     private var pendingSeekPosition: Double?
@@ -434,7 +438,7 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
         // A ceiling alone leaves the player on the variant it already buffered.
         let time = strategy.player.currentTime()
         if time.isValid, time.seconds.isFinite {
-            strategy.player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero)
+            strategy.player.seek(to: time, toleranceBefore: Constants.seekTolerance, toleranceAfter: Constants.seekTolerance)
         }
     }
 
@@ -838,6 +842,7 @@ private extension KinescopeVideoPlayer {
             updateNowPlaying()
             updateChapters()
             loadAudioTracks()
+            suppressEmbeddedCaptions()
             // Android drops the live cover on STATE_READY. Waiting for the picture
             // to drift kept the stub up through the seek to the live edge.
             if Self.isBroadcast(video), !isAwaitingLiveStart {
@@ -973,6 +978,8 @@ private extension KinescopeVideoPlayer {
             // seek backward, so it is not live anymore
             isLive = false
         }
+        seekGeneration += 1
+        let generation = seekGeneration
         self.isSeeking = true
         let time = CMTime(seconds: seconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
 
@@ -980,8 +987,12 @@ private extension KinescopeVideoPlayer {
                                      level: KinescopeLoggerLevel.player)
         delegate?.player(didSeekTo: seconds)
 
-        strategy.player.seek(to: time, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] finished in
-            guard let self else { return }
+        // Zero tolerance waits for an exact sample. On HLS that sample often is not a keyframe,
+        // so the player stays in `.waitingToPlayAtSpecifiedRate` and the spinner never leaves.
+        strategy.player.seek(to: time,
+                             toleranceBefore: Constants.seekTolerance,
+                             toleranceAfter: Constants.seekTolerance) { [weak self] finished in
+            guard let self, generation == self.seekGeneration else { return }
             self.isSeeking = false
             if !self.hasPresentedVideo {
                 let seconds = self.strategy.player.currentTime().seconds
@@ -992,6 +1003,18 @@ private extension KinescopeVideoPlayer {
             }
             self.updateNowPlaying()
         }
+    }
+
+    /// HLS embeds its own captions. AVPlayer draws them even while the SDK menu says they are off.
+    func suppressEmbeddedCaptions() {
+        guard let item = strategy.player.currentItem else {
+            return
+        }
+        strategy.player.appliesMediaSelectionCriteriaAutomatically = false
+        guard let group = item.asset.mediaSelectionGroup(forMediaCharacteristic: .legible) else {
+            return
+        }
+        item.select(nil, in: group)
     }
 
     func apply(rate: Float) {

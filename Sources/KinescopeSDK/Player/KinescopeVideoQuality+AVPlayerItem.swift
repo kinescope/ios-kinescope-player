@@ -36,7 +36,7 @@ fileprivate extension KinescopeVideoQuality {
 #if !targetEnvironment(simulator)
         dataProtectionHandler?.bind(with: asset)
 #endif
-        return AVPlayerItem(asset: asset)
+        return Self.item(for: asset)
     }
 
     func makeDownloadedItem(from url: URL, with dataProtectionHandler: DataProtectionHandler?) -> AVPlayerItem? {
@@ -46,7 +46,7 @@ fileprivate extension KinescopeVideoQuality {
         if let handler = dataProtectionHandler as? DataProtectionKeySessionHandler, handler.hasOfflineKey {
             handler.bind(with: asset)
         }
-        return AVPlayerItem(asset: asset)
+        return Self.item(for: asset)
     }
 
     @available(*, deprecated, message: "Changing of playerItem is not required. Switching between qualities is handling in HLS stream.")
@@ -55,7 +55,11 @@ fileprivate extension KinescopeVideoQuality {
             return nil
         }
 
-        return AVPlayerItem(url: url)
+        return Self.item(for: AVURLAsset(url: url))
+    }
+
+    static func item(for asset: AVURLAsset) -> AVPlayerItem {
+        AVPlayerItem(asset: asset)
     }
 
     @available(*, deprecated, message: "Changing of playerItem is not required. Switching between qualities is handling in HLS stream.")
