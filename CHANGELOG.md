@@ -1,3 +1,11 @@
+## 1.0.3
+
+### Fixed
+
+- Embedded HLS captions no longer show while subtitles are off. The SDK draws captions itself, and they move down when the seek bar hides.
+- Seeking no longer sticks on the loading indicator. Playback lands on the nearest keyframe instead of waiting for an exact sample.
+- A tap on either outer third of the video seeks immediately. The center tap still shows and hides the controls.
+
 ## 1.0.2
 
 ### Fixed

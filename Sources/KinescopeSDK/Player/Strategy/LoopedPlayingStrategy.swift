@@ -10,7 +10,7 @@ import AVFoundation
 /// Strategy to play item inside infinite loop.
 final class LoopedPlayingStrategy: PlayingStrategy {
 
-    private var queuePlayer = AVQueuePlayer()
+    private var queuePlayer = LoopedPlayingStrategy.makeQueue()
     private var looper: AVPlayerLooper?
     private var templateURL: URL?
     private var isLoopingDisabled = false
@@ -92,13 +92,19 @@ final class LoopedPlayingStrategy: PlayingStrategy {
     private func installFreshQueue() -> (previous: AVQueuePlayer, rate: Float) {
         let previous = queuePlayer
         let rate = previous.rate
-        let fresh = AVQueuePlayer()
+        let fresh = Self.makeQueue()
         fresh.volume = previous.volume
         fresh.isMuted = previous.isMuted
         fresh.preventsDisplaySleepDuringVideoPlayback = previous.preventsDisplaySleepDuringVideoPlayback
         previous.pause()
         queuePlayer = fresh
         return (previous, rate)
+    }
+
+    private static func makeQueue() -> AVQueuePlayer {
+        let player = AVQueuePlayer()
+        player.appliesMediaSelectionCriteriaAutomatically = false
+        return player
     }
 
 }

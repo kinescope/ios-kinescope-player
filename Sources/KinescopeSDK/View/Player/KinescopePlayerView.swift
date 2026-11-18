@@ -269,11 +269,18 @@ public class KinescopePlayerView: UIView {
         overlay?.isSelected = true
         controlPanel?.isHidden = false
         controlPanel?.showAnimated()
+        setSubtitleOffset(controlsVisible: true, animated: true)
         overlayDebouncer.handler = { }
     }
 
     func showSubtitle(_ text: String?) {
         subtitleOverlay?.set(text: text)
+    }
+
+    /// Captions sit above the seek bar while it is on screen and drop to the bottom once it hides.
+    private func setSubtitleOffset(controlsVisible: Bool, animated: Bool) {
+        let bar = config.controlPanel?.preferedHeight ?? 52
+        subtitleOverlay?.setBottomInset(controlsVisible ? bar + 12 : 16, animated: animated)
     }
 
     func set(options: [KinescopePlayerOption]) {
@@ -383,6 +390,7 @@ public extension KinescopePlayerView {
         overlay?.isUserInteractionEnabled = true
         overlay?.hideContentImmediately()
         controlPanel?.setVisible(false, animated: false)
+        setSubtitleOffset(controlsVisible: false, animated: false)
     }
 
     /// Center button, seek bar and the gradient bands, after fullscreen has finished moving.
@@ -393,6 +401,7 @@ public extension KinescopePlayerView {
         overlay?.isSelected = true
         controlPanel?.setVisible(true, animated: false)
         controlPanel?.expanded = false
+        setSubtitleOffset(controlsVisible: true, animated: false)
         guard autoHide, config.controlPanel?.hideOnPlayTimeout != nil else {
             return
         }
@@ -407,6 +416,7 @@ public extension KinescopePlayerView {
         overlay?.isUserInteractionEnabled = true
         overlay?.hideContentImmediately()
         controlPanel?.setVisible(true, animated: false)
+        setSubtitleOffset(controlsVisible: true, animated: false)
     }
 
     /// Looped playback swaps the queue player. The layer and PiP follow the new one.
@@ -1009,6 +1019,7 @@ private extension KinescopePlayerView {
                 return
             }
             self.controlPanel?.hideAnimated(with: { self.controlPanel?.expanded = false })
+            self.setSubtitleOffset(controlsVisible: false, animated: true)
         }
     }
 
@@ -1024,6 +1035,7 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
                 overlay?.isSelected = false
                 if config.controlPanel?.hideOnPlayTimeout != nil {
                     controlPanel?.hideAnimated()
+                    setSubtitleOffset(controlsVisible: false, animated: true)
                 }
             } else {
                 controlPanel?.expanded = false
@@ -1031,6 +1043,7 @@ extension KinescopePlayerView: PlayerOverlayViewDelegate {
         } else {
             overlay?.isSelected = true
             controlPanel?.showAnimated()
+            setSubtitleOffset(controlsVisible: true, animated: true)
             addDebouncerHandler()
         }
         overlayDebouncer.renewInterval()
