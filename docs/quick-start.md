@@ -1,5 +1,11 @@
 # Quick start
 
+Add the package first, see [Installation](installation.md). Files that use the player start with:
+
+```swift
+import KinescopeSDK
+```
+
 ## 1. Configure the SDK
 
 ```swift
@@ -53,3 +59,17 @@ KinescopePlayerConfig(videoId: videoId,
 ```
 
 `drmAuthToken` is sent as `drmauthtoken` on the video metadata request.
+
+## Shorts
+
+With the `KinescopeShorts` product the feed is one view controller. It loads the videos of a dashboard project or folder (`nil` is no filter):
+
+```swift
+import KinescopeSDK
+import KinescopeShorts
+
+let shorts = KinescopeShortsViewController(projectId: projectId, folderId: nil, perPage: 100)
+navigationController?.pushViewController(shorts, animated: true)
+```
+
+The feed needs `Kinescope.shared.setConfig` with the dashboard token from step 1. Its look is set by `KinescopeShortsUIConfig`, see [Customization](customization.md#shorts).

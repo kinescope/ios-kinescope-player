@@ -1,6 +1,6 @@
 import UIKit
 
-/// Caption look, same options as on Android.
+/// Caption look.
 struct SubtitleStyle: Equatable {
     var fontColor: UIColor = .white
     var fontSizePercent: Int = 100

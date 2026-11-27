@@ -1,7 +1,7 @@
 import UIKit
 import KinescopeSDK
 
-/// Same screen as the Android Live test: a player, a live id field, and Watch live.
+/// Live test: a player, a live id field, and Watch live.
 final class LiveTestViewController: UIViewController, UITextFieldDelegate {
 
     private let defaultLiveId = "aLJgR9TJfe2EUBejpH5Fuo"

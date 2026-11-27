@@ -54,7 +54,11 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
     private let dependencies: KinescopePlayerDependencies
     
     private var analyticStorage: InnerEventsDataStorage & InnerEventsDataInputs = InMemoryInnerEventsDataStorage()
-    private lazy var analytic: InnerEventsHandler? = Kinescope.analytic?.provide(with: analyticStorage)
+    private lazy var analyticHandler: InnerEventsHandler? = Kinescope.analytic?.provide(with: analyticStorage)
+    /// `nil` while `doNotTrack` is on, so no event leaves the device.
+    private var analytic: InnerEventsHandler? {
+        doNotTrack ? nil : analyticHandler
+    }
 
     private let kvoBag = KVOBag()
 
@@ -115,11 +119,22 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
     private var exitFullscreenOnPortrait = false
     private var portraitExit: DispatchWorkItem?
     private var ignorePortraitExitUntil: CFTimeInterval = 0
+    /// Entering fullscreen on rotation needs the device to be seen in portrait first,
+    /// so leaving fullscreen by the button while holding the phone in landscape
+    /// does not open it again at once.
+    private var rotateEnterArmed = true
     private var playbackRate: Float = KinescopePlayingRate.normal.rawValue
     private(set) var currentQuality = L10n.Player.auto
     private(set) var currentSubtitles: String?
-    private lazy var isLoopEnabled = config.looped
-    /// Shorts cap the picture at 480, same as Android `setMaxVideoSize(854, 480)`.
+    /// Subtitles asked for before the video metadata arrived. Applied once it loads.
+    private var subtitlesRequest: SubtitlesRequest?
+    /// Audio rendition of the HLS master (`EXT-X-MEDIA TYPE=AUDIO`), the stream for quality "Audio".
+    private var audioOnlyURL: URL?
+    private var audioOnlyTask: URLSessionDataTask?
+    /// Quality "Audio" is on: the audio rendition plays and the poster replaces the picture.
+    private(set) var isAudioOnly = false
+    private lazy var isLoopEnabled = config.looped || config.background
+    /// Shorts cap the picture at 480 (854 × 480).
     private var maximumPlaybackHeight: CGFloat = 0
 
     var currentRate: KinescopePlayingRate {
@@ -144,6 +159,10 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
                 return
             }
             isLive = Self.isBroadcast(video) && strategy.player.isReadyToPlay
+            audioOnlyTask?.cancel()
+            audioOnlyURL = nil
+            isAudioOnly = false
+            view?.setAudioOnly(false)
             audioGroup = nil
             audioOptions = []
             audioTrackTitles = []
@@ -156,7 +175,7 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
             drmHandler = dependencies.drmFactory.provide(for: video)
             analyticStorage.videoInput.setVideo(video)
             analyticStorage.sessionInput.resetWatchedDuration()
-            analytic?.reset()
+            analyticHandler?.reset()
             if isNowPlayingEnabled {
                 nowPlaying.loadArtwork(from: posterSource(for: video))
                 updateNowPlaying()
@@ -207,7 +226,34 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
     }
 
     var availableAssets: [KinescopeVideoAsset] {
-        video?.downloadableAssets ?? []
+        guard config.localPlaybackURL != nil else {
+            return video?.downloadableAssets ?? []
+        }
+        return downloadedAsset.map { [$0] } ?? []
+    }
+
+    var showsAutoQuality: Bool {
+        config.localPlaybackURL == nil
+    }
+
+    /// The rendition saved in the downloaded file.
+    var downloadedAsset: KinescopeVideoAsset? {
+        guard config.localPlaybackURL != nil, let assets = video?.downloadableAssets, !assets.isEmpty else {
+            return nil
+        }
+        guard let height = OfflineVideoStore.downloadedHeight(for: config.videoId) else {
+            // Without a pick the download keeps the best rendition.
+            return assets.first
+        }
+        return assets.first { $0.height == height }
+            ?? assets.min { abs($0.height - height) < abs($1.height - height) }
+    }
+
+    var supportsAudioOnly: Bool {
+        guard let video, !Self.isBroadcast(video) else {
+            return false
+        }
+        return config.localPlaybackURL != nil || audioOnlyURL != nil
     }
 
     var availableSubtitles: [String] {
@@ -238,11 +284,21 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
         self.dependencies = dependencies
         self._playRepeater = Repeating(executionQueue: .main, mode: config.repeatingMode)
         self.config = config
+        self.doNotTrack = config.doNotTrack
+        self.allowsBackgroundPlayback = config.allowsBackgroundPlayback
+        self.startTime = config.startTime
+        analyticStorage.sessionInput.set(externalId: config.externalId)
         playRepeater = .init(title: "play") { [weak self] in
             guard self?.wantsPlayback == true else { return }
             self?.play()
         }
         addNotofications()
+        // Observers do not run for assignments in the initializer, so register here.
+        autopause = config.autopause
+        Self.registerForAutopause(self)
+        if config.background {
+            isMuted = true
+        }
     }
 
     deinit {
@@ -266,6 +322,7 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
 
     public func play() {
         wantsPlayback = true
+        pauseOthersForAutopause()
         installLoopHandoffIfNeeded()
         if let video {
             // Not ready yet usually means the item is still preparing.
@@ -336,6 +393,10 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
         if self.view === view, view.playerView.player === strategy.player {
             return
         }
+        if config.background {
+            // Background video: the picture only, no controls to tap.
+            view.setLayout(with: .background(from: view.config))
+        }
         analyticStorage.sessionInput.refreshViewId()
         
         view.bind(playingRateProvider: PlayingRateProvider(rateSource: self),
@@ -367,6 +428,9 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
         addPlayerStatusObserver()
         addPlayerItemObserver()
         addPlayerStatusObserver()
+        if config.background, !wantsPlayback {
+            play()
+        }
     }
 
     public func detach(view: KinescopePlayerView) {
@@ -415,9 +479,51 @@ public class KinescopeVideoPlayer: KinescopePlayer, KinescopePlayerBody, Fullscr
         }
     }
 
+    /// Opens fullscreen. Does nothing when fullscreen is already open.
     public func enterFullscreen() {
-        guard let view else { return }
+        guard let view, !KinescopeFullscreenViewController.isPresented else { return }
         didPresentFullscreen(from: view)
+    }
+
+    /// Closes fullscreen. Does nothing when this player is not in fullscreen.
+    public func exitFullscreen() {
+        guard let view, isFullScreenModeActive, KinescopeFullscreenViewController.isPresented else { return }
+        didPresentFullscreen(from: view)
+    }
+
+    /// Do not send analytics events, the same as `dnt` in the web player embed.
+    /// Starts from `KinescopePlayerConfig.doNotTrack`.
+    public var doNotTrack = false
+
+    /// Pause this player when another player with `autopause` starts playing,
+    /// the same as `autopause` in the web player embed. Starts from `KinescopePlayerConfig.autopause`.
+    public var autopause = false {
+        didSet {
+            Self.registerForAutopause(self)
+        }
+    }
+
+    /// Keep playing when the app goes to the background. The picture is detached
+    /// from the view there, so the sound goes on. The host app needs the `playback`
+    /// audio session category and the background audio mode.
+    /// Starts from `KinescopePlayerConfig.allowsBackgroundPlayback`.
+    public var allowsBackgroundPlayback = false
+
+    /// Start position in seconds, applied on every load. Ignored for live. `nil` starts from the beginning.
+    /// Starts from `KinescopePlayerConfig.startTime`.
+    public var startTime: TimeInterval?
+
+    /// `true` while this player is in fullscreen.
+    public var isFullscreen: Bool {
+        isFullScreenModeActive
+    }
+
+    /// Viewer identifier sent with every analytics event as `Session.ExternalID`.
+    /// Starts from `KinescopePlayerConfig.externalId`. Can be changed at any time:
+    /// the next event uses the new value. `nil` or blank sends nothing.
+    public var externalId: String? {
+        get { analyticStorage.sessionInput.externalId }
+        set { analyticStorage.sessionInput.set(externalId: newValue) }
     }
 
     public func select(quality: KinescopeVideoQuality) {
@@ -584,10 +690,17 @@ private extension KinescopeVideoPlayer {
         if config.localPlaybackURL != nil, let cached = OfflineVideoStore.video(for: config.videoId) {
             isLoadingVideo = false
             self.video = cached
+            if let downloadedAsset {
+                currentQuality = downloadedAsset.name
+            }
             view?.set(preview: posterSource(for: cached))
             view?.overlay?.set(title: cached.title, subtitle: cached.description)
             view?.set(options: makePlayerOptions(from: cached))
+            view?.set(watermark: cached.analytic?.watermark)
             updateChapters()
+            applySubtitlesRequest()
+            applyStartTime(to: cached)
+            focusViewIfNeeded()
             delegate?.playerDidLoadVideo(error: nil)
             didPlay()
             return
@@ -618,7 +731,12 @@ private extension KinescopeVideoPlayer {
                 }
                 self.view?.overlay?.set(title: video.title, subtitle: video.description)
                 self.view?.set(options: self.makePlayerOptions(from: video))
+                self.view?.set(watermark: video.analytic?.watermark)
                 self.updateChapters()
+                self.applySubtitlesRequest()
+                self.applyStartTime(to: video)
+                self.focusViewIfNeeded()
+                self.resolveAudioOnlyURL(for: video)
                 self.delegate?.playerDidLoadVideo(error: nil)
                 guard self.wantsPlayback else {
                     return
@@ -843,7 +961,7 @@ private extension KinescopeVideoPlayer {
             updateChapters()
             loadAudioTracks()
             suppressEmbeddedCaptions()
-            // Android drops the live cover on STATE_READY. Waiting for the picture
+            // The live cover goes once the item is ready. Waiting for the picture
             // to drift kept the stub up through the seek to the live edge.
             if Self.isBroadcast(video), !isAwaitingLiveStart {
                 presentVideo()
@@ -1042,8 +1160,7 @@ private extension KinescopeVideoPlayer {
 
     @objc
     func changeOrientation() {
-        guard let view = view,
-              view.canBeFullScreen else {
+        guard let view = view else {
             return
         }
 
@@ -1051,12 +1168,23 @@ private extension KinescopeVideoPlayer {
             return
         }
         let isFullScreen = KinescopeFullscreenViewController.isPresented
+        // Entering on rotation follows `fullscreenOnRotate`, or the fullscreen button when unset.
+        // Leaving on rotation always works for the player in fullscreen: without controls
+        // there is no other way out.
+        let rotates = view.config?.fullscreenOnRotate ?? view.canBeFullScreen
+        guard isFullScreen ? isFullScreenModeActive : rotates else {
+            return
+        }
         let interfaceLandscape = view.window?.windowScene?.interfaceOrientation.isLandscape ?? false
         let device = UIDevice.current.orientation
 
         // A landscape reading means the phone really turned. Only then may a later
         // portrait reading leave fullscreen. Seek taps also post this notification,
         // often with a portrait value, while the video is still landscape.
+        if device.isPortrait, !isFullScreen {
+            rotateEnterArmed = true
+        }
+
         if device.isLandscape {
             exitFullscreenOnPortrait = isFullScreen || interfaceLandscape
             portraitExit?.cancel()
@@ -1066,7 +1194,8 @@ private extension KinescopeVideoPlayer {
         // Device orientation can report landscape for a moment while the screen
         // is still portrait. Fullscreen follows the interface, so opening a
         // video does not flash a landscape player.
-        if interfaceLandscape && device.isLandscape && !isFullScreen {
+        if interfaceLandscape && device.isLandscape && !isFullScreen
+            && rotateEnterArmed && !isPortraitContent {
             exitFullscreenOnPortrait = true
             didPresentFullscreen(from: view)
             return
@@ -1097,6 +1226,28 @@ private extension KinescopeVideoPlayer {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.35, execute: work)
     }
 
+    /// `t` of the web embed: every load starts there, live streams start at the live edge.
+    func applyStartTime(to video: KinescopeVideo) {
+        guard let startTime, startTime > 0, !Self.isBroadcast(video) else {
+            return
+        }
+        seek(to: startTime)
+    }
+
+    /// `autofocus` of the web embed: a hardware keyboard controls the player right away.
+    func focusViewIfNeeded() {
+        guard config.autofocus, let view, view.window != nil else {
+            return
+        }
+        view.becomeFirstResponder()
+    }
+
+    /// A portrait video stays inline on rotation.
+    var isPortraitContent: Bool {
+        let size = strategy.player.currentItem?.presentationSize ?? .zero
+        return size.width > 0 && size.height > size.width
+    }
+
     func holdPortraitExitForSeek() {
         ignorePortraitExitUntil = CACurrentMediaTime() + 0.7
         portraitExit?.cancel()
@@ -1120,8 +1271,16 @@ private extension KinescopeVideoPlayer {
         if pictureInPicture {
             return
         }
+        if allowsBackgroundPlayback {
+            // A layer on screen pauses video in the background. Without it the sound goes on.
+            // `appWillEnterForeground` puts the player back into the layer.
+            if isPlaying {
+                view?.playerView.player = nil
+            }
+            return
+        }
         // Background audio stays only for Lock Screen / Control Center playback.
-        // Otherwise minimizing the app pauses, same as Android with background playback off.
+        // Otherwise minimizing the app pauses.
         if !isNowPlayingEnabled, isPlaying {
             pausedForBackground = true
             pause()
@@ -1305,13 +1464,15 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             detach(view: view)
             
             isFullScreenModeActive = false
+            rotateEnterArmed = UIDevice.current.orientation.isPortrait
             analytic?.send(event: .exitfullscreen)
 
             KinescopeFullscreenViewController.dismiss { [weak self] in
-                guard
-                    let self,
-                    let miniView = self.miniView
-                else {
+                guard let self else {
+                    return
+                }
+                defer { self.delegate?.playerDidExitFullscreen() }
+                guard let miniView = self.miniView else {
                     return
                 }
 
@@ -1341,6 +1502,7 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
                 host.overlay?.set(title: video.title, subtitle: video.description)
                 host.stopLoader(withPreview: strategy.player.isReadyToPlay)
                 restoreView()
+                delegate?.playerDidEnterFullscreen()
             }
         }
     }
@@ -1360,6 +1522,24 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
             return
         }
 
+        if Self.isAudioOnlyName(quality) {
+            selectAudioOnly()
+            return
+        }
+        let wasAudioOnly = isAudioOnly
+        if wasAudioOnly {
+            isAudioOnly = false
+            view?.setAudioOnly(false)
+        }
+        // A downloaded file holds one rendition: nothing to switch to, and never the network.
+        // After "Audio" only the picture comes back.
+        if config.localPlaybackURL != nil {
+            currentQuality = quality
+            view?.controlPanel?.set(settingsBadgeFor: settingsBadgeHeight())
+            delegate?.player(changedQualityTo: quality)
+            return
+        }
+
         let videoQuality: KinescopeVideoQuality
         if let asset = video.firstQuality(by: quality) {
             if let path = dependencies.assetDownloader.getLocation(by: video.id + asset.name) {
@@ -1376,7 +1556,18 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
 
         analytic?.send(event: .qualitychanged)
 
-        select(quality: videoQuality)
+        if wasAudioOnly, case .exact = videoQuality {
+            // An exact quality only caps the item that is playing, and that item is the audio rendition.
+            // Bring the master back first; the position is kept until it is ready.
+            select(quality: .auto(hlsLink: video.hlsLink))
+            if let item = strategy.player.currentItem {
+                item.preferredPeakBitRate = videoQuality.preferredMaxBitRate
+                item.preferredMaximumResolution = videoQuality.preferredMaximumResolution
+                applyMaximumVideoHeight(to: item)
+            }
+        } else {
+            select(quality: videoQuality)
+        }
         if isAutomaticQuality {
             applyMeasuredAutoHeight()
         }
@@ -1448,7 +1639,11 @@ extension KinescopeVideoPlayer: KinescopePlayerViewDelegate {
         Kinescope.shared.logger?.log(message: "Select subtitles: \(subtitles)",
                                      level: KinescopeLoggerLevel.player)
 
-        subtitleTask = URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
+        var request = URLRequest(url: url)
+        if let userAgent = Kinescope.shared.config?.userAgent {
+            request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
+        }
+        subtitleTask = URLSession.shared.dataTask(with: request) { [weak self] data, _, error in
             let cues = data.flatMap { SubtitleCueParser.parse(String(decoding: $0, as: UTF8.self)) } ?? []
             DispatchQueue.main.async {
                 guard let self, self.currentSubtitles == subtitles else {
@@ -1631,17 +1826,32 @@ extension KinescopeVideoPlayer {
         if normalized.isEmpty || normalized == "auto" || quality == L10n.Player.auto {
             return presentationHeight
         }
-        if normalized == "audio" || normalized == "audio_only" || normalized == "audio-only" {
+        if Self.isAudioOnlyName(quality) {
             return 0
         }
-        if let asset = video?.firstQuality(by: quality), asset.height > 0 {
-            return CGFloat(asset.height)
-        }
-        let digits = quality.filter(\.isNumber)
-        if let value = Int(digits), value > 0 {
+        // The name is the rendition ("480p"). `height` of `quality_map` is the longer side of a portrait
+        // video (854 for 480p), which turned the badge into HD.
+        if let value = Self.qualityNumber(in: quality) {
             return CGFloat(value)
         }
+        if let asset = video?.firstQuality(by: quality) {
+            if let value = Self.qualityNumber(in: asset.label) {
+                return CGFloat(value)
+            }
+            if asset.height > 0 {
+                return CGFloat(asset.height)
+            }
+        }
         return 0
+    }
+
+    /// Leading number of a quality name: `480p` → 480, `1080p60` → 1080. `nil` without one.
+    static func qualityNumber(in name: String) -> Int? {
+        let digits = name.trimmingCharacters(in: .whitespacesAndNewlines).prefix(while: \.isNumber)
+        guard let value = Int(digits), value > 0 else {
+            return nil
+        }
+        return value
     }
 
     /// Shorter side, so a portrait 720×1280 frame stays 720 and does not pick up an HD badge.
@@ -1661,6 +1871,8 @@ extension KinescopeVideoPlayer {
         view.selectedAudioTrack = selectedAudioTrackIndex
         view.controlPanel?.set(settingsBadgeFor: settingsBadgeHeight())
         view.subtitleCues = subtitleCues
+        view.controlPanel?.set(subtitleOn: currentSubtitles != nil)
+        view.set(watermark: video?.analytic?.watermark)
         view.subtitleStyle = subtitleStyle
         view.subtitleOverlay?.apply(subtitleStyle)
         updateChapters()
@@ -1718,6 +1930,169 @@ extension KinescopeVideoPlayer {
             counters[name, default: 0] += 1
             return "\(name) · \(counters[name] ?? 1)"
         }
+    }
+
+}
+
+// MARK: - Audio only
+
+extension KinescopeVideoPlayer {
+
+    static func isAudioOnlyName(_ name: String) -> Bool {
+        let normalized = name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        return ["audio", "audio_only", "audio-only", L10n.Player.audio.lowercased()].contains(normalized)
+    }
+
+    /// Quality "Audio": the stream switches to its audio rendition, so no video is downloaded.
+    /// A downloaded file keeps playing and only hides the picture.
+    func selectAudioOnly() {
+        currentQuality = L10n.Player.audio
+        isAudioOnly = true
+        view?.setAudioOnly(true)
+        view?.controlPanel?.set(settingsBadgeFor: 0)
+        analytic?.send(event: .qualitychanged)
+        if config.localPlaybackURL == nil, let audioOnlyURL {
+            select(quality: .auto(hlsLink: audioOnlyURL.absoluteString))
+        }
+        Kinescope.shared.logger?.log(message: "Select quality: audio only", level: KinescopeLoggerLevel.player)
+        delegate?.player(changedQualityTo: currentQuality)
+    }
+
+    /// Reads the HLS master once per video and keeps the default audio rendition.
+    func resolveAudioOnlyURL(for video: KinescopeVideo) {
+        guard config.localPlaybackURL == nil, !Self.isBroadcast(video),
+              let master = URL(string: video.hlsLink) else {
+            return
+        }
+        var request = URLRequest(url: master)
+        if let userAgent = Kinescope.shared.config?.userAgent {
+            request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
+        }
+        let videoId = video.id
+        audioOnlyTask?.cancel()
+        audioOnlyTask = URLSession.shared.dataTask(with: request) { [weak self] data, _, _ in
+            let url = data.flatMap {
+                KinescopeVideoPlayer.audioRenditionURL(in: String(decoding: $0, as: UTF8.self), master: master)
+            }
+            DispatchQueue.main.async {
+                guard let self, self.video?.id == videoId else {
+                    return
+                }
+                self.audioOnlyURL = url
+            }
+        }
+        audioOnlyTask?.resume()
+    }
+
+    /// `URI` of the `DEFAULT=YES` audio rendition, or of the first one, resolved against the master URL.
+    static func audioRenditionURL(in playlist: String, master: URL) -> URL? {
+        let renditions = playlist
+            .components(separatedBy: .newlines)
+            .filter { $0.hasPrefix("#EXT-X-MEDIA:") && $0.contains("TYPE=AUDIO") }
+        let chosen = renditions.first { $0.contains("DEFAULT=YES") } ?? renditions.first
+        guard let line = chosen,
+              let start = line.range(of: "URI=\"")?.upperBound,
+              let end = line[start...].firstIndex(of: "\"") else {
+            return nil
+        }
+        return URL(string: String(line[start..<end]), relativeTo: master)?.absoluteURL
+    }
+
+}
+
+// MARK: - Autopause
+
+private struct WeakPlayer {
+    weak var player: KinescopeVideoPlayer?
+}
+
+extension KinescopeVideoPlayer {
+
+    private static var autopausePlayers: [WeakPlayer] = []
+
+    static func registerForAutopause(_ player: KinescopeVideoPlayer) {
+        autopausePlayers.removeAll { $0.player == nil || $0.player === player }
+        if player.autopause {
+            autopausePlayers.append(WeakPlayer(player: player))
+        }
+    }
+
+    /// Web embed behaviour: a player that starts pauses the others that have `autopause` on.
+    func pauseOthersForAutopause() {
+        Self.autopausePlayers.removeAll { $0.player == nil }
+        Self.autopausePlayers
+            .compactMap { $0.player }
+            .filter { $0 !== self && $0.wantsPlayback }
+            .forEach { $0.pause() }
+    }
+
+}
+
+// MARK: - Subtitles
+
+enum SubtitlesRequest {
+    case first
+    case matching(String)
+}
+
+public extension KinescopeVideoPlayer {
+
+    /// Subtitle track titles of the loaded video, as the settings menu shows them.
+    /// Empty until the video loads.
+    var subtitleTitles: [String] {
+        video?.allSubtitlesVariants ?? []
+    }
+
+    /// Title of the subtitle track that is on. `nil` while subtitles are off.
+    var selectedSubtitleTitle: String? {
+        currentSubtitles
+    }
+
+    /// Turns subtitles on.
+    ///
+    /// Can be called before the video loads: the track is selected once it does.
+    /// - parameter track: Track title from `subtitleTitles` or a language code such as `en`.
+    /// `nil` selects the first track. An unknown track also falls back to the first one.
+    func enableSubtitles(_ track: String? = nil) {
+        subtitlesRequest = track.map { SubtitlesRequest.matching($0) } ?? .first
+        applySubtitlesRequest()
+    }
+
+    /// Turns subtitles off, including subtitles asked for before the video loaded.
+    func disableSubtitles() {
+        subtitlesRequest = nil
+        guard video != nil else {
+            return
+        }
+        didSelect(subtitles: "")
+    }
+
+}
+
+extension KinescopeVideoPlayer {
+
+    func applySubtitlesRequest() {
+        guard let request = subtitlesRequest, let video else {
+            return
+        }
+        subtitlesRequest = nil
+        let tracks = video.subtitles ?? []
+        let picked: KinescopeVideoSubtitle?
+        switch request {
+        case .first:
+            picked = tracks.first
+        case .matching(let value):
+            let wanted = value.trimmingCharacters(in: .whitespacesAndNewlines)
+            picked = tracks.first { $0.title == wanted }
+                ?? tracks.first { $0.language.caseInsensitiveCompare(wanted) == .orderedSame }
+                ?? tracks.first
+        }
+        guard let picked else {
+            Kinescope.shared.logger?.log(message: "Video has no subtitles",
+                                         level: KinescopeLoggerLevel.player)
+            return
+        }
+        didSelect(subtitles: picked.title)
     }
 
 }

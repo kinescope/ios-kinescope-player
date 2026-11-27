@@ -49,6 +49,7 @@ private extension VideosNetworkService {
 
             let request = try RequestBuilder(path: "\(config.endpoint)\(id).json", method: .get)
                 .add(referer: config.referer)
+                .add(userAgent: config.userAgent)
                 .add(parameters: parameters)
                 .build(body: EmptyRequest())
 

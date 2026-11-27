@@ -55,6 +55,18 @@ final class RequestBuilder {
         return self
     }
 
+    func add(userAgent: String?) -> RequestBuilder {
+        guard let userAgent else {
+            return self
+        }
+        if self.headers != nil {
+            self.headers?["User-Agent"] = userAgent
+        } else {
+            self.headers = ["User-Agent": userAgent]
+        }
+        return self
+    }
+
     func add(parameters: [String: String]) -> RequestBuilder {
         self.parameters = parameters
         return self

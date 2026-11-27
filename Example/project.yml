@@ -10,10 +10,17 @@ options:
   createIntermediateGroups: true
 settings:
   DEVELOPMENT_TEAM: EFAAG9GXN4
+# The SDK comes from the repository root as a local Swift package.
+packages:
+  KinescopeSDK:
+    path: ..
 targets:
     KinescopeExample:
       dependencies:
         - sdk: UIKit.framework
+        # Player and Shorts in one framework. A player-only app takes product KinescopeSDK instead.
+        - package: KinescopeSDK
+          product: KinescopeShorts
       type: application
       platform: iOS
       deploymentTarget: "15.0"

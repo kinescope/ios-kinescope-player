@@ -1,9 +1,20 @@
 # Kinescope iOS SDK
 
-iOS SDK for [Kinescope](https://kinescope.io/) video: player, vertical Shorts feed, and offline HLS downloads with FairPlay, in one module. Deployment target is iOS 15. Distributed as git tags through CocoaPods (`:git` and `:tag`) and Swift Package Manager.
+iOS SDK for [Kinescope](https://kinescope.io/) video. One Swift package, two libraries:
+
+| Product | What is inside | Import |
+| --- | --- | --- |
+| `KinescopeSDK` | Player, offline HLS downloads with FairPlay, dashboard catalog | `import KinescopeSDK` |
+| `KinescopeShorts` | Everything in `KinescopeSDK` plus the vertical Shorts feed | `import KinescopeSDK` and `import KinescopeShorts` |
+
+Add one of them to the app target, not both. Deployment target is iOS 15.
+
+In Xcode, add the package `https://github.com/kinescope/ios-kinescope-player.git` with `Exact Version` `1.0.4` and pick the product. See [docs/installation.md](docs/installation.md).
+
+CocoaPods (`:git` and `:tag`) ships the player only, Shorts are Swift Package Manager only:
 
 ```ruby
-pod 'KinescopeSDK', :git => 'https://github.com/kinescope/ios-kinescope-player.git', :tag => '1.0.3'
+pod 'KinescopeSDK', :git => 'https://github.com/kinescope/ios-kinescope-player.git', :tag => '1.0.4'
 ```
 
 With CocoaPods, add a `post_install` block that sets `IPHONEOS_DEPLOYMENT_TARGET` to `15.0` for all pods (see [docs/installation.md](docs/installation.md)). Otherwise current Xcode rejects the `M3U8Kit` and `SwiftProtobuf` targets.
@@ -56,7 +67,7 @@ There is no tvOS target.
 
 | Topic | File |
 |-------|------|
-| Open the feed (`KinescopeShortsViewController`) | [docs/demo-app.md](docs/demo-app.md) |
+| Add and open the feed (`KinescopeShortsViewController`) | [docs/quick-start.md](docs/quick-start.md#shorts) |
 | Look (`KinescopeShortsUIConfig`) | [docs/customization.md](docs/customization.md#shorts) |
 | Download a video from the feed | [docs/offline-downloads.md](docs/offline-downloads.md#download-a-short) |
 

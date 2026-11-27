@@ -1,6 +1,6 @@
 # Kinescope iOS SDK
 
-Guides for the player, the vertical Shorts feed, offline FairPlay downloads, and the dashboard catalog.
+Guides for the player, the vertical Shorts feed, offline FairPlay downloads, and the dashboard catalog. The player, downloads, and catalog are the `KinescopeSDK` library; the feed is `KinescopeShorts`. See [Installation](installation.md).
 
 ### Getting started
 
@@ -42,6 +42,6 @@ Guides for the player, the vertical Shorts feed, offline FairPlay downloads, and
 
 | Guide | What it covers |
 | --- | --- |
-| [Demo app](demo-app.md) | Opening `KinescopeShortsViewController` |
+| [Quick start](quick-start.md#shorts) | Opening `KinescopeShortsViewController` |
 | [Customization](customization.md#shorts) | `KinescopeShortsUIConfig` |
 | [Offline downloads](offline-downloads.md#download-a-short) | Download a video from the feed |

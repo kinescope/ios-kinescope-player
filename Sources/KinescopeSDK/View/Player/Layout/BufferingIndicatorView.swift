@@ -1,6 +1,6 @@
 import UIKit
 
-/// Rotating arc used as default loading indicator (Android `kinescope_ic_buffering`).
+/// Rotating arc used as default loading indicator.
 final class BufferingIndicatorView: UIView, KinescopeActivityIndicating {
 
     private enum Constants {

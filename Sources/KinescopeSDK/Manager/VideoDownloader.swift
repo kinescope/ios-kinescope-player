@@ -25,6 +25,8 @@ class VideoDownloader: KinescopeVideoDownloadable {
             OfflineVideoStore.save(video)
             savePoster(of: video)
         }
+        // The settings menu of the saved video lists this rendition only.
+        OfflineVideoStore.saveDownloadedHeight(minimumHeight, for: videoId)
         assetService.enqueueDownload(assetId: videoId, url: url, video: video, minimumHeight: minimumHeight)
     }
 
@@ -178,6 +180,40 @@ enum OfflineVideoStore {
         if let poster = posterFileURL(for: videoId) {
             try? FileManager.default.removeItem(at: poster)
         }
+        if let quality = qualityFileURL(for: videoId) {
+            try? FileManager.default.removeItem(at: quality)
+        }
+    }
+
+    /// Height of the rendition picked for the download (`minimumHeight`).
+    /// `nil` when no rendition was picked, or for a download made before 1.0.4.
+    static func downloadedHeight(for videoId: String) -> Int? {
+        guard let url = qualityFileURL(for: videoId),
+              let text = try? String(contentsOf: url, encoding: .utf8) else {
+            return nil
+        }
+        return Int(text.trimmingCharacters(in: .whitespacesAndNewlines))
+    }
+
+    static func saveDownloadedHeight(_ height: Int?, for videoId: String) {
+        guard let url = qualityFileURL(for: videoId) else {
+            return
+        }
+        guard let height, height > 0 else {
+            try? FileManager.default.removeItem(at: url)
+            return
+        }
+        do {
+            try FileManager.default.createDirectory(at: url.deletingLastPathComponent(),
+                                                    withIntermediateDirectories: true)
+            try Data(String(height).utf8).write(to: url, options: .completeFileProtectionUntilFirstUserAuthentication)
+        } catch {
+            Kinescope.shared.logger?.log(error: error, level: KinescopeLoggerLevel.network)
+        }
+    }
+
+    private static func qualityFileURL(for videoId: String) -> URL? {
+        fileURL(for: videoId)?.deletingPathExtension().appendingPathExtension("quality")
     }
 
     /// Local copy of the poster image, or `nil` when the video was never downloaded.

@@ -2,7 +2,7 @@ import UIKit
 import KinescopeSDK
 import AVFoundation
 
-/// Demo settings. Same role as Android `KinescopeDemoConfig`.
+/// Demo settings.
 enum KinescopeDemoConfig {
     /// Shorts catalog filter, `GET /v1/videos?project_id=`. `nil` loads every project for the token.
     static let projectId: String? = nil

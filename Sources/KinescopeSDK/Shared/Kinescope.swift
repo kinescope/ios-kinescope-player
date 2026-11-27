@@ -13,6 +13,10 @@ public enum Kinescope {
 
     // MARK: - Properties
 
+    /// SDK version. Keep in step with `KinescopeSDK.podspec` and the git tag.
+    /// Sent in analytics as the player version.
+    public static let sdkVersion = "1.0.4"
+
     /// Singleton entry to kinescope services
     public static let shared: SharedManager = Manager()
 

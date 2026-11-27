@@ -56,7 +56,7 @@ final class VideoScaleController: NSObject {
         updateBadge()
     }
 
-    /// Settings step. `0.97` and `1.03` match the Android −3% / +3% rows.
+    /// Settings step. `0.97` and `1.03` are the −3% / +3% rows.
     func multiply(by factor: CGFloat) {
         scale = min(Constants.maxScale, max(Constants.minScale, scale * factor))
         if scale <= Constants.badgeThreshold {

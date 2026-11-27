@@ -2,7 +2,7 @@ import UIKit
 import AVFoundation
 import KinescopeSDK
 
-/// Same screen as the Android Custom Player: a player and the template / playback switches under it.
+/// Custom Player: a player and the template / playback switches under it.
 final class CustomPlayerViewController: UIViewController {
 
     private let videoId: String

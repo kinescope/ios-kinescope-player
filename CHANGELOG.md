@@ -1,3 +1,39 @@
+## 1.0.4
+
+### Added
+
+- Fullscreen on rotate as its own setting: `KinescopePlayerViewConfiguration.builder().setFullscreenOnRotate(_:)`. Unset, rotation follows the fullscreen button, as before. Portrait videos stay inline on rotation. Leaving fullscreen by the button while the phone is still landscape does not open it again until the phone has been upright
+- Fullscreen from code: `exitFullscreen()`, `isFullscreen`, and `KinescopeVideoPlayerDelegate.playerDidEnterFullscreen()` / `playerDidExitFullscreen()`
+- Viewer ID in analytics: `KinescopePlayerConfig(externalId:)` and `KinescopeVideoPlayer.externalId`, sent with every event as `Session.ExternalID`, like `externalid` in the web embed
+- Turn analytics off: `KinescopePlayerConfig(doNotTrack:)` and `KinescopeVideoPlayer.doNotTrack`, like `dnt` in the web embed
+- Autopause: `KinescopePlayerConfig(autopause:)` and `KinescopeVideoPlayer.autopause`. A player that starts pauses the others that have it on
+- Background playback: `KinescopePlayerConfig(allowsBackgroundPlayback:)` and `KinescopeVideoPlayer.allowsBackgroundPlayback`. Needs the `playback` audio session category and the background audio mode in the app
+- Subtitles from code: `enableSubtitles(_:)` (track title, language code, or the first track), `disableSubtitles()`, `subtitleTitles`, `selectedSubtitleTitle`. Can be called before the video loads
+- Hide single controls: `setShowsPlayPauseButton(_:)` on the overlay builder, `setShowsTimeline(_:)` and `setShowsTimeIndicator(_:)` on the control panel builder
+- `setShowsDefaultPoster(false)` on the layout builder leaves the view empty when the video has no poster or it fails to load
+- Your own images in place of the built-in ones: `setDefaultPoster(_:)` and `setLiveAwaitingCover(_:)` on the layout builder
+- Watermark from the server: the player reads `sdk.watermark` from the video metadata and draws it over the picture, in fullscreen and with pinch zoom too. Text, `mode` (`random` jumps around the frame, `stripes` fills it with diagonal rows), `scale`, `display_timeout` (blinking) and `color` (`#RRGGBBAA`). It is set up in the Kinescope dashboard, no code needed. `KinescopePlayerView.watermarkText` returns the current text
+- Web embed parameters: `KinescopePlayerConfig(startTime:)` and `KinescopeVideoPlayer.startTime` (`t`), `KinescopePlayerConfig(background:)` (autoplay, muted, loop, no controls), `KinescopePlayerConfig(autofocus:)`, `KinescopeConfig(userAgent:)`, `setShowsHeader(_:)` on the overlay builder (`header`), `setTransparentBackground(_:)` on the layout builder (`transparent`). `baseUrl` is `KinescopeConfig(endpoint:)`
+- Quality "Audio" in the settings menu, and `selectQuality(named: "audio")`: the stream switches to its audio rendition (no video is downloaded) and the poster replaces the picture. A downloaded video keeps playing and hides the picture. Shown when the stream has a separate audio rendition or the video is a downloaded file
+- Hardware keyboard: space plays or pauses, arrows seek 10 seconds while the player view is first responder. `KinescopePlayerView.keyboardShortcutsEnabled` turns it off
+- `Kinescope.sdkVersion`
+
+### Changed
+
+- Shorts moved to their own library, `KinescopeShorts`, in the same Swift package. `KinescopeSDK` is the player, offline downloads, and the dashboard catalog. An app that shows Shorts adds the `KinescopeShorts` product instead of `KinescopeSDK` (the player comes with it) and `import KinescopeShorts` where it opens the feed. The Shorts API is the same. A player-only app needs no change and no longer ships the Shorts code and images. CocoaPods gets the player only. The example app takes the SDK as a local Swift package
+- Seek by taps: a double tap on the right or left half seeks 10 seconds, double taps within 1.5 seconds add up. A single tap shows or hides the controls after the double tap timeout. In 1.0.3 a single tap on an outer third seeked at once
+- `enterFullscreen()` only opens fullscreen. Before, a second call closed it. Use `exitFullscreen()` to close
+- Without the fullscreen button and without the control panel the player in fullscreen still leaves it when the phone turns back to portrait. Before, there was no way out
+- Analytics sends `Kinescope.sdkVersion` as the player version. A Swift package build sent `unknown`
+- Built-in images are about 10 times smaller: the live cover and the Shorts stub are JPEG, the default poster is a palette PNG. The three images went from 2.45 MB to 217 KB. Resolution and look are the same ([#20](https://github.com/kinescope/ios-kinescope-player/issues/20))
+
+### Fixed
+
+- A downloaded video lists only the rendition picked for the download in the quality menu, without "Auto". Before, it listed every quality of the video, and choosing one switched playback to the network
+- The settings badge shows HD only for HD qualities. A portrait video lists 480p with `height` 854 in `quality_map`, and choosing 480p showed HD
+- The subtitles button shows the right state after the player view is attached again
+- The side menu does not reassign its frames on every player layout
+
 ## 1.0.3
 
 ### Fixed

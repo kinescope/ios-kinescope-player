@@ -6,16 +6,11 @@ This example shows how to use KinescopeSDK.
 
 ## Usage
 
-### Install dependencies
+### Run
 
- Run `make init` from `{Repository}/Example`
+Open `KinescopeExample.xcworkspace` and run the `KinescopeExample` scheme. The SDK comes from the repository root as a local Swift package (product `KinescopeShorts`: the player and the Shorts feed); Xcode resolves it and its dependencies on the first build. There are no pods.
 
- This command will
-
- - update bundler to required version
- - install required gems
- - install required pods
- - generate project and workspace
+`make init` sets up bundler and XcodeGen for a fresh checkout: `KinescopeExample.xcodeproj` is not in git and is generated from `project.yml`.
 
 ## License
 

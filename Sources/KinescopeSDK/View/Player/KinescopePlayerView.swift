@@ -34,20 +34,23 @@ public class KinescopePlayerView: UIView {
 
     /// One coordination for phones and other for pads
     private let sideMenuCoordinator = SideMenuSlideCoordinator()
-    /// Android template flag `playback_rate`. Hides the speed row in settings when false.
+    /// Template flag `playback_rate`. Hides the speed row in settings when false.
     public var showsPlaybackRateSetting = true
 
     private var playingRateProvider: SideMenuItemsProvider?
     private var qualityProvider: SideMenuItemsProvider?
     private var subtitlesProvider: SideMenuItemsProvider?
     private var scaleController: VideoScaleController?
+    private var watermarkView: WatermarkView?
+    /// Kept across `setLayout`, which rebuilds the views.
+    private var watermarkStyle: WatermarkStyle?
     /// Clips the scaled video to the player. The surface inside it is what pinch zoom moves.
     private let videoCanvas = UIView()
     private let videoSurface = UIView()
     /// Wins over the navigation back-swipe so a horizontal seek does not slide the screen away.
     private var backSwipeClaim: UIPanGestureRecognizer?
     private var scrubHint: ScrubHintBar?
-    /// Video surface stays covered until playback has actually started, same as Android.
+    /// Video surface stays covered until playback has actually started.
     private(set) var isVideoPresented = false
     /// Live broadcast has not started: keep the awaiting cover up instead of a black frame.
     private(set) var keepsLiveCover = false
@@ -169,14 +172,14 @@ public class KinescopePlayerView: UIView {
             previewView.isHidden = false
             playerView?.isHidden = true
         }
-        // The awaiting cover replaces the spinner, same as the Android live informer.
+        // The awaiting cover replaces the spinner.
         progressView.showVideoProgress(isLoading: !keepsLiveCover)
     }
 
     func stopLoader(withPreview: Bool = true) {
         progressView.showVideoProgress(isLoading: false)
-        previewView.isHidden = isVideoPresented || withPreview
-        if isVideoPresented {
+        previewView.isHidden = (isVideoPresented || withPreview) && !isAudioOnly
+        if isVideoPresented, !isAudioOnly {
             playerView?.isHidden = false
         }
         overlay?.isHidden = false
@@ -188,7 +191,7 @@ public class KinescopePlayerView: UIView {
         isVideoPresented = false
         previewView.accessibilityIdentifier = "liveAwaitingCover"
         previewView.contentMode = .scaleAspectFill
-        previewView.image = .image(named: "liveAwaitingCover")
+        previewView.image = config?.liveAwaitingCover ?? .image(named: "liveAwaitingCover")
         previewView.isHidden = false
         playerView?.isHidden = true
         progressView.showVideoProgress(isLoading: false)
@@ -205,6 +208,77 @@ public class KinescopePlayerView: UIView {
         playerView?.isHidden = false
         announceSnack?.hideAnimated()
         hidePlaybackError()
+        // The picture size is known now: the watermark moves into the video frame.
+        watermarkView?.setNeedsDisplay()
+        if isAudioOnly {
+            showPosterForAudio()
+        }
+    }
+
+    /// Quality "Audio": the poster stands in for the picture.
+    private(set) var isAudioOnly = false
+
+    func setAudioOnly(_ audioOnly: Bool) {
+        isAudioOnly = audioOnly
+        if audioOnly {
+            showPosterForAudio()
+        } else if isVideoPresented {
+            previewView.isHidden = true
+            playerView?.isHidden = false
+        }
+    }
+
+    private func showPosterForAudio() {
+        previewView.isHidden = false
+        playerView?.isHidden = true
+    }
+
+    // MARK: - Hardware keyboard
+
+    /// Space plays or pauses, the left and right arrows seek 10 seconds, while the view is first responder.
+    /// `KinescopePlayerConfig(autofocus:)` makes it first responder once the video loads. `true` by default.
+    public var keyboardShortcutsEnabled = true
+
+    public override var canBecomeFirstResponder: Bool {
+        keyboardShortcutsEnabled
+    }
+
+    public override var keyCommands: [UIKeyCommand]? {
+        guard keyboardShortcutsEnabled else {
+            return nil
+        }
+        return [
+            UIKeyCommand(input: " ", modifierFlags: [], action: #selector(keyPlayPause)),
+            UIKeyCommand(input: UIKeyCommand.inputLeftArrow, modifierFlags: [], action: #selector(keySeekBack)),
+            UIKeyCommand(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(keySeekForward))
+        ]
+    }
+
+    @objc private func keyPlayPause() {
+        if (playerView?.player?.rate ?? 0) > 0 {
+            didPause()
+        } else {
+            didPlay()
+        }
+    }
+
+    @objc private func keySeekBack() {
+        didFastBackward()
+    }
+
+    @objc private func keySeekForward() {
+        didFastForward()
+    }
+
+    /// Watermark text shown over the video, `nil` when there is none.
+    public var watermarkText: String? {
+        watermarkStyle?.text
+    }
+
+    /// Shows `sdk.watermark` of the current video, hides it when there is none.
+    func set(watermark: KinescopeWatermark?) {
+        watermarkStyle = WatermarkStyle(watermark)
+        watermarkView?.style = watermarkStyle
     }
 
     func change(timeControlStatus: AVPlayer.TimeControlStatus) {
@@ -295,6 +369,27 @@ public class KinescopePlayerView: UIView {
         self.subtitlesProvider = subtitlesProvider
     }
 
+    /// Poster for a video without one: the host's image, the built-in one, or none.
+    private var defaultPosterImage: UIImage? {
+        guard config.showsDefaultPoster else {
+            return nil
+        }
+        return config.defaultPoster ?? .image(named: "defaultPoster")
+    }
+
+    /// The built-in service falls back to the default poster on a load error.
+    /// With the host's poster, or with none, it falls back to that instead.
+    private var posterService: PreviewService? {
+        guard let service = config.previewService else {
+            return nil
+        }
+        guard service is PreviewNetworkService,
+              !config.showsDefaultPoster || config.defaultPoster != nil else {
+            return service
+        }
+        return PreviewNetworkService(fallback: defaultPosterImage)
+    }
+
     func set(preview: String?) {
         if let preview, let url = URL(string: preview), url.isFileURL,
            let image = UIImage(contentsOfFile: url.path) {
@@ -306,12 +401,12 @@ public class KinescopePlayerView: UIView {
             }
             return
         }
-        if let preview, let previewService = config.previewService {
+        if let preview, let previewService = posterService {
             previewService.fetchPreview(for: preview, into: previewView)
         } else {
             previewView.accessibilityIdentifier = nil
             previewView.contentMode = .scaleAspectFit
-            previewView.image = .image(named: "defaultPoster")
+            previewView.image = defaultPosterImage
         }
         if !isVideoPresented {
             previewView.isHidden = false
@@ -350,6 +445,7 @@ public extension KinescopePlayerView {
 
         configurePlayerView(with: config.gravity)
         configurePreviewView()
+        configureWatermarkView()
         configureAnnounce(with: config.announceSnack)
 
         if let overlay = config.overlay {
@@ -530,7 +626,7 @@ private extension KinescopePlayerView {
     func configurePlayerView(with gravity: AVLayerVideoGravity) {
         videoCanvas.subviews.forEach { $0.removeFromSuperview() }
         videoCanvas.clipsToBounds = true
-        videoCanvas.backgroundColor = .black
+        videoCanvas.backgroundColor = config.transparentBackground ? .clear : .black
         addSubview(videoCanvas)
         stretch(view: videoCanvas)
 
@@ -549,11 +645,21 @@ private extension KinescopePlayerView {
         self.playerView = playerView
     }
 
+    /// Above the picture and the poster, on the surface that pinch zoom moves.
+    func configureWatermarkView() {
+        let view = WatermarkView()
+        view.playerLayer = playerView?.playerLayer
+        videoSurface.addSubview(view)
+        videoSurface.stretch(view: view)
+        view.style = watermarkStyle
+        watermarkView = view
+    }
+
     func configurePreviewView() {
         previewView.contentMode = .scaleAspectFit
         previewView.isUserInteractionEnabled = false
         previewView.clipsToBounds = true
-        previewView.backgroundColor = .black
+        previewView.backgroundColor = config.transparentBackground ? .clear : .black
         previewView.setContentHuggingPriority(.defaultLow, for: .horizontal)
         previewView.setContentHuggingPriority(.defaultLow, for: .vertical)
         previewView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
@@ -896,28 +1002,10 @@ private extension KinescopePlayerView {
         return items
     }
 
+    /// Rows of the per-asset download menu. Empty: the legacy `AssetDownloader` is off
+    /// (`FeatureToggle.assetDownloaderEnabled`). Offline video goes through `videoDownloader`.
     func makeAssetsSideMenuItems() -> [SideMenu.Item] {
-//        guard let materials = delegate?.didShowAssets() else {
-//            return []
-//        }
-//
-//        var items: [SideMenu.Item] = []
-//        let bcf = ByteCountFormatter()
-//        bcf.allowedUnits = [.useAll]
-//        bcf.countStyle = .file
-//
-//        for material in materials {
-//            let title = material.label
-//            let value = material.name
-//            // TODO: - Feature.assetDownloader: how to get fileSize ?
-////            let value = bcf.string(fromByteCount: Int64(material.fileSize))
-//            items.append(.description(id: title, 
-//                                      title: title,
-//                                      value: value))
-//        }
-//
-//        return items
-        return []
+        []
     }
 
     func handleCheckmarkActions(for title: NSAttributedString, rowIndex: Int, sideMenu: SideMenu) {
@@ -1272,7 +1360,7 @@ extension KinescopePlayerView: UIGestureRecognizerDelegate {
 
 }
 
-/// Top seek hint shown while the timeline is dragged. Matches the Android scrub header:
+/// Top seek hint shown while the timeline is dragged:
 /// a top gradient, running rewind and forward chevrons, and the double-tap hint.
 private final class ScrubHintBar: UIView {
 

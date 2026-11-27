@@ -6,8 +6,7 @@ platform :ios, '15.0'
 target 'KinescopeExample' do
   # Comment the next line if you don't want to use dynamic frameworks
 
-  # Pods for KinescopeExample
-  pod 'KinescopeSDK', :path => '../'
+  # KinescopeSDK and KinescopeShorts come from the root Swift package (project.yml, packages).
 
 end
 

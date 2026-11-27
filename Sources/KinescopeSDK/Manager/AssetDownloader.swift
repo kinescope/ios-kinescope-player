@@ -40,7 +40,7 @@ class AssetDownloader: KinescopeAssetDownloadable {
     // MARK: - KinescopeDownloadable
 
     func enqueueDownload(video: KinescopeVideo, asset: KinescopeVideoAsset) {
-        // TODO: - Feature.assetDownloader: Get downloading link from manifest
+        // Legacy per-asset download, off behind `FeatureToggle.assetDownloaderEnabled`. The link is built, not read from the manifest.
         let assetLink = assetLinksService.getAssetLink(by: video.id, asset: asset)
 
         if let url = URL(string: assetLink.link) {

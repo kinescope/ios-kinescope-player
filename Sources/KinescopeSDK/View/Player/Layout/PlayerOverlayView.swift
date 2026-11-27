@@ -36,6 +36,7 @@ final class PlayerOverlayView: UIControl {
     private var backwardFeedbackWidth: NSLayoutConstraint?
     private var seekStreak: SeekStreak?
     private var singleTap: UITapGestureRecognizer?
+    private var doubleTap: UITapGestureRecognizer?
     private let nameView: VideoNameView
     private let contentView = UIView()
     private let config: KinescopePlayerOverlayConfiguration
@@ -181,6 +182,7 @@ private extension PlayerOverlayView {
         playPauseView.isUserInteractionEnabled = true
         playPauseView.squareSize(with: config.playBackgroundRadius * 2)
         contentView.centerChild(view: playPauseView)
+        playPauseView.isHidden = !config.showsPlayPauseButton
         let playTap = UITapGestureRecognizer(target: self, action: #selector(playButtonTapped))
         playPauseView.addGestureRecognizer(playTap)
     }
@@ -209,13 +211,24 @@ private extension PlayerOverlayView {
     func configureNameView() {
         contentView.addSubview(nameView)
         contentView.topChildWithSafeArea(view: nameView)
+        nameView.isHidden = !config.showsHeader
     }
 
     func addGestureRecognizers() {
+        // A double tap on either half seeks, a single tap shows or hides
+        // the controls once the double tap has had its chance.
+        let doubleTapGestureRecognizer = UITapGestureRecognizer(target: self,
+                                                             action: #selector(doubleTapAction))
+        doubleTapGestureRecognizer.numberOfTapsRequired = 2
+        doubleTapGestureRecognizer.delegate = self
+        addGestureRecognizer(doubleTapGestureRecognizer)
+        doubleTap = doubleTapGestureRecognizer
+
         let singleTapGestureRecognizer = UITapGestureRecognizer(target: self,
                                                              action: #selector(singleTapAction))
         singleTapGestureRecognizer.numberOfTapsRequired = 1
         singleTapGestureRecognizer.delegate = self
+        singleTapGestureRecognizer.require(toFail: doubleTapGestureRecognizer)
         addGestureRecognizer(singleTapGestureRecognizer)
         singleTap = singleTapGestureRecognizer
     }
@@ -246,15 +259,16 @@ private extension PlayerOverlayView {
         let location = recognizer.location(in: contentView)
         let playArea = playPauseView.frame.insetBy(dx: -8, dy: -8)
 
-        // A side tap always seeks. Waiting for a second tap made the first one look ignored,
-        // and a tap inside an active streak sought on the first try.
-        if let direction = seekDirection(at: recognizer.location(in: self)) {
-            fastSeek(direction)
-        } else if isSelected && playArea.contains(location) {
+        if isSelected && !playPauseView.isHidden && playArea.contains(location) {
             playPauseAction()
         } else {
             delegate?.didTap(isSelected: isSelected)
         }
+    }
+
+    @objc
+    func doubleTapAction(recognizer: UITapGestureRecognizer) {
+        fastSeek(seekDirection(at: recognizer.location(in: self)))
     }
 
     var activeSeekStreak: SeekStreak? {
@@ -265,15 +279,9 @@ private extension PlayerOverlayView {
         return streak
     }
 
-    func seekDirection(at location: CGPoint) -> SeekDirection? {
-        // Outer thirds seek on the first tap. The middle stays a tap that shows or hides the controls.
-        let zone = max(72, bounds.width * 0.3)
-        if location.x >= bounds.width - zone {
-            return .forward
-        } else if location.x <= zone {
-            return .backward
-        }
-        return nil
+    func seekDirection(at location: CGPoint) -> SeekDirection {
+        // Right half forward, left half back.
+        location.x > bounds.width / 2 ? .forward : .backward
     }
 
     func fastSeek(_ direction: SeekDirection) {
@@ -300,12 +308,14 @@ private extension PlayerOverlayView {
 extension PlayerOverlayView: UIGestureRecognizerDelegate {
 
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        guard gestureRecognizer === singleTap else {
+        guard gestureRecognizer === singleTap || gestureRecognizer === doubleTap else {
             return true
         }
-        delegate?.didTouchVideo()
+        if gestureRecognizer === singleTap {
+            delegate?.didTouchVideo()
+        }
         // While the chrome is faded out the button cannot be hit, so a center tap must reveal it.
-        guard contentView.alpha > 0.01 else {
+        guard contentView.alpha > 0.01, !playPauseView.isHidden else {
             return true
         }
         let point = touch.location(in: playPauseView)
@@ -313,7 +323,7 @@ extension PlayerOverlayView: UIGestureRecognizerDelegate {
     }
 }
 
-/// Top or bottom darkening shown with the controls. Same stops as the Android mobile chrome.
+/// Top or bottom darkening shown with the controls.
 final class ChromeGradientBand: UIView {
 
     enum Edge {

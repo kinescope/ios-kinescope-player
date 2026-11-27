@@ -10,7 +10,19 @@ Cues render in `SubtitleOverlayView`. Style (font, color, size percent, backgrou
 
 Search opens over the full player, not a small card. The list stays open after a line is chosen. The chosen line stays highlighted and the player seeks to that cue. The clock on each row is the cue start.
 
-## Turning them off
+## From code
+
+```swift
+player.enableSubtitles()        // first track
+player.enableSubtitles("en")    // track title from subtitleTitles, or a language code
+player.disableSubtitles()
+player.subtitleTitles           // empty until the video loads
+player.selectedSubtitleTitle    // nil while subtitles are off
+```
+
+`enableSubtitles` can be called before the video loads: the track is selected once it does. An unknown title falls back to the first track.
+
+## Hiding the button
 
 ```swift
 player.disableOptions([.subtitles])

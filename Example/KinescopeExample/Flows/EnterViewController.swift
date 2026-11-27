@@ -2,6 +2,7 @@ import AVFoundation
 import Metal
 import UIKit
 import KinescopeSDK
+import KinescopeShorts
 
 final class EnterViewController: UIViewController {
 
@@ -125,6 +126,8 @@ private extension EnterViewController {
     func showDownloaded() {
         let list = DownloadedListViewController()
         let nav = UINavigationController(rootViewController: list)
+        // Full screen, not a sheet: the sheet's swipe-down took over seek drags in the saved-video player.
+        nav.modalPresentationStyle = .fullScreen
         present(nav, animated: true)
     }
 

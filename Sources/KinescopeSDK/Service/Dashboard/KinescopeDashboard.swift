@@ -20,7 +20,7 @@ public enum KinescopeDashboard {
     private static var cachedPages: [String: [KinescopeLibraryVideo]] = [:]
     private static var inflight: [String: [(Result<[KinescopeLibraryVideo], Error>) -> Void]] = [:]
 
-    /// `projectId` and `folderId` match Android `KinescopeDemoConfig`: a blank value is no filter.
+    /// `projectId` and `folderId`: a blank value is no filter.
     /// Only `projectId` limits the feed to that project; `folderId` narrows it further.
     public static func videos(page: Int = 1,
                               perPage: Int = 100,

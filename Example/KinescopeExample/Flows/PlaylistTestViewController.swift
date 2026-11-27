@@ -1,7 +1,7 @@
 import UIKit
 import KinescopeSDK
 
-/// Same screen as the Android Playlist test: player on top, light list of every dashboard video below.
+/// Playlist test: player on top, light list of every dashboard video below.
 final class PlaylistTestViewController: UIViewController {
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask { .portrait }

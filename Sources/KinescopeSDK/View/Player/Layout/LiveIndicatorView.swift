@@ -43,7 +43,7 @@ extension LiveIndicatorView: LiveIndicatorInput {
         circleView.layer.removeAnimation(forKey: "pulse")
         circleView.alpha = 1
         if animated {
-            // Red dot while playback sits on the live edge. Opacity blink matches Android.
+            // Red dot while playback sits on the live edge, with an opacity blink.
             circleView.backgroundColor = config.onColor
             let pulse = CABasicAnimation(keyPath: "opacity")
             pulse.fromValue = 1

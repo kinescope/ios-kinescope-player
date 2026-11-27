@@ -153,7 +153,7 @@ private extension TimeIndicatorView {
         invalidateIntrinsicContentSize()
     }
 
-    /// Duration suffix clips open and shut, same as Android: 100ms, fade only after 40%.
+    /// Duration suffix clips open and shut: 100ms, fade only after 40%.
     func animateSuffix(shown: Bool) {
         suffixLink?.invalidate()
         let target = durationLabel.intrinsicContentSize.width
