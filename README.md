@@ -1,4 +1,4 @@
-# Kinescope iOS SDK
+# Kinescope iOS Swift SDK
 
 iOS SDK for [Kinescope](https://kinescope.io/) video. One Swift package, two libraries:
 
