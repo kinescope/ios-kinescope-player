@@ -17,7 +17,7 @@ enum SubtitleCueParser {
         return blocks.compactMap(parseBlock).sorted { $0.start < $1.start }
     }
 
-    /// Lines revealed as playback moves through the cue, same as Android progressive captions.
+    /// Lines revealed as playback moves through the cue (progressive captions).
     static func text(at time: TimeInterval, in cues: [SubtitleCue]) -> String? {
         guard let cue = cue(at: time, in: cues), !cue.lines.isEmpty else {
             return nil

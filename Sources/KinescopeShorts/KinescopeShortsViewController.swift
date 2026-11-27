@@ -1,8 +1,9 @@
 import UIKit
 import AVFoundation
+import KinescopeSDK
 
 /// Shorts chrome. `nil` keeps the default. `false` hides that control. Set this before the feed is shown.
-/// Same role as Android `KinescopeUiConfig`. `KinescopeUiConfig` is the same type.
+/// `KinescopeUiConfig` is the same type.
 public enum KinescopeShortsUIConfig {
     public static var showLikeButton: Bool?
     public static var showDislikeButton: Bool?
@@ -362,7 +363,7 @@ public final class KinescopeShortsViewController: UIViewController, KinescopeVid
             player = retired
             ready = !Self.isAtEnd(retired)
         } else if let slot = preloads.removeValue(forKey: index) {
-            // Already on this cell with a picture: the swipe can show it at once, the way Android does.
+            // Already on this cell with a picture: the swipe can show it at once.
             ready = slot.showsFrame && slot.isPlaced(on: cell.playerView)
             player = slot.takeOver(on: cell.playerView)
         } else {
@@ -433,7 +434,7 @@ public final class KinescopeShortsViewController: UIViewController, KinescopeVid
         }
     }
 
-    /// Like the Android pool: neighbours buffer while the current page plays, and a ready one
+    /// Player pool: neighbours buffer while the current page plays, and a ready one
     /// already shows its first frame so the next page does not open on the poster.
     private func warm(around index: Int) {
         let wanted = neighborIndexes(around: index)
@@ -1133,7 +1134,7 @@ private final class ShortsPageCell: UICollectionViewCell, UIGestureRecognizerDel
         seekTrack.isHidden = !KinescopeShortsUIConfig.showsSeekBar || !(showPaused || dragConfirmed)
     }
 
-    /// One line with an ellipsis. A tap opens the rest, up to the Android limits, then a second tap closes it.
+    /// One line with an ellipsis. A tap opens the rest, up to the line limit, then a second tap closes it.
     @objc private func titleTapped() {
         toggleText(titleLabel, expanded: &titleExpanded, limit: 5)
     }
@@ -1244,7 +1245,7 @@ private final class ShortsPageCell: UICollectionViewCell, UIGestureRecognizerDel
     }
 
     private static func icon(_ name: String) -> UIImage? {
-        let image = UIImage.image(named: name)
+        let image = ShortsImage.named(name)
         guard image.size != .zero else { return nil }
         return image.withRenderingMode(.alwaysTemplate)
     }
@@ -1557,7 +1558,7 @@ enum KinescopeShortsArtwork {
         lock.unlock()
         guard !already else { return }
         DispatchQueue.global(qos: .utility).async {
-            let ready = UIImage.image(named: "shortsStub").preparingForDisplay()
+            let ready = ShortsImage.named("shortsStub").preparingForDisplay()
             lock.lock()
             decoded = ready
             lock.unlock()
@@ -1569,7 +1570,7 @@ enum KinescopeShortsArtwork {
         lock.lock()
         let ready = decoded
         lock.unlock()
-        return ready ?? UIImage.image(named: "shortsStub")
+        return ready ?? ShortsImage.named("shortsStub")
     }
 }
 

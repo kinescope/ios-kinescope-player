@@ -22,6 +22,20 @@ public struct KinescopePlayerViewConfiguration {
     let announceSnack: KinescopeAnnounceConfiguration
     /// System picture-in-picture. Shorts keep this off: the feed is the only surface.
     let allowsPictureInPicture: Bool
+    /// Device rotation to landscape opens fullscreen.
+    /// `nil`: only when the fullscreen button is shown, as before 1.0.4.
+    /// `true` or `false` works apart from the button and the control panel.
+    /// Rotation back to portrait closes fullscreen whatever this value is.
+    let fullscreenOnRotate: Bool?
+    /// Built-in poster when the video has no poster or it fails to load.
+    /// `false` leaves the view empty until playback.
+    let showsDefaultPoster: Bool
+    /// Poster shown when the video has none or it fails to load. `nil` uses the built-in one.
+    let defaultPoster: UIImage?
+    /// Cover shown while a live broadcast has not started. `nil` uses the built-in one.
+    let liveAwaitingCover: UIImage?
+    /// Clear backdrop behind the picture and the poster instead of black.
+    let transparentBackground: Bool
     
     /// - parameter gravity: `AVLayerVideoGravity` value defines how the video is displayed within a layer’s bounds rectangle
     /// - parameter previewService: Implementation of service to load posters into imageView. Set `nil` to disable previews.
@@ -35,6 +49,13 @@ public struct KinescopePlayerViewConfiguration {
     /// - parameter sideMenu: Configuration of side menu with setings
     /// - parameter shadowOverlay: Configuration of shadow overlay beneath side menu
     /// - parameter announceSnack: Configuration of snack bar to announce events.
+    /// - parameter fullscreenOnRotate: Open fullscreen when the device turns to landscape.
+    /// `nil` follows the fullscreen button.
+    /// - parameter showsDefaultPoster: Built-in poster when the video has no poster of its own.
+    /// - parameter defaultPoster: Your own poster in place of the built-in one. `nil` uses the built-in one.
+    /// - parameter liveAwaitingCover: Your own cover while a live broadcast has not started.
+    /// `nil` uses the built-in one.
+    /// - parameter transparentBackground: Clear backdrop instead of black, like `transparent` in the web player embed.
     public init(gravity: AVLayerVideoGravity,
                 previewService: PreviewService?,
                 activityIndicator: KinescopeActivityIndicator,
@@ -44,7 +65,12 @@ public struct KinescopePlayerViewConfiguration {
                 sideMenu: KinescopeSideMenuConfiguration,
                 shadowOverlay: KinescopePlayerShadowOverlayConfiguration?,
                 announceSnack: KinescopeAnnounceConfiguration,
-                allowsPictureInPicture: Bool = true) {
+                allowsPictureInPicture: Bool = true,
+                fullscreenOnRotate: Bool? = nil,
+                showsDefaultPoster: Bool = true,
+                defaultPoster: UIImage? = nil,
+                liveAwaitingCover: UIImage? = nil,
+                transparentBackground: Bool = false) {
         self.gravity = gravity
         self.previewService = previewService
         self.activityIndicator = activityIndicator
@@ -55,6 +81,11 @@ public struct KinescopePlayerViewConfiguration {
         self.shadowOverlay = shadowOverlay
         self.announceSnack = announceSnack
         self.allowsPictureInPicture = allowsPictureInPicture
+        self.fullscreenOnRotate = fullscreenOnRotate
+        self.showsDefaultPoster = showsDefaultPoster
+        self.defaultPoster = defaultPoster
+        self.liveAwaitingCover = liveAwaitingCover
+        self.transparentBackground = transparentBackground
     }
     
 }
@@ -77,8 +108,25 @@ public extension KinescopePlayerViewConfiguration {
         sideMenu: .default,
         shadowOverlay: .default,
         announceSnack: .default,
-        allowsPictureInPicture: true
+        allowsPictureInPicture: true,
+        fullscreenOnRotate: nil,
+        showsDefaultPoster: true,
+        defaultPoster: nil,
+        liveAwaitingCover: nil,
+        transparentBackground: false
     )
+
+    /// Background video, like `background` in the web player embed: the picture only,
+    /// no overlay, control panel, PiP, or fullscreen on rotate. Everything else comes from `base`.
+    static func background(from base: KinescopePlayerViewConfiguration = .default) -> Self {
+        KinescopePlayerViewConfigurationBuilder(configuration: base)
+            .setOverlay(nil)
+            .setControlPanel(nil)
+            .setShadowOverlay(nil)
+            .setPictureInPicture(false)
+            .setFullscreenOnRotate(false)
+            .build()
+    }
 
     static func accentTimeLineAndPlayButton(with color: UIColor) -> Self {
         .builder()
@@ -115,6 +163,11 @@ public class KinescopePlayerViewConfigurationBuilder {
     private var shadowOverlay: KinescopePlayerShadowOverlayConfiguration?
     private var announceSnack: KinescopeAnnounceConfiguration
     private var allowsPictureInPicture: Bool
+    private var fullscreenOnRotate: Bool?
+    private var showsDefaultPoster: Bool
+    private var defaultPoster: UIImage?
+    private var liveAwaitingCover: UIImage?
+    private var transparentBackground: Bool
     
     public init(configuration: KinescopePlayerViewConfiguration = .default) {
         self.gravity = configuration.gravity
@@ -127,6 +180,11 @@ public class KinescopePlayerViewConfigurationBuilder {
         self.shadowOverlay = configuration.shadowOverlay
         self.announceSnack = configuration.announceSnack
         self.allowsPictureInPicture = configuration.allowsPictureInPicture
+        self.fullscreenOnRotate = configuration.fullscreenOnRotate
+        self.showsDefaultPoster = configuration.showsDefaultPoster
+        self.defaultPoster = configuration.defaultPoster
+        self.liveAwaitingCover = configuration.liveAwaitingCover
+        self.transparentBackground = configuration.transparentBackground
     }
     
     public func setGravity(_ gravity: AVLayerVideoGravity) -> Self {
@@ -174,6 +232,41 @@ public class KinescopePlayerViewConfigurationBuilder {
         return self
     }
 
+    /// Open fullscreen when the device turns to landscape.
+    /// Works apart from the fullscreen button and the control panel.
+    /// Unset, rotation opens fullscreen only while the fullscreen button is shown.
+    public func setFullscreenOnRotate(_ enabled: Bool) -> Self {
+        fullscreenOnRotate = enabled
+        return self
+    }
+
+    /// Built-in poster when the video has no poster or it fails to load. `true` by default.
+    /// `false` leaves the view empty until playback.
+    public func setShowsDefaultPoster(_ shows: Bool) -> Self {
+        showsDefaultPoster = shows
+        return self
+    }
+
+    /// Your own poster for videos without one, and for a poster that fails to load.
+    /// `nil` (default) uses the built-in one. Ignored when `setShowsDefaultPoster(false)`.
+    public func setDefaultPoster(_ image: UIImage?) -> Self {
+        defaultPoster = image
+        return self
+    }
+
+    /// Your own cover while a live broadcast has not started. `nil` (default) uses the built-in one.
+    public func setLiveAwaitingCover(_ image: UIImage?) -> Self {
+        liveAwaitingCover = image
+        return self
+    }
+
+    /// Clear backdrop behind the picture and the poster instead of black, like `transparent`
+    /// in the web player embed. `false` by default. Fullscreen keeps its black background.
+    public func setTransparentBackground(_ transparent: Bool) -> Self {
+        transparentBackground = transparent
+        return self
+    }
+
     public func setAnnounceSnack(_ announceSnack: KinescopeAnnounceConfiguration) -> Self {
         self.announceSnack = announceSnack
         return self
@@ -190,7 +283,12 @@ public class KinescopePlayerViewConfigurationBuilder {
             sideMenu: sideMenu,
             shadowOverlay: shadowOverlay,
             announceSnack: announceSnack,
-            allowsPictureInPicture: allowsPictureInPicture
+            allowsPictureInPicture: allowsPictureInPicture,
+            fullscreenOnRotate: fullscreenOnRotate,
+            showsDefaultPoster: showsDefaultPoster,
+            defaultPoster: defaultPoster,
+            liveAwaitingCover: liveAwaitingCover,
+            transparentBackground: transparentBackground
         )
     }
 }

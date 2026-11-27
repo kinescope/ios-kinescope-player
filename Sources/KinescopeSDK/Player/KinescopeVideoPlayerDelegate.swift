@@ -48,6 +48,10 @@ public protocol KinescopeVideoPlayerDelegate: AnyObject {
     func playerDidStall()
     /// Triggered when user selected item in playlist menu. Host app should load selected video.
     func player(didSelectPlaylistItem item: KinescopePlaylistItem)
+    /// Triggered when the player has opened fullscreen: by the button, by rotation or by `enterFullscreen()`
+    func playerDidEnterFullscreen()
+    /// Triggered when the player has closed fullscreen
+    func playerDidExitFullscreen()
 }
 
 public extension KinescopeVideoPlayerDelegate {
@@ -70,4 +74,6 @@ public extension KinescopeVideoPlayerDelegate {
     func playerDidFinishPlaying() { }
     func playerDidStall() { }
     func player(didSelectPlaylistItem item: KinescopePlaylistItem) { }
+    func playerDidEnterFullscreen() { }
+    func playerDidExitFullscreen() { }
 }

@@ -18,6 +18,12 @@ final class PreviewNetworkService: PreviewService {
 
     private let executionQueue = DispatchQueue.global(qos: .utility)
     private let completionQueue = DispatchQueue.main
+    /// Shown when the poster fails to load. `nil` leaves the image view empty.
+    private let fallback: UIImage?
+
+    init(fallback: UIImage? = UIImage.image(named: "defaultPoster")) {
+        self.fallback = fallback
+    }
 
     // MARK: - Public Methods
 
@@ -31,7 +37,8 @@ final class PreviewNetworkService: PreviewService {
             completionQueue.async(execute: mark)
         }
 
-        executionQueue.async { [weak self] in
+        // Captured by value: a service made for one call may be gone before the load ends.
+        executionQueue.async { [fallback = self.fallback, completionQueue = self.completionQueue] in
             let image: UIImage?
             if let remote = URL(string: url),
                let data = try? Data(contentsOf: remote) {
@@ -39,8 +46,8 @@ final class PreviewNetworkService: PreviewService {
             } else {
                 image = nil
             }
-            let poster = image ?? .image(named: "defaultPoster")
-            self?.completionQueue.async {
+            let poster = image ?? fallback
+            completionQueue.async {
                 guard imageView.accessibilityIdentifier == url else {
                     return
                 }

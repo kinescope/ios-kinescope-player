@@ -14,14 +14,8 @@ final class PlayerAnalyticDataFactory: Factory {
     
     private let type = "iOS SDK"
 
-    private let bundle: Bundle = {
-    #if SWIFT_PACKAGE
-    return Bundle.module
-    #else
-    return Bundle(for: KinescopeVideoPlayer.self)
-    #endif
-    }()
-    private lazy var currentVersion = bundle.infoDictionary?["CFBundleShortVersionString"] as? String ?? "unknown"
+    /// A Swift package bundle has no version in its Info.plist, so the version comes from code.
+    private let currentVersion = Kinescope.sdkVersion
 
     // MARK: - Factory
 

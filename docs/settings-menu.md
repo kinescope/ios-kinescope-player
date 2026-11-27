@@ -10,6 +10,8 @@ The gear fades the settings card in above the control bar. Each next screen slid
 
 Choosing a row pushes the next list. The current value is a checkmark. Quality `Auto` clears the peak bitrate and the gear badge follows the rendition that is actually playing. That badge is refreshed about once a second, and only while the control panel is on screen: reading the player access log is a synchronous call to the media server. A named rendition (`720p` and similar) sets `preferredPeakBitRate` for that rung. `player.selectQuality(named:)` accepts `auto`, `360`, `480`, `720`, `1080`, `720p`, and `audio`.
 
+The last quality row is **Audio**. The stream switches to its audio rendition, so no video is downloaded, and the poster stands in for the picture. A downloaded video keeps playing from the file and only hides the picture. The row is there when the HLS master has a separate audio rendition (`EXT-X-MEDIA TYPE=AUDIO`) or the video is a downloaded file; it is not shown for live. Choosing any other quality brings the picture back. `player.selectQuality(named: "audio")` does the same from code.
+
 Speed values come from `KinescopePlayingRate`.
 
 The scale row's nested actions are **− 3%**, **+ 3%**, and **100%**. Pinch on the video goes from 1× to 5× and pans inside the player frame; the badge (for example `2x`) resets the scale. The percent on the disclosure row updates immediately.

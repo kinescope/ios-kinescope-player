@@ -8,6 +8,8 @@
 import Foundation
 
 protocol SessionAnalyticInput {
+    var externalId: String? { get }
+    func set(externalId: String?)
     func refreshViewId()
     func resetWatchedDuration()
     func incrementWatchedDuration(by step: TimeInterval)
@@ -21,6 +23,8 @@ final class SessionAnalyticDataFactory: Factory {
     private let playerId = UUID().uuidString
     private var viewId = UUID().uuidString
     private var watchedDuration: TimeInterval?
+    /// Host viewer id, sent as `Session.ExternalID`. `nil` sends nothing.
+    private(set) var externalId: String?
 
     // MARK: - Factory
 
@@ -35,6 +39,9 @@ final class SessionAnalyticDataFactory: Factory {
         result.type = Analytics_SessionType.online
         if let watchedDuration {
             result.watchedDuration = UInt32(watchedDuration)
+        }
+        if let externalId {
+            result.externalID = externalId
         }
         return result
     }
@@ -58,6 +65,11 @@ final class SessionAnalyticDataFactory: Factory {
 // MARK: - SessionAnalyticInput
 
 extension SessionAnalyticDataFactory: SessionAnalyticInput {
+    func set(externalId: String?) {
+        let trimmed = externalId?.trimmingCharacters(in: .whitespacesAndNewlines)
+        self.externalId = (trimmed?.isEmpty == false) ? trimmed : nil
+    }
+
     func refreshViewId() {
         viewId = UUID().uuidString
     }

@@ -78,7 +78,7 @@ final class SeekFeedbackView: UIView {
 
     // MARK: - Methods
 
-    /// Visible half of the oval. Fullscreen uses the Android scales; inline stays a 340pt circle.
+    /// Visible half of the oval. Fullscreen uses its own scales; inline stays a 340pt circle.
     func preferredWidth(in container: CGSize, screen: CGSize?, portraitVideo: Bool) -> CGFloat {
         let next = Self.ovalSize(in: container, screen: screen, portraitVideo: portraitVideo)
         if next != ovalSize {
@@ -173,7 +173,7 @@ private extension SeekFeedbackView {
         addSubview(label)
     }
 
-    /// Scale from the player edge like Android pivot.
+    /// Scale from the player edge.
     func collapsedTransform() -> CGAffineTransform {
         let scale = Constants.collapsedScale
         let pivotX = edge == .leading ? -bounds.width / 2 : bounds.width / 2

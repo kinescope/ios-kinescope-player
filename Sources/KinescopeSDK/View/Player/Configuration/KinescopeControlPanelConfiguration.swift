@@ -18,6 +18,8 @@ public struct KinescopeControlPanelConfiguration {
     let liveIndicator: KinescopeLiveIndicatorConfiguration
     let timeline: KinescopePlayerTimelineConfiguration
     let optionsMenu: KinescopePlayerOptionsConfiguration
+    let showsTimeline: Bool
+    let showsTimeIndicator: Bool
 
     /// - parameter tintColor: Tint Color of buttons and controls
     /// - parameter backgroundColor: Background color of panel
@@ -29,6 +31,8 @@ public struct KinescopeControlPanelConfiguration {
     /// - parameter timeIndicator: Appearance of current tme indicator
     /// - parameter timeline: Appearance of timeline
     /// - parameter options: Appearance of expandable options menu
+    /// - parameter showsTimeline: Show the seek bar
+    /// - parameter showsTimeIndicator: Show current time and duration
     public init(tintColor: UIColor,
                 backgroundColor: UIColor,
                 preferedHeight: CGFloat,
@@ -36,7 +40,9 @@ public struct KinescopeControlPanelConfiguration {
                 liveIndicator: KinescopeLiveIndicatorConfiguration,
                 timeIndicator: KinescopePlayerTimeindicatorConfiguration,
                 timeline: KinescopePlayerTimelineConfiguration,
-                optionsMenu: KinescopePlayerOptionsConfiguration) {
+                optionsMenu: KinescopePlayerOptionsConfiguration,
+                showsTimeline: Bool = true,
+                showsTimeIndicator: Bool = true) {
         self.tintColor = tintColor
         self.backgroundColor = backgroundColor
         self.preferedHeight = preferedHeight
@@ -45,6 +51,8 @@ public struct KinescopeControlPanelConfiguration {
         self.timeIndicator = timeIndicator
         self.timeline = timeline
         self.optionsMenu = optionsMenu
+        self.showsTimeline = showsTimeline
+        self.showsTimeIndicator = showsTimeIndicator
     }
 }
 
@@ -80,6 +88,8 @@ public class KinescopeControlPanelConfigurationBuilder {
     private var timeIndicator: KinescopePlayerTimeindicatorConfiguration
     private var timeline: KinescopePlayerTimelineConfiguration
     private var optionsMenu: KinescopePlayerOptionsConfiguration
+    private var showsTimeline: Bool
+    private var showsTimeIndicator: Bool
 
     public init(configuration: KinescopeControlPanelConfiguration = .default) {
         self.tintColor = configuration.tintColor
@@ -90,6 +100,8 @@ public class KinescopeControlPanelConfigurationBuilder {
         self.timeIndicator = configuration.timeIndicator
         self.timeline = configuration.timeline
         self.optionsMenu = configuration.optionsMenu
+        self.showsTimeline = configuration.showsTimeline
+        self.showsTimeIndicator = configuration.showsTimeIndicator
     }
 
     public func setTintColor(_ color: UIColor) -> Self {
@@ -132,6 +144,18 @@ public class KinescopeControlPanelConfigurationBuilder {
         return self
     }
 
+    /// Show the seek bar. `true` by default.
+    public func setShowsTimeline(_ shows: Bool) -> Self {
+        self.showsTimeline = shows
+        return self
+    }
+
+    /// Show current time and duration. `true` by default. The live badge does not depend on it.
+    public func setShowsTimeIndicator(_ shows: Bool) -> Self {
+        self.showsTimeIndicator = shows
+        return self
+    }
+
     public func build() -> KinescopeControlPanelConfiguration {
         return .init(tintColor: tintColor,
                      backgroundColor: backgroundColor,
@@ -140,6 +164,8 @@ public class KinescopeControlPanelConfigurationBuilder {
                      liveIndicator: liveIndicator,
                      timeIndicator: timeIndicator,
                      timeline: timeline,
-                     optionsMenu: optionsMenu)
+                     optionsMenu: optionsMenu,
+                     showsTimeline: showsTimeline,
+                     showsTimeIndicator: showsTimeIndicator)
     }
 }

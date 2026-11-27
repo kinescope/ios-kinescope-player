@@ -26,6 +26,32 @@ public struct KinescopePlayerConfig {
     /// Sent as `drmauthtoken` query parameter of video metadata request.
     public let drmAuthToken: String?
 
+    /// Your own viewer identifier (user ID, account ID), sent with every analytics event
+    /// as `Session.ExternalID`, the same as `externalid` in the web player embed.
+    /// `nil` or blank sends nothing. Change it later with `KinescopeVideoPlayer.externalId`.
+    public let externalId: String?
+
+    /// Do not send analytics events, the same as `dnt` in the web player embed.
+    public let doNotTrack: Bool
+
+    /// Pause when another player with `autopause` starts, the same as `autopause` in the web player embed.
+    public let autopause: Bool
+
+    /// Keep playing when the app goes to the background.
+    /// The host app needs the `playback` audio session category and the background audio mode.
+    public let allowsBackgroundPlayback: Bool
+
+    /// Start position in seconds on every load, the same as `t` in the web player embed. Ignored for live.
+    public let startTime: TimeInterval?
+
+    /// Background video, the same as `background` in the web player embed: plays on attach,
+    /// muted and in a loop, without controls.
+    public let background: Bool
+
+    /// Make the player view first responder once the video loads, the same as `autofocus`
+    /// in the web player embed. A hardware keyboard then controls it: space plays or pauses, arrows seek.
+    public let autofocus: Bool
+
     /// Default link to share video and play it on web.
     public var shareLink: URL? {
         URL(string: "https://kinescope.io/\(videoId)")
@@ -36,16 +62,37 @@ public struct KinescopePlayerConfig {
     /// - parameter repeatingMode: Mode which will be used to repeat failed requests.
     /// - parameter localPlaybackURL: Optional local file URL for offline playback (e.g. downloaded video with or without DRM).
     /// - parameter drmAuthToken: Optional token for DRM-protected videos with authorization.
+    /// - parameter externalId: Optional viewer identifier for analytics (`Session.ExternalID`).
+    /// - parameter doNotTrack: Do not send analytics events. By default is `false`
+    /// - parameter autopause: Pause when another player with `autopause` starts. By default is `false`
+    /// - parameter allowsBackgroundPlayback: Keep playing in the background. By default is `false`
+    /// - parameter startTime: Start position in seconds on every load. Ignored for live. By default is `nil`
+    /// - parameter background: Background video: autoplay, muted, loop, no controls. By default is `false`
+    /// - parameter autofocus: Focus the player view for a hardware keyboard once the video loads. By default is `false`
     public init(videoId: String,
                 looped: Bool = false,
                 repeatingMode: RepeatingMode = .default,
                 localPlaybackURL: URL? = nil,
-                drmAuthToken: String? = nil) {
+                drmAuthToken: String? = nil,
+                externalId: String? = nil,
+                doNotTrack: Bool = false,
+                autopause: Bool = false,
+                allowsBackgroundPlayback: Bool = false,
+                startTime: TimeInterval? = nil,
+                background: Bool = false,
+                autofocus: Bool = false) {
         self.videoId = KinescopeVideoID.parse(videoId)
         self.looped = looped
         self.repeatingMode = repeatingMode
         self.localPlaybackURL = localPlaybackURL
         self.drmAuthToken = drmAuthToken
+        self.externalId = externalId
+        self.doNotTrack = doNotTrack
+        self.autopause = autopause
+        self.allowsBackgroundPlayback = allowsBackgroundPlayback
+        self.startTime = startTime
+        self.background = background
+        self.autofocus = autofocus
     }
 
 }

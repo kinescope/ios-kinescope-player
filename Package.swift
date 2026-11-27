@@ -15,6 +15,13 @@ let package = Package(
             name: "KinescopeSDK",
             type: .dynamic,
             targets: ["KinescopeSDK"]),
+        // Player plus the vertical feed in one framework. An app adds one product:
+        // KinescopeSDK for the player only, or KinescopeShorts for Shorts (the player comes with it).
+        // Adding both links the player twice.
+        .library(
+            name: "KinescopeShorts",
+            type: .dynamic,
+            targets: ["KinescopeSDK", "KinescopeShorts"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -32,11 +39,24 @@ let package = Package(
                 .product(name: "SwiftProtobuf", package: "swift-protobuf")
             ],
             path: "Sources/KinescopeSDK",
+            // Not part of the Swift package: the plist is for the Xcode framework project, the protos are the source of events.pb.swift.
+            exclude: [
+                "Info.plist",
+                "Models/Events/events.proto",
+                "Models/Events/gogo.proto"
+            ],
             resources: [
                 .process("Resources/Fonts"),
                 .process("Resources/Assets.xcassets"),
                 .process("Resources/en.lproj"),
                 .process("Resources/ru.lproj")
+            ]),
+        .target(
+            name: "KinescopeShorts",
+            dependencies: ["KinescopeSDK"],
+            path: "Sources/KinescopeShorts",
+            resources: [
+                .process("Resources/Assets.xcassets")
             ]),
         .testTarget(
             name: "KinescopeSDKTests",

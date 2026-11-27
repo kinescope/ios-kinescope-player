@@ -131,8 +131,11 @@ final class VideoViewController: UIViewController {
 }
 
 extension VideoViewController: UINavigationControllerDelegate {
+    /// The app mask (`AppDelegate`) keeps this screen portrait. The navigation controller itself must not
+    /// exclude landscape: when it is presented full screen (Saved videos), a landscape fullscreen player on top
+    /// would have no orientation in common with it, and UIKit throws.
     func navigationControllerSupportedInterfaceOrientations(_ navigationController: UINavigationController) -> UIInterfaceOrientationMask {
-        return self.supportedInterfaceOrientations
+        return .allButUpsideDown
     }
 }
 

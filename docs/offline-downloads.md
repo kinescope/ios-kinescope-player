@@ -33,6 +33,8 @@ Kinescope.shared.inspector.video(id: videoId, onSuccess: { video in
 
 `KinescopeOffline.qualities(for:)` reads `qualityMap` when the video has one. Otherwise it fetches the HLS master playlist and collects `RESOLUTION` heights. Labels are the asset name, or `"720p"` when the name is empty. Heights are unique and sorted high to low.
 
+The picked height is saved with the download. When the saved video plays, the quality row in the settings menu shows that rendition only, plus **Audio**. A download without `minimumHeight`, or one made before 1.0.4, shows the highest rendition of `qualityMap`, which is what AVFoundation saves by default.
+
 `minimumHeight` is passed to `AVAssetDownloadTask` as `AVAssetDownloadTaskMinimumRequiredPresentationSizeKey` (16:9 width derived from the height). That asks AVFoundation for one rendition. It is not a Media3 stream-key filter: the system still decides which variant meets the size.
 
 ## What is stored
@@ -152,7 +154,7 @@ FairPlay cannot be verified in the Simulator. Use a device and a commercial-DRM 
 | Title, description, chapters from the saved JSON | Local |
 | Poster and Now Playing artwork | Local, after the poster file has been written |
 | Subtitles | Remote URL on each selection. The cue file is not saved |
-| Quality change | Selects `.exact` or `.auto(hlsLink)` and leaves the local file |
+| Quality | Local. The settings menu lists the downloaded rendition and **Audio**, with no **Auto**. Choosing a row never switches to the network |
 | Playlist | Whatever the host passed to `setPlaylist`. The SDK does not save it with the download |
 | Attachments | Separate downloader, not part of this pipeline |
 

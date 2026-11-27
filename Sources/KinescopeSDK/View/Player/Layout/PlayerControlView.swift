@@ -79,7 +79,7 @@ extension PlayerControlView: PlayerControlInput {
 
     func set(live: Bool?) {
         let liveMode = live != nil
-        timeIndicator.isHidden = liveMode
+        timeIndicator.isHidden = liveMode || !config.showsTimeIndicator
         liveIndicator.isHidden = !liveMode
         if let live {
             liveIndicator.set(animated: live)
@@ -199,6 +199,8 @@ private extension PlayerControlView {
         optionsMenu = PlayerControlOptionsView(config: config.optionsMenu)
 
         addSubviews(liveIndicator, timeIndicator, timeline, optionsMenu)
+        timeIndicator.isHidden = !config.showsTimeIndicator
+        timeline.isHidden = !config.showsTimeline
 
         setupConstraints()
         configureScrubTitle()
@@ -286,8 +288,14 @@ private extension PlayerControlView {
     /// Seek bar starts after the clock, or after the LIVE badge so the badge does not cover the track.
     func pinTimeline(afterLiveBadge liveMode: Bool) {
         timelineLeading?.isActive = false
-        let anchor = liveMode ? liveIndicator.trailingAnchor : timeIndicator.trailingAnchor
-        let leading = timeline.leadingAnchor.constraint(equalTo: anchor, constant: liveMode ? 8 : 12)
+        let leading: NSLayoutConstraint
+        if liveMode {
+            leading = timeline.leadingAnchor.constraint(equalTo: liveIndicator.trailingAnchor, constant: 8)
+        } else if config.showsTimeIndicator {
+            leading = timeline.leadingAnchor.constraint(equalTo: timeIndicator.trailingAnchor, constant: 12)
+        } else {
+            leading = timeline.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
+        }
         leading.isActive = true
         timelineLeading = leading
     }
@@ -297,7 +305,7 @@ private extension PlayerControlView {
         optionsMenu.isExpanded = expanded
         let showingLive = !liveIndicator.isHidden
         if !expanded {
-            timeIndicator.isHidden = showingLive
+            timeIndicator.isHidden = showingLive || !config.showsTimeIndicator
         }
         optionsMenu.setExtraWidths(revealed: expanded)
         optionsWidth?.constant = optionsMenu.laidOutWidth
@@ -314,7 +322,7 @@ private extension PlayerControlView {
         }
         animator.addCompletion { [weak self] _ in
             guard let self else { return }
-            self.timeIndicator.isHidden = expanded || !self.liveIndicator.isHidden
+            self.timeIndicator.isHidden = expanded || !self.liveIndicator.isHidden || !self.config.showsTimeIndicator
             if !expanded {
                 self.timeIndicator.alpha = 1
                 self.liveIndicator.alpha = 1

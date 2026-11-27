@@ -8,6 +8,6 @@ Hide it:
 player.disableOptions([.pip])
 ```
 
-The example keeps a single PiP session. Opening another video closes the previous PiP for that id (`PipManager`). Background audio follows the system PiP rules; the player does not start a separate background mode beyond what PiP already requires.
+The example keeps a single PiP session. Opening another video closes the previous PiP for that id (`PipManager`). Background audio follows the system PiP rules. To keep the sound without PiP, see [Background playback](player-options.md#background-playback).
 
 The Custom Player switch "Picture in picture" writes `picture_in_picture` on the player template and hides the button when it is off.

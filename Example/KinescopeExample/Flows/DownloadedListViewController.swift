@@ -1,7 +1,7 @@
 import UIKit
 import KinescopeSDK
 
-/// Saved videos, same screen as Android Offline DRM: downloaded rows, empty state, and a separate download screen.
+/// Saved videos: downloaded rows, empty state, and a separate download screen.
 final class DownloadedListViewController: UIViewController {
 
     private struct Item {
@@ -259,13 +259,20 @@ extension DownloadedListViewController: KinescopeVideoDownloadableDelegate {
     }
 }
 
-/// Separate download screen, same as Android "Скачать видео": id field and the dashboard catalog.
+/// Separate download screen: id field and the dashboard catalog.
 final class AddDownloadViewController: UIViewController {
 
     private var videos: [KinescopeLibraryVideo] = []
     private var progress: [String: Double] = [:]
     private let tableView = UITableView(frame: .zero, style: .plain)
     private let idField = UITextField()
+    private let downloadButton = UIButton(type: .system)
+    /// Status of the last download started here, also for an ID that is not in the catalog below.
+    private let statusLabel = UILabel()
+    private let statusBar = UIProgressView(progressViewStyle: .bar)
+    private lazy var statusStack = UIStackView(arrangedSubviews: [statusLabel, statusBar])
+    private var trackedId: String?
+    private var trackedTitle = ""
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask { .portrait }
 
@@ -315,7 +322,7 @@ final class AddDownloadViewController: UIViewController {
         idField.autocorrectionType = .no
         idField.autocapitalizationType = .none
         idField.borderStyle = .none
-        let download = UIButton(type: .system)
+        let download = downloadButton
         download.setTitle("Скачать", for: .normal)
         download.setTitleColor(.white, for: .normal)
         download.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
@@ -327,6 +334,17 @@ final class AddDownloadViewController: UIViewController {
         fieldRow.spacing = 8
         fieldRow.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(fieldRow)
+
+        statusLabel.font = .systemFont(ofSize: 13)
+        statusLabel.textColor = UIColor.white.withAlphaComponent(0.8)
+        statusLabel.numberOfLines = 2
+        statusBar.progressTintColor = UIColor(red: 97 / 255, green: 97 / 255, blue: 252 / 255, alpha: 1)
+        statusBar.trackTintColor = UIColor.white.withAlphaComponent(0.12)
+        statusStack.axis = .vertical
+        statusStack.spacing = 6
+        statusStack.isHidden = true
+        statusStack.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(statusStack)
 
         tableView.backgroundColor = .black
         tableView.separatorColor = UIColor.white.withAlphaComponent(0.12)
@@ -351,7 +369,10 @@ final class AddDownloadViewController: UIViewController {
             fieldRow.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 8),
             fieldRow.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             fieldRow.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            tableView.topAnchor.constraint(equalTo: fieldRow.bottomAnchor, constant: 12),
+            statusStack.topAnchor.constraint(equalTo: fieldRow.bottomAnchor, constant: 8),
+            statusStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            statusStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            tableView.topAnchor.constraint(equalTo: statusStack.bottomAnchor, constant: 12),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -369,31 +390,53 @@ final class AddDownloadViewController: UIViewController {
             return
         }
         view.endEditing(true)
+        showStatus("Получаем данные видео…")
+        downloadButton.isEnabled = false
         Kinescope.shared.inspector.video(id: videoId, onSuccess: { [weak self] video in
+            self?.downloadButton.isEnabled = true
             self?.promptQuality(for: video)
         }, onError: { [weak self] error in
-            self?.toast(error.localizedDescription)
+            self?.downloadButton.isEnabled = true
+            self?.showStatus("Ошибка: \(error.localizedDescription)", isError: true)
         })
+    }
+
+    /// One line under the ID field. `progress` (0–100) shows the bar.
+    private func showStatus(_ text: String, progress: Double? = nil, isError: Bool = false) {
+        statusStack.isHidden = false
+        statusLabel.text = text
+        statusLabel.textColor = isError
+            ? UIColor(red: 1, green: 0.42, blue: 0.42, alpha: 1)
+            : UIColor.white.withAlphaComponent(0.8)
+        statusBar.isHidden = progress == nil
+        statusBar.setProgress(Float(min(max((progress ?? 0) / 100, 0), 1)), animated: progress != nil)
+    }
+
+    private func hideStatus() {
+        statusStack.isHidden = true
     }
 
     private func promptQuality(for video: KinescopeVideo) {
         KinescopeOffline.qualities(for: video) { [weak self] qualities in
             guard let self else { return }
             guard !qualities.isEmpty else {
-                self.toast("Нет доступных качеств")
+                self.showStatus("Нет доступных качеств для «\(video.title)»", isError: true)
                 return
             }
             guard qualities.count > 1 else {
                 self.startDownload(video, height: qualities.first?.height)
                 return
             }
+            self.showStatus("Выберите качество для «\(video.title)»")
             let sheet = UIAlertController(title: "Качество: \(video.title)", message: nil, preferredStyle: .actionSheet)
             for quality in qualities {
                 sheet.addAction(UIAlertAction(title: quality.name, style: .default) { [weak self] _ in
                     self?.startDownload(video, height: quality.height)
                 })
             }
-            sheet.addAction(UIAlertAction(title: "Отмена", style: .cancel))
+            sheet.addAction(UIAlertAction(title: "Отмена", style: .cancel) { [weak self] _ in
+                self?.hideStatus()
+            })
             sheet.popoverPresentationController?.sourceView = self.view
             self.present(sheet, animated: true)
         }
@@ -401,9 +444,12 @@ final class AddDownloadViewController: UIViewController {
 
     private func startDownload(_ video: KinescopeVideo, height: Int?) {
         guard let url = URL(string: video.hlsLink) else {
-            toast("Нет ссылки на видео")
+            showStatus("Нет ссылки на видео «\(video.title)»", isError: true)
             return
         }
+        trackedId = video.id
+        trackedTitle = video.title.isEmpty ? video.id : video.title
+        showStatus("Скачивается «\(trackedTitle)»: 0%", progress: 0)
         progress[video.id] = 0
         tableView.reloadData()
         Kinescope.shared.videoDownloader.enqueueDownload(videoId: video.id,
@@ -462,16 +508,25 @@ extension AddDownloadViewController: UITableViewDataSource {
 extension AddDownloadViewController: KinescopeVideoDownloadableDelegate {
     func videoDownloadProgress(videoId: String, progress value: Double) {
         DispatchQueue.main.async { [weak self] in
-            self?.progress[videoId] = value
-            self?.tableView.reloadData()
+            guard let self else { return }
+            self.progress[videoId] = value
+            self.tableView.reloadData()
+            if videoId == self.trackedId {
+                self.showStatus(String(format: "Скачивается «%@»: %.0f%%", self.trackedTitle, value), progress: value)
+            }
         }
     }
 
     func videoDownloadError(videoId: String, error: KinescopeDownloadError) {
         DispatchQueue.main.async { [weak self] in
-            self?.progress[videoId] = nil
-            self?.tableView.reloadData()
-            self?.toast("Ошибка скачивания")
+            guard let self else { return }
+            self.progress[videoId] = nil
+            self.tableView.reloadData()
+            if videoId == self.trackedId {
+                self.showStatus("Ошибка скачивания «\(self.trackedTitle)»", isError: true)
+            } else {
+                self.toast("Ошибка скачивания")
+            }
         }
     }
 
@@ -480,8 +535,12 @@ extension AddDownloadViewController: KinescopeVideoDownloadableDelegate {
             guard let self else { return }
             self.progress[videoId] = nil
             self.tableView.reloadData()
-            let title = self.videos.first(where: { $0.id == videoId })?.title ?? ""
-            self.toast(title.isEmpty ? "Видео скачано" : "Видео \"\(title)\" скачано")
+            if videoId == self.trackedId {
+                self.showStatus("Скачано «\(self.trackedTitle)». Видео в списке сохранённых", progress: 100)
+            } else {
+                let title = self.videos.first(where: { $0.id == videoId })?.title ?? ""
+                self.toast(title.isEmpty ? "Видео скачано" : "Видео \"\(title)\" скачано")
+            }
         }
     }
 }

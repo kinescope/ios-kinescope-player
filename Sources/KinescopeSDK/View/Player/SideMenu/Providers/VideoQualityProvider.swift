@@ -10,6 +10,10 @@ import AVFoundation
 protocol VideoQualitySource: QualitySelectionProvider {
     var currentQuality: String { get }
     var availableAssets: [KinescopeVideoAsset] { get }
+    /// The stream has a separate audio rendition, or the video is a downloaded file.
+    var supportsAudioOnly: Bool { get }
+    /// `false` for a downloaded file: it holds one rendition and "Auto" would go to the network.
+    var showsAutoQuality: Bool { get }
 }
 
 final class VideoQualityProvider: SideMenuItemsProvider {
@@ -31,9 +35,15 @@ final class VideoQualityProvider: SideMenuItemsProvider {
             return .checkmark(title: .init(string: quality.name), selected: selected)
         }
 
-        let autoTitle = NSAttributedString(string: L10n.Player.auto)
-        let selected = selectedTitle.hasPrefix(autoTitle.string)
-        items.insert(.checkmark(title: autoTitle, selected: selected), at: 0)
+        if source?.showsAutoQuality != false {
+            let autoTitle = NSAttributedString(string: L10n.Player.auto)
+            let selected = selectedTitle.hasPrefix(autoTitle.string)
+            items.insert(.checkmark(title: autoTitle, selected: selected), at: 0)
+        }
+        if source?.supportsAudioOnly == true {
+            items.append(.checkmark(title: .init(string: L10n.Player.audio),
+                                    selected: selectedTitle == L10n.Player.audio))
+        }
         return items
     }
 

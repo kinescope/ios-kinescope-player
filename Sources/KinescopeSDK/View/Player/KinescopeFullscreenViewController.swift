@@ -6,6 +6,7 @@
 //
 // swiftlint:disable implicitly_unwrapped_optional
 
+import AVFoundation
 import UIKit
 
 final public class KinescopeFullscreenViewController: UIViewController {
@@ -160,7 +161,7 @@ extension KinescopeFullscreenViewController {
         let target = orientationBeforePresentation ?? .portrait
         let needsRotate = current != nil && current != target && mask(for: target) != nil
         guard needsRotate, let targetMask = mask(for: target) else {
-            // Same orientation as Android: the surface switches, the fullscreen layer just goes away.
+            // Same orientation: the surface switches, the fullscreen layer just goes away.
             controller.placePlayerBack()
             restoreNavigationBar(of: presenting)
             presenting.view.layoutIfNeeded()
@@ -283,9 +284,15 @@ extension KinescopeFullscreenViewController {
             }
         }
 
-        let size = source.playerView.player?.currentItem?.presentationSize ?? .zero
+        let item = source.playerView.player?.currentItem
+        let size = item?.presentationSize ?? .zero
+        let playsFile = (item?.asset as? AVURLAsset)?.url.isFileURL ?? false
         if size.width > 1, size.height > 1 {
             open(size.width > size.height ? .landscape : .portrait)
+        } else if playsFile {
+            // A saved video: reading the HLS master would wait on the network, offline until it times out,
+            // and every tap is ignored while fullscreen is on its way.
+            open(.landscape)
         } else {
             KinescopeFullscreenConfiguration.preferred(for: video, completion: open)
         }

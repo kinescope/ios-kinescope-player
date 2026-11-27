@@ -1,6 +1,6 @@
 import UIKit
 
-/// Bottom playlist sheet: index or playing mark, poster, duration, title. Same layout as Android.
+/// Bottom playlist sheet: index or playing mark, poster, duration, title.
 final class PlaylistSheetView: UIView {
 
     var onSelect: ((KinescopePlaylistItem) -> Void)?

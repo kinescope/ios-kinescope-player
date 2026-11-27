@@ -31,8 +31,8 @@ fileprivate extension KinescopeVideoQuality {
             return nil
         }
 
-        let asset = AVURLAsset(url: url)
-        
+        let asset = Self.streamAsset(for: url)
+
 #if !targetEnvironment(simulator)
         dataProtectionHandler?.bind(with: asset)
 #endif
@@ -60,6 +60,20 @@ fileprivate extension KinescopeVideoQuality {
 
     static func item(for asset: AVURLAsset) -> AVPlayerItem {
         AVPlayerItem(asset: asset)
+    }
+
+    /// Network stream with `KinescopeConfig.userAgent`, when one is set.
+    static func streamAsset(for url: URL) -> AVURLAsset {
+        guard let userAgent = Kinescope.shared.config?.userAgent else {
+            return AVURLAsset(url: url)
+        }
+        var options: [String: Any] = [:]
+        if #available(iOS 16.0, *) {
+            options[AVURLAssetHTTPUserAgentKey] = userAgent
+        } else {
+            options["AVURLAssetHTTPHeaderFieldsKey"] = ["User-Agent": userAgent]
+        }
+        return AVURLAsset(url: url, options: options)
     }
 
     @available(*, deprecated, message: "Changing of playerItem is not required. Switching between qualities is handling in HLS stream.")

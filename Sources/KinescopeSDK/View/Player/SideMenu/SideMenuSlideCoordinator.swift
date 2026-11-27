@@ -202,10 +202,15 @@ struct SideMenuSlideCoordinator: SideMenuCoordinator {
             return
         }
         let destination = frame(for: menu, in: board)
-        clip.frame = destination
+        // Runs from the player's layoutSubviews: touch the views only on a real change.
+        if clip.frame != destination {
+            clip.frame = destination
+        }
         menu.isHidden = false
         menu.alpha = 1
-        menu.frame = clip.bounds
+        if menu.frame != clip.bounds {
+            menu.frame = clip.bounds
+        }
     }
 
     /// Pins a panel to the top of the card. The card's top edge moves as its height changes.

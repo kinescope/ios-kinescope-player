@@ -1,7 +1,7 @@
 import UIKit
 import CoreText
 
-/// Roboto faces used by the Android player settings.
+/// Roboto faces used by the player settings.
 enum KinescopeFont {
 
     static func regular(_ size: CGFloat) -> UIFont {

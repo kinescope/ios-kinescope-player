@@ -19,6 +19,8 @@ public struct KinescopePlayerOverlayConfiguration {
     let backgroundColor: UIColor
     let duration: TimeInterval
     let nameConfiguration: KinescopeVideoNameConfiguration
+    let showsPlayPauseButton: Bool
+    let showsHeader: Bool
     
     /// - parameter playImage: Image showing If video started after tapping on overlay
     /// - parameter pauseImage: Image showing If video paused after tapping on overlay
@@ -29,6 +31,8 @@ public struct KinescopePlayerOverlayConfiguration {
     /// - parameter backgroundColor: Background color of overlay
     /// - parameter duration: Duration of overlay appear animation in seconds
     /// - parameter nameConfiguration: Appearence preferences for title and subtitle above video
+    /// - parameter showsPlayPauseButton: Show the play/pause button at the center of overlay
+    /// - parameter showsHeader: Show the video title and description at the top, like `header` in the web player embed
     public init(playImage: UIImage,
                 pauseImage: UIImage,
                 fastForwardImage: UIImage,
@@ -37,7 +41,9 @@ public struct KinescopePlayerOverlayConfiguration {
                 playBackgroundColor: UIColor,
                 backgroundColor: UIColor,
                 duration: TimeInterval,
-                nameConfiguration: KinescopeVideoNameConfiguration) {
+                nameConfiguration: KinescopeVideoNameConfiguration,
+                showsPlayPauseButton: Bool = true,
+                showsHeader: Bool = true) {
         self.playImage = playImage
         self.pauseImage = pauseImage
         self.fastForwardImage = fastForwardImage
@@ -47,6 +53,8 @@ public struct KinescopePlayerOverlayConfiguration {
         self.backgroundColor = backgroundColor
         self.duration = duration
         self.nameConfiguration = nameConfiguration
+        self.showsPlayPauseButton = showsPlayPauseButton
+        self.showsHeader = showsHeader
     }
 }
 
@@ -85,6 +93,8 @@ public class KinescopePlayerOverlayConfigurationBuilder {
     private var backgroundColor: UIColor
     private var duration: TimeInterval
     private var nameConfiguration: KinescopeVideoNameConfiguration
+    private var showsPlayPauseButton: Bool
+    private var showsHeader: Bool
     
     public init(configuration: KinescopePlayerOverlayConfiguration) {
         self.playImage = configuration.playImage
@@ -96,6 +106,8 @@ public class KinescopePlayerOverlayConfigurationBuilder {
         self.backgroundColor = configuration.backgroundColor
         self.duration = configuration.duration
         self.nameConfiguration = configuration.nameConfiguration
+        self.showsPlayPauseButton = configuration.showsPlayPauseButton
+        self.showsHeader = configuration.showsHeader
     }
     
     public func setPlayImage(_ image: UIImage) -> Self {
@@ -143,6 +155,18 @@ public class KinescopePlayerOverlayConfigurationBuilder {
         return self
     }
     
+    /// Show the play/pause button at the center of overlay. `true` by default.
+    public func setShowsPlayPauseButton(_ shows: Bool) -> Self {
+        showsPlayPauseButton = shows
+        return self
+    }
+    
+    /// Show the video title and description at the top, like `header` in the web player embed. `true` by default.
+    public func setShowsHeader(_ shows: Bool) -> Self {
+        showsHeader = shows
+        return self
+    }
+    
     public func build() -> KinescopePlayerOverlayConfiguration {
         return .init(playImage: playImage,
                      pauseImage: pauseImage,
@@ -152,7 +176,9 @@ public class KinescopePlayerOverlayConfigurationBuilder {
                      playBackgroundColor: playBackgroundColor,
                      backgroundColor: backgroundColor,
                      duration: duration,
-                     nameConfiguration: nameConfiguration)
+                     nameConfiguration: nameConfiguration,
+                     showsPlayPauseButton: showsPlayPauseButton,
+                     showsHeader: showsHeader)
     }
     
 }

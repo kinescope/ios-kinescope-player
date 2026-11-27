@@ -16,3 +16,5 @@ When the inspector marks the video as live:
 - the live indicator is shown in the time slot
 
 Seek on a live stream is limited to the seekable range `duration` reports (the end of that range). Chapters are not shown for live.
+
+Before the broadcast starts, the player shows a cover. Replace it with your own image through `setLiveAwaitingCover(_:)`, see [Customization](customization.md#poster).
